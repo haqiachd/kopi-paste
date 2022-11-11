@@ -1,2 +1,2 @@
 <div id="top"></div>
-<h1 align="center">Gemastik Lightning</h1>
+<h1 align="center">Kopi Paste</h1>
