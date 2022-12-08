@@ -1019,7 +1019,8 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSupplierMouseClicked
 
     private void lblTopProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseClicked
-        JOptionPane.showMessageDialog(null, "Coming Soon!");
+        com.window.dialog.UserProfile prof = new com.window.dialog.UserProfile(null, true);
+        prof.setVisible(true);
     }//GEN-LAST:event_lblTopProfileMouseClicked
 
     private void lblTopProfileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseEntered
