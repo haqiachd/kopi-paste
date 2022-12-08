@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumnModel;
 
@@ -24,14 +25,17 @@ public class GetDataMenu extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
+    private final HashMap<String, Integer> stokMenu;
+    
     Database barang = new Database();
     
     Text text = new Text();
     
-    public GetDataMenu(java.awt.Frame parent, boolean modal) {
+    public GetDataMenu(java.awt.Frame parent, boolean modal, HashMap stokMenu) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+        this.stokMenu = stokMenu;
         
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
@@ -61,7 +65,7 @@ public class GetDataMenu extends javax.swing.JDialog {
                 // menyimpan data dari tabel ke object
                 obj[rows][0] = id;
                 obj[rows][1] = barang.res.getString("nama_menu");
-                obj[rows][2] = this.hitungStokMenu(id);
+                obj[rows][2] = this.stokMenu.get(id);
                 obj[rows][3] = text.toMoneyCase(barang.res.getString("harga"));
                 rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
             }
@@ -94,113 +98,6 @@ public class GetDataMenu extends javax.swing.JDialog {
         columnModel.getColumn(1).setMaxWidth(230);
         columnModel.getColumn(2).setPreferredWidth(70);
         columnModel.getColumn(2).setMaxWidth(70);
-    }
-    
-    private int getStokBahan(String idBahan){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT stok FROM bahan WHERE id_bahan = '"+idBahan+"'");
-            
-            if(res.next()){
-                int val = res.getInt("stok");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int getQuantity(String idMenu, String idBahan){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT quantity FROM detail_menu WHERE id_menu = '"+idMenu+"' AND id_bahan = '"+idBahan+"'");
-            
-            if(res.next()){
-                int val = res.getInt("quantity");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int getJumlahBahan(String idMenu){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT COUNT(id_bahan) AS total FROM detail_menu WHERE id_menu = '"+idMenu+"'");
-            
-            if(res.next()){
-                int val = res.getInt("total");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int hitungStokMenu(String idMenu){
-        try{
-            if(this.getJumlahBahan(idMenu) < 1){
-                return 0;
-            }
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT id_bahan FROM detail_menu WHERE id_menu = '"+idMenu+"'");
-            int[] qCek = new int[this.getJumlahBahan(idMenu)];
-            int stokBahan, quantity, index = 0;
-            String idBahan;
-            
-            while(res.next()){
-                idBahan = res.getString("id_bahan");
-                stokBahan = this.getStokBahan(idBahan);
-                quantity = this.getQuantity(idMenu, idBahan);
-                
-                if(quantity == 0){
-                    return 0;
-                }
-                
-                qCek[index] = (int)stokBahan / quantity;
-                System.out.println(idBahan + " : " + (int)stokBahan / quantity);
-                index++;
-            }
-            
-            conn.close();
-            stat.close();
-            res.close();
-            
-            Arrays.sort(qCek);
-            return qCek[0];
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    public int getStokMenu(String idMenu){
-        return 0;
-    }
-    
-    public void setStokMenu(String idMenu){
-        
     }
     
     public boolean isSelected(){
@@ -478,7 +375,7 @@ public class GetDataMenu extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GetDataMenu dialog = new GetDataMenu(new javax.swing.JFrame(), true);
+                GetDataMenu dialog = new GetDataMenu(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
