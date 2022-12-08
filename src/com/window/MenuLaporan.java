@@ -578,7 +578,7 @@ public class MenuLaporan extends javax.swing.JFrame {
 
     private void btnTransaksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTransaksiMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        MenuLaporan window = new MenuLaporan();
+        MenuTransaksi window = new MenuTransaksi();
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
