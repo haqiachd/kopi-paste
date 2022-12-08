@@ -1240,7 +1240,7 @@ public class MenuTransaksiJualBck extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariPembeliMouseExited
 
     private void inpCariMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpCariMenuMouseClicked
-        GetDataMenu g = new GetDataMenu(null, true);
+        GetDataMenu g = new GetDataMenu(null, true, null);
         g.setVisible(true);
         
         if(g.isSelected()){
