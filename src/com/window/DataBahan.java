@@ -9,7 +9,10 @@ import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
 import com.sun.glass.events.KeyEvent;
+import com.window.dialog.InfoApp;
+import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataBahan;
+import com.window.dialog.UserProfile;
 import java.awt.Cursor;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -1001,7 +1004,8 @@ public class DataBahan extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSupplierMouseClicked
 
     private void lblTopProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseClicked
-        JOptionPane.showMessageDialog(null, "Coming Soon!");
+        UserProfile dia = new UserProfile(null, true);
+        dia.setVisible(true);
     }//GEN-LAST:event_lblTopProfileMouseClicked
 
     private void lblTopProfileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseEntered
@@ -1015,7 +1019,8 @@ public class DataBahan extends javax.swing.JFrame {
     }//GEN-LAST:event_lblTopProfileMouseExited
 
     private void lblTopSettingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopSettingMouseClicked
-        JOptionPane.showMessageDialog(null, "Coming Soon!");
+        Pengaturan dia = new Pengaturan(null, true);
+        dia.setVisible(true);
     }//GEN-LAST:event_lblTopSettingMouseClicked
 
     private void lblTopSettingMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopSettingMouseEntered
@@ -1029,7 +1034,8 @@ public class DataBahan extends javax.swing.JFrame {
     }//GEN-LAST:event_lblTopSettingMouseExited
 
     private void lblTopInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopInfoMouseClicked
-        JOptionPane.showMessageDialog(null, "Coming Soon!");
+        InfoApp dia = new InfoApp(null, true);
+        dia.setVisible(true);
     }//GEN-LAST:event_lblTopInfoMouseClicked
 
     private void lblTopInfoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopInfoMouseEntered

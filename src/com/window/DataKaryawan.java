@@ -8,6 +8,8 @@ import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
 import com.sun.glass.events.KeyEvent;
+import com.window.dialog.InfoApp;
+import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataKaryawan;
 import java.awt.Cursor;
 import java.sql.Connection;
@@ -1034,7 +1036,8 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_lblTopProfileMouseExited
 
     private void lblTopSettingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopSettingMouseClicked
-        JOptionPane.showMessageDialog(null, "Coming Soon!");
+        Pengaturan dia = new Pengaturan(null, true);
+        dia.setVisible(true);
     }//GEN-LAST:event_lblTopSettingMouseClicked
 
     private void lblTopSettingMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopSettingMouseEntered
@@ -1048,7 +1051,8 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_lblTopSettingMouseExited
 
     private void lblTopInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopInfoMouseClicked
-        JOptionPane.showMessageDialog(null, "Coming Soon!");
+        InfoApp dia = new InfoApp(null, true);
+        dia.setVisible(true);
     }//GEN-LAST:event_lblTopInfoMouseClicked
 
     private void lblTopInfoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopInfoMouseEntered
