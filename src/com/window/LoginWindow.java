@@ -310,7 +310,7 @@ public class LoginWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlMainMouseDragged
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

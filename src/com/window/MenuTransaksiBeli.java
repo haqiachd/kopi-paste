@@ -734,7 +734,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         pnlTop.setRoundTopLeft(20);
         pnlTop.setRoundTopRight(20);
 
-        lblIconWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/icons8_card_payment_40px.png"))); // NOI18N
+        lblIconWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-topleft-trbeli.png"))); // NOI18N
 
         lblNamaWindow.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         lblNamaWindow.setForeground(new java.awt.Color(0, 21, 39));
@@ -1344,7 +1344,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSupplierMouseClicked
 
     private void lblTopProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseClicked
-        UserProfile dia = new UserProfile(null, true);
+        UserProfile dia = new UserProfile(null, true, this);
         dia.setVisible(true);
     }//GEN-LAST:event_lblTopProfileMouseClicked
 

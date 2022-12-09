@@ -880,7 +880,7 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSupplierMouseClicked
 
     private void lblTopProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseClicked
-        UserProfile dia = new UserProfile(null, true);
+        UserProfile dia = new UserProfile(null, true, this);
         dia.setVisible(true);
     }//GEN-LAST:event_lblTopProfileMouseClicked
 

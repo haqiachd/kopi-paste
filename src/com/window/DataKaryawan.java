@@ -11,6 +11,7 @@ import com.sun.glass.events.KeyEvent;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataKaryawan;
+import com.window.dialog.UserProfile;
 import java.awt.Cursor;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -449,7 +450,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         pnlTop.setRoundTopLeft(20);
         pnlTop.setRoundTopRight(20);
 
-        lblIconWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-topleft-dashboard.png"))); // NOI18N
+        lblIconWindow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-topleft-karyawan.png"))); // NOI18N
 
         lblNamaWindow.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         lblNamaWindow.setForeground(new java.awt.Color(0, 21, 39));
@@ -1021,7 +1022,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSupplierMouseClicked
 
     private void lblTopProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTopProfileMouseClicked
-        com.window.dialog.UserProfile prof = new com.window.dialog.UserProfile(null, true);
+        UserProfile prof = new UserProfile(null, true, this);
         prof.setVisible(true);
     }//GEN-LAST:event_lblTopProfileMouseClicked
 

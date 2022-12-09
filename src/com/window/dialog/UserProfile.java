@@ -10,6 +10,7 @@ import com.media.Audio;
 import com.media.Gambar;
 import java.awt.Color;
 import java.awt.Cursor;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,17 +21,24 @@ public class UserProfile extends javax.swing.JDialog {
 
     private PopUpBackground pop = new PopUpBackground();
     
+    private JFrame frame;
+    
     /**
      * Creates new form UserProfile
+     * @param parent
+     * @param modal
+     * @param frame
      */
-    public UserProfile(java.awt.Frame parent, boolean modal) {
+    public UserProfile(java.awt.Frame parent, boolean modal, JFrame frame) {
         super(parent, modal);
         this.pop.setVisible(true);
-        
+
         initComponents();
-        this.setBackground(new Color(0,0,0,0));
+        this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
         this.btnLogoutAccount.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+
+        this.frame = frame;
     }
     
     @Override
@@ -256,10 +264,12 @@ public class UserProfile extends javax.swing.JDialog {
     private void btnLogoutAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutAccountActionPerformed
         Audio.play(Audio.SOUND_INFO);
         int result = JOptionPane.showConfirmDialog(this, "Apakah yakin ingin melogout akun?", "confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
-        switch(result){
-            case JOptionPane.YES_OPTION :
-            new User().logout();
-            this.setVisible(false);
+        switch (result) {
+            case JOptionPane.YES_OPTION:
+                this.frame.dispose();
+                this.pop.dispose();
+                new User().logout();
+                this.dispose();
             break;
         }
     }//GEN-LAST:event_btnLogoutAccountActionPerformed
@@ -308,7 +318,7 @@ public class UserProfile extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UserProfile dialog = new UserProfile(new javax.swing.JFrame(), true);
+                UserProfile dialog = new UserProfile(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
