@@ -13,7 +13,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -111,18 +110,22 @@ public class Dashboard extends javax.swing.JFrame {
     public void showLineChart(){
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(170, "Amount", "Kamis");
-        dataset.setValue(150, "Amount", "Jumat");
-        dataset.setValue(80, "Amount", "Sabtu");
-        dataset.setValue(50, "Amount", "Minggu");
-        dataset.setValue(180, "Amount", "Senin");
-        dataset.setValue(200, "Amount", "Selasa");
-        dataset.setValue(200, "Amount", "Rabu");
+        dataset.setValue(50, "Amount", "Minggu 1");
+        dataset.setValue(80, "Amount", "Minggu 2");
+        dataset.setValue(150, "Amount", "Minggu 3");
+        dataset.setValue(120, "Amount", "Minggu 4");
+//        dataset.setValue(170, "Amount", "Kamis");
+//        dataset.setValue(150, "Amount", "Jumat");
+//        dataset.setValue(80, "Amount", "Sabtu");
+//        dataset.setValue(50, "Amount", "Minggu");
+//        dataset.setValue(180, "Amount", "Senin");
+//        dataset.setValue(200, "Amount", "Selasa");
+//        dataset.setValue(200, "Amount", "Rabu");
         
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Produk","Hari","Jumlah", 
+        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Produk","Minggu","Jumlah", 
                 dataset, PlotOrientation.VERTICAL, false,true,false);
-        linechart.setTitle(new TextTitle("Penjualan Produk Minggu Ini", new java.awt.Font("Ebrima", 1, 20)));
+        linechart.setTitle(new TextTitle("Penjualan Produk Bulan Ini", new java.awt.Font("Ebrima", 1, 20)));
         
         //create plot object
          CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
@@ -540,7 +543,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblNamaChart.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblNamaChart.setForeground(new java.awt.Color(255, 255, 255));
-        lblNamaChart.setText(" Penjualan Dalam Seminggu Terakhir");
+        lblNamaChart.setText(" Penjualan Dalam Sebulan Terakhir");
 
         lblServerTime.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblServerTime.setForeground(new java.awt.Color(255, 255, 255));
