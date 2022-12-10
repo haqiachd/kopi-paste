@@ -1,16 +1,11 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumnModel;
@@ -98,6 +93,19 @@ public class GetDataMenu extends javax.swing.JDialog {
         columnModel.getColumn(1).setMaxWidth(230);
         columnModel.getColumn(2).setPreferredWidth(70);
         columnModel.getColumn(2).setMaxWidth(70);
+    }
+    
+    private void pilihMenu(){
+        if(this.idSelected.equals("")){
+            JOptionPane.showMessageDialog(this, "Tidak ada menu yang dipilih!");
+        }else{
+            if(this.tempStokMenu.get(this.idSelected) > 0){
+                this.isSelected = true;
+                this.dispose();                    
+            }else{
+                Message.showWarning(this, "Stok Habis!");
+            }
+        }        
     }
     
     public boolean isSelected(){
@@ -306,12 +314,7 @@ public class GetDataMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_tabelDataMouseClicked
 
     private void btnPilihActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihActionPerformed
-        if(this.idSelected.equals("")){
-            JOptionPane.showMessageDialog(this, "Tidak ada menu yang dipilih!");
-        }else{
-            this.isSelected = true;
-            this.dispose();
-        }
+        this.pilihMenu();
     }//GEN-LAST:event_btnPilihActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
@@ -346,12 +349,7 @@ public class GetDataMenu extends javax.swing.JDialog {
 
     private void tabelDataKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            if(this.idSelected.equals("")){
-                JOptionPane.showMessageDialog(this, "Tidak ada menu yang dipilih!");
-            }else{
-                this.isSelected = true;
-                this.dispose();
-            }
+            this.pilihMenu();
         }
     }//GEN-LAST:event_tabelDataKeyReleased
 

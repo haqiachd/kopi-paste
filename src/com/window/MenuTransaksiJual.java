@@ -42,7 +42,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                ,jumlah // jumlah menu yg dipilih
                ,ttlHrgMenu // total harga dari menu (harga menu * jumlah menu)
                ,ttlHargaBayar = 0 // total keseluruhan harga dari menu
-               ,oldJumlah; 
+               ,oldJumlah;
     
     private final UIManager win = new UIManager();
     
@@ -110,14 +110,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.inpPembeli.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNamaMenu.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpJumlah.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-    
-//        this.inpPembayaran.setVisible(false);
-//        this.inpKembalian.setVisible(false);
-//        this.lblPembayaran.setVisible(false);
-//        this.lblKembalian.setVisible(false);
-//        this.lblPembayaranRp.setVisible(false);
-//        this.lblKembalianRp.setVisible(false);
+        this.inpJumlah.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0)); 
         
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
@@ -126,7 +119,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.getAllStokMenu();
     }
     
-    // auto increment id transaksi penjualan
+    /**
+     * Auto increment id transaksi
+     * 
+     * @return 
+     */
     private String createID(){
         try{
             // menyiapkan query untuk mendapatkan id terakhir
@@ -366,7 +363,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 this.inpTotalHarga.setText(txt.toMoneyCase(""+this.ttlHargaBayar));
                 
                 // mengupdate stok menu
-//                this.editStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml);
                 if(newJml > this.oldJumlah){
                     newJml = newJml - this.oldJumlah;
                     System.out.println("TAMBAH PESANAN");
@@ -374,10 +370,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                     System.out.println("OLD JUMLAH : " + oldJumlah);
                     this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "min");
                 }else if(newJml < this.oldJumlah){
+                    newJml = oldJumlah - newJml;
                     System.out.println("KURANGI PESANAN");
                     System.out.println("NEW JUMLAH : " + newJml);
                     System.out.println("OLD JUMLAH : " + oldJumlah);
-                    newJml = oldJumlah - newJml;
                     this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "add");
                 }
             }
@@ -647,25 +643,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.getAllStokMenu();
     }
     
-    private HashMap<String, String> getDataBahan(String idMenu){
-        try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT id_bahan, quantity FROM detail_menu WHERE id_menu = '"+idMenu+"'");
-            HashMap<String, String> data = new HashMap();
-            
-            while(r.next()){
-                data.put(r.getString("id_bahan"), r.getString("quantity"));
-            }
-            
-            return data;
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            Message.showException(this, ex);
-        }
-        return null;
-    }
-    
     private boolean trJual(){
         try{
             Connection c = (Connection) Koneksi.configDB();
@@ -726,7 +703,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             
             for(int i = 0; i < this.tabelTr.getRowCount(); i++){
                 String id = this.tabelTr.getValueAt(i, 1).toString();
-                data = this.getDataBahan(id);
+                data = this.getBahanMenu(idMenu);
                 Object[] idBahan = data.keySet().toArray(),
                          quantity = data.values().toArray();
                 for(int j = 0; j < idBahan.length; j++){
@@ -1785,8 +1762,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelTrKeyTyped
 
     private void tabelTrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelTrKeyReleased
-//        this.oldJumlah = this.oldJumlah = Integer.parseInt(this.tabelTr.getValueAt(tabelTr.getSelectedRow(), 5).toString());
-//        System.out.println("old jumlah : " + this.oldJumlah);
         // untuk editing data
         if(this.tabelTr.getSelectedColumn() == 5){
             if(evt.getKeyCode() == KeyEvent.VK_ENTER){
@@ -1876,5 +1851,4 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private com.manage.RoundedPanel pnlTop;
     private javax.swing.JTable tabelTr;
     // End of variables declaration//GEN-END:variables
-
 }
