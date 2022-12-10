@@ -20,9 +20,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -41,7 +41,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private int hargaMenu // harga dari menu
                ,jumlah // jumlah menu yg dipilih
                ,ttlHrgMenu // total harga dari menu (harga menu * jumlah menu)
-               ,ttlHargaBayar = 0; // total keseluruhan harga dari menu
+               ,ttlHargaBayar = 0 // total keseluruhan harga dari menu
+               ,oldJumlah; 
     
     private final UIManager win = new UIManager();
     
@@ -51,7 +52,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     
     private final Waktu waktu = new Waktu();
     
-    private final HashMap<String, Integer> stokMenu = new HashMap();
+    /**
+     * Meyimpan data stok bahan dan stok menu sementara saat proses transaksi sedang berlangsung
+     */
+    private HashMap<String, Integer> tempStokBahan, tempStokMenu;
     
     private boolean status;
     
@@ -118,7 +122,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
         
-        this.getAllStok();
+        this.getAllStokBahan();
+        this.getAllStokMenu();
     }
     
     // auto increment id transaksi penjualan
@@ -141,7 +146,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                     nomor = "0000";
                 }
                 conn.close();
-            
+                
                 // jika id barang belum exist maka id akan dibuat
                 return String.format("TRJ%04d", Integer.parseInt(nomor)+1);
             }
@@ -302,10 +307,25 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.resetTabel();
         
         // reset total menu
-        this.getAllStok();
+        this.getAllStokBahan();
+        this.getAllStokMenu();
         
         // update id transaksi
         this.inpIdTransaksi.setText(this.createID());
+    }
+    
+    private void tambahMenu(){
+        // cek apakah data menu sudah dipilih
+        if(!this.inpIdMenu.getText().isEmpty()){
+            // cek apakah data jumlah sudah dimasukan
+            if (this.inpJumlah.getText().isEmpty()) {
+                Message.showWarning(this, "Jumlah menu belum dimasukan!");
+            } else {
+                this.tambahDataMenu();
+            }                
+        }else{
+            Message.showWarning(this, "Tidak ada data menu yang dipilih!");
+        }
     }
     
     // untuk menambahkan data menu
@@ -316,7 +336,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.ttlHargaBayar += this.ttlHrgMenu;
         this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlHargaBayar).substring(4));
         // mengurangi stok menu
-        this.minStokMenu(this.idMenu, this.jumlah);
+        this.updateStokMenu(this.idMenu, this.jumlah, "min");
         // reset tabel dan textfield
         this.updateTabel();
         this.resetTambah();
@@ -346,7 +366,20 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 this.inpTotalHarga.setText(txt.toMoneyCase(""+this.ttlHargaBayar));
                 
                 // mengupdate stok menu
-                this.editStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml);
+//                this.editStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml);
+                if(newJml > this.oldJumlah){
+                    newJml = newJml - this.oldJumlah;
+                    System.out.println("TAMBAH PESANAN");
+                    System.out.println("NEW JUMLAH : " + newJml);
+                    System.out.println("OLD JUMLAH : " + oldJumlah);
+                    this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "min");
+                }else if(newJml < this.oldJumlah){
+                    System.out.println("KURANGI PESANAN");
+                    System.out.println("NEW JUMLAH : " + newJml);
+                    System.out.println("OLD JUMLAH : " + oldJumlah);
+                    newJml = oldJumlah - newJml;
+                    this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "add");
+                }
             }
             
         }catch(NumberFormatException ex){
@@ -368,9 +401,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             int row = tabelTr.getSelectedRow();
             
             // update stok menu
-            this.addStokMenu(
+            this.updateStokMenu(
                     this.tabelTr.getValueAt(row, 1).toString(), 
-                    Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString()));
+                    Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString()),
+                    "add"
+            );
             
             // menghapus baris pada tabel
             DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
@@ -391,7 +426,228 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         return ttlJumlah;
     }
     
-    private HashMap getDataBahan(String idMenu){
+    /**
+     * Digunakan untuk mendapatkan semua stok bahan dari tabel database dan outputnya disimpan dalam hashmap
+     */
+    private void getAllStokBahan(){
+        try{
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery("SELECT id_bahan, stok FROM bahan");
+            // inisialisasi hashmap
+            tempStokBahan = new HashMap<>();
+            
+            // membaca semua data yang ada didalam tabel bahan
+            while(r.next()){
+                // menyimpan id bahan dan stok kedalam hashmap
+                tempStokBahan.put(r.getString("id_bahan"), r.getInt("stok"));
+            }
+            
+            // menutup koneksi
+            s.close();
+            r.close();
+            c.close();
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * Digunakan untuk menampilkan semua data stok bahan
+     */
+    private void showStokBahan(){
+        // konversi hashmap ke object
+        Object obj[] = this.tempStokBahan.entrySet().toArray();
+        // membaca semua data
+        for(Object o : obj){
+            System.out.println(o);
+        }
+    }
+    
+    /**
+     * Digunakan untuk mendapatkan data stok bahan sementara yang ada di hashmap
+     * 
+     * @param idBahan id bahan yang akan diambil stoknya
+     * @return stok sementara dari bahan
+     */
+    private int getTempStokBahan(String idBahan){
+        return this.tempStokBahan.get(idBahan);
+    }
+    
+    /**
+     * Digunakan untuk mengubah data stok bahan sementara yang ada di hashmap
+     * 
+     * @param idBahan id bahan yang akan ubah data stoknya
+     * @param newStok stok baru dari bahan
+     */
+    private void setTempStokBahan(String idBahan, int newStok){
+        this.tempStokBahan.replace(idBahan, newStok);
+    }
+    
+    /**
+     * Digunakan untuk mendapatkan bahan-bahan dari menu yang akan dipesan
+     * 
+     * @param idMenu id dari menu yang akan diambil bahan-bahanya
+     * @return id bahan dan jumlah bahan dari menu
+     */
+    private HashMap<String, Integer> getBahanMenu(String idMenu){
+        try{
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery("SELECT id_bahan, quantity FROM detail_menu WHERE id_menu = '"+idMenu+"'");
+            // menyimpan data sementara dari bahan
+            HashMap<String, Integer> data = new HashMap();
+            
+            // mendapatkan data bahan-bahan
+            while(r.next()){
+                data.put(r.getString("id_bahan"), r.getInt("quantity"));
+            }
+            
+            c.close();
+            s.close();
+            r.close();
+            
+            return data;
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Digunakan untuk menampilkan bahan-bahan dari menu
+     * 
+     * @param idMenu id menu yang akan ditampilkan bahan-bahannya
+     */
+    private void showBahanMenu(String idMenu){
+        Object[] obj = this.getBahanMenu(idMenu).entrySet().toArray();
+        for(Object o : obj){
+            System.out.println(o);
+        }
+    }
+    
+    /**
+     * Digunakan untuk menghitung ketersediaan stok dari menu
+     * 
+     * @param idMenu id menu yang akan dicek
+     * @return stok dari menu
+     */
+    private int hitungStokMenu(String idMenu){
+        String idBahan;
+        StringTokenizer token; // meyimpan token dari id bahan
+        Object[] bahanMenu =  this.getBahanMenu(idMenu).entrySet().toArray(); // mendapatkan data bahan-bahan dari menu dalam bentuk token
+        int cekStok[] = new int[bahanMenu.length]; // menyimpan stok sementara dari menu
+        int stokBahan, quantity;
+
+        for(int i = 0; i < bahanMenu.length; i++){
+            // mendapatkan token dari data bahan menu (contoh token : BA001=10) 
+            token = new StringTokenizer(bahanMenu[i].toString(), "=");
+            // mendapatkan data id bahan dari token
+            idBahan = token.nextToken();
+            // mendapatkan jumlah bahan dari token
+            quantity = Integer.parseInt(token.nextToken());
+            // mendapatkan stok dari bahan
+            stokBahan = this.getTempStokBahan(idBahan);
+            
+            // menghindari error pembagian degan 0
+            if(quantity == 0){
+                return 0;
+            }
+            
+            // menghitung stok dengan cara membagi stok dari bahan dengan quantity bahan
+            cekStok[i] = (int)stokBahan / quantity; 
+//            System.out.printf("\nId Bahan : %s \nStok Bahan : %d \nQuantity : %d \nStok : %d\n", idBahan, stokBahan, quantity, cekStok[i]);
+        }
+        
+        // mendapatkan stok terendah dari bahan bahan menu
+        Arrays.sort(cekStok);
+        return cekStok[0];
+    }
+    
+    /**
+     * Digunakan untuk mendapatkan semua stok menu
+     */
+    private void getAllStokMenu(){
+        try{
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery("SELECT id_menu FROM menu");
+            String id;
+            // inisialisasi hashmap
+            tempStokMenu = new HashMap();
+            
+            // membaca semua data menu
+            while(r.next()){
+                id = r.getString("id_menu");
+                // menghitung stok dari menu
+                tempStokMenu.put(id, this.hitungStokMenu(id));
+            }
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
+        }
+    }
+    
+    /**
+     * Menampilkan semua stok dari menu
+     */
+    private void showStokMenu(){
+        // konversi hashmap ke array objct
+        Object[] obj = this.tempStokMenu.entrySet().toArray();
+        // menampilkan semua data
+        for(Object o : obj){
+            System.out.println(o);
+        }
+    }
+    
+    /**
+     * Digunakan untuk mengupdate stok dari menu saat terjadi proses transaksi penjualan
+     * 
+     * @param idMenu id menu yang dipesan
+     * @param jumlah jumlah menu yang dipesan
+     * @param status <ul> <li>add : menambahkan menu </li>
+     *                    <li>min : mengurangi menu </li>
+     *               </ul>
+     */
+    private void updateStokMenu(String idMenu, int jumlah, String status){
+        int quantity, stokBahan = 0;
+        String idBahan;
+        StringTokenizer token; // menyimpan token dari data-data bahan
+        Object[] dataBahan = this.getBahanMenu(idMenu).entrySet().toArray(); // mendapatkan data bahan-bahan dari menu
+        
+        for (Object bahan : dataBahan) {
+            // mendapatkan token dari data bahan menu (contoh token : BA001=10) 
+            token = new StringTokenizer(bahan.toString(), "=");
+            // mendapatkan data id bahan dari token
+            idBahan = token.nextToken();
+            // mendapatkan jumlah bahan dari token
+            quantity = Integer.parseInt(token.nextToken());
+            
+            // cek status tambah atau mengurangi menu
+            switch(status){
+                case "add":
+                    // mendapatkan menghitung stok bahan baru
+                    stokBahan = this.getTempStokBahan(idBahan) + (quantity * jumlah);
+                    break;
+                case "min":
+                    // mendapatkan menghitung stok bahan baru
+                    stokBahan = this.getTempStokBahan(idBahan) - (quantity * jumlah);
+                    break;
+            }
+            
+            // meyimpan stok bahan baru pada hashmap
+            this.setTempStokBahan(idBahan, stokBahan);
+        }
+        // hitung ulang stok menu
+        this.getAllStokMenu();
+    }
+    
+    private HashMap<String, String> getDataBahan(String idMenu){
         try{
             Connection c = (Connection) Koneksi.configDB();
             Statement s = c.createStatement();
@@ -494,155 +750,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }
         return false;
     }
-    
-    private int getStokBahan(String idBahan){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT stok FROM bahan WHERE id_bahan = '"+idBahan+"'");
-            
-            if(res.next()){
-                int val = res.getInt("stok");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int getQuantity(String idMenu, String idBahan){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT quantity FROM detail_menu WHERE id_menu = '"+idMenu+"' AND id_bahan = '"+idBahan+"'");
-            
-            if(res.next()){
-                int val = res.getInt("quantity");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int getJumlahBahan(String idMenu){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT COUNT(id_bahan) AS total FROM detail_menu WHERE id_menu = '"+idMenu+"'");
-            
-            if(res.next()){
-                int val = res.getInt("total");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int hitungStokMenu(String idMenu){
-        try{
-            if(this.getJumlahBahan(idMenu) < 1){
-                return 0;
-            }
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT id_bahan FROM detail_menu WHERE id_menu = '"+idMenu+"'");
-            int[] qCek = new int[this.getJumlahBahan(idMenu)];
-            int stokBahan, quantity, index = 0;
-            String idBahan;
-            
-            while(res.next()){
-                idBahan = res.getString("id_bahan");
-                stokBahan = this.getStokBahan(idBahan);
-                quantity = this.getQuantity(idMenu, idBahan);
-                
-                if(quantity == 0){
-                    return 0;
-                }
-                
-                qCek[index] = (int)stokBahan / quantity;
-                System.out.println(idBahan + " : " + (int)stokBahan / quantity);
-                index++;
-            }
-            
-            conn.close();
-            stat.close();
-            res.close();
-            
-            Arrays.sort(qCek);
-            return qCek[0];
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
- 
-    private void getAllStok(){
-        try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM menu");
-            String id;
-            
-            while(r.next()){
-                id = r.getString("id_menu");
-                this.stokMenu.put(id, this.hitungStokMenu(id));
-            }
-            s.close();
-            r.close();
-            c.close();
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
-        }
-    }
-    
-    private void tambahMenu(){
-        // cek apakah data menu sudah dipilih
-        if(!this.inpIdMenu.getText().isEmpty()){
-            // cek apakah data jumlah sudah dimasukan
-            if (this.inpJumlah.getText().isEmpty()) {
-                Message.showWarning(this, "Jumlah menu belum dimasukan!");
-            } else {
-                this.tambahDataMenu();
-            }                
-        }else{
-            Message.showWarning(this, "Tidak ada data menu yang dipilih!");
-        }
-    }
-    
-    private void addStokMenu(String idMenu, int value){
-        int oldStok = this.stokMenu.get(idMenu);
-        this.stokMenu.replace(idMenu, (oldStok + value));
-    }
-    
-    private void editStokMenu(String idMenu, int value){
-        int oldStok = this.hitungStokMenu(idMenu);
-        this.stokMenu.replace(idMenu, (oldStok - value));
-    }
-    
-    private void minStokMenu(String idMenu, int value){
-        int oldStok = this.stokMenu.get(idMenu);
-        this.stokMenu.replace(idMenu, (oldStok - value));
-    }
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1605,7 +1712,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_inpIdMenuMouseClicked
 
     private void inpCariMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpCariMenuMouseClicked
-        GetDataMenu g = new GetDataMenu(null, true, this.stokMenu);
+        GetDataMenu g = new GetDataMenu(null, true, this.tempStokMenu);
         g.setVisible(true);
         
         if(g.isSelected()){
@@ -1613,7 +1720,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.inpIdMenu.setText(idMenu);
             this.showMenuSelected();
             this.inpJumlah.requestFocus();
-            this.lblStokMenu.setText("/ "+stokMenu.get(this.idMenu) + " Pesanaan");
+            this.lblStokMenu.setText("/ "+tempStokMenu.get(this.idMenu) + " Pesanaan");
         }
     }//GEN-LAST:event_inpCariMenuMouseClicked
 
@@ -1626,11 +1733,20 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariMenuMouseExited
 
     private void tabelTrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelTrMouseClicked
-
+        this.oldJumlah = Integer.parseInt(this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 5).toString());
+        System.out.println("old jumlah : " + oldJumlah);
     }//GEN-LAST:event_tabelTrMouseClicked
 
     private void tabelTrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelTrKeyPressed
-
+//        this.oldJumlah = Integer.parseInt(this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 5).toString());
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        if(evt.getKeyCode() == com.sun.glass.events.KeyEvent.VK_UP){
+            this.oldJumlah = Integer.parseInt(this.tabelTr.getValueAt(tabelTr.getSelectedRow() - 1, 5).toString());
+        }else if(evt.getKeyCode() == com.sun.glass.events.KeyEvent.VK_DOWN){
+            this.oldJumlah = Integer.parseInt(this.tabelTr.getValueAt(tabelTr.getSelectedRow() + 1, 5).toString());
+        }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        System.out.println("old jumlah : " + this.oldJumlah);
     }//GEN-LAST:event_tabelTrKeyPressed
 
     private void inpPembeliMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpPembeliMouseClicked
@@ -1669,6 +1785,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelTrKeyTyped
 
     private void tabelTrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelTrKeyReleased
+//        this.oldJumlah = this.oldJumlah = Integer.parseInt(this.tabelTr.getValueAt(tabelTr.getSelectedRow(), 5).toString());
+//        System.out.println("old jumlah : " + this.oldJumlah);
         // untuk editing data
         if(this.tabelTr.getSelectedColumn() == 5){
             if(evt.getKeyCode() == KeyEvent.VK_ENTER){

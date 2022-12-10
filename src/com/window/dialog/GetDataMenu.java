@@ -25,17 +25,17 @@ public class GetDataMenu extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    private final HashMap<String, Integer> stokMenu;
+    private final HashMap<String, Integer> tempStokMenu;
     
     Database barang = new Database();
     
     Text text = new Text();
     
-    public GetDataMenu(java.awt.Frame parent, boolean modal, HashMap stokMenu) {
+    public GetDataMenu(java.awt.Frame parent, boolean modal, HashMap tempStokMenu) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        this.stokMenu = stokMenu;
+        this.tempStokMenu = tempStokMenu;
         
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
@@ -65,7 +65,7 @@ public class GetDataMenu extends javax.swing.JDialog {
                 // menyimpan data dari tabel ke object
                 obj[rows][0] = id;
                 obj[rows][1] = barang.res.getString("nama_menu");
-                obj[rows][2] = this.stokMenu.get(id);
+                obj[rows][2] = this.tempStokMenu.get(id);
                 obj[rows][3] = text.toMoneyCase(barang.res.getString("harga"));
                 rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
             }
