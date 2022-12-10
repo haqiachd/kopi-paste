@@ -18,7 +18,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class GetDataBahan extends javax.swing.JDialog {
+public class GetDataBahanMenu extends javax.swing.JDialog {
 
     private String idSelected = "", keyword = "", idName = "", satuan = "", quantity = "", bahanCode = "";
     
@@ -28,7 +28,7 @@ public class GetDataBahan extends javax.swing.JDialog {
     
     Text txt = new Text();
     
-    public GetDataBahan(java.awt.Frame parent, boolean modal) {
+    public GetDataBahanMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -49,7 +49,7 @@ public class GetDataBahan extends javax.swing.JDialog {
     }
 
     
-    public GetDataBahan(java.awt.Frame parent, boolean modal, String idBahan, String quantity) {
+    public GetDataBahanMenu(java.awt.Frame parent, boolean modal, String idBahan, String quantity) {
         this(parent, modal);
         
         this.idSelected = idBahan;
@@ -224,6 +224,7 @@ public class GetDataBahan extends javax.swing.JDialog {
         tabelData.setGridColor(new java.awt.Color(0, 0, 0));
         tabelData.setSelectionBackground(new java.awt.Color(26, 164, 250));
         tabelData.setSelectionForeground(new java.awt.Color(250, 246, 246));
+        tabelData.getTableHeader().setReorderingAllowed(false);
         tabelData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelDataMouseClicked(evt);
@@ -502,13 +503,13 @@ public class GetDataBahan extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GetDataBahan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GetDataBahanMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                GetDataBahan dialog = new GetDataBahan(new javax.swing.JFrame(), true);
+                GetDataBahanMenu dialog = new GetDataBahanMenu(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

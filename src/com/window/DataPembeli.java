@@ -204,7 +204,7 @@ public class DataPembeli extends javax.swing.JFrame {
         lblTopProfile = new javax.swing.JLabel();
         lblTopKembali = new javax.swing.JLabel();
         pnlContent = new com.manage.RoundedPanel();
-        lblTotalData = new javax.swing.JLabel();
+        lblKeyword = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelData = this.tabelData = new com.manage.StripedTabelModel(new String[][]{}, new String[]{});
         inpCari = new com.manage.RoundedTextField(15);
@@ -560,9 +560,9 @@ public class DataPembeli extends javax.swing.JFrame {
         pnlContent.setRoundTopLeft(20);
         pnlContent.setRoundTopRight(20);
 
-        lblTotalData.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        lblTotalData.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblTotalData.setText("Menampilkan 20 data pembeli dengan keyword \"test\"");
+        lblKeyword.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblKeyword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblKeyword.setText("Menampilkan data pembeli dengan keyword \"\"");
 
         tabelData.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         tabelData.setModel(new javax.swing.table.DefaultTableModel(
@@ -775,7 +775,7 @@ public class DataPembeli extends javax.swing.JFrame {
                         .addComponent(inpCari, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
-                        .addComponent(lblTotalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lblKeyword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(18, 18, 18))
         );
         pnlContentLayout.setVerticalGroup(
@@ -791,7 +791,7 @@ public class DataPembeli extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTotalData))
+                        .addComponent(lblKeyword))
                     .addGroup(pnlContentLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1142,12 +1142,14 @@ public class DataPembeli extends javax.swing.JFrame {
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_pembeli LIKE '%"+key+"%' OR nama_pembeli LIKE '%"+key+"%'";
+        this.lblKeyword.setText("Menampilkan data pembeli dengan keyword \""+key+"\"");
         this.updateTabel();
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_pembeli LIKE '%"+key+"%' OR nama_pembeli LIKE '%"+key+"%'";
+        this.lblKeyword.setText("Menampilkan data pembeli dengan keyword \""+key+"\"");
         this.updateTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
@@ -1205,6 +1207,7 @@ public class DataPembeli extends javax.swing.JFrame {
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblInfoData;
+    private javax.swing.JLabel lblKeyword;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblNamaUser;
@@ -1216,7 +1219,6 @@ public class DataPembeli extends javax.swing.JFrame {
     private javax.swing.JLabel lblTopNotif;
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JLabel lblTopSetting;
-    private javax.swing.JLabel lblTotalData;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
     private javax.swing.JSeparator lineSideMenu1;

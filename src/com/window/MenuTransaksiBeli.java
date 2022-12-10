@@ -7,7 +7,7 @@ import com.manage.UIManager;
 import com.manage.User;
 import com.manage.Waktu;
 import com.media.Gambar;
-import com.window.dialog.GetDataBahanSupplier;
+import com.window.dialog.GetDataSupplierJualBahan;
 import com.window.dialog.GetDataSupplier;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
@@ -1468,7 +1468,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         if(this.idSupplier == null || this.idSupplier.equals("")){
             JOptionPane.showMessageDialog(this, "Silahkan pilih data Supplier terlebih dahulu!");
         }else{
-            GetDataBahanSupplier dia = new GetDataBahanSupplier(null, true, this.idSupplier, this.namaSupplier);
+            GetDataSupplierJualBahan dia = new GetDataSupplierJualBahan(null, true, this.idSupplier, this.namaSupplier);
             dia.setVisible(true);
             
             if(dia.isSelected()){

@@ -601,7 +601,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_btnHapusActionPerformed
     
     private void btnTambahBahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahBahanActionPerformed
-        GetDataBahan g = new GetDataBahan(null, true);
+        GetDataBahanMenu g = new GetDataBahanMenu(null, true);
         g.setVisible(true);
         
         if(g.isSelected()){
@@ -627,7 +627,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                quantity = selectedVal.substring(selectedVal.indexOf("|")+1, selectedVal.indexOf("."));
         
         // membuka dialog
-        GetDataBahan g = new GetDataBahan(null, true, idBhn, quantity);
+        GetDataBahanMenu g = new GetDataBahanMenu(null, true, idBhn, quantity);
         g.setVisible(true);
         
         if(g.isSelected()){

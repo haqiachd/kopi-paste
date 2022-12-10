@@ -503,7 +503,7 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnTambahBahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahBahanActionPerformed
-        GetDataBahanOld g = new GetDataBahanOld(null, true);
+        GetDataBahanSupplier g = new GetDataBahanSupplier(null, true);
         g.setVisible(true);
         
         if(g.isSelected()){

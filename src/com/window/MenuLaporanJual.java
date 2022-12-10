@@ -515,6 +515,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         ));
         tabelData.setGridColor(new java.awt.Color(0, 0, 0));
+        tabelData.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tabelData);
 
         inpDataPerhari.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -697,6 +698,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         ));
         tabelData2.setGridColor(new java.awt.Color(0, 0, 0));
+        tabelData2.getTableHeader().setReorderingAllowed(false);
         tabelData2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelData2MouseClicked(evt);

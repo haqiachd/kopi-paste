@@ -1,16 +1,12 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -19,7 +15,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class GetDataBahanSupplier extends javax.swing.JDialog {
 
-    private String idSelected = "", keyword = "", idName = "", idSupplier, namaSupplier;
+    private String idSelected = "", keyword = "", idName = "";
     
     private boolean isSelected = false;
     
@@ -27,14 +23,10 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     
     Text text = new Text();
     
-    public GetDataBahanSupplier(java.awt.Frame parent, boolean modal, String idSupplier, String namaSupplier) {
+    public GetDataBahanSupplier(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        
-        this.idSupplier = idSupplier;
-        this.namaSupplier = namaSupplier;
-        this.lblTop.setText(this.lblTop.getText() + this.namaSupplier);
         
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
@@ -48,52 +40,51 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         
         this.updateTabel();
     }
+
+    private Object[][] getData(){
+        try{
+            Object obj[][];
+            int rows = 0;
+            String sql = "SELECT id_bahan, nama_bahan, harga FROM bahan " + keyword;
+            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
+            obj = new Object[barang.getJumlahData("bahan", keyword)][4];
+            // mengeksekusi query
+            barang.res = barang.stat.executeQuery(sql);
+            // mendapatkan semua data yang ada didalam tabel
+            while(barang.res.next()){
+                // menyimpan data dari tabel ke object
+                obj[rows][0] = barang.res.getString("id_bahan");
+                obj[rows][1] = barang.res.getString("nama_bahan");
+                obj[rows][2] = text.toMoneyCase(barang.res.getString("harga"));
+                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
+            }
+            return obj;
+        }catch(SQLException ex){
+            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
+        }
+        return null;
+    }
     
     private void updateTabel(){
-        
-        DefaultTableModel tableModel = new DefaultTableModel(
-                new String[][]{}, // default valuenya kosong
-                new String [] {
-                    "ID Bahan", "Nama Bahan", "Stok", "Harga"
-                }
-        ) {
-            // set agar data pada tabel tidak bisa diedit
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
+        this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
+            getData(),
+            new String [] {
+                "ID Bahan", "Nama Bahan", "Harga"
             }
-        };
-
-        try{
-            String sql = "SELECT DISTINCT bahan.id_bahan, bahan.nama_bahan, bahan.stok, bahan.harga "
-                        + "FROM bahan JOIN detail_supplier "
-                        + "ON bahan.id_bahan = detail_supplier.id_bahan "
-                        + "WHERE detail_supplier.id_supplier = '"+this.idSupplier+"' " + keyword
-                        + " ORDER BY bahan.stok ASC";
-            System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery(sql);
-
-            while (rs.next()) {
-                // mendapatkan data dari database
-                String idPembeli = rs.getString("bahan.id_bahan");
-                String namaBarang = rs.getString("bahan.nama_bahan");
-                String stok = rs.getString("bahan.stok");
-                String harga = rs.getString("bahan.harga");
-
-                // menambahkan data kedalam array
-                String[] data = { idPembeli, namaBarang, stok, harga} ;
-
-                // menambahkan data kedalam tabel
-                tableModel.addRow(data);
-        }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
-    }
-        // set model
-        tabelData.setModel(tableModel); 
+        ){
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TableColumnModel columnModel = tabelData.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(90);
+        columnModel.getColumn(0).setMaxWidth(90);
+        columnModel.getColumn(1).setPreferredWidth(330);
+        columnModel.getColumn(1).setMaxWidth(330);
     }
     
     public boolean isSelected(){
@@ -115,7 +106,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelData = new javax.swing.JTable();
         inpCari = new javax.swing.JTextField();
-        lblTop = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btnPilih = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
@@ -141,18 +132,19 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         tabelData.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         tabelData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "ID Bahan", "Nama Bahan", "Harga", "Stok"
+                "ID Bahan", "Nama Bahan", "Harga"
             }
         ));
         tabelData.setGridColor(new java.awt.Color(0, 0, 0));
         tabelData.setSelectionBackground(new java.awt.Color(26, 164, 250));
         tabelData.setSelectionForeground(new java.awt.Color(250, 246, 246));
+        tabelData.getTableHeader().setReorderingAllowed(false);
         tabelData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelDataMouseClicked(evt);
@@ -161,9 +153,6 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         tabelData.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tabelDataKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tabelDataKeyReleased(evt);
             }
         });
         jScrollPane1.setViewportView(tabelData);
@@ -178,15 +167,15 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
             }
         });
 
-        lblTop.setFont(new java.awt.Font("Dialog", 1, 22)); // NOI18N
-        lblTop.setForeground(new java.awt.Color(0, 78, 243));
-        lblTop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTop.setText("Bahan Yang Dijual ");
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 78, 243));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Pilih Data Bahan");
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(245, 22, 32));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Cari Nama Bahan");
+        jLabel2.setText("Cari ID / Nama Bahan");
 
         btnPilih.setBackground(new java.awt.Color(255, 0, 255));
         btnPilih.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -225,7 +214,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +239,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(lblTop, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -259,7 +248,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -328,26 +317,17 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
-        this.keyword = " AND bahan.nama_bahan LIKE '%"+key+"%'";
+        this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
         this.updateTabel();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
         String key = this.inpCari.getText();
-        this.keyword = " AND bahan.nama_bahan LIKE '%"+key+"%'";
+        this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
         this.updateTabel();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
     }//GEN-LAST:event_inpCariKeyTyped
-
-    private void tabelDataKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyReleased
-        if(this.idSelected.equals("")){
-            JOptionPane.showMessageDialog(this, "Tidak ada bahan yang dipilih!");
-        }else{
-            this.isSelected = true;
-            this.dispose();
-        }
-    }//GEN-LAST:event_tabelDataKeyReleased
 
     /**
      * @param args the command line arguments
@@ -368,7 +348,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                GetDataBahanSupplier dialog = new GetDataBahanSupplier(new javax.swing.JFrame(), true, "SP005", "SKFdl");
+                GetDataBahanSupplier dialog = new GetDataBahanSupplier(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -384,6 +364,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     private javax.swing.JButton btnBatal;
     private javax.swing.JButton btnPilih;
     private javax.swing.JTextField inpCari;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
@@ -391,7 +372,6 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblInfoBahan;
-    private javax.swing.JLabel lblTop;
     private javax.swing.JTable tabelData;
     // End of variables declaration//GEN-END:variables
 }

@@ -602,7 +602,7 @@
                               </Group>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jScrollPane2" pref="510" max="32767" attributes="0"/>
-                                  <Component id="lblTotalData" max="32767" attributes="0"/>
+                                  <Component id="lblKeyword" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
@@ -623,7 +623,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jScrollPane2" max="32767" attributes="0"/>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblTotalData" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblKeyword" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
@@ -673,13 +673,13 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="lblTotalData">
+                <Component class="javax.swing.JLabel" name="lblKeyword">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="12" style="1"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Menampilkan 20 data pembeli dengan keyword &quot;test&quot;"/>
+                    <Property name="text" type="java.lang.String" value="Menampilkan data pembeli dengan keyword &quot;&quot;"/>
                   </Properties>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane2">

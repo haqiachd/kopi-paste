@@ -173,6 +173,7 @@ public class GetDataSupplier extends javax.swing.JDialog {
         tabelData.setGridColor(new java.awt.Color(0, 0, 0));
         tabelData.setSelectionBackground(new java.awt.Color(26, 164, 250));
         tabelData.setSelectionForeground(new java.awt.Color(250, 246, 246));
+        tabelData.getTableHeader().setReorderingAllowed(false);
         tabelData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelDataMouseClicked(evt);
