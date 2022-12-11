@@ -58,7 +58,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.setTitle("Menu Transaksi");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
-        this.chart.showPieChart(this.pnlChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
+        this.chart.showPieChart(this.pnlShowChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
         
         // set hover button
         this.win.btns = new JLabel[]{
@@ -70,23 +70,21 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         // set ui button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
-
-        this.tabelData2.setRowHeight(29);
-        this.tabelData2.getTableHeader().setBackground(new java.awt.Color(0,153,153));
-        this.tabelData2.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
         
+        // menampilkan data 
         this.showLaporanHarian("");
-        this.showDataLaporanHarian("");
+        this.showDataLaporanHarian();
+        this.showLaporanBulanan("");
     }
     
     private void resetTableLpHarian(){
         // set desain tabel
-        this.tblLpHarian.setRowHeight(29);
-        this.tblLpHarian.getTableHeader().setBackground(new java.awt.Color(0,153,153));
-        this.tblLpHarian.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
+        this.tabelLpHarian.setRowHeight(29);
+        this.tabelLpHarian.getTableHeader().setBackground(new java.awt.Color(0,153,153));
+        this.tabelLpHarian.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
         
         // set model tabel
-        this.tblLpHarian.setModel(new javax.swing.table.DefaultTableModel(
+        this.tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
                     "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
@@ -103,7 +101,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         });
         
         // set size kolom tabel
-        TableColumnModel columnModel = this.tblLpHarian.getColumnModel();
+        TableColumnModel columnModel = this.tabelLpHarian.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
         columnModel.getColumn(1).setPreferredWidth(235);
@@ -117,12 +115,12 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         columnModel.getColumn(5).setPreferredWidth(210);
         columnModel.getColumn(5).setMaxWidth(210);
     }
-
+    
     private void showLaporanHarian(String kondisi){
         
         // mereset tabel laporan harian
         this.resetTableLpHarian();
-        DefaultTableModel model = (DefaultTableModel) this.tblLpHarian.getModel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelLpHarian.getModel();
         
         try{
             // query untuk mengambil data laporan
@@ -156,7 +154,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
             
             // menampilkan data tabel
-            this.tblLpHarian.setModel(model);
+            this.tabelLpHarian.setModel(model);
             this.modelCariLaporan = model;
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -164,38 +162,47 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }
     }
     
-    private void showDataLaporanHarian(String kondisi){
-        try{
-            String sql = "SELECT COUNT(id_tr_jual) AS ttl_tr, SUM(total_menu) AS ttl_menu, SUM(total_harga) AS ttl_harga "
-                    + "FROM transaksi_jual " 
-                    + kondisi;
-            
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
-            
-            if(r.next()){
-                this.lblTotalTrHarian.setText(String.format(" Transaksi : %,d", r.getInt(1)));
-                this.lblTotalPsHarian.setText(String.format(" Pesanan : %,d", r.getInt(2)));
-                this.lblTotalPdtHarian.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(r.getString(3))));
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+    private void showDataLaporanHarian(){
+        // jika tidak ada data pada tabel
+        if(this.tabelLpHarian.getRowCount() < 1){
+            this.lblTotalTrHarian.setText(" Transaksi : 0");
+            this.lblTotalPsHarian.setText(" Pesananan : 0");
+            this.lblTotalPdtHarian.setText(" Pendapatan : Rp. 00");
+            return;
         }
+        
+        
+        int transaksi = this.tabelLpHarian.getRowCount(), 
+            pesanan = 0, pendapatan = 0;
+        
+        // menghitung data
+        for(int i = 0; i < this.tabelLpHarian.getRowCount(); i++){
+            pesanan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Pesanan", ""));
+            pendapatan += Integer.parseInt(txt.removeMoneyCae(this.tabelLpHarian.getValueAt(i, 4).toString()));
+        }
+        
+        // menampilkan data
+        this.lblTotalTrHarian.setText(String.format(" Transaksi : %,d", transaksi));
+        this.lblTotalPsHarian.setText(String.format(" Pesanan : %,d", pesanan));
+        this.lblTotalPdtHarian.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(Integer.toString(pendapatan))));
     }
     
     private void cariLaporanHarian(){
+        // reset tabel laporan
         this.resetTableLpHarian();
-        DefaultTableModel model = (DefaultTableModel) this.tblLpHarian.getModel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelLpHarian.getModel();
         String key = inpCariHarian.getText().toLowerCase(), id, nama, tanggal;
         
+        // membaca semua is tabel laporan
         for(int i = 0; i < this.modelCariLaporan.getRowCount(); i++){
+            // mendapatkan data id, nama dan tanggal
             id = this.modelCariLaporan.getValueAt(i, 0).toString().toLowerCase();
             nama = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase();
             tanggal = this.modelCariLaporan.getValueAt(i, 5).toString().toLowerCase();
             
+            // pengecekan id, nama dan tanggal
             if(id.contains(key) || nama.contains(key) || tanggal.contains(key)){
+                // jika match maka data ditampilkan kedalam tabel
                 model.addRow(
                     new Object[]{
                         id.toUpperCase(), 
@@ -208,7 +215,64 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 );
             }
         }
-        this.tblLpHarian.setModel(model);
+        
+        // refresh tabel laporan harian
+        this.tabelLpHarian.setModel(model);
+        // refresh total data
+        this.showDataLaporanHarian();
+    }
+    
+    private void resetTableLpBulanan(){
+        // set desain tabel
+        this.tabelLpBulanan.setRowHeight(29);
+        this.tabelLpBulanan.getTableHeader().setBackground(new java.awt.Color(0,153,153));
+        this.tabelLpBulanan.getTableHeader().setForeground(new java.awt.Color(255, 255, 255));
+        
+        // set model tabel
+        this.tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Januari", "2022", "123", "674", "Rp. 3.455.200,00"},
+                {"Februari", "2022", "543", "989", "Rp. 5.900.400,00"},
+                {"Maret", "2022", "123", "901", "Rp. 10.430.300,00"},
+                {"April", "2022", "232", "790", "Rp. 1.000,00"},
+                {"Mei", "2022", "145", "1,902", "Rp. 1.000,00"},
+                {"Juni", "2022", "412", "1,031", "Rp. 1.000,00"},
+                {"Juli", "2022", "242", "958", "Rp. 1.000,00"},
+                {"Agustus", "2022", "232", "690", "Rp. 1.000,00"},
+                {"September", "2022", "232", "618", "Rp. 1.000,00"},
+                {"Oktober", "2022", "424", "956", "Rp. 1.000,00"},
+                {"November", "2022", "253", "890", "Rp. 1.000,00"},
+                {"Desember", "2022", "", null, ""}
+            },
+            new String [] {
+                "Bulan", "Tahun", "Pembeli", "Pesanan", "Total Pendapatan"
+            }
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        
+        // set size kolom tabel
+        TableColumnModel columnModel = this.tabelLpBulanan.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(90);
+        columnModel.getColumn(0).setMaxWidth(90);
+        columnModel.getColumn(1).setPreferredWidth(60);
+        columnModel.getColumn(1).setMaxWidth(60);
+        columnModel.getColumn(2).setPreferredWidth(80);
+        columnModel.getColumn(2).setMaxWidth(80);
+        columnModel.getColumn(3).setPreferredWidth(80);
+        columnModel.getColumn(3).setMaxWidth(80);
+    }
+    
+    private void showLaporanBulanan(String kondisi){
+        this.resetTableLpBulanan();
+        DefaultTableModel model = (DefaultTableModel) this.tabelLpBulanan.getModel();
     }
     
     public void showLineChart(){
@@ -239,9 +303,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         
          //create chartPanel to display chart(graph)
         ChartPanel lineChartPanel = new ChartPanel(linechart);
-        pnlChart.removeAll();
-        pnlChart.add(lineChartPanel, BorderLayout.CENTER);
-        pnlChart.validate();
+        pnlShowChart.removeAll();
+        pnlShowChart.add(lineChartPanel, BorderLayout.CENTER);
+        pnlShowChart.validate();
     }
     
     public void showBarChart(){
@@ -265,9 +329,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         renderer.setSeriesPaint(0, clr3);
         
         ChartPanel barpChartPanel = new ChartPanel(chart);
-        pnlChart.removeAll();
-        pnlChart.add(barpChartPanel, BorderLayout.CENTER);
-        pnlChart.validate();
+        pnlShowChart.removeAll();
+        pnlShowChart.add(barpChartPanel, BorderLayout.CENTER);
+        pnlShowChart.validate();
         
         
     }
@@ -301,39 +365,39 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTopProfile = new javax.swing.JLabel();
         pnlContent = new com.manage.RoundedPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        pnlLaporanHarian = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblLpHarian = new javax.swing.JTable();
+        tabelLpHarian = new javax.swing.JTable();
         inpDataPerhari = new com.toedter.calendar.JDateChooser();
         cariDataHarian = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblDataPerhari = new javax.swing.JLabel();
+        lblDataAntara = new javax.swing.JLabel();
         inpDataHarianBetween1 = new com.toedter.calendar.JDateChooser();
-        jLabel4 = new javax.swing.JLabel();
+        lblAntara1 = new javax.swing.JLabel();
         cariDataAntara = new javax.swing.JLabel();
         inpDataHarianBetween2 = new com.toedter.calendar.JDateChooser();
         lblTotalTrHarian = new javax.swing.JLabel();
         lblTotalPsHarian = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
+        btnHapusHarian = new javax.swing.JButton();
+        btnCetakHarian = new javax.swing.JButton();
+        lblCari = new javax.swing.JLabel();
         inpCariHarian = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
+        btnSemuaHarian = new javax.swing.JButton();
+        lineBottom = new javax.swing.JSeparator();
         lblTotalPdtHarian = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        pnlLaporanBulanan = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tabelData2 = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jPanel4 = new javax.swing.JPanel();
+        tabelLpBulanan = new javax.swing.JTable();
+        lblTotalTrBulanan = new javax.swing.JLabel();
+        lblTahun = new javax.swing.JLabel();
+        inpPilihTahun = new javax.swing.JComboBox();
         pnlChart = new javax.swing.JPanel();
-        jComboBox2 = new javax.swing.JComboBox();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        pnlShowChart = new javax.swing.JPanel();
+        inpChartBulanan = new javax.swing.JComboBox();
+        lblChartBulanan = new javax.swing.JLabel();
+        lblTotalPdBulanan = new javax.swing.JLabel();
+        btnCetakBulanan = new javax.swing.JButton();
+        btnRiwayatBulanan = new javax.swing.JButton();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -642,11 +706,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setBackground(new java.awt.Color(248, 249, 250));
+        pnlLaporanHarian.setBackground(new java.awt.Color(248, 249, 250));
 
-        tblLpHarian.setBackground(new java.awt.Color(251, 251, 251));
-        tblLpHarian.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        tblLpHarian.setModel(new javax.swing.table.DefaultTableModel(
+        tabelLpHarian.setBackground(new java.awt.Color(251, 251, 251));
+        tabelLpHarian.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"TRJ001", "Mohammad Ilham", null, "4", "Rp. 25.000,00", "22 November 2022"},
                 {"TRJ002", "Mohammad Ilham", null, "7", "Rp. 89.000,00", "22 November 2022"},
@@ -669,11 +733,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblLpHarian.setGridColor(new java.awt.Color(0, 0, 0));
-        tblLpHarian.setSelectionBackground(new java.awt.Color(53, 152, 230));
-        tblLpHarian.setSelectionForeground(new java.awt.Color(248, 248, 248));
-        tblLpHarian.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(tblLpHarian);
+        tabelLpHarian.setGridColor(new java.awt.Color(0, 0, 0));
+        tabelLpHarian.setSelectionBackground(new java.awt.Color(53, 152, 230));
+        tabelLpHarian.setSelectionForeground(new java.awt.Color(248, 248, 248));
+        tabelLpHarian.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tabelLpHarian);
 
         inpDataPerhari.setForeground(new java.awt.Color(102, 204, 0));
         inpDataPerhari.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -691,20 +755,20 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(27, 109, 235));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Data Perhari");
+        lblDataPerhari.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblDataPerhari.setForeground(new java.awt.Color(27, 109, 235));
+        lblDataPerhari.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDataPerhari.setText("Data Perhari");
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(27, 109, 235));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Urutkan Berdasarkan Hari");
+        lblDataAntara.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblDataAntara.setForeground(new java.awt.Color(27, 109, 235));
+        lblDataAntara.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDataAntara.setText("Urutkan Berdasarkan Hari");
 
         inpDataHarianBetween1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setText("Sampai");
+        lblAntara1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblAntara1.setText("Sampai");
 
         cariDataAntara.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariDataAntara.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -729,25 +793,28 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPsHarian.setText(" Pesanan : 2.133");
         lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton1.setBackground(new java.awt.Color(0, 153, 153));
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Semua");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnHapusHarian.setBackground(new java.awt.Color(222, 225, 228));
+        btnHapusHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnHapusHarian.setText("Hapus");
+        btnHapusHarian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnHapusHarianActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(204, 0, 204));
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Detail");
+        btnCetakHarian.setBackground(new java.awt.Color(222, 225, 228));
+        btnCetakHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnCetakHarian.setText("Cetak");
+        btnCetakHarian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakHarianActionPerformed(evt);
+            }
+        });
 
-        jLabel8.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(250, 22, 22));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Cari Transaksi");
+        lblCari.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCari.setForeground(new java.awt.Color(250, 22, 22));
+        lblCari.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCari.setText("Cari Transaksi");
 
         inpCariHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpCariHarian.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -760,265 +827,266 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 102, 0));
-        jButton3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Cetak");
+        btnSemuaHarian.setBackground(new java.awt.Color(222, 225, 228));
+        btnSemuaHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnSemuaHarian.setText("Semua");
+        btnSemuaHarian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSemuaHarianActionPerformed(evt);
+            }
+        });
 
-        jSeparator1.setBackground(new java.awt.Color(0, 123, 255));
-        jSeparator1.setForeground(new java.awt.Color(0, 123, 255));
+        lineBottom.setBackground(new java.awt.Color(0, 123, 255));
+        lineBottom.setForeground(new java.awt.Color(0, 123, 255));
 
         lblTotalPdtHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalPdtHarian.setText(" Pendapatan : Rp. 3.901.000.00");
         lblTotalPdtHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlLaporanHarianLayout = new javax.swing.GroupLayout(pnlLaporanHarian);
+        pnlLaporanHarian.setLayout(pnlLaporanHarianLayout);
+        pnlLaporanHarianLayout.setHorizontalGroup(
+            pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblDataPerhari, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
                                 .addComponent(inpDataPerhari, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cariDataHarian)))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
                                 .addComponent(inpDataHarianBetween1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
+                                .addComponent(lblAntara1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(inpDataHarianBetween2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(10, 10, 10)
                                 .addComponent(cariDataAntara, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblDataAntara, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblCari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(inpCariHarian)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanHarianLayout.createSequentialGroup()
                         .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnHapusHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
-                    .addComponent(jSeparator1))
+                    .addComponent(lineBottom))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        pnlLaporanHarianLayout.setVerticalGroup(
+            pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanHarianLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
+                        .addComponent(lblDataPerhari, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(inpDataPerhari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cariDataHarian, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(inpDataHarianBetween1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                                    .addComponent(cariDataAntara, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                                    .addComponent(inpDataHarianBetween2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addComponent(inpCariHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
+                        .addComponent(lblDataAntara, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inpDataHarianBetween1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblAntara1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                            .addComponent(cariDataAntara, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                            .addComponent(inpDataHarianBetween2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
+                        .addComponent(lblCari, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpCariHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnHapusHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Laporan Harian", jPanel1);
+        jTabbedPane1.addTab("Laporan Harian", pnlLaporanHarian);
 
-        jPanel2.setBackground(new java.awt.Color(248, 249, 250));
+        pnlLaporanBulanan.setBackground(new java.awt.Color(248, 249, 250));
 
-        tabelData2.setBackground(new java.awt.Color(251, 251, 251));
-        tabelData2.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        tabelData2.setModel(new javax.swing.table.DefaultTableModel(
+        tabelLpBulanan.setBackground(new java.awt.Color(251, 251, 251));
+        tabelLpBulanan.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Januari", "2022", "123", "Rp. 1.000,00"},
-                {"Februari", "2022", "543", "Rp. 1.000,00"},
-                {"Maret", "2022", "123", "Rp. 1.000,00"},
-                {"April", "2022", "232", "Rp. 1.000,00"},
-                {"Mei", "2022", "145", "Rp. 1.000,00"},
-                {"Juni", "2022", "412", "Rp. 1.000,00"},
-                {"Juli", "2022", "242", "Rp. 1.000,00"},
-                {"Agustus", "2022", "232", "Rp. 1.000,00"},
-                {"September", "2022", "232", "Rp. 1.000,00"},
-                {"Oktober", "2022", "424", "Rp. 1.000,00"},
-                {"November", "2022", "253", "Rp. 1.000,00"},
-                {"Desember", "2022", "", ""}
+                {"Januari", "2022", "123", "674", "Rp. 1.000,00"},
+                {"Februari", "2022", "543", "989", "Rp. 1.000,00"},
+                {"Maret", "2022", "123", "901", "Rp. 1.000,00"},
+                {"April", "2022", "232", "790", "Rp. 1.000,00"},
+                {"Mei", "2022", "145", "1,902", "Rp. 1.000,00"},
+                {"Juni", "2022", "412", "1,031", "Rp. 1.000,00"},
+                {"Juli", "2022", "242", "958", "Rp. 1.000,00"},
+                {"Agustus", "2022", "232", "690", "Rp. 1.000,00"},
+                {"September", "2022", "232", "618", "Rp. 1.000,00"},
+                {"Oktober", "2022", "424", "956", "Rp. 1.000,00"},
+                {"November", "2022", "253", "890", "Rp. 1.000,00"},
+                {"Desember", "2022", "", null, ""}
             },
             new String [] {
-                "Bulan", "Tahun", "Total Pembeli", "Total Pendapatan"
+                "Bulan", "Tahun", "Pembeli", "Pesanan", "Total Pendapatan"
             }
         ));
-        tabelData2.setGridColor(new java.awt.Color(0, 0, 0));
-        tabelData2.getTableHeader().setReorderingAllowed(false);
-        tabelData2.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabelLpBulanan.setGridColor(new java.awt.Color(0, 0, 0));
+        tabelLpBulanan.getTableHeader().setReorderingAllowed(false);
+        tabelLpBulanan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelData2MouseClicked(evt);
+                tabelLpBulananMouseClicked(evt);
             }
         });
-        jScrollPane4.setViewportView(tabelData2);
+        jScrollPane4.setViewportView(tabelLpBulanan);
 
-        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel9.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel9.setText(" Total Transaksi : 2,343 Transaksi");
-        jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalTrBulanan.setBackground(new java.awt.Color(255, 255, 255));
+        lblTotalTrBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalTrBulanan.setText(" Total Transaksi : 2,343 Transaksi");
+        lblTotalTrBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel10.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Pilih Tahun ");
+        lblTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTahun.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTahun.setText("Pilih Tahun ");
 
-        jComboBox1.setBackground(new java.awt.Color(248, 249, 250));
-        jComboBox1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2022", "2021" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        inpPilihTahun.setBackground(new java.awt.Color(248, 249, 250));
+        inpPilihTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpPilihTahun.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2022", "2021" }));
+        inpPilihTahun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                inpPilihTahunActionPerformed(evt);
             }
         });
-
-        jPanel4.setBackground(new java.awt.Color(248, 249, 250));
-        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         pnlChart.setBackground(new java.awt.Color(248, 249, 250));
-        pnlChart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        pnlChart.setLayout(new java.awt.BorderLayout());
+        pnlChart.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jComboBox2.setBackground(new java.awt.Color(248, 249, 250));
-        jComboBox2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pie Chart", "Line Chart", "Bar Chart" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        pnlShowChart.setBackground(new java.awt.Color(248, 249, 250));
+        pnlShowChart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlShowChart.setLayout(new java.awt.BorderLayout());
+
+        inpChartBulanan.setBackground(new java.awt.Color(248, 249, 250));
+        inpChartBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpChartBulanan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pie Chart", "Line Chart", "Bar Chart" }));
+        inpChartBulanan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                inpChartBulananActionPerformed(evt);
             }
         });
 
-        jLabel12.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("Pilih Tipe Chart");
+        lblChartBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblChartBulanan.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblChartBulanan.setText("Pilih Tipe Chart");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
+        javax.swing.GroupLayout pnlChartLayout = new javax.swing.GroupLayout(pnlChart);
+        pnlChart.setLayout(pnlChartLayout);
+        pnlChartLayout.setHorizontalGroup(
+            pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlChartLayout.createSequentialGroup()
+                .addGroup(pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlChartLayout.createSequentialGroup()
+                        .addComponent(lblChartBulanan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inpChartBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnlShowChart, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        pnlChartLayout.setVerticalGroup(
+            pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlChartLayout.createSequentialGroup()
+                .addGroup(pnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(inpChartBulanan, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(lblChartBulanan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(pnlShowChart, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jLabel13.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel13.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel13.setText(" Total Pendapatan : Rp. 12.344.343,00");
-        jLabel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalPdBulanan.setBackground(new java.awt.Color(255, 255, 255));
+        lblTotalPdBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPdBulanan.setText(" Total Pendapatan : Rp. 12.344.343,00");
+        lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton4.setBackground(new java.awt.Color(255, 102, 0));
-        jButton4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Cetak");
+        btnCetakBulanan.setBackground(new java.awt.Color(255, 102, 0));
+        btnCetakBulanan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnCetakBulanan.setForeground(new java.awt.Color(255, 255, 255));
+        btnCetakBulanan.setText("Cetak");
 
-        jButton5.setBackground(new java.awt.Color(0, 153, 255));
-        jButton5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Detail");
+        btnRiwayatBulanan.setBackground(new java.awt.Color(0, 153, 255));
+        btnRiwayatBulanan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnRiwayatBulanan.setForeground(new java.awt.Color(255, 255, 255));
+        btnRiwayatBulanan.setText("Riwayat");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlLaporanBulananLayout = new javax.swing.GroupLayout(pnlLaporanBulanan);
+        pnlLaporanBulanan.setLayout(pnlLaporanBulananLayout);
+        pnlLaporanBulananLayout.setHorizontalGroup(
+            pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
+                        .addComponent(btnCetakBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRiwayatBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTotalTrBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
+                        .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
+                            .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
+                                .addComponent(lblTahun)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(inpPilihTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        pnlLaporanBulananLayout.setVerticalGroup(
+            pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanBulananLayout.createSequentialGroup()
                 .addContainerGap(33, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
+                .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
+                        .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblTahun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inpPilihTahun, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotalTrBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRiwayatBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCetakBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Lapoan Bulanan", jPanel2);
+        jTabbedPane1.addTab("Lapoan Bulanan", pnlLaporanBulanan);
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -1256,19 +1324,19 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        if(this.jComboBox2.getSelectedIndex() == 0){
-            this.chart.showPieChart(this.pnlChart, "Penjualan Produk Bulan " + namaBulan, 10, 15, 30, 20, 15);
-        }else if(this.jComboBox2.getSelectedIndex() == 1){
+    private void inpChartBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpChartBulananActionPerformed
+        if(this.inpChartBulanan.getSelectedIndex() == 0){
+            this.chart.showPieChart(this.pnlShowChart, "Penjualan Produk Bulan " + namaBulan, 10, 15, 30, 20, 15);
+        }else if(this.inpChartBulanan.getSelectedIndex() == 1){
             this.showLineChart();
-        }else if(this.jComboBox2.getSelectedIndex() == 2){
+        }else if(this.inpChartBulanan.getSelectedIndex() == 2){
             this.showBarChart();
         }
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_inpChartBulananActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        if(this.jComboBox1.getSelectedIndex() == 0){
-        tabelData2.setModel(new javax.swing.table.DefaultTableModel(
+    private void inpPilihTahunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpPilihTahunActionPerformed
+        if(this.inpPilihTahun.getSelectedIndex() == 0){
+        tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Januari", "2022", "123", "Rp. 1.000,00"},
                 {"Februari", "2022", "543", "Rp. 1.000,00"},
@@ -1287,8 +1355,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 "Bulan", "Tahun", "Total Pembeli", "Total Pendapatan"
             }
         ));
-        }else if(this.jComboBox1.getSelectedIndex() == 1){
-        tabelData2.setModel(new javax.swing.table.DefaultTableModel(
+        }else if(this.inpPilihTahun.getSelectedIndex() == 1){
+        tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Januari", "2021", "343", "Rp. 1.000,00"},
                 {"Februari", "2021", "123", "Rp. 1.000,00"},
@@ -1308,21 +1376,21 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         ));
         }
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_inpPilihTahunActionPerformed
 
     private String namaBulan = "???";
     
-    private void tabelData2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelData2MouseClicked
-        this.namaBulan = this.tabelData2.getValueAt(this.tabelData2.getSelectedRow(), 0).toString();
-        this.namaBulan += " " + this.jComboBox1.getSelectedItem().toString();
-        if(this.jComboBox2.getSelectedIndex() == 0){
-            this.chart.showPieChart(this.pnlChart, "Penjualan Produk Bulan " + namaBulan, 10, 15, 30, 20, 15);
-        }else if(this.jComboBox2.getSelectedIndex() == 1){
+    private void tabelLpBulananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelLpBulananMouseClicked
+        this.namaBulan = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString();
+        this.namaBulan += " " + this.inpPilihTahun.getSelectedItem().toString();
+        if(this.inpChartBulanan.getSelectedIndex() == 0){
+            this.chart.showPieChart(this.pnlShowChart, "Penjualan Produk Bulan " + namaBulan, 10, 15, 30, 20, 15);
+        }else if(this.inpChartBulanan.getSelectedIndex() == 1){
             this.showLineChart();
-        }else if(this.jComboBox2.getSelectedIndex() == 2){
+        }else if(this.inpChartBulanan.getSelectedIndex() == 2){
             this.showBarChart();
         }
-    }//GEN-LAST:event_tabelData2MouseClicked
+    }//GEN-LAST:event_tabelLpBulananMouseClicked
 
     private void cariDataHarianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseClicked
         this.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -1338,7 +1406,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
             // menampilkan data
             this.showLaporanHarian("WHERE DATE(trj.tanggal) = '"+tanggal+"'");
-            this.showDataLaporanHarian("WHERE DATE(tanggal) = '"+tanggal+"'");
+            this.showDataLaporanHarian();
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }//GEN-LAST:event_cariDataHarianMouseClicked
@@ -1358,7 +1426,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
             // menampilkan data
             this.showLaporanHarian("WHERE DATE(trj.tanggal) BETWEEN '"+tanggal1+"' AND '"+tanggal2+"'");
-            this.showDataLaporanHarian("WHERE DATE(tanggal) BETWEEN '"+tanggal1+"' AND '"+tanggal2+"'");
+            this.showDataLaporanHarian();
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));            
         }
     }//GEN-LAST:event_cariDataAntaraMouseClicked
@@ -1371,10 +1439,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.showLaporanHarian("");
-        this.showDataLaporanHarian("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnHapusHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusHarianActionPerformed
+
+    }//GEN-LAST:event_btnHapusHarianActionPerformed
 
     private void cariDataHarianMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseEntered
         this.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -1399,6 +1466,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private void inpCariHarianKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariHarianKeyReleased
         this.cariLaporanHarian();
     }//GEN-LAST:event_inpCariHarianKeyReleased
+
+    private void btnSemuaHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemuaHarianActionPerformed
+        this.showLaporanHarian("");
+        this.showDataLaporanHarian();
+        this.inpDataPerhari.setDate(null);
+        this.inpDataHarianBetween1.setDate(null);
+        this.inpDataHarianBetween2.setDate(null);
+    }//GEN-LAST:event_btnSemuaHarianActionPerformed
+
+    private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCetakHarianActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1427,63 +1506,63 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnBahan;
+    private javax.swing.JButton btnCetakBulanan;
+    private javax.swing.JButton btnCetakHarian;
     private javax.swing.JLabel btnDashboard;
     private javax.swing.JLabel btnDataMaster;
+    private javax.swing.JButton btnHapusHarian;
     private javax.swing.JLabel btnKaryawan;
     private javax.swing.JLabel btnLaporan;
     private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel btnMenu;
     private javax.swing.JLabel btnPembeli;
+    private javax.swing.JButton btnRiwayatBulanan;
+    private javax.swing.JButton btnSemuaHarian;
     private javax.swing.JLabel btnSupplier;
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JLabel cariDataAntara;
     private javax.swing.JLabel cariDataHarian;
     private javax.swing.JTextField inpCariHarian;
+    private javax.swing.JComboBox inpChartBulanan;
     private com.toedter.calendar.JDateChooser inpDataHarianBetween1;
     private com.toedter.calendar.JDateChooser inpDataHarianBetween2;
     private com.toedter.calendar.JDateChooser inpDataPerhari;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JComboBox inpPilihTahun;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblAntara1;
     private javax.swing.JLabel lblBottom;
+    private javax.swing.JLabel lblCari;
+    private javax.swing.JLabel lblChartBulanan;
+    private javax.swing.JLabel lblDataAntara;
+    private javax.swing.JLabel lblDataPerhari;
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
     private javax.swing.JLabel lblProfileSidebar;
+    private javax.swing.JLabel lblTahun;
     private javax.swing.JLabel lblTopInfo;
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JLabel lblTopSetting;
+    private javax.swing.JLabel lblTotalPdBulanan;
     private javax.swing.JLabel lblTotalPdtHarian;
     private javax.swing.JLabel lblTotalPsHarian;
+    private javax.swing.JLabel lblTotalTrBulanan;
     private javax.swing.JLabel lblTotalTrHarian;
+    private javax.swing.JSeparator lineBottom;
     private javax.swing.JSeparator lineSideMenu1;
     private javax.swing.JPanel pnlChart;
     private com.manage.RoundedPanel pnlContent;
+    private javax.swing.JPanel pnlLaporanBulanan;
+    private javax.swing.JPanel pnlLaporanHarian;
     private javax.swing.JPanel pnlMain;
+    private javax.swing.JPanel pnlShowChart;
     private javax.swing.JPanel pnlSidebar;
     private com.manage.RoundedPanel pnlTop;
-    private javax.swing.JTable tabelData2;
-    private javax.swing.JTable tblLpHarian;
+    private javax.swing.JTable tabelLpBulanan;
+    private javax.swing.JTable tabelLpHarian;
     // End of variables declaration//GEN-END:variables
 }
