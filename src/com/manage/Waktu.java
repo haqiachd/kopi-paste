@@ -65,6 +65,26 @@ public class Waktu {
         }
     }
     
+//Senin = Monday.
+//Selasa = Tuesday.
+//Rabu = Wednesday.
+//Kamis = Thursday.
+//Jumat = Friday.
+//Sabtu = Saturday.
+//Minggu = Sunday.
+    public String getNamaHariInIndonesian(String english){
+        switch(english.toLowerCase()){
+            case "monday" : return "Senin";
+            case "tuesday" : return "Selasa";
+            case "wednesday" : return "Rabu";
+            case "thursday" : return "Kamis";
+            case "friday": return "Jumat";
+            case "saturday" : return "Sabtu";
+            case "sunday" : return "Minggu";
+            default : return "null";
+        }
+    }
+    
     public String getNamaHari(){
         return this.getNamaHari(kalender.get(Calendar.DAY_OF_WEEK));
     }
