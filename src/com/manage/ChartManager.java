@@ -37,11 +37,21 @@ public class ChartManager {
         
         //create dataset
         DefaultPieDataset barDataset = new DefaultPieDataset();
-        barDataset.setValue( "Makanan", new Double(makanan));  
-        barDataset.setValue( "Minuman", new Double(minuman));   
-        barDataset.setValue( "Original Coffee", new Double(snack));    
-        barDataset.setValue( "Flavoured Coffee", new Double(atk));  
-        barDataset.setValue( "Snack", new Double(s));  
+        if(makanan > 0){
+            barDataset.setValue( "Makanan", new Double(makanan));
+        }
+        if(minuman > 0){
+            barDataset.setValue( "Minuman", new Double(minuman));
+        }
+        if(snack > 0){
+            barDataset.setValue( "Original Coffee", new Double(snack));
+        }
+        if(atk > 0){
+            barDataset.setValue( "Flavoured Coffee", new Double(atk));
+        }
+        if(s > 0){
+            barDataset.setValue( "Snack", new Double(s));
+        }
 
         //create chart
         JFreeChart piechart = ChartFactory.createPieChart("Penjualan Produk",barDataset, false,true,false);//explain
@@ -49,11 +59,21 @@ public class ChartManager {
 
         //changing pie chart blocks colors
         PiePlot piePlot =(PiePlot) piechart.getPlot();
-        piePlot.setSectionPaint("Makanan", this.C_MAKANAN);
-        piePlot.setSectionPaint("Minuman", this.C_MINUMAN);
-        piePlot.setSectionPaint("Original Coffee", this.C_SNACK);
-        piePlot.setSectionPaint("Flavoured Coffee", this.C_ATK);
-        piePlot.setSectionPaint("Snack", this.C_S);
+        if(makanan > 0){
+            piePlot.setSectionPaint("Makanan", this.C_MAKANAN);
+        }
+        if(minuman > 0){
+            piePlot.setSectionPaint("Minuman", this.C_MINUMAN);
+        }
+        if(snack > 0){
+            piePlot.setSectionPaint("Original Coffee", this.C_SNACK);
+        }
+        if(atk > 0){
+            piePlot.setSectionPaint("Flavoured Coffee", this.C_ATK);
+        }
+        if(s > 0){
+            piePlot.setSectionPaint("Snack", this.C_S);
+        }
         piePlot.setBackgroundPaint(this.BG_CHART);
 
         //create chartPanel to display chart(graph)
