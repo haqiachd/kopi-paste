@@ -567,32 +567,34 @@
                                               <Group type="102" attributes="0">
                                                   <Component id="inpDataPerhari" min="-2" pref="196" max="-2" attributes="0"/>
                                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="cariDataHarian" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Group type="102" attributes="0">
-                                                  <Component id="jDateChooser2" min="-2" pref="196" max="-2" attributes="0"/>
+                                                  <Component id="inpDataHarianBetween1" min="-2" pref="196" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="jDateChooser4" min="-2" pref="196" max="-2" attributes="0"/>
+                                                  <Component id="inpDataHarianBetween2" min="-2" pref="196" max="-2" attributes="0"/>
                                                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                                  <Component id="jLabel5" max="32767" attributes="0"/>
+                                                  <Component id="cariDataAntara" max="32767" attributes="0"/>
                                               </Group>
                                               <Component id="jLabel3" min="-2" pref="490" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel8" max="32767" attributes="0"/>
-                                              <Component id="jTextField1" max="32767" attributes="0"/>
+                                              <Component id="inpCariHarian" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel6" min="-2" pref="265" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jLabel7" min="-2" pref="286" max="-2" attributes="0"/>
+                                          <Component id="lblTotalTrHarian" min="-2" pref="160" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="lblTotalPsHarian" min="-2" pref="143" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="lblTotalPdtHarian" min="-2" pref="260" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
                                           <Component id="jButton3" min="-2" pref="108" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
@@ -600,7 +602,8 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jButton1" min="-2" pref="108" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jScrollPane2" alignment="1" min="-2" pref="985" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane2" alignment="0" pref="985" max="32767" attributes="0"/>
+                                      <Component id="jSeparator1" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="22" max="32767" attributes="0"/>
                               </Group>
@@ -609,56 +612,55 @@
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="jLabel2" min="-2" pref="36" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="inpDataPerhari" max="32767" attributes="0"/>
+                                              <Component id="cariDataHarian" pref="32" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="jLabel3" min="-2" pref="36" max="-2" attributes="0"/>
+                                              <Component id="jLabel8" min="-2" pref="36" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                      <Component id="inpDataHarianBetween1" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="jLabel4" alignment="1" pref="32" max="32767" attributes="0"/>
+                                                      <Component id="cariDataAntara" alignment="0" pref="32" max="32767" attributes="0"/>
+                                                      <Component id="inpDataHarianBetween2" alignment="0" max="32767" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                              <Group type="102" alignment="1" attributes="0">
+                                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                                                  <Component id="inpCariHarian" min="-2" pref="32" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" min="-2" pref="329" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                                  <Component id="jSeparator1" min="-2" pref="5" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
                                               <Component id="jButton1" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                               <Component id="jButton2" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                               <Component id="jButton3" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Group type="102" attributes="0">
-                                                  <Component id="jLabel2" min="-2" pref="36" max="-2" attributes="0"/>
-                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                      <Component id="inpDataPerhari" max="32767" attributes="0"/>
-                                                      <Component id="jLabel1" pref="32" max="32767" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <Group type="102" alignment="1" attributes="0">
-                                                  <Group type="103" groupAlignment="1" attributes="0">
-                                                      <Component id="jLabel3" min="-2" pref="36" max="-2" attributes="0"/>
-                                                      <Component id="jLabel8" min="-2" pref="36" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Group type="102" attributes="0">
-                                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                              <Component id="jDateChooser2" alignment="0" max="32767" attributes="0"/>
-                                                              <Component id="jLabel4" alignment="1" pref="32" max="32767" attributes="0"/>
-                                                              <Component id="jLabel5" alignment="0" pref="32" max="32767" attributes="0"/>
-                                                              <Component id="jDateChooser4" alignment="0" max="32767" attributes="0"/>
-                                                          </Group>
-                                                      </Group>
-                                                      <Group type="102" alignment="1" attributes="0">
-                                                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                                          <Component id="jTextField1" min="-2" pref="32" max="-2" attributes="0"/>
-                                                      </Group>
-                                                  </Group>
-                                              </Group>
-                                          </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jScrollPane2" min="-2" pref="340" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel7" pref="37" max="32767" attributes="0"/>
-                                              <Component id="jLabel6" max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
+                                      <Component id="lblTotalPsHarian" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTotalTrHarian" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTotalPdtHarian" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -673,17 +675,17 @@
 
                           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                           <SubComponents>
-                            <Component class="javax.swing.JTable" name="tabelData">
+                            <Component class="javax.swing.JTable" name="tblLpHarian">
                               <Properties>
                                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                                  <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                                  <Color blue="fb" green="fb" red="fb" type="rgb"/>
                                 </Property>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Ebrima" size="14" style="1"/>
                                 </Property>
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                  <Table columnCount="5" rowCount="8">
-                                    <Column editable="true" title="ID Transaksi" type="java.lang.Object">
+                                  <Table columnCount="6" rowCount="8">
+                                    <Column editable="false" title="ID Transaksi" type="java.lang.Object">
                                       <Data value="TRJ001"/>
                                       <Data value="TRJ002"/>
                                       <Data value="TRJ003"/>
@@ -693,7 +695,7 @@
                                       <Data value="TRJ007"/>
                                       <Data value="TRJ008"/>
                                     </Column>
-                                    <Column editable="true" title="Nama Karyawan" type="java.lang.Object">
+                                    <Column editable="false" title="Nama Karyawan" type="java.lang.Object">
                                       <Data value="Mohammad Ilham"/>
                                       <Data value="Mohammad Ilham"/>
                                       <Data value="Widyasari Raisya"/>
@@ -703,7 +705,8 @@
                                       <Data value="Mohammad Ilham"/>
                                       <Data value="Septian Yoga"/>
                                     </Column>
-                                    <Column editable="true" title="Total Pesanan" type="java.lang.Object">
+                                    <Column editable="false" title="Nama Pembeli" type="java.lang.Object"/>
+                                    <Column editable="false" title="Total Pesanan" type="java.lang.Object">
                                       <Data value="4"/>
                                       <Data value="7"/>
                                       <Data value="2"/>
@@ -713,7 +716,7 @@
                                       <Data value="4"/>
                                       <Data value="3"/>
                                     </Column>
-                                    <Column editable="true" title="Total Harga" type="java.lang.Object">
+                                    <Column editable="false" title="Total Harga" type="java.lang.Object">
                                       <Data value="Rp. 25.000,00"/>
                                       <Data value="Rp. 89.000,00"/>
                                       <Data value="Rp. 10.000,00"/>
@@ -723,7 +726,7 @@
                                       <Data value="Rp. 23.000,00"/>
                                       <Data value="Rp. 11.000,00"/>
                                     </Column>
-                                    <Column editable="true" title="Tanggal" type="java.lang.Object">
+                                    <Column editable="false" title="Tanggal" type="java.lang.Object">
                                       <Data value="22 November 2022"/>
                                       <Data value="22 November 2022"/>
                                       <Data value="22 November 2022"/>
@@ -738,6 +741,12 @@
                                 <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                   <Color blue="0" green="0" red="0" type="rgb"/>
                                 </Property>
+                                <Property name="selectionBackground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                  <Color blue="e6" green="98" red="35" type="rgb"/>
+                                </Property>
+                                <Property name="selectionForeground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                  <Color blue="f8" green="f8" red="f8" type="rgb"/>
+                                </Property>
                                 <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                                 </Property>
@@ -747,19 +756,24 @@
                         </Container>
                         <Component class="com.toedter.calendar.JDateChooser" name="inpDataPerhari">
                           <Properties>
+                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="0" green="cc" red="66" type="rgb"/>
+                            </Property>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Dialog" size="14" style="1"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel1">
+                        <Component class="javax.swing.JLabel" name="cariDataHarian">
                           <Properties>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                               <Image iconType="3" name="/resources/image/icons/ic-window searchdata.png"/>
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel1MouseClicked"/>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cariDataHarianMouseClicked"/>
+                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cariDataHarianMouseEntered"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cariDataHarianMouseExited"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -786,7 +800,7 @@
                             <Property name="text" type="java.lang.String" value="Urutkan Berdasarkan Hari"/>
                           </Properties>
                         </Component>
-                        <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser2">
+                        <Component class="com.toedter.calendar.JDateChooser" name="inpDataHarianBetween1">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Dialog" size="14" style="1"/>
@@ -801,29 +815,31 @@
                             <Property name="text" type="java.lang.String" value="Sampai"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel5">
+                        <Component class="javax.swing.JLabel" name="cariDataAntara">
                           <Properties>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                               <Image iconType="3" name="/resources/image/icons/ic-window searchdata.png"/>
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel5MouseClicked"/>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cariDataAntaraMouseClicked"/>
+                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cariDataAntaraMouseEntered"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cariDataAntaraMouseExited"/>
                           </Events>
                         </Component>
-                        <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser4">
+                        <Component class="com.toedter.calendar.JDateChooser" name="inpDataHarianBetween2">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Dialog" size="14" style="1"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel6">
+                        <Component class="javax.swing.JLabel" name="lblTotalTrHarian">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Dialog" size="16" style="1"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value=" Total Transaksi : 1.239 Transaksi"/>
+                            <Property name="text" type="java.lang.String" value=" Transaksi : 1.239 "/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                 <LineBorder/>
@@ -831,12 +847,12 @@
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel7">
+                        <Component class="javax.swing.JLabel" name="lblTotalPsHarian">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Dialog" size="16" style="1"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value=" Total Pendapatan : Rp. 9,242,454.00"/>
+                            <Property name="text" type="java.lang.String" value=" Pesanan : 2.133"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                 <LineBorder/>
@@ -884,16 +900,20 @@
                               <Color blue="16" green="16" red="fa" type="rgb"/>
                             </Property>
                             <Property name="horizontalAlignment" type="int" value="0"/>
-                            <Property name="text" type="java.lang.String" value="Cari ID Transaksi"/>
+                            <Property name="text" type="java.lang.String" value="Cari Transaksi"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField1">
+                        <Component class="javax.swing.JTextField" name="inpCariHarian">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Dialog" size="14" style="1"/>
+                              <Font name="Dialog" size="16" style="1"/>
                             </Property>
                             <Property name="horizontalAlignment" type="int" value="0"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpCariHarianKeyReleased"/>
+                            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpCariHarianKeyTyped"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="jButton3">
                           <Properties>
@@ -907,6 +927,29 @@
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value="Cetak"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JSeparator" name="jSeparator1">
+                          <Properties>
+                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="ff" green="7b" red="0" type="rgb"/>
+                            </Property>
+                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="ff" green="7b" red="0" type="rgb"/>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="lblTotalPdtHarian">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                              <Font name="Dialog" size="16" style="1"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value=" Pendapatan : Rp. 3.901.000.00"/>
+                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                                <LineBorder/>
+                              </Border>
+                            </Property>
                           </Properties>
                         </Component>
                       </SubComponents>
@@ -936,7 +979,7 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jButton5" min="-2" pref="108" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel9" min="-2" pref="269" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="jLabel13" min="-2" pref="292" max="-2" attributes="0"/>
                                       </Group>
@@ -960,7 +1003,7 @@
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="28" max="32767" attributes="0"/>
+                                  <EmptySpace pref="33" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -1082,10 +1125,9 @@
                               <Font name="Dialog" size="16" style="1"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value=" Total Transaksi : 2,343 Transaksi"/>
-                            <Property name="verticalAlignment" type="int" value="3"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-                                <EmptyBorder/>
+                              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                                <LineBorder/>
                               </Border>
                             </Property>
                           </Properties>
@@ -1214,10 +1256,9 @@
                               <Font name="Dialog" size="16" style="1"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value=" Total Pendapatan : Rp. 12.344.343,00"/>
-                            <Property name="verticalAlignment" type="int" value="3"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-                                <EmptyBorder/>
+                              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                                <LineBorder/>
                               </Border>
                             </Property>
                           </Properties>

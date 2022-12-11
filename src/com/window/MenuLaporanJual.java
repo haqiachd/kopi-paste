@@ -1,6 +1,9 @@
 package com.window;
 
+import com.koneksi.Koneksi;
 import com.manage.ChartManager;
+import com.manage.Message;
+import com.manage.Text;
 import com.manage.UIManager;
 import com.manage.User;
 import com.manage.Waktu;
@@ -11,9 +14,16 @@ import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -32,38 +42,173 @@ import org.jfree.data.statistics.HistogramDataset;
  */
 public class MenuLaporanJual extends javax.swing.JFrame {
     
+    private DefaultTableModel modelCariLaporan;
+    
     private final UIManager win = new UIManager();
     
     private final ChartManager chart = new ChartManager();
-    // ASU
+    
+    private final Waktu waktu = new Waktu();
+    
+    private final Text txt = new Text();
+
     public MenuLaporanJual() {
         initComponents();
         
         this.setTitle("Menu Transaksi");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
+        this.chart.showPieChart(this.pnlChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
+        
+        // set hover button
         this.win.btns = new JLabel[]{
             this.btnKaryawan, this.btnSupplier, this.btnPembeli, 
             this.btnDashboard, this.btnTransaksi, this.btnBahan, this.btnLogout, this.btnMenu
         };
-        
-        this.chart.showPieChart(this.pnlChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
-        
-        // set ui button
-
-        
         this.win.hoverButton();
         
-        // set desain tabel
-        this.tabelData.setRowHeight(29);
-        this.tabelData.getTableHeader().setBackground(new java.awt.Color(0,153,153));
-        this.tabelData.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
+        // set ui button
+        this.btnPembeli.setVisible(false);
+        this.btnLogout.setVisible(false);
+
         this.tabelData2.setRowHeight(29);
         this.tabelData2.getTableHeader().setBackground(new java.awt.Color(0,153,153));
         this.tabelData2.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
         
-        this.btnPembeli.setVisible(false);
-        this.btnLogout.setVisible(false);
+        this.showLaporanHarian("");
+        this.showDataLaporanHarian("");
+    }
+    
+    private void resetTableLpHarian(){
+        // set desain tabel
+        this.tblLpHarian.setRowHeight(29);
+        this.tblLpHarian.getTableHeader().setBackground(new java.awt.Color(0,153,153));
+        this.tblLpHarian.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
+        
+        // set model tabel
+        this.tblLpHarian.setModel(new javax.swing.table.DefaultTableModel(
+                new String[][]{},
+                new String[]{
+                    "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        
+        // set size kolom tabel
+        TableColumnModel columnModel = this.tblLpHarian.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(90);
+        columnModel.getColumn(0).setMaxWidth(90);
+        columnModel.getColumn(1).setPreferredWidth(235);
+        columnModel.getColumn(1).setMaxWidth(235);
+        columnModel.getColumn(2).setPreferredWidth(235);
+        columnModel.getColumn(2).setMaxWidth(235);
+        columnModel.getColumn(3).setPreferredWidth(100);
+        columnModel.getColumn(3).setMaxWidth(100);
+        columnModel.getColumn(4).setPreferredWidth(125);
+        columnModel.getColumn(4).setMaxWidth(125);
+        columnModel.getColumn(5).setPreferredWidth(210);
+        columnModel.getColumn(5).setMaxWidth(210);
+    }
+
+    private void showLaporanHarian(String kondisi){
+        
+        // mereset tabel laporan harian
+        this.resetTableLpHarian();
+        DefaultTableModel model = (DefaultTableModel) this.tblLpHarian.getModel();
+        
+        try{
+            // query untuk mengambil data laporan
+            String sql = String.format(
+                    "SELECT trj.id_tr_jual, trj.id_karyawan, trj.nama_pembeli, trj.total_menu, trj.total_harga, trj.tanggal, ky.nama_karyawan, DAYNAME(trj.tanggal) AS hari "
+                  + "FROM transaksi_jual AS trj "
+                  + "JOIN karyawan AS ky "
+                  + "ON ky.id_karyawan = trj.id_karyawan "
+                  + kondisi 
+                  + " ORDER BY trj.tanggal DESC"
+            );
+
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(r.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new String[]{
+                        r.getString("trj.id_tr_jual"), 
+                        r.getString("ky.nama_karyawan"),
+                        r.getString("trj.nama_pembeli"),
+                        r.getString("trj.total_menu") + " Pesanan", 
+                        txt.toMoneyCase(r.getString("trj.total_harga")), 
+                        waktu.getNamaHariInIndonesian(r.getString("hari")) + ", " + txt.toDateCase(r.getString("tanggal"))
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tblLpHarian.setModel(model);
+            this.modelCariLaporan = model;
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+    
+    private void showDataLaporanHarian(String kondisi){
+        try{
+            String sql = "SELECT COUNT(id_tr_jual) AS ttl_tr, SUM(total_menu) AS ttl_menu, SUM(total_harga) AS ttl_harga "
+                    + "FROM transaksi_jual " 
+                    + kondisi;
+            
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            if(r.next()){
+                this.lblTotalTrHarian.setText(String.format(" Transaksi : %,d", r.getInt(1)));
+                this.lblTotalPsHarian.setText(String.format(" Pesanan : %,d", r.getInt(2)));
+                this.lblTotalPdtHarian.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(r.getString(3))));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+    
+    private void cariLaporanHarian(){
+        this.resetTableLpHarian();
+        DefaultTableModel model = (DefaultTableModel) this.tblLpHarian.getModel();
+        String key = inpCariHarian.getText().toLowerCase(), id, nama, tanggal;
+        
+        for(int i = 0; i < this.modelCariLaporan.getRowCount(); i++){
+            id = this.modelCariLaporan.getValueAt(i, 0).toString().toLowerCase();
+            nama = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase();
+            tanggal = this.modelCariLaporan.getValueAt(i, 5).toString().toLowerCase();
+            
+            if(id.contains(key) || nama.contains(key) || tanggal.contains(key)){
+                model.addRow(
+                    new Object[]{
+                        id.toUpperCase(), 
+                        this.modelCariLaporan.getValueAt(i, 1),
+                        this.modelCariLaporan.getValueAt(i, 2),
+                        this.modelCariLaporan.getValueAt(i, 3),
+                        this.modelCariLaporan.getValueAt(i, 4),
+                        this.modelCariLaporan.getValueAt(i, 5)
+                    }
+                );
+            }
+        }
+        this.tblLpHarian.setModel(model);
     }
     
     public void showLineChart(){
@@ -158,22 +303,24 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabelData = new javax.swing.JTable();
+        tblLpHarian = new javax.swing.JTable();
         inpDataPerhari = new com.toedter.calendar.JDateChooser();
-        jLabel1 = new javax.swing.JLabel();
+        cariDataHarian = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        inpDataHarianBetween1 = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jDateChooser4 = new com.toedter.calendar.JDateChooser();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        cariDataAntara = new javax.swing.JLabel();
+        inpDataHarianBetween2 = new com.toedter.calendar.JDateChooser();
+        lblTotalTrHarian = new javax.swing.JLabel();
+        lblTotalPsHarian = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        inpCariHarian = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblTotalPdtHarian = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tabelData2 = new javax.swing.JTable();
@@ -497,33 +644,50 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(248, 249, 250));
 
-        tabelData.setBackground(new java.awt.Color(240, 240, 240));
-        tabelData.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        tabelData.setModel(new javax.swing.table.DefaultTableModel(
+        tblLpHarian.setBackground(new java.awt.Color(251, 251, 251));
+        tblLpHarian.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        tblLpHarian.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"TRJ001", "Mohammad Ilham", "4", "Rp. 25.000,00", "22 November 2022"},
-                {"TRJ002", "Mohammad Ilham", "7", "Rp. 89.000,00", "22 November 2022"},
-                {"TRJ003", "Widyasari Raisya", "2", "Rp. 10.000,00", "22 November 2022"},
-                {"TRJ004", "Septian Yoga", "3", "Rp. 17.500,00", "22 November 2022"},
-                {"TRJ005", "Widyasari Raisya", "1", "Rp. 8.000,00", "22 November 2022"},
-                {"TRJ006", "Mohammad Ilham", "3", "Rp. 18.000,00", "22 November 2022"},
-                {"TRJ007", "Mohammad Ilham", "4", "Rp. 23.000,00", "22 November 2022"},
-                {"TRJ008", "Septian Yoga", "3", "Rp. 11.000,00", "22 November 2022"}
+                {"TRJ001", "Mohammad Ilham", null, "4", "Rp. 25.000,00", "22 November 2022"},
+                {"TRJ002", "Mohammad Ilham", null, "7", "Rp. 89.000,00", "22 November 2022"},
+                {"TRJ003", "Widyasari Raisya", null, "2", "Rp. 10.000,00", "22 November 2022"},
+                {"TRJ004", "Septian Yoga", null, "3", "Rp. 17.500,00", "22 November 2022"},
+                {"TRJ005", "Widyasari Raisya", null, "1", "Rp. 8.000,00", "22 November 2022"},
+                {"TRJ006", "Mohammad Ilham", null, "3", "Rp. 18.000,00", "22 November 2022"},
+                {"TRJ007", "Mohammad Ilham", null, "4", "Rp. 23.000,00", "22 November 2022"},
+                {"TRJ008", "Septian Yoga", null, "3", "Rp. 11.000,00", "22 November 2022"}
             },
             new String [] {
-                "ID Transaksi", "Nama Karyawan", "Total Pesanan", "Total Harga", "Tanggal"
+                "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
             }
-        ));
-        tabelData.setGridColor(new java.awt.Color(0, 0, 0));
-        tabelData.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(tabelData);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblLpHarian.setGridColor(new java.awt.Color(0, 0, 0));
+        tblLpHarian.setSelectionBackground(new java.awt.Color(53, 152, 230));
+        tblLpHarian.setSelectionForeground(new java.awt.Color(248, 248, 248));
+        tblLpHarian.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tblLpHarian);
+
+        inpDataPerhari.setForeground(new java.awt.Color(102, 204, 0));
         inpDataPerhari.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        cariDataHarian.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
+        cariDataHarian.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                cariDataHarianMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cariDataHarianMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cariDataHarianMouseExited(evt);
             }
         });
 
@@ -537,27 +701,33 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Urutkan Berdasarkan Hari");
 
-        jDateChooser2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpDataHarianBetween1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel4.setText("Sampai");
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+        cariDataAntara.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
+        cariDataAntara.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
+                cariDataAntaraMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cariDataAntaraMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cariDataAntaraMouseExited(evt);
             }
         });
 
-        jDateChooser4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpDataHarianBetween2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel6.setText(" Total Transaksi : 1.239 Transaksi");
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalTrHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalTrHarian.setText(" Transaksi : 1.239 ");
+        lblTotalTrHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel7.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jLabel7.setText(" Total Pendapatan : Rp. 9,242,454.00");
-        jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalPsHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPsHarian.setText(" Pesanan : 2.133");
+        lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton1.setBackground(new java.awt.Color(0, 153, 153));
         jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -577,15 +747,30 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(250, 22, 22));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Cari ID Transaksi");
+        jLabel8.setText("Cari Transaksi");
 
-        jTextField1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpCariHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpCariHarian.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpCariHarian.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpCariHarianKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpCariHarianKeyTyped(evt);
+            }
+        });
 
         jButton3.setBackground(new java.awt.Color(255, 102, 0));
         jButton3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Cetak");
+
+        jSeparator1.setBackground(new java.awt.Color(0, 123, 255));
+        jSeparator1.setForeground(new java.awt.Color(0, 123, 255));
+
+        lblTotalPdtHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPdtHarian.setText(" Pendapatan : Rp. 3.901.000.00");
+        lblTotalPdtHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -600,75 +785,79 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(inpDataPerhari, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel1)))
+                                .addComponent(cariDataHarian)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(inpDataHarianBetween1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDateChooser4, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(inpDataHarianBetween2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(cariDataAntara, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField1)))
+                            .addComponent(inpCariHarian)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 985, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                    .addComponent(jSeparator1))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inpDataPerhari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cariDataHarian, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(inpDataHarianBetween1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                                    .addComponent(cariDataAntara, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                                    .addComponent(inpDataHarianBetween2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(inpCariHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(inpDataPerhari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                                            .addComponent(jDateChooser4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(11, 11, 11)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -709,8 +898,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         jLabel9.setBackground(new java.awt.Color(255, 255, 255));
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel9.setText(" Total Transaksi : 2,343 Transaksi");
-        jLabel9.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel10.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -771,8 +959,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         jLabel13.setBackground(new java.awt.Color(255, 255, 255));
         jLabel13.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel13.setText(" Total Pendapatan : Rp. 12.344.343,00");
-        jLabel13.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel13.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jLabel13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton4.setBackground(new java.awt.Color(255, 102, 0));
         jButton4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -796,7 +983,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -813,7 +1000,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addContainerGap(33, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1137,45 +1324,44 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tabelData2MouseClicked
 
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        Calendar c = this.inpDataPerhari.getCalendar();
-        int hari = c.get(Calendar.DAY_OF_MONTH), tahun = c.get(Calendar.YEAR), bulan = c.get(Calendar.MONTH);
-        String tanggal = "" + hari + " " + new Waktu().getNamaBulan(bulan) + " " + tahun;
-        tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"TRJ001", "Mohammad Ilham", "4", "Rp. 25.000,00", tanggal},
-                {"TRJ002", "Mohammad Ilham", "7", "Rp. 89.000,00", tanggal},
-                {"TRJ003", "Widyasari Raisya", "2", "Rp. 10.000,00", tanggal}
-            },
-            new String [] {
-                "ID Transaksi", "Nama Karyawan", "Total Pesanan", "Total Harga", "Tanggal"
-            }
-        ));
-        
-    }//GEN-LAST:event_jLabel1MouseClicked
+    private void cariDataHarianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseClicked
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.inpDataHarianBetween1.setDate(null);
+        this.inpDataHarianBetween2.setDate(null);
+ 
+        // mendapatkan input dari jdatechooser
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-d");
+        if(this.inpDataPerhari.getDate() == null){
+            Message.showWarning(this, "Silahkan pilih tanggal terlebih dahulu!");
+        }else{
+            String tanggal = format.format(this.inpDataPerhari.getDate());
 
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        Calendar c1= this.jDateChooser2.getCalendar();
-        int hari1 = c1.get(Calendar.DAY_OF_MONTH), tahun = c1.get(Calendar.YEAR), bulan = c1.get(Calendar.MONTH);
-        String tanggal1 = "" + hari1 + " " + new Waktu().getNamaBulan(bulan) + " " + tahun;
-        Calendar c2= this.jDateChooser4.getCalendar();
-        int hari2 = c2.get(Calendar.DAY_OF_MONTH), tahun2 = c2.get(Calendar.YEAR), bulan2 = c2.get(Calendar.MONTH);
-        String tanggal2 = "" + hari2 + " " + new Waktu().getNamaBulan(bulan) + " " + tahun;
+            // menampilkan data
+            this.showLaporanHarian("WHERE DATE(trj.tanggal) = '"+tanggal+"'");
+            this.showDataLaporanHarian("WHERE DATE(tanggal) = '"+tanggal+"'");
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+    }//GEN-LAST:event_cariDataHarianMouseClicked
+
+    private void cariDataAntaraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataAntaraMouseClicked
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.inpDataPerhari.setDate(null);
         
-        tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"TRJ001", "Mohammad Ilham", "4", "Rp. 75.500,00", tanggal1},
-                {"TRJ002", "Mohammad Ilham", "7", "Rp. 29.600,00", tanggal1},
-                {"TRJ003", "Septian Yoga", "2", "Rp. 15.000,00", tanggal1},
-                {"TRJ003", "Widyasari Raisya", "2", "Rp. 12.000,00", tanggal2},
-                {"TRJ003", "Septian Yoga", "2", "Rp. 15.000,00", tanggal2},
-                {"TRJ003", "Widyasari Raisya", "2", "Rp. 12.000,00", tanggal2},
-            },
-            new String [] {
-                "ID Transaksi", "Nama Karyawan", "Total Pesanan", "Total Harga", "Tanggal"
-            }
-        ));
-    }//GEN-LAST:event_jLabel5MouseClicked
+        // mendapatkan input dari jdatechooser
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-d"), 
+                           format2 = format1;
+        if(this.inpDataHarianBetween1.getDate() == null || this.inpDataHarianBetween2.getDate() == null){
+            Message.showWarning(this, "Silahkan pilih tanggal terlebih dahulu!");
+        }else{
+              String tanggal1 = format1.format(this.inpDataHarianBetween1.getDate()),
+                     tanggal2 = format2.format(this.inpDataHarianBetween2.getDate());
+
+            // menampilkan data
+            this.showLaporanHarian("WHERE DATE(trj.tanggal) BETWEEN '"+tanggal1+"' AND '"+tanggal2+"'");
+            this.showDataLaporanHarian("WHERE DATE(tanggal) BETWEEN '"+tanggal1+"' AND '"+tanggal2+"'");
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));            
+        }
+    }//GEN-LAST:event_cariDataAntaraMouseClicked
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
         if(this.jTabbedPane1.getSelectedIndex() == 0){
@@ -1186,22 +1372,33 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"TRJ001", "Mohammad Ilham", "4", "Rp. 25.000,00", "22 November 2022"},
-                {"TRJ002", "Mohammad Ilham", "7", "Rp. 89.000,00", "22 November 2022"},
-                {"TRJ003", "Widyasari Raisya", "2", "Rp. 10.000,00", "22 November 2022"},
-                {"TRJ004", "Septian Yoga", "3", "Rp. 17.500,00", "22 November 2022"},
-                {"TRJ005", "Widyasari Raisya", "1", "Rp. 8.000,00", "22 November 2022"},
-                {"TRJ006", "Mohammad Ilham", "3", "Rp. 18.000,00", "22 November 2022"},
-                {"TRJ007", "Mohammad Ilham", "4", "Rp. 23.000,00", "22 November 2022"},
-                {"TRJ008", "Septian Yoga", "3", "Rp. 11.000,00", "22 November 2022"}
-            },
-            new String [] {
-                "ID Transaksi", "Nama Karyawan", "Total Pesanan", "Total Harga", "Tanggal"
-            }
-        ));
+        this.showLaporanHarian("");
+        this.showDataLaporanHarian("");
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cariDataHarianMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseEntered
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_cariDataHarianMouseEntered
+
+    private void cariDataHarianMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseExited
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_cariDataHarianMouseExited
+
+    private void cariDataAntaraMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataAntaraMouseEntered
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_cariDataAntaraMouseEntered
+
+    private void cariDataAntaraMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataAntaraMouseExited
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_cariDataAntaraMouseExited
+
+    private void inpCariHarianKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariHarianKeyTyped
+        this.cariLaporanHarian();
+    }//GEN-LAST:event_inpCariHarianKeyTyped
+
+    private void inpCariHarianKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariHarianKeyReleased
+        this.cariLaporanHarian();
+    }//GEN-LAST:event_inpCariHarianKeyReleased
 
     /**
      * @param args the command line arguments
@@ -1239,6 +1436,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel btnPembeli;
     private javax.swing.JLabel btnSupplier;
     private javax.swing.JLabel btnTransaksi;
+    private javax.swing.JLabel cariDataAntara;
+    private javax.swing.JLabel cariDataHarian;
+    private javax.swing.JTextField inpCariHarian;
+    private com.toedter.calendar.JDateChooser inpDataHarianBetween1;
+    private com.toedter.calendar.JDateChooser inpDataHarianBetween2;
     private com.toedter.calendar.JDateChooser inpDataPerhari;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -1247,18 +1449,12 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
-    private com.toedter.calendar.JDateChooser jDateChooser4;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -1267,8 +1463,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblMenu;
@@ -1278,13 +1474,16 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblTopInfo;
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JLabel lblTopSetting;
+    private javax.swing.JLabel lblTotalPdtHarian;
+    private javax.swing.JLabel lblTotalPsHarian;
+    private javax.swing.JLabel lblTotalTrHarian;
     private javax.swing.JSeparator lineSideMenu1;
     private javax.swing.JPanel pnlChart;
     private com.manage.RoundedPanel pnlContent;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
     private com.manage.RoundedPanel pnlTop;
-    private javax.swing.JTable tabelData;
     private javax.swing.JTable tabelData2;
+    private javax.swing.JTable tblLpHarian;
     // End of variables declaration//GEN-END:variables
 }
