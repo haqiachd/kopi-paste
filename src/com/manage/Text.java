@@ -423,6 +423,17 @@ public class Text {
         return buffer;
     }
     
+    public String toDateCase(String yymmdd){
+        int tahun, bulan, hari;
+        // mendapatkan data dari tanggal 
+        StringTokenizer token = new StringTokenizer(yymmdd, "-: ");
+        tahun = Integer.parseInt(token.nextToken());
+        bulan = Integer.parseInt(token.nextToken());
+        hari =  Integer.parseInt(token.nextToken());
+        // mengubah menjadi data case
+        return String.format("%02d %s %02d", hari, new Waktu().getNamaBulan(bulan-1), tahun);   
+    }
+    
     public void filterAngka(KeyEvent a){
         if(Character.isAlphabetic(a.getKeyChar())){
             a.consume();
