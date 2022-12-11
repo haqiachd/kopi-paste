@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -29,12 +28,10 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.statistics.HistogramDataset;
 
 /**
  *
@@ -51,6 +48,10 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private final Waktu waktu = new Waktu();
     
     private final Text txt = new Text();
+    
+    private String namaBulan = "???";
+    
+    private int trBulanan = 0, psBulanan = 0, pdBulanan = 0;
 
     public MenuLaporanJual() {
         initComponents();
@@ -74,13 +75,14 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         // menampilkan data 
         this.showLaporanHarian("");
         this.showDataLaporanHarian();
-        this.showLaporanBulanan("");
+        this.showLaporanBulanan();
+        this.showDataLaporanBulanan("");
     }
     
     private void resetTableLpHarian(){
         // set desain tabel
         this.tabelLpHarian.setRowHeight(29);
-        this.tabelLpHarian.getTableHeader().setBackground(new java.awt.Color(0,153,153));
+        this.tabelLpHarian.getTableHeader().setBackground(new java.awt.Color(0,105,233));
         this.tabelLpHarian.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
         
         // set model tabel
@@ -225,25 +227,12 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private void resetTableLpBulanan(){
         // set desain tabel
         this.tabelLpBulanan.setRowHeight(29);
-        this.tabelLpBulanan.getTableHeader().setBackground(new java.awt.Color(0,153,153));
+        this.tabelLpBulanan.getTableHeader().setBackground(new java.awt.Color(0,105,233));
         this.tabelLpBulanan.getTableHeader().setForeground(new java.awt.Color(255, 255, 255));
         
         // set model tabel
         this.tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Januari", "2022", "123", "674", "Rp. 3.455.200,00"},
-                {"Februari", "2022", "543", "989", "Rp. 5.900.400,00"},
-                {"Maret", "2022", "123", "901", "Rp. 10.430.300,00"},
-                {"April", "2022", "232", "790", "Rp. 1.000,00"},
-                {"Mei", "2022", "145", "1,902", "Rp. 1.000,00"},
-                {"Juni", "2022", "412", "1,031", "Rp. 1.000,00"},
-                {"Juli", "2022", "242", "958", "Rp. 1.000,00"},
-                {"Agustus", "2022", "232", "690", "Rp. 1.000,00"},
-                {"September", "2022", "232", "618", "Rp. 1.000,00"},
-                {"Oktober", "2022", "424", "956", "Rp. 1.000,00"},
-                {"November", "2022", "253", "890", "Rp. 1.000,00"},
-                {"Desember", "2022", "", null, ""}
-            },
+            new String[][]{},
             new String [] {
                 "Bulan", "Tahun", "Pembeli", "Pesanan", "Total Pendapatan"
             }
@@ -270,9 +259,121 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         columnModel.getColumn(3).setMaxWidth(80);
     }
     
-    private void showLaporanBulanan(String kondisi){
+    private Object[] getDataLaporan(int bulan, int tahun){
+        try{
+            int pendapatan, pesanan, transaksi;
+            //SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) FROM transaksi_jual WHERE MONTH(tanggal) = 12 AND YEAR(tanggal) = 2022;
+            String sql = "SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) "
+                         + "FROM transaksi_jual "
+                         + "WHERE MONTH(tanggal) = "+bulan+" AND YEAR(tanggal) = " + tahun;
+            
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            if(r.next()){
+                // mendapatakan data
+                transaksi = r.getInt(2);
+                pesanan = r.getInt(3);
+                pendapatan = r.getInt(4);
+                
+                // jika pendapatan tidak kosong maka data akan diambil dari mysql
+                if(pendapatan >= 1){
+                    // mengupdate total data
+                    this.trBulanan += transaksi;
+                    this.psBulanan += pesanan;
+                    this.pdBulanan += pendapatan;
+                    
+                    // mendapatkan data dan mengembalikan data
+                    return new Object[]{
+                        waktu.getNamaBulan(r.getInt(1)-1),
+                        this.inpPilihTahun.getYear(),
+                        String.format("%,d", transaksi),
+                        String.format("%,d", pesanan),
+                        String.format("%s", txt.toMoneyCase(Integer.toString(pendapatan)))
+                    };                    
+                // jika pendapatan kurang dari 1 maka data dianggap kosong dan data yang akan ditampilkan akan diset default
+                }else{
+                    return new Object[]{
+                        waktu.getNamaBulan(bulan-1),
+                        this.inpPilihTahun.getYear(),
+                        0,
+                        0,
+                        "Rp. 00"
+                    };    
+                }
+                
+            }
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
+        return null;
+    }
+    
+    private void showLaporanBulanan(){
+        // reset tabel laporan bulanan
         this.resetTableLpBulanan();
         DefaultTableModel model = (DefaultTableModel) this.tabelLpBulanan.getModel();
+        
+        // mendapatkan data waktu
+        int bulanSaatIni = this.waktu.getBulan()+1,
+            tahunSaatIni = this.waktu.getTahun(),
+            tahunDipilih = this.inpPilihTahun.getYear();
+        
+        // jika tahun yang dipilih adalah tahun saat ini maka yang ditampilkan ada bulan paling akhir smp januari
+        if(tahunSaatIni == this.inpPilihTahun.getYear()){
+            // menambahkan data ke tabel
+            for(int i = bulanSaatIni; i >= 1; i--){
+                model.addRow(this.getDataLaporan(i, tahunDipilih));
+            }
+        // jika tahun yang dipilih adalah lebih kecil dari tahun saat ini maka data yang ditampilkan adalah desember smp januari
+        }else if(tahunSaatIni > this.inpPilihTahun.getYear()){
+            // menambahkan data ke tabel
+            for(int i = 12; i >= 1; i--){
+                model.addRow(this.getDataLaporan(i, tahunDipilih));
+            }
+        }
+        
+        // refresh tabel
+        this.tabelLpBulanan.setModel(model);
+        this.showDataLaporanBulanan("");
+    }
+
+    private void showDataLaporanBulanan(String kondisi){
+        this.lblTotalTrBulanan.setText(String.format(" Transaksi : %,d", this.trBulanan));
+        this.lblTotalPsBulanan.setText(String.format(" Pesanan : %,d", this.psBulanan));
+        this.lblTotalPdBulanan.setText(String.format(" Pendapatan : %s", this.txt.toMoneyCase(Integer.toString(this.pdBulanan))));
+    }
+    
+    private int getPieData(String jenis, int bulan, int tahun){
+        // membuat query
+        String sql = "SELECT SUM(dtrj.jumlah) AS pesanan " +
+                     "FROM detail_tr_jual AS dtrj " +
+                     "JOIN transaksi_jual AS trj " +
+                     "ON trj.id_tr_jual = dtrj.id_tr_jual " +
+                     "JOIN menu AS mn " +
+                     "ON mn.id_menu = dtrj.id_menu\n" +
+                     "WHERE mn.jenis = '"+jenis+"' AND MONTH(trj.tanggal) = "+bulan+" AND YEAR(trj.tanggal) = " + tahun;
+//        System.out.println(sql);
+        
+        try{
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            if(r.next()){
+                int total = r.getInt("pesanan");
+                System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
+                c.close(); s.close(); r.close();
+                return total;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return 0;
     }
     
     public void showLineChart(){
@@ -317,18 +418,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 //        dataset.setValue(80, "Amount", "may");
 //        dataset.setValue(250, "Amount", "june");
         
-        JFreeChart chart = ChartFactory.createBarChart("penjualan","mingguan","jumlah penjualan", 
+        JFreeChart c = ChartFactory.createBarChart("penjualan","mingguan","jumlah penjualan", 
                 dataset, PlotOrientation.VERTICAL, false,true,false);
-        chart.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
+        c.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
         
-        CategoryPlot categoryPlot = chart.getCategoryPlot();
+        CategoryPlot categoryPlot = c.getCategoryPlot();
         //categoryPlot.setRangeGridlinePaint(Color.BLUE);
         categoryPlot.setBackgroundPaint(Color.WHITE);
         BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
         Color clr3 = new Color(230,47,69);
         renderer.setSeriesPaint(0, clr3);
         
-        ChartPanel barpChartPanel = new ChartPanel(chart);
+        ChartPanel barpChartPanel = new ChartPanel(c);
         pnlShowChart.removeAll();
         pnlShowChart.add(barpChartPanel, BorderLayout.CENTER);
         pnlShowChart.validate();
@@ -364,7 +465,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTopInfo = new javax.swing.JLabel();
         lblTopProfile = new javax.swing.JLabel();
         pnlContent = new com.manage.RoundedPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabPane = new javax.swing.JTabbedPane();
         pnlLaporanHarian = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelLpHarian = new javax.swing.JTable();
@@ -388,16 +489,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         pnlLaporanBulanan = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tabelLpBulanan = new javax.swing.JTable();
-        lblTotalTrBulanan = new javax.swing.JLabel();
         lblTahun = new javax.swing.JLabel();
-        inpPilihTahun = new javax.swing.JComboBox();
         pnlChart = new javax.swing.JPanel();
         pnlShowChart = new javax.swing.JPanel();
         inpChartBulanan = new javax.swing.JComboBox();
         lblChartBulanan = new javax.swing.JLabel();
-        lblTotalPdBulanan = new javax.swing.JLabel();
+        lblTotalPsBulanan = new javax.swing.JLabel();
         btnCetakBulanan = new javax.swing.JButton();
         btnRiwayatBulanan = new javax.swing.JButton();
+        lblTotalPdBulanan = new javax.swing.JLabel();
+        inpPilihTahun = new com.toedter.calendar.JYearChooser();
+        cariTahun = new javax.swing.JLabel();
+        lblTotalTrBulanan = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -698,17 +801,16 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         pnlContent.setRoundTopLeft(20);
         pnlContent.setRoundTopRight(20);
 
-        jTabbedPane1.setBackground(new java.awt.Color(248, 249, 250));
-        jTabbedPane1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabPane.setBackground(new java.awt.Color(248, 249, 250));
+        tabPane.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        tabPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTabbedPane1MouseClicked(evt);
+                tabPaneMouseClicked(evt);
             }
         });
 
         pnlLaporanHarian.setBackground(new java.awt.Color(248, 249, 250));
 
-        tabelLpHarian.setBackground(new java.awt.Color(251, 251, 251));
         tabelLpHarian.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -734,8 +836,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
         tabelLpHarian.setGridColor(new java.awt.Color(0, 0, 0));
-        tabelLpHarian.setSelectionBackground(new java.awt.Color(53, 152, 230));
-        tabelLpHarian.setSelectionForeground(new java.awt.Color(248, 248, 248));
+        tabelLpHarian.setSelectionBackground(new java.awt.Color(71, 230, 143));
         tabelLpHarian.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tabelLpHarian);
 
@@ -786,15 +887,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         inpDataHarianBetween2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         lblTotalTrHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalTrHarian.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalTrHarian.setText(" Transaksi : 1.239 ");
-        lblTotalTrHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalTrHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         lblTotalPsHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPsHarian.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalPsHarian.setText(" Pesanan : 2.133");
-        lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
-        btnHapusHarian.setBackground(new java.awt.Color(222, 225, 228));
+        btnHapusHarian.setBackground(new java.awt.Color(246, 44, 68));
         btnHapusHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnHapusHarian.setForeground(new java.awt.Color(255, 255, 255));
         btnHapusHarian.setText("Hapus");
         btnHapusHarian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -802,8 +906,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
 
-        btnCetakHarian.setBackground(new java.awt.Color(222, 225, 228));
+        btnCetakHarian.setBackground(new java.awt.Color(255, 102, 0));
         btnCetakHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnCetakHarian.setForeground(new java.awt.Color(255, 255, 255));
         btnCetakHarian.setText("Cetak");
         btnCetakHarian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -827,8 +932,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
 
-        btnSemuaHarian.setBackground(new java.awt.Color(222, 225, 228));
+        btnSemuaHarian.setBackground(new java.awt.Color(0, 153, 255));
         btnSemuaHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnSemuaHarian.setForeground(new java.awt.Color(255, 255, 255));
         btnSemuaHarian.setText("Semua");
         btnSemuaHarian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -836,12 +942,13 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         });
 
-        lineBottom.setBackground(new java.awt.Color(0, 123, 255));
-        lineBottom.setForeground(new java.awt.Color(0, 123, 255));
+        lineBottom.setBackground(new java.awt.Color(0, 0, 0));
+        lineBottom.setForeground(new java.awt.Color(0, 0, 0));
 
         lblTotalPdtHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPdtHarian.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalPdtHarian.setText(" Pendapatan : Rp. 3.901.000.00");
-        lblTotalPdtHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalPdtHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         javax.swing.GroupLayout pnlLaporanHarianLayout = new javax.swing.GroupLayout(pnlLaporanHarian);
         pnlLaporanHarian.setLayout(pnlLaporanHarianLayout);
@@ -929,11 +1036,10 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Laporan Harian", pnlLaporanHarian);
+        tabPane.addTab("Laporan Harian", pnlLaporanHarian);
 
         pnlLaporanBulanan.setBackground(new java.awt.Color(248, 249, 250));
 
-        tabelLpBulanan.setBackground(new java.awt.Color(251, 251, 251));
         tabelLpBulanan.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -955,6 +1061,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         ));
         tabelLpBulanan.setGridColor(new java.awt.Color(0, 0, 0));
+        tabelLpBulanan.setSelectionBackground(new java.awt.Color(71, 230, 143));
         tabelLpBulanan.getTableHeader().setReorderingAllowed(false);
         tabelLpBulanan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -963,23 +1070,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(tabelLpBulanan);
 
-        lblTotalTrBulanan.setBackground(new java.awt.Color(255, 255, 255));
-        lblTotalTrBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblTotalTrBulanan.setText(" Total Transaksi : 2,343 Transaksi");
-        lblTotalTrBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        lblTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTahun.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblTahun.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTahun.setText("Pilih Tahun ");
-
-        inpPilihTahun.setBackground(new java.awt.Color(248, 249, 250));
-        inpPilihTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpPilihTahun.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2022", "2021" }));
-        inpPilihTahun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inpPilihTahunActionPerformed(evt);
-            }
-        });
 
         pnlChart.setBackground(new java.awt.Color(248, 249, 250));
         pnlChart.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -1024,10 +1117,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 .addComponent(pnlShowChart, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        lblTotalPdBulanan.setBackground(new java.awt.Color(255, 255, 255));
-        lblTotalPdBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblTotalPdBulanan.setText(" Total Pendapatan : Rp. 12.344.343,00");
-        lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblTotalPsBulanan.setBackground(new java.awt.Color(255, 255, 255));
+        lblTotalPsBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPsBulanan.setForeground(new java.awt.Color(0, 105, 233));
+        lblTotalPsBulanan.setText(" Pesanan : 5.650");
+        lblTotalPsBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         btnCetakBulanan.setBackground(new java.awt.Color(255, 102, 0));
         btnCetakBulanan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -1039,6 +1133,31 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         btnRiwayatBulanan.setForeground(new java.awt.Color(255, 255, 255));
         btnRiwayatBulanan.setText("Riwayat");
 
+        lblTotalPdBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
+        lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
+        lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        inpPilihTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+
+        cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
+        cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cariTahunMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cariTahunMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cariTahunMouseExited(evt);
+            }
+        });
+
+        lblTotalTrBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalTrBulanan.setForeground(new java.awt.Color(0, 105, 233));
+        lblTotalTrBulanan.setText(" Transaksi : 2,345");
+        lblTotalTrBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
         javax.swing.GroupLayout pnlLaporanBulananLayout = new javax.swing.GroupLayout(pnlLaporanBulanan);
         pnlLaporanBulanan.setLayout(pnlLaporanBulananLayout);
         pnlLaporanBulananLayout.setHorizontalGroup(
@@ -1047,22 +1166,26 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
+                        .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
+                                .addComponent(lblTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpPilihTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8)
+                                .addComponent(cariTahun)))
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
                         .addComponent(btnCetakBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRiwayatBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblTotalTrBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTotalTrBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
-                        .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
-                                .addComponent(lblTahun)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(inpPilihTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblTotalPsBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         pnlLaporanBulananLayout.setVerticalGroup(
@@ -1072,21 +1195,24 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlLaporanBulananLayout.createSequentialGroup()
                         .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblTahun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(inpPilihTahun, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
+                            .addComponent(lblTahun, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                            .addComponent(inpPilihTahun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cariTahun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(pnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTotalTrBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRiwayatBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCetakBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTotalPsBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRiwayatBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCetakBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotalTrBulanan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Lapoan Bulanan", pnlLaporanBulanan);
+        tabPane.addTab("Lapoan Bulanan", pnlLaporanBulanan);
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -1094,14 +1220,14 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(tabPane)
                 .addContainerGap())
         );
         pnlContentLayout.setVerticalGroup(
             pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
                 .addContainerGap(36, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1334,57 +1460,25 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inpChartBulananActionPerformed
 
-    private void inpPilihTahunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpPilihTahunActionPerformed
-        if(this.inpPilihTahun.getSelectedIndex() == 0){
-        tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Januari", "2022", "123", "Rp. 1.000,00"},
-                {"Februari", "2022", "543", "Rp. 1.000,00"},
-                {"Maret", "2022", "123", "Rp. 1.000,00"},
-                {"April", "2022", "232", "Rp. 1.000,00"},
-                {"Mei", "2022", "145", "Rp. 1.000,00"},
-                {"Juni", "2022", "412", "Rp. 1.000,00"},
-                {"Juli", "2022", "242", "Rp. 1.000,00"},
-                {"Agustus", "2022", "232", "Rp. 1.000,00"},
-                {"September", "2022", "232", "Rp. 1.000,00"},
-                {"Oktober", "2022", "424", "Rp. 1.000,00"},
-                {"November", "2022", "253", "Rp. 1.000,00"},
-                {"Desember", "2022", "", ""}
-            },
-            new String [] {
-                "Bulan", "Tahun", "Total Pembeli", "Total Pendapatan"
-            }
-        ));
-        }else if(this.inpPilihTahun.getSelectedIndex() == 1){
-        tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Januari", "2021", "343", "Rp. 1.000,00"},
-                {"Februari", "2021", "123", "Rp. 1.000,00"},
-                {"Maret", "2021", "342", "Rp. 1.000,00"},
-                {"April", "2021", "433", "Rp. 1.000,00"},
-                {"Mei", "2021", "433", "Rp. 1.000,00"},
-                {"Juni", "2021", "123", "Rp. 1.000,00"},
-                {"Juli", "2021", "544", "Rp. 1.000,00"},
-                {"Agustus", "2021", "234", "Rp. 1.000,00"},
-                {"September", "2021", "654", "Rp. 1.000,00"},
-                {"Oktober", "2021", "324", "Rp. 1.000,00"},
-                {"November", "2021", "123", "Rp. 1.000,00"},
-                {"Desember", "2021", "342", "Rp. 5.000,00"}
-            },
-            new String [] {
-                "Bulan", "Tahun", "Total Pembeli", "Total Pendapatan"
-            }
-        ));
-        }
-    }//GEN-LAST:event_inpPilihTahunActionPerformed
 
-    private String namaBulan = "???";
     
     private void tabelLpBulananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelLpBulananMouseClicked
+        // mendapatkan nama bulan
         this.namaBulan = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString();
-        this.namaBulan += " " + this.inpPilihTahun.getSelectedItem().toString();
+        // mendapatkan nilai bulan
+        int bulanDipilih = this.waktu.getNilaiBulan(this.namaBulan),
+            tahunDipilih = this.inpPilihTahun.getYear();
+        
+        // jika yang dipilih adalah pie chart
         if(this.inpChartBulanan.getSelectedIndex() == 0){
-            this.chart.showPieChart(this.pnlShowChart, "Penjualan Produk Bulan " + namaBulan, 10, 15, 30, 20, 15);
+            this.chart.showPieChart(
+                    this.pnlShowChart, "Penjualan Produk Bulan " + namaBulan + " " + tahunDipilih, 
+                    this.getPieData("Makanan", bulanDipilih, tahunDipilih), 
+                    this.getPieData("Minuman", bulanDipilih, tahunDipilih), 
+                    this.getPieData("Original Coffee", bulanDipilih, tahunDipilih), 
+                    this.getPieData("Falvoured Coffee", bulanDipilih, tahunDipilih),
+                    this.getPieData("Snack", bulanDipilih, tahunDipilih)
+            );
         }else if(this.inpChartBulanan.getSelectedIndex() == 1){
             this.showLineChart();
         }else if(this.inpChartBulanan.getSelectedIndex() == 2){
@@ -1431,13 +1525,13 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cariDataAntaraMouseClicked
 
-    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
-        if(this.jTabbedPane1.getSelectedIndex() == 0){
+    private void tabPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabPaneMouseClicked
+        if(this.tabPane.getSelectedIndex() == 0){
             this.lblNamaWindow.setText("Laporan Penjualan Harian");
-        }else if(this.jTabbedPane1.getSelectedIndex() == 1){
+        }else if(this.tabPane.getSelectedIndex() == 1){
             this.lblNamaWindow.setText("Laporan Penjualan Bulanan");
         }
-    }//GEN-LAST:event_jTabbedPane1MouseClicked
+    }//GEN-LAST:event_tabPaneMouseClicked
 
     private void btnHapusHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusHarianActionPerformed
 
@@ -1478,6 +1572,39 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCetakHarianActionPerformed
+
+    private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        // jika input tahun valid
+        if(this.inpPilihTahun.getYear() <= this.waktu.getTahun()){
+            // reset total data
+            this.trBulanan = 0;
+            this.psBulanan = 0;
+            this.pdBulanan = 0;
+            // menampilkan data laporan
+            this.showLaporanBulanan();
+        }else{
+            // jika input tahun melebihi tahun saat ini
+            Message.showWarning(this, "'" + this.inpPilihTahun.getYear() + "' Tidak bisa menampilkan data di masa depan!");
+            // menampilkan data tahun ini
+            this.inpPilihTahun.setYear(this.waktu.getTahun());
+            // reset total data
+            this.trBulanan = 0;
+            this.psBulanan = 0;
+            this.pdBulanan = 0;
+            // menampilkan data laporan
+            this.showLaporanBulanan();
+        }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_cariTahunMouseClicked
+
+    private void cariTahunMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseEntered
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_cariTahunMouseEntered
+
+    private void cariTahunMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseExited
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_cariTahunMouseExited
 
     /**
      * @param args the command line arguments
@@ -1522,16 +1649,16 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JLabel cariDataAntara;
     private javax.swing.JLabel cariDataHarian;
+    private javax.swing.JLabel cariTahun;
     private javax.swing.JTextField inpCariHarian;
     private javax.swing.JComboBox inpChartBulanan;
     private com.toedter.calendar.JDateChooser inpDataHarianBetween1;
     private com.toedter.calendar.JDateChooser inpDataHarianBetween2;
     private com.toedter.calendar.JDateChooser inpDataPerhari;
-    private javax.swing.JComboBox inpPilihTahun;
+    private com.toedter.calendar.JYearChooser inpPilihTahun;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblAntara1;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
@@ -1549,6 +1676,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblTopSetting;
     private javax.swing.JLabel lblTotalPdBulanan;
     private javax.swing.JLabel lblTotalPdtHarian;
+    private javax.swing.JLabel lblTotalPsBulanan;
     private javax.swing.JLabel lblTotalPsHarian;
     private javax.swing.JLabel lblTotalTrBulanan;
     private javax.swing.JLabel lblTotalTrHarian;
@@ -1562,6 +1690,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JPanel pnlShowChart;
     private javax.swing.JPanel pnlSidebar;
     private com.manage.RoundedPanel pnlTop;
+    private javax.swing.JTabbedPane tabPane;
     private javax.swing.JTable tabelLpBulanan;
     private javax.swing.JTable tabelLpHarian;
     // End of variables declaration//GEN-END:variables
