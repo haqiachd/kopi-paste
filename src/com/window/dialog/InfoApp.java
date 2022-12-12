@@ -465,7 +465,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void iconIgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconIgMouseClicked
         try {
-            this.inet.openLink("https://www.instagram.com/direct/t/340282366841710300949128226529731561852");
+            this.inet.openLink("https://www.instagram.com/");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
