@@ -1554,7 +1554,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             // cek apakah data bahan sudah dipilih
             if(!this.inpIdBahan.getText().isEmpty()){
                 // cek apakah data jumlah sudah dimasukan
-                if (this.inpJumlah.getText().isEmpty()) {
+                if (this.inpJumlah.getText().isEmpty() || Integer.parseInt(this.inpJumlah.getText()) == 0) {
                     Message.showWarning(this, "Jumlah bahan belum dimasukan!");
                 } else {
                     this.tambahDataBahan();

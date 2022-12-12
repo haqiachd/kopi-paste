@@ -8,6 +8,8 @@ import com.manage.UIManager;
 import com.manage.User;
 import com.manage.Waktu;
 import com.media.Gambar;
+import com.window.dialog.DetailTransaksi;
+import com.window.dialog.RiwayatTransaksi;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UserProfile;
@@ -896,10 +898,10 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPsHarian.setText(" Pesanan : 2.133");
         lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
-        btnHapusHarian.setBackground(new java.awt.Color(246, 44, 68));
+        btnHapusHarian.setBackground(new java.awt.Color(204, 0, 204));
         btnHapusHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btnHapusHarian.setForeground(new java.awt.Color(255, 255, 255));
-        btnHapusHarian.setText("Hapus");
+        btnHapusHarian.setText("Detail");
         btnHapusHarian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHapusHarianActionPerformed(evt);
@@ -1127,11 +1129,37 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         btnCetakBulanan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btnCetakBulanan.setForeground(new java.awt.Color(255, 255, 255));
         btnCetakBulanan.setText("Cetak");
+        btnCetakBulanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnCetakBulananMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnCetakBulananMouseExited(evt);
+            }
+        });
+        btnCetakBulanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakBulananActionPerformed(evt);
+            }
+        });
 
         btnRiwayatBulanan.setBackground(new java.awt.Color(0, 153, 255));
         btnRiwayatBulanan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btnRiwayatBulanan.setForeground(new java.awt.Color(255, 255, 255));
         btnRiwayatBulanan.setText("Riwayat");
+        btnRiwayatBulanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnRiwayatBulananMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnRiwayatBulananMouseExited(evt);
+            }
+        });
+        btnRiwayatBulanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRiwayatBulananActionPerformed(evt);
+            }
+        });
 
         lblTotalPdBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
@@ -1534,7 +1562,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_tabPaneMouseClicked
 
     private void btnHapusHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusHarianActionPerformed
-
+        DetailTransaksi dtr = new DetailTransaksi(null, true, this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString(), "");
+        dtr.setVisible(true);
     }//GEN-LAST:event_btnHapusHarianActionPerformed
 
     private void cariDataHarianMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseEntered
@@ -1570,7 +1599,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnCetakHarianActionPerformed
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
@@ -1605,6 +1634,33 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private void cariTahunMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseExited
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_cariTahunMouseExited
+
+    private void btnRiwayatBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatBulananActionPerformed
+        String bulan = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString(),
+               tahun = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 1).toString();
+        RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan, tahun);
+        dtl.setVisible(true);
+    }//GEN-LAST:event_btnRiwayatBulananActionPerformed
+
+    private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed
+        
+    }//GEN-LAST:event_btnCetakBulananActionPerformed
+
+    private void btnCetakBulananMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCetakBulananMouseEntered
+        
+    }//GEN-LAST:event_btnCetakBulananMouseEntered
+
+    private void btnCetakBulananMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCetakBulananMouseExited
+        
+    }//GEN-LAST:event_btnCetakBulananMouseExited
+
+    private void btnRiwayatBulananMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRiwayatBulananMouseEntered
+        
+    }//GEN-LAST:event_btnRiwayatBulananMouseEntered
+
+    private void btnRiwayatBulananMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRiwayatBulananMouseExited
+        
+    }//GEN-LAST:event_btnRiwayatBulananMouseExited
 
     /**
      * @param args the command line arguments

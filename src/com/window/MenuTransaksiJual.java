@@ -1753,7 +1753,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
     private void inpJumlahKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpJumlahKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            this.tambahMenu();
+            if(Integer.parseInt(this.inpJumlah.getText()) > this.tempStokMenu.get(this.inpIdMenu.getText())){
+                Message.showWarning(this, "Jumlah stok tidak cukup!");
+            }else if(Integer.parseInt(this.inpJumlah.getText()) == 0){
+                Message.showWarning(this, "Jumlah stok tidak boleh 0");
+            }else{
+                this.tambahMenu();
+            }
         }
     }//GEN-LAST:event_inpJumlahKeyPressed
 
