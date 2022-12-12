@@ -75,12 +75,14 @@ public class ChartManager {
             piePlot.setSectionPaint("Snack", this.C_S);
         }
         piePlot.setBackgroundPaint(this.BG_CHART);
-
+        
         //create chartPanel to display chart(graph)
         ChartPanel barChartPanel = new ChartPanel(piechart);
         panel.removeAll();
         panel.add(barChartPanel, BorderLayout.CENTER);
         panel.validate();
+        
+        
     }
 
     public void showPieChart(JPanel panel, String title, double makanan, double minuman, double snack, double atk, double s){
