@@ -1,11 +1,17 @@
 package com.window.dialog;
 
-import com.manage.User;
-import com.media.Audio;
+import com.koneksi.Koneksi;
+import com.manage.Message;
+import com.manage.Text;
+import com.manage.Waktu;
 import com.media.Gambar;
 import java.awt.Color;
 import java.awt.Cursor;
-import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -13,29 +19,38 @@ import javax.swing.table.TableColumnModel;
  * @author Achmad Baihaqi
  */
 public class RiwayatTransaksi extends javax.swing.JDialog {
+    
+    private DefaultTableModel cariData;
 
-    private PopUpBackground pop = new PopUpBackground();
+    private final PopUpBackground pop = new PopUpBackground();
+    
+    private final Waktu waktu = new Waktu();
+    
+    private final Text text = new Text();
+    
+    private final int bulan, tahun;
     
     /**
      * Creates new form UserProfile
+     * @param parent
+     * @param modal
+     * @param bulan
+     * @param tahun
      */
-    public RiwayatTransaksi(java.awt.Frame parent, boolean modal, String bulan, String tahun) {
+    public RiwayatTransaksi(java.awt.Frame parent, boolean modal, int bulan, int tahun) {
         super(parent, modal);
         this.pop.setVisible(true);
-        
+        this.bulan = bulan;
+        this.tahun = tahun;
+
         initComponents();
         this.setBackground(new Color(0,0,0,0));
         this.setLocationRelativeTo(null);
         
-//        this.btnBackup.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        
-        this.tabelLpBulanan.setRowHeight(29);
-        this.tabelLpBulanan.getTableHeader().setBackground(new java.awt.Color(0,105,233));
-        this.tabelLpBulanan.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
+        this.lblDialogName.setText(this.lblDialogName.getText() + waktu.getNamaBulan(bulan) + " " + tahun);
         
         this.resetTableLpBulanan();
-        
-        this.lblDialogName.setText(this.lblDialogName.getText() + bulan + " " + tahun);
+        this.showRiwayatTransaksi();
     }
     
     @Override
@@ -52,16 +67,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
         
         // set model tabel
         this.tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"TRJ001", "Mohammad Ilham", null, "4", "Rp. 25.000,00", "22 November 2022"},
-                {"TRJ002", "Mohammad Ilham", null, "7", "Rp. 89.000,00", "22 November 2022"},
-                {"TRJ003", "Widyasari Raisya", null, "2", "Rp. 10.000,00", "22 November 2022"},
-                {"TRJ004", "Septian Yoga", null, "3", "Rp. 17.500,00", "22 November 2022"},
-                {"TRJ005", "Widyasari Raisya", null, "1", "Rp. 8.000,00", "22 November 2022"},
-                {"TRJ006", "Mohammad Ilham", null, "3", "Rp. 18.000,00", "22 November 2022"},
-                {"TRJ007", "Mohammad Ilham", null, "4", "Rp. 23.000,00", "22 November 2022"},
-                {"TRJ008", "Septian Yoga", null, "3", "Rp. 11.000,00", "22 November 2022"}
-            },
+            new Object [][] {},
                 new String[]{
                     "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
                 }
@@ -80,23 +86,61 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
         TableColumnModel columnModel = this.tabelLpBulanan.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(235);
-        columnModel.getColumn(1).setMaxWidth(235);
-        columnModel.getColumn(2).setPreferredWidth(235);
-        columnModel.getColumn(2).setMaxWidth(235);
-        columnModel.getColumn(3).setPreferredWidth(100);
-        columnModel.getColumn(3).setMaxWidth(100);
-        columnModel.getColumn(4).setPreferredWidth(125);
-        columnModel.getColumn(4).setMaxWidth(125);
+        columnModel.getColumn(1).setPreferredWidth(250);
+        columnModel.getColumn(1).setMaxWidth(250);
+        columnModel.getColumn(2).setPreferredWidth(250);
+        columnModel.getColumn(2).setMaxWidth(250);
+        columnModel.getColumn(3).setPreferredWidth(110);
+        columnModel.getColumn(3).setMaxWidth(110);
+        columnModel.getColumn(4).setPreferredWidth(135);
+        columnModel.getColumn(4).setMaxWidth(135);
 //        columnModel.getColumn(5).setPreferredWidth(210);
 //        columnModel.getColumn(5).setMaxWidth(210);
     }
+    
+    private void showRiwayatTransaksi(){
+        // r
+        this.resetTableLpBulanan();
+        DefaultTableModel model = (DefaultTableModel) this.tabelLpBulanan.getModel();
+        
+        try{
+            String sql = "SELECT trj.id_tr_jual, ky.nama_karyawan, trj.nama_pembeli, trj.total_menu, trj.total_harga, DATE(trj.tanggal), DAYNAME(trj.tanggal) " +
+                        "FROM transaksi_jual AS trj " +
+                        "JOIN karyawan AS ky " +
+                        "ON ky.id_karyawan = trj.id_karyawan " +
+                        "WHERE MONTH(tanggal) = "+(this.bulan+1)+" AND YEAR(tanggal) = " + this.tahun + 
+                        " ORDER BY trj.tanggal DESC";
+            System.out.println(sql);
+            System.out.println("NILAI BULAN : " + this.bulan);
+            System.out.println("MENAMPILKAN DATA BULAN " + this.waktu.getNamaBulan(this.bulan));
+            
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            while(r.next()){
+                model.addRow(
+                    new Object[]{
+                        r.getString(1),
+                        r.getString(2),
+                        r.getString(3),
+                        r.getString(4) + " Pesanan",
+                        this.text.toMoneyCase(r.getString(5)),
+                        this.waktu.getNamaHariInIndonesian(r.getString(7)) + ", " + this.text.toDateCase(r.getString(6))
+                    }
+                );
+            }
+            
+            this.tabelLpBulanan.setModel(model);
+            this.cariData = model;
+            
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
+    }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -114,6 +158,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -148,7 +193,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
             }
         });
 
-        tabelLpBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        tabelLpBulanan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -160,6 +205,8 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
                 "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Jumlah", "Harga", "Tanggal"
             }
         ));
+        tabelLpBulanan.setSelectionBackground(new java.awt.Color(71, 230, 143));
+        tabelLpBulanan.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tabelLpBulanan);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -198,6 +245,9 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Cetak");
 
+        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -206,7 +256,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
                 .addGap(39, 39, 39)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 31, Short.MAX_VALUE)
                         .addComponent(lblDialogName, javax.swing.GroupLayout.PREFERRED_SIZE, 999, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblClose, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -226,9 +276,10 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1071, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 1071, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 21, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE)
+                            .addComponent(lineTop, javax.swing.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE)
+                            .addComponent(jSeparator1))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlMainLayout.setVerticalGroup(
@@ -247,7 +298,9 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
                     .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -305,8 +358,9 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                RiwayatTransaksi dialog = new RiwayatTransaksi(new javax.swing.JFrame(), true, "", "");
+                RiwayatTransaksi dialog = new RiwayatTransaksi(new javax.swing.JFrame(), true, 11, 2022);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -326,6 +380,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblClose;
     private javax.swing.JLabel lblDialogName;

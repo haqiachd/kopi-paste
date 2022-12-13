@@ -114,7 +114,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
         setUndecorated(true);
 
         pnlMain.setBackground(new java.awt.Color(248, 249, 250));
-        pnlMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
+        pnlMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 136, 211), 10));
         pnlMain.setRoundBottomLeft(30);
         pnlMain.setRoundBottomRight(30);
         pnlMain.setRoundTopLeft(30);
@@ -144,7 +144,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
             }
         });
 
-        tabelDetail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        tabelDetail.setFont(new java.awt.Font("Ebrima", 1, 16)); // NOI18N
         tabelDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"TRJ0030", "Kentang Goreng", "4", "Rp. 56.000,00"},
@@ -201,7 +201,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
                 .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1))
