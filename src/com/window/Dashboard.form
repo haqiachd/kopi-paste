@@ -599,7 +599,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value=" Pendapatan Hari Ini"/>
+                        <Property name="text" type="java.lang.String" value=" Pendapatan Bulan Ini"/>
                         <Property name="verticalAlignment" type="int" value="1"/>
                       </Properties>
                     </Component>
@@ -794,7 +794,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Pengeluaran Hari Ini"/>
+                        <Property name="text" type="java.lang.String" value="Pengeluaran Bulan Ini"/>
                         <Property name="verticalAlignment" type="int" value="1"/>
                       </Properties>
                     </Component>
@@ -872,7 +872,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Total Pembeli Hari Ini"/>
+                        <Property name="text" type="java.lang.String" value="Pembelian Bulan Ini"/>
                         <Property name="verticalAlignment" type="int" value="1"/>
                       </Properties>
                     </Component>
