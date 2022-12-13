@@ -1636,10 +1636,16 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_cariTahunMouseExited
 
     private void btnRiwayatBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatBulananActionPerformed
-        String bulan = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString(),
-               tahun = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 1).toString();
-        RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan, tahun);
-        dtl.setVisible(true);
+        int row = this.tabelLpBulanan.getSelectedRow();
+        if(row >= 0){
+            int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
+                tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
+
+            RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan-1, tahun);
+            dtl.setVisible(true);            
+        }else{
+            Message.showWarning(this, "Tidak ada bulan yang dipilih!");
+        }
     }//GEN-LAST:event_btnRiwayatBulananActionPerformed
 
     private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed

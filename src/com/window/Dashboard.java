@@ -498,7 +498,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPendapatan.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPendapatan.setForeground(new java.awt.Color(255, 255, 255));
-        lblPendapatan.setText(" Pendapatan Hari Ini");
+        lblPendapatan.setText(" Pendapatan Bulan Ini");
         lblPendapatan.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPendapatan.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
@@ -606,7 +606,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPengeluaran.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPengeluaran.setForeground(new java.awt.Color(255, 255, 255));
-        lblPengeluaran.setText("Pengeluaran Hari Ini");
+        lblPengeluaran.setText("Pengeluaran Bulan Ini");
         lblPengeluaran.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPengeluaran.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
@@ -652,7 +652,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPembeli.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPembeli.setForeground(new java.awt.Color(255, 255, 255));
-        lblPembeli.setText("Total Pembeli Hari Ini");
+        lblPembeli.setText("Pembelian Bulan Ini");
         lblPembeli.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPembeli.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N

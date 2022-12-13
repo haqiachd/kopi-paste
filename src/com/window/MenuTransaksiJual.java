@@ -1271,6 +1271,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 inpTotalHargaMouseClicked(evt);
             }
         });
+        inpTotalHarga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpTotalHargaActionPerformed(evt);
+            }
+        });
 
         lblIDTransaksi.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblIDTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-idtransaksii.png"))); // NOI18N
@@ -1296,6 +1301,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         inpJumlah.setBackground(new java.awt.Color(248, 249, 250));
         inpJumlah.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpJumlah.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpJumlah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpJumlahActionPerformed(evt);
+            }
+        });
         inpJumlah.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inpJumlahKeyPressed(evt);
@@ -1780,6 +1790,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.hapusDataMenu();
         }
     }//GEN-LAST:event_tabelTrKeyReleased
+
+    private void inpTotalHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpTotalHargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpTotalHargaActionPerformed
+
+    private void inpJumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpJumlahActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpJumlahActionPerformed
 
     /**
      * @param args the command line arguments
