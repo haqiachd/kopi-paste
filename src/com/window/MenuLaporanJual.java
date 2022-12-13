@@ -481,7 +481,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         inpDataHarianBetween2 = new com.toedter.calendar.JDateChooser();
         lblTotalTrHarian = new javax.swing.JLabel();
         lblTotalPsHarian = new javax.swing.JLabel();
-        btnHapusHarian = new javax.swing.JButton();
+        btnDetailHarian = new javax.swing.JButton();
         btnCetakHarian = new javax.swing.JButton();
         lblCari = new javax.swing.JLabel();
         inpCariHarian = new javax.swing.JTextField();
@@ -898,13 +898,13 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPsHarian.setText(" Pesanan : 2.133");
         lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
-        btnHapusHarian.setBackground(new java.awt.Color(204, 0, 204));
-        btnHapusHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnHapusHarian.setForeground(new java.awt.Color(255, 255, 255));
-        btnHapusHarian.setText("Detail");
-        btnHapusHarian.addActionListener(new java.awt.event.ActionListener() {
+        btnDetailHarian.setBackground(new java.awt.Color(204, 0, 204));
+        btnDetailHarian.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnDetailHarian.setForeground(new java.awt.Color(255, 255, 255));
+        btnDetailHarian.setText("Detail");
+        btnDetailHarian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHapusHarianActionPerformed(evt);
+                btnDetailHarianActionPerformed(evt);
             }
         });
 
@@ -992,7 +992,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnHapusHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
                     .addComponent(lineBottom))
                 .addContainerGap(22, Short.MAX_VALUE))
@@ -1029,7 +1029,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                     .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnHapusHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1165,8 +1165,6 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
-
-        inpPilihTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
 
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1561,10 +1559,17 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tabPaneMouseClicked
 
-    private void btnHapusHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusHarianActionPerformed
-        DetailTransaksi dtr = new DetailTransaksi(null, true, this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString(), "");
-        dtr.setVisible(true);
-    }//GEN-LAST:event_btnHapusHarianActionPerformed
+    private void btnDetailHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailHarianActionPerformed
+        String id;
+        if(this.tabelLpHarian.getSelectedRow() > 0){
+            // membuka pop up detail transaksi
+            id= this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString();
+            DetailTransaksi dtr = new DetailTransaksi(null, true, id);
+            dtr.setVisible(true);            
+        }else{
+            Message.showWarning(this, "Tidak ada data yang dipilih!");
+        }
+    }//GEN-LAST:event_btnDetailHarianActionPerformed
 
     private void cariDataHarianMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseEntered
         this.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -1699,7 +1704,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JButton btnCetakHarian;
     private javax.swing.JLabel btnDashboard;
     private javax.swing.JLabel btnDataMaster;
-    private javax.swing.JButton btnHapusHarian;
+    private javax.swing.JButton btnDetailHarian;
     private javax.swing.JLabel btnKaryawan;
     private javax.swing.JLabel btnLaporan;
     private javax.swing.JLabel btnLogout;

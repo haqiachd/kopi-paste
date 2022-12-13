@@ -337,8 +337,15 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
     }//GEN-LAST:event_lblCloseMouseExited
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DetailTransaksi dtr = new DetailTransaksi(null, true, this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString(), "");
-        dtr.setVisible(true);
+        String id;
+        if(this.tabelLpBulanan.getSelectedRow() > 0){
+            // membuka pop up detail transaksi
+            id= this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString();
+            DetailTransaksi dtr = new DetailTransaksi(null, true, id);
+            dtr.setVisible(true);            
+        }else{
+            Message.showWarning(this, "Tidak ada data yang dipilih!");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

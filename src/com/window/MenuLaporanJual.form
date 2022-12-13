@@ -600,7 +600,7 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="btnCetakHarian" min="-2" pref="108" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="btnHapusHarian" min="-2" pref="108" max="-2" attributes="0"/>
+                                          <Component id="btnDetailHarian" min="-2" pref="108" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="jScrollPane2" alignment="0" pref="985" max="32767" attributes="0"/>
                                       <Component id="lineBottom" max="32767" attributes="0"/>
@@ -647,7 +647,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="btnHapusHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                                              <Component id="btnDetailHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                               <Component id="btnCetakHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                               <Component id="btnSemuaHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                           </Group>
@@ -858,7 +858,7 @@
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JButton" name="btnHapusHarian">
+                        <Component class="javax.swing.JButton" name="btnDetailHarian">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="cc" green="0" red="cc" type="rgb"/>
@@ -872,7 +872,7 @@
                             <Property name="text" type="java.lang.String" value="Detail"/>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHapusHarianActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDetailHarianActionPerformed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="btnCetakHarian">
