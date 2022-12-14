@@ -8,8 +8,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.StringTokenizer;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -124,11 +122,11 @@ public class ChartManager {
     }
     
     public void showLineChart(JPanel panel, String title, int bulan, int tahun){
+//        bulan = bulan + 1;
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for(int i = 1; i <= 31; i+=2){
-            System.out.println(i);
-            dataset.setValue(new java.util.Random().nextInt(150), "Amount", Integer.toString(i));
+            dataset.setValue(this.getLineData(bulan, tahun, i, (i+1)), "Amount", Integer.toString(i));
         }
         
         //create chart
@@ -151,6 +149,36 @@ public class ChartManager {
         panel.removeAll();
         panel.add(lineChartPanel, BorderLayout.CENTER);
         panel.validate();
+    }
+    
+    private int getLineData(int bulan, int tahun, int hari1, int hari2){
+        try{
+            // query untuk mendapatkan total pendapatan selama dua hari
+            String sql = String.format(
+                    "SELECT SUM(dt.harga) AS total " +
+                    "FROM transaksi_jual AS t " +
+                    "JOIN detail_tr_jual AS dt " +
+                    "ON t.id_tr_jual = dt.id_tr_jual " +
+                    "WHERE MONTH(t.tanggal) = %d AND YEAR(t.tanggal) = %d AND DAY(tanggal) " + 
+                    "BETWEEN %d AND %d;", bulan, tahun, hari1, hari2
+            );
+            System.out.println(sql);
+            
+            // membuat koneksi
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            if(r.next()){
+                int total = r.getInt("total");
+                c.close(); r.close(); s.close();
+                return total;
+            }
+            
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
     }
     
     public void showBarChart(JPanel panel, String title, int bulan, int tahun){

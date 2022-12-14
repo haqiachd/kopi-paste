@@ -1549,6 +1549,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         int bulanDipilih = this.waktu.getNilaiBulan(this.namaBulan),
             tahunDipilih = this.inpPilihTahun.getYear();
         
+        System.out.println("BULAN DIPILIH : " + bulanDipilih);
+        
         String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
         
         switch(tipe){

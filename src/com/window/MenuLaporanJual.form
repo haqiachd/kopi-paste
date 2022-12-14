@@ -1341,11 +1341,6 @@
                           </Properties>
                         </Component>
                         <Component class="com.toedter.calendar.JYearChooser" name="inpPilihTahun">
-                          <Properties>
-                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Tahoma" size="16" style="1"/>
-                            </Property>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="cariTahun">
                           <Properties>
