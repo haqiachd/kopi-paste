@@ -62,6 +62,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
         this.chart.showPieChart(this.pnlShowChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
+        this.lblNamaWindow.setText("Laporan Penjualan Harian");
         
         // set hover button
         this.win.btns = new JLabel[]{
@@ -182,7 +183,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         // menghitung data
         for(int i = 0; i < this.tabelLpHarian.getRowCount(); i++){
             pesanan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Pesanan", ""));
-            pendapatan += Integer.parseInt(txt.removeMoneyCae(this.tabelLpHarian.getValueAt(i, 4).toString()));
+            pendapatan += Integer.parseInt(txt.removeMoneyCase(this.tabelLpHarian.getValueAt(i, 4).toString()));
         }
         
         // menampilkan data
@@ -1166,6 +1167,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
+        inpPilihTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1561,7 +1564,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
     private void btnDetailHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailHarianActionPerformed
         String id;
-        if(this.tabelLpHarian.getSelectedRow() > 0){
+        if(this.tabelLpHarian.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
             id= this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString();
             DetailTransaksi dtr = new DetailTransaksi(null, true, id);

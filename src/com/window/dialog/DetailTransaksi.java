@@ -1,11 +1,15 @@
 package com.window.dialog;
 
-import com.manage.User;
-import com.media.Audio;
-import com.media.Gambar;
+
+import com.koneksi.Koneksi;
+import com.manage.Message;
+import com.manage.Text;
 import java.awt.Color;
-import java.awt.Cursor;
-import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -15,6 +19,8 @@ import javax.swing.table.TableColumnModel;
 public class DetailTransaksi extends javax.swing.JDialog {
 
     private final PopUpBackground pop = new PopUpBackground();
+    
+    private final Text txt = new Text();
     
     private final String id;
     
@@ -33,16 +39,11 @@ public class DetailTransaksi extends javax.swing.JDialog {
         initComponents();
         this.setBackground(new Color(0,0,0,0));
         this.setLocationRelativeTo(null);
-        
-//        this.btnBackup.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        
-        this.tabelDetail.setRowHeight(29);
-        this.tabelDetail.getTableHeader().setBackground(new java.awt.Color(0,105,233));
-        this.tabelDetail.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
-        
-        this.resetTableLpBulanan();
-        
         this.lblDialogName.setText(this.lblDialogName.getText() + id);
+        
+        this.resetTableDetail();
+        this.showDetailTransaksi();
+        
     }
     
     @Override
@@ -51,7 +52,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
         this.pop.dispose();
     }
     
-    private void resetTableLpBulanan(){
+    private void resetTableDetail(){
         // set desain tabel
         this.tabelDetail.setRowHeight(29);
         this.tabelDetail.getTableHeader().setBackground(new java.awt.Color(0,105,233));
@@ -59,18 +60,13 @@ public class DetailTransaksi extends javax.swing.JDialog {
         
         // set model tabel
         this.tabelDetail.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {id, "Kentang Goreng", "4", "Rp. 56.000,00"},
-                {null, "Es Jeruk", "1", "Rp. 10.000,00"},
-                {null, "Chocholate", "2", "Rp. 24.000,00"},
-                {null, "Ayam Goreng", "1", "Rp. 13.300,00"}
-            },
+            new Object [][] {},
             new String [] {
-                "ID Transaksi", "Nama Menu", "Jumlah", "Harga"
+                "ID Transaksi", "Nama Menu", "Harga", "Jumlah", "Total Harga"
             }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             @Override
@@ -81,18 +77,82 @@ public class DetailTransaksi extends javax.swing.JDialog {
         
         // set size kolom tabel
         TableColumnModel columnModel = this.tabelDetail.getColumnModel();
-//        columnModel.getColumn(0).setPreferredWidth(90);
-//        columnModel.getColumn(0).setMaxWidth(90);
-//        columnModel.getColumn(1).setPreferredWidth(235);
-//        columnModel.getColumn(1).setMaxWidth(235);
-//        columnModel.getColumn(2).setPreferredWidth(235);
-//        columnModel.getColumn(2).setMaxWidth(235);
-//        columnModel.getColumn(3).setPreferredWidth(100);
-//        columnModel.getColumn(3).setMaxWidth(100);
-//        columnModel.getColumn(4).setPreferredWidth(125);
-//        columnModel.getColumn(4).setMaxWidth(125);
-//        columnModel.getColumn(5).setPreferredWidth(210);
-//        columnModel.getColumn(5).setMaxWidth(210);
+        columnModel.getColumn(0).setPreferredWidth(90);
+        columnModel.getColumn(0).setMaxWidth(90);
+        columnModel.getColumn(1).setPreferredWidth(190);
+        columnModel.getColumn(1).setMaxWidth(190);
+        columnModel.getColumn(2).setPreferredWidth(120);
+        columnModel.getColumn(2).setMaxWidth(120);
+        columnModel.getColumn(3).setPreferredWidth(60);
+        columnModel.getColumn(3).setMaxWidth(60);
+    }
+    
+    private void showDetailTransaksi(){
+        // reset tabel
+        this.resetTableDetail();
+        DefaultTableModel model = (DefaultTableModel) this.tabelDetail.getModel();
+        
+        try{
+            String sql = "SELECT d.id_tr_jual, m.nama_menu, m.harga, d.jumlah, d.harga "
+                       + "FROM detail_tr_jual AS d "
+                       + "JOIN menu AS m "
+                       + "ON m.id_menu = d.id_menu "
+                       + "WHERE id_tr_jual = '"+this.id+"'";
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            int row = 0;
+            while(r.next()){
+                String idTr; 
+                
+                // id transaksi hanya ditampilkan pada baris ke satu saja
+                if(row == 0){
+                    idTr = r.getString("d.id_tr_jual");
+                }else{
+                    idTr = "";
+                }
+                
+                // menambahkan data detail ke tabel
+                model.addRow(new Object[]{
+                        idTr,
+                        r.getString("m.nama_menu"),
+                        txt.toMoneyCase(r.getString("m.harga")),
+                        r.getString("d.jumlah"),
+                        txt.toMoneyCase(r.getString("d.harga"))
+                    }
+                );
+                row++;
+            }
+            
+            c.close();
+            r.close();
+            s.close();
+            
+            int jumlah = 0, harga = 0;
+            // menghitung total menu dan harga
+            for(int i = 0; i < model.getRowCount(); i++){
+                jumlah += Integer.parseInt(model.getValueAt(i, 3).toString());
+                harga += Integer.parseInt(txt.removeMoneyCase(model.getValueAt(i, 4).toString()));
+            }
+            
+            // menampilkan total jumlah pesanan dan total harga
+            model.addRow(
+                new Object[]{
+                    "Total", "", "", jumlah, txt.toMoneyCase(""+harga)
+                }
+            );
+            
+            // menampilkan data kedalam tabel
+            this.tabelDetail.setModel(model);
+            
+            this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-1, 50);
+            this.tabelDetail.setRowSelectionInterval(this.tabelDetail.getRowCount()-1, this.tabelDetail.getRowCount()-1);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -129,13 +189,13 @@ public class DetailTransaksi extends javax.swing.JDialog {
         tabelDetail.setFont(new java.awt.Font("Ebrima", 1, 16)); // NOI18N
         tabelDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"TRJ0030", "Kentang Goreng", "4", "Rp. 56.000,00"},
-                {null, "Es Jeruk", "1", "Rp. 10.000,00"},
-                {null, "Chocholate", "2", "Rp. 24.000,00"},
-                {null, "Ayam Goreng", "1", "Rp. 13.300,00"}
+                {"TRJ0030", "Kentang Goreng", null, "4", "Rp. 56.000,00"},
+                {null, "Es Jeruk", null, "1", "Rp. 10.000,00"},
+                {null, "Chocholate", null, "2", "Rp. 24.000,00"},
+                {null, "Ayam Goreng", null, "1", "Rp. 13.300,00"}
             },
             new String [] {
-                "ID Transaksi", "Nama Menu", "Jumlah", "Harga"
+                "ID Transaksi", "Nama Menu", "Harga", "Jumlah", "Total Harga"
             }
         ));
         jScrollPane1.setViewportView(tabelDetail);
@@ -163,17 +223,18 @@ public class DetailTransaksi extends javax.swing.JDialog {
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
+                        .addComponent(lineTop))
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap())
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,8 +245,8 @@ public class DetailTransaksi extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
                     .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

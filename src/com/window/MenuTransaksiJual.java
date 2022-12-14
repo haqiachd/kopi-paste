@@ -345,9 +345,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 // mendapatkan jumlah menu yang baru
                 newJml = Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString()),
                 // mendapatkan data harga dari menu    
-                harga = Integer.parseInt(txt.removeMoneyCae(this.tabelTr.getValueAt(row, 4).toString())),
+                harga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 4).toString())),
                 // mendapatkan data total harga menu yang lama
-                oldTotalHarga = Integer.parseInt(txt.removeMoneyCae(this.tabelTr.getValueAt(row, 6).toString())),
+                oldTotalHarga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 6).toString())),
                 newTotalHarga;
             
             if(newJml >= 1){
@@ -681,7 +681,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 p.setString(1, this.inpIdTransaksi.getText());
                 p.setString(2, this.tabelTr.getValueAt(i, 1).toString());
                 p.setString(3, this.tabelTr.getValueAt(i, 5).toString());
-                p.setString(4, txt.removeMoneyCae(this.tabelTr.getValueAt(i, 6).toString()));
+                p.setString(4, txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
                 
                 p.executeUpdate();
                 p.close();
