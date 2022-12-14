@@ -1,8 +1,13 @@
 package com.manage;
 
+import com.koneksi.Koneksi;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import javax.swing.JPanel;
@@ -28,34 +33,41 @@ import org.jfree.data.statistics.HistogramDataset;
 public class ChartManager {
     
     private final Color C_MAKANAN = new Color(250,138,16), C_MINUMAN = new Color(64,123,250), 
-                        C_SNACK = new Color(32,245,15), C_ATK = new Color(204,34,245), C_S = new Color(245,38,41),
+                        C_ORIGINAL = new Color(32,245,15), C_FLAVOURED = new Color(204,34,245), C_SNACK = new Color(245,38,41),
                         BG_CHART = Color.WHITE;
     
-    private final Font F_PRODUK = new Font("Ebrima", 1, 20);
+    private final Font F_MENU = new Font("Ebrima", 1, 20);
     
-    public void showPieChart(JPanel panel, String title, Font font, double makanan, double minuman, double snack, double atk, double s){
+    public void showPieChart(JPanel panel, String title, int bulan, int tahun){
+        // mendapatkan data dari database
+        double makanan = this.getPieData("Makanan", bulan, tahun)
+              ,minuman = this.getPieData("Minuman", bulan, tahun)
+              ,original = this.getPieData("Original Coffee", bulan, tahun)
+              ,flavoured = this.getPieData("Falvoured Coffee", bulan, tahun)
+              ,snack = this.getPieData("Snack", bulan, tahun);
         
         //create dataset
         DefaultPieDataset barDataset = new DefaultPieDataset();
+        
         if(makanan > 0){
             barDataset.setValue( "Makanan", new Double(makanan));
         }
         if(minuman > 0){
             barDataset.setValue( "Minuman", new Double(minuman));
         }
+        if(original > 0){
+            barDataset.setValue("Original Coffee", new Double(original));
+        }
+        if(flavoured > 0){
+            barDataset.setValue("Flavoured Coffee", new Double(flavoured));
+        }
         if(snack > 0){
-            barDataset.setValue( "Original Coffee", new Double(snack));
-        }
-        if(atk > 0){
-            barDataset.setValue( "Flavoured Coffee", new Double(atk));
-        }
-        if(s > 0){
-            barDataset.setValue( "Snack", new Double(s));
+            barDataset.setValue("Snack", new Double(snack));
         }
 
         //create chart
         JFreeChart piechart = ChartFactory.createPieChart("Penjualan Produk",barDataset, false,true,false);//explain
-        piechart.setTitle(new TextTitle(title, font));
+        piechart.setTitle(new TextTitle(title, this.F_MENU));
 
         //changing pie chart blocks colors
         PiePlot piePlot =(PiePlot) piechart.getPlot();
@@ -65,14 +77,14 @@ public class ChartManager {
         if(minuman > 0){
             piePlot.setSectionPaint("Minuman", this.C_MINUMAN);
         }
+        if(original > 0){
+            piePlot.setSectionPaint("Original Coffee", this.C_ORIGINAL);
+        }
+        if(flavoured > 0){
+            piePlot.setSectionPaint("Flavoured Coffee", this.C_FLAVOURED);
+        }
         if(snack > 0){
-            piePlot.setSectionPaint("Original Coffee", this.C_SNACK);
-        }
-        if(atk > 0){
-            piePlot.setSectionPaint("Flavoured Coffee", this.C_ATK);
-        }
-        if(s > 0){
-            piePlot.setSectionPaint("Snack", this.C_S);
+            piePlot.setSectionPaint("Snack", this.C_SNACK);
         }
         piePlot.setBackgroundPaint(this.BG_CHART);
         
@@ -81,69 +93,51 @@ public class ChartManager {
         panel.removeAll();
         panel.add(barChartPanel, BorderLayout.CENTER);
         panel.validate();
-        
-        
-    }
-
-    public void showPieChart(JPanel panel, String title, double makanan, double minuman, double snack, double atk, double s){
-        this.showPieChart(panel, title, F_PRODUK, makanan, minuman, snack, atk, s);
     }
     
-    public void pieChartProduk(){
+    private int getPieData(String jenis, int bulan, int tahun){
+        // membuat query
+        String sql = "SELECT SUM(dtrj.jumlah) AS pesanan " +
+                     "FROM detail_tr_jual AS dtrj " +
+                     "JOIN transaksi_jual AS trj " +
+                     "ON trj.id_tr_jual = dtrj.id_tr_jual " +
+                     "JOIN menu AS mn " +
+                     "ON mn.id_menu = dtrj.id_menu\n" +
+                     "WHERE mn.jenis = '"+jenis+"' AND MONTH(trj.tanggal) = "+bulan+" AND YEAR(trj.tanggal) = " + tahun;
+//        System.out.println(sql);
         
+        try{
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            if(r.next()){
+                int total = r.getInt("pesanan");
+                System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
+                c.close(); s.close(); r.close();
+                return total;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return 0;
     }
     
-    public void lineChartPenjualan(JPanel panel){
-        HashMap<String, Integer> hash = new HashMap();
-        hash.put("Kamis", 200);
-        hash.put("Jumat", 150);
-        hash.put("Sabtu", 58);
-        hash.put("Minggu", 30);
-        hash.put("Senin", 180);
-        hash.put("Selasa", 250);
-        hash.put("Rabu", 250);
-        
-        this.showLineChart(panel, hash);
-    }
-    
-    public void lineChartPengeluaran(){
-        
-    }
-    
-    public void lineChartTransaksi(){
-        
-    }
-    
-    public void showLineChart(JPanel panel, HashMap<String, Integer> hash){
+    public void showLineChart(JPanel panel, String title, int bulan, int tahun){
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//        dataset.setValue(200, "Amount", "Kamis");
-//        dataset.setValue(150, "Amount", "Jumat");
-//        dataset.setValue(58, "Amount", "Sabtu");
-//        dataset.setValue(30, "Amount", "Minggu");
-//        dataset.setValue(180, "Amount", "Senin");
-//        dataset.setValue(250, "Amount", "Selasa");
-//        dataset.setValue(250, "Amount", "Rabu");
-        
-        String key;
-        int valKey;
-        StringTokenizer token;
-        Object[] buff = hash.entrySet().toArray();
-        
-        for(Object obj : buff){
-            token = new StringTokenizer(obj.toString(), "=");
-            key = token.nextToken();
-            valKey = Integer.parseInt(token.nextToken());
-            dataset.setValue(valKey, "Amount", key);
+        for(int i = 1; i <= 31; i+=2){
+            System.out.println(i);
+            dataset.setValue(new java.util.Random().nextInt(150), "Amount", Integer.toString(i));
         }
         
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Seminggu Terakhir","Hari","Jumlah", 
+        JFreeChart linechart = ChartFactory.createLineChart(title,"Tanggal","Pendapatan", 
                 dataset, PlotOrientation.VERTICAL, false,true,false);
-        linechart.setTitle(new TextTitle("Line Chart", new java.awt.Font("Ebrima", 1, 22)));
+        linechart.setTitle(new TextTitle(title, this.F_MENU));
         
         //create plot object
-        CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
+         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
         lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
         lineCategoryPlot.setBackgroundPaint(Color.WHITE);
         
@@ -156,6 +150,29 @@ public class ChartManager {
         ChartPanel lineChartPanel = new ChartPanel(linechart);
         panel.removeAll();
         panel.add(lineChartPanel, BorderLayout.CENTER);
+        panel.validate();
+    }
+    
+    public void showBarChart(JPanel panel, String title, int bulan, int tahun){
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for(int i = 1; i <= 4; i++){
+            dataset.setValue(new java.util.Random().nextInt(150), "Amount", "Minggu ke-"+Integer.toString(i));
+        }
+        
+        JFreeChart barchart = ChartFactory.createBarChart(title,"Minggu","Jumlah Pendapatan", 
+                dataset, PlotOrientation.VERTICAL, false,true,false);
+        barchart.setTitle(new TextTitle(title, this.F_MENU));
+        
+        CategoryPlot categoryPlot = barchart.getCategoryPlot();
+        //categoryPlot.setRangeGridlinePaint(Color.BLUE);
+        categoryPlot.setBackgroundPaint(Color.WHITE);
+        BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
+        Color clr3 = new Color(237,40,40);
+        renderer.setSeriesPaint(0, clr3);
+        
+        ChartPanel barpChartPanel = new ChartPanel(barchart);
+        panel.removeAll();
+        panel.add(barpChartPanel, BorderLayout.CENTER);
         panel.validate();
     }
 
@@ -182,54 +199,6 @@ public class ChartManager {
         panel.removeAll();
         panel.add(barpChartPanel2, BorderLayout.CENTER);
         panel.validate();
-    }
-
-    public void showBarChart(JPanel panel){
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(200, "Amount", "january");
-        dataset.setValue(150, "Amount", "february");
-        dataset.setValue(18, "Amount", "march");
-        dataset.setValue(100, "Amount", "april");
-        dataset.setValue(80, "Amount", "may");
-        dataset.setValue(250, "Amount", "june");
-        
-        JFreeChart chart = ChartFactory.createBarChart("contribution","monthly","amount", 
-                dataset, PlotOrientation.VERTICAL, false,true,false);
-        
-        CategoryPlot categoryPlot = chart.getCategoryPlot();
-        //categoryPlot.setRangeGridlinePaint(Color.BLUE);
-        categoryPlot.setBackgroundPaint(Color.WHITE);
-        BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
-        Color clr3 = new Color(204,0,51);
-        renderer.setSeriesPaint(0, clr3);
-        
-        ChartPanel barpChartPanel = new ChartPanel(chart);
-        panel.removeAll();
-        panel.add(barpChartPanel, BorderLayout.CENTER);
-        panel.validate();
-        
-        
-    }
-    
-    public static void main(String[] args) {
-        
-        HashMap<String, Integer> hash = new HashMap();
-        hash.put("Senin", 10);
-        hash.put("Selasa", 20);
-        
-        System.out.println(hash.toString());
-        
-        Object[] values = hash.values().toArray(),
-                 key = hash.keySet().toArray();
-        
-        Object[] val = hash.entrySet().toArray();
-        
-        StringTokenizer token;
-        for(Object b : val){
-            token = new StringTokenizer(b.toString(), "=");
-            System.out.printf("Key : %s\nValue : %s\n\n", token.nextToken(), token.nextToken());
-        }
-        
     }
     
 }
