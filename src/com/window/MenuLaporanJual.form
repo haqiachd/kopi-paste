@@ -1211,6 +1211,25 @@
                               </Properties>
 
                               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+                              <SubComponents>
+                                <Component class="javax.swing.JLabel" name="lblEmptyChart">
+                                  <Properties>
+                                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                      <Color blue="28" green="28" red="ed" type="rgb"/>
+                                    </Property>
+                                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                      <Font name="Verdana" size="18" style="1"/>
+                                    </Property>
+                                    <Property name="horizontalAlignment" type="int" value="0"/>
+                                    <Property name="text" type="java.lang.String" value="Silahkan Pilih Tipe Chart"/>
+                                  </Properties>
+                                  <Constraints>
+                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+                                      <BorderConstraints direction="Center"/>
+                                    </Constraint>
+                                  </Constraints>
+                                </Component>
+                              </SubComponents>
                             </Container>
                             <Component class="javax.swing.JComboBox" name="inpChartBulanan">
                               <Properties>
@@ -1221,10 +1240,11 @@
                                   <Font name="Dialog" size="16" style="1"/>
                                 </Property>
                                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                                  <StringArray count="3">
-                                    <StringItem index="0" value="Pie Chart"/>
-                                    <StringItem index="1" value="Line Chart"/>
-                                    <StringItem index="2" value="Bar Chart"/>
+                                  <StringArray count="4">
+                                    <StringItem index="0" value="Pilih Tipe"/>
+                                    <StringItem index="1" value="Pie Chart"/>
+                                    <StringItem index="2" value="Line Chart"/>
+                                    <StringItem index="3" value="Bar Chart"/>
                                   </StringArray>
                                 </Property>
                               </Properties>
@@ -1321,6 +1341,11 @@
                           </Properties>
                         </Component>
                         <Component class="com.toedter.calendar.JYearChooser" name="inpPilihTahun">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                              <Font name="Tahoma" size="16" style="1"/>
+                            </Property>
+                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="cariTahun">
                           <Properties>

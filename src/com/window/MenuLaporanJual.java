@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import org.jfree.chart.ChartFactory;
@@ -61,7 +62,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.setTitle("Menu Transaksi");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
-        this.chart.showPieChart(this.pnlShowChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
+//        this.chart.showPieChart(this.pnlShowChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
         this.lblNamaWindow.setText("Laporan Penjualan Harian");
         
         // set hover button
@@ -81,7 +82,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.showLaporanBulanan();
         this.showDataLaporanBulanan("");
     }
-    
+        
     private void resetTableLpHarian(){
         // set desain tabel
         this.tabelLpHarian.setRowHeight(29);
@@ -379,7 +380,19 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         return 0;
     }
     
-    public void showLineChart(){
+    private void setEmptyChart(String text){
+        this.lblEmptyChart.setText(text);
+        
+        this.pnlShowChart.removeAll();
+        this.pnlShowChart.repaint();
+        this.pnlShowChart.revalidate();
+        
+        this.pnlShowChart.add(new JPanel().add(this.lblEmptyChart), BorderLayout.CENTER);
+        this.pnlShowChart.repaint();
+        this.pnlShowChart.revalidate();
+    }
+    
+    public void showLineChartOld(){
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.setValue(170, "Amount", "Minggu Ke-1");
@@ -391,7 +404,37 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         dataset.setValue(150, "Amount", "Minggu Ke-4");
         
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Pada Bulan "+namaBulan,"Minggu","Jumlah Penjualan", 
+        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Pada Bulan "+namaBulan,"Minggu","Jumlah Pembeli", 
+                dataset, PlotOrientation.VERTICAL, false,true,false);
+        linechart.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
+        
+        //create plot object
+         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
+        lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
+        lineCategoryPlot.setBackgroundPaint(Color.WHITE);
+        
+        //create render object to change the moficy the line properties like color
+        LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
+        Color lineChartColor = new Color(255,2,9);
+        lineRenderer.setSeriesPaint(0, lineChartColor);
+        
+         //create chartPanel to display chart(graph)
+        ChartPanel lineChartPanel = new ChartPanel(linechart);
+        pnlShowChart.removeAll();
+        pnlShowChart.add(lineChartPanel, BorderLayout.CENTER);
+        pnlShowChart.validate();
+    }
+    
+    public void showLineChart(){
+        //create dataset for the graph
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for(int i = 1; i <= 31; i+=2){
+            System.out.println(i);
+            dataset.setValue(new java.util.Random().nextInt(500_000), "Amount", Integer.toString(i));
+        }
+        
+        //create chart
+        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Pada Bulan "+namaBulan,"Tanggal","Jumlah Pembeli", 
                 dataset, PlotOrientation.VERTICAL, false,true,false);
         linechart.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
         
@@ -437,6 +480,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         pnlShowChart.add(barpChartPanel, BorderLayout.CENTER);
         pnlShowChart.validate();
         
+    }
+    
+    private void tampilkanChart(){
         
     }
     
@@ -495,6 +541,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTahun = new javax.swing.JLabel();
         pnlChart = new javax.swing.JPanel();
         pnlShowChart = new javax.swing.JPanel();
+        lblEmptyChart = new javax.swing.JLabel();
         inpChartBulanan = new javax.swing.JComboBox();
         lblChartBulanan = new javax.swing.JLabel();
         lblTotalPsBulanan = new javax.swing.JLabel();
@@ -1084,9 +1131,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         pnlShowChart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pnlShowChart.setLayout(new java.awt.BorderLayout());
 
+        lblEmptyChart.setBackground(new java.awt.Color(237, 40, 40));
+        lblEmptyChart.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        lblEmptyChart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblEmptyChart.setText("Silahkan Pilih Tipe Chart");
+        pnlShowChart.add(lblEmptyChart, java.awt.BorderLayout.CENTER);
+
         inpChartBulanan.setBackground(new java.awt.Color(248, 249, 250));
         inpChartBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpChartBulanan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pie Chart", "Line Chart", "Bar Chart" }));
+        inpChartBulanan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Tipe", "Pie Chart", "Line Chart", "Bar Chart" }));
         inpChartBulanan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inpChartBulananActionPerformed(evt);
@@ -1167,7 +1220,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
-        inpPilihTahun.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpPilihTahun.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
 
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1480,38 +1533,75 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
     
     private void inpChartBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpChartBulananActionPerformed
-        if(this.inpChartBulanan.getSelectedIndex() == 0){
-            this.chart.showPieChart(this.pnlShowChart, "Penjualan Produk Bulan " + namaBulan, 10, 15, 30, 20, 15);
-        }else if(this.inpChartBulanan.getSelectedIndex() == 1){
-            this.showLineChart();
-        }else if(this.inpChartBulanan.getSelectedIndex() == 2){
-            this.showBarChart();
+        // mendapatkan row tabel dan tipe chart
+        int row = this.tabelLpBulanan.getSelectedRow(),
+            tipe = this.inpChartBulanan.getSelectedIndex();
+        
+        // jika user belum memilih data pada tabel
+        if(row < 0){
+            this.setEmptyChart("Silahkan pilih bulan pada tabel disamping");
+            return;
+        }
+
+        // mendapatkan nama bulan
+        this.namaBulan = this.tabelLpBulanan.getValueAt(row, 0).toString();
+        // mendapatkan bulan tahun yg dipilih
+        int bulanDipilih = this.waktu.getNilaiBulan(this.namaBulan),
+            tahunDipilih = this.inpPilihTahun.getYear();
+        
+        String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
+        
+        switch(tipe){
+            // jika yang dipilih adalah pie chart
+            case 1 : 
+                this.chart.showPieChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                break;
+            // jika yang dipilih adalah line chart
+            case 2 : 
+                this.chart.showLineChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                break;
+            case 3 :
+                // jika yang dipilih adalah bar chart
+                this.chart.showBarChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);    
+                break;
+            default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
         }
     }//GEN-LAST:event_inpChartBulananActionPerformed
-
-
     
     private void tabelLpBulananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelLpBulananMouseClicked
         // mendapatkan nama bulan
         this.namaBulan = this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 0).toString();
-        // mendapatkan nilai bulan
-        int bulanDipilih = this.waktu.getNilaiBulan(this.namaBulan),
-            tahunDipilih = this.inpPilihTahun.getYear();
         
-        // jika yang dipilih adalah pie chart
-        if(this.inpChartBulanan.getSelectedIndex() == 0){
-            this.chart.showPieChart(
-                    this.pnlShowChart, "Penjualan Produk Bulan " + namaBulan + " " + tahunDipilih, 
-                    this.getPieData("Makanan", bulanDipilih, tahunDipilih), 
-                    this.getPieData("Minuman", bulanDipilih, tahunDipilih), 
-                    this.getPieData("Original Coffee", bulanDipilih, tahunDipilih), 
-                    this.getPieData("Falvoured Coffee", bulanDipilih, tahunDipilih),
-                    this.getPieData("Snack", bulanDipilih, tahunDipilih)
-            );
-        }else if(this.inpChartBulanan.getSelectedIndex() == 1){
-            this.showLineChart();
-        }else if(this.inpChartBulanan.getSelectedIndex() == 2){
-            this.showBarChart();
+        // mendapatkan bulan tahun yg dipilih
+        int bulanDipilih = this.waktu.getNilaiBulan(this.namaBulan),
+            tahunDipilih = this.inpPilihTahun.getYear(),
+            // mendapatkan jumlah pembeli dan tipe chart
+            jmlPembeli = Integer.parseInt(this.tabelLpBulanan.getValueAt(this.tabelLpBulanan.getSelectedRow(), 2).toString()),
+            tipeChart = this.inpChartBulanan.getSelectedIndex();
+        
+        System.out.println("JUMLAH PEMBELI : " + jmlPembeli);
+        
+        if(jmlPembeli > 0){
+            
+            String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
+            switch(tipeChart){
+                // jika yang dipilih adalah pie chart
+                case 1 : 
+                    this.chart.showPieChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                    break;
+                // jika yang dipilih adalah line chart
+                case 2 : 
+                    this.chart.showLineChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                    break;
+                case 3 :
+                    // jika yang dipilih adalah bar chart
+                    this.chart.showBarChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);    
+                    break;
+                default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
+            }
+        }else{
+            System.out.println("EXECUTED");
+            this.setEmptyChart("Tidak ada pembelian pada bulan " + namaBulan);
         }
     }//GEN-LAST:event_tabelLpBulananMouseClicked
 
@@ -1644,13 +1734,19 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_cariTahunMouseExited
 
     private void btnRiwayatBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatBulananActionPerformed
-        int row = this.tabelLpBulanan.getSelectedRow();
+        int row = this.tabelLpBulanan.getSelectedRow(),
+            jmlData;
         if(row >= 0){
-            int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
-                tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
+            jmlData = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 3).toString());
+            if(jmlData > 0){
+                int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
+                    tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
 
-            RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan-1, tahun);
-            dtl.setVisible(true);            
+                RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan-1, tahun);
+                dtl.setVisible(true);                
+            }else{
+                Message.showWarning(this, "Gagal menampilkan data!\nTidak ada pembelian yang dilakukan pada bulan " + this.tabelLpBulanan.getValueAt(row, 0).toString());
+            }
         }else{
             Message.showWarning(this, "Tidak ada bulan yang dipilih!");
         }
@@ -1735,6 +1831,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblChartBulanan;
     private javax.swing.JLabel lblDataAntara;
     private javax.swing.JLabel lblDataPerhari;
+    private javax.swing.JLabel lblEmptyChart;
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblNamaUser;
