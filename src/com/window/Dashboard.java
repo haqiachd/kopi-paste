@@ -44,8 +44,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.status = true;
         this.setTitle("Menu Dashboard");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
-        this.chart.showPieChart(this.pnlPieChart, "Presentase Penjualan Produk", 10, 15, 30, 20, 15);
-        this.showLineChart();
+        this.chart.showPieChart(this.pnlPieChart, "Presentase Penjualan Bulan Ini", waktu.getBulan(), waktu.getTahun());
+        this.chart.showLineChart(this.pnlLineChart, "Penjualan Produk Bulan Ini", waktu.getBulan(), waktu.getTahun());
         this.lblNamaUser.setText(User.getNamaUser());
         
         this.win.btns = new JLabel[]{
@@ -110,20 +110,13 @@ public class Dashboard extends javax.swing.JFrame {
     public void showLineChart(){
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(50, "Amount", "Minggu 1");
-        dataset.setValue(80, "Amount", "Minggu 2");
-        dataset.setValue(150, "Amount", "Minggu 3");
-        dataset.setValue(120, "Amount", "Minggu 4");
-//        dataset.setValue(170, "Amount", "Kamis");
-//        dataset.setValue(150, "Amount", "Jumat");
-//        dataset.setValue(80, "Amount", "Sabtu");
-//        dataset.setValue(50, "Amount", "Minggu");
-//        dataset.setValue(180, "Amount", "Senin");
-//        dataset.setValue(200, "Amount", "Selasa");
-//        dataset.setValue(200, "Amount", "Rabu");
+        for(int i = 1; i <= 31; i+=2){
+            System.out.println(i);
+            dataset.setValue(new java.util.Random().nextInt(150), "Amount", Integer.toString(i));
+        }
         
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Produk","Minggu","Jumlah", 
+        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Produk","Tanggal","Jumlah", 
                 dataset, PlotOrientation.VERTICAL, false,true,false);
         linechart.setTitle(new TextTitle("Penjualan Produk Bulan Ini", new java.awt.Font("Ebrima", 1, 20)));
         
