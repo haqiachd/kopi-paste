@@ -371,7 +371,7 @@ public class Text {
         return "Rp. -1.00";
     }
     
-    public String removeMoneyCae(String money){
+    public String removeMoneyCase(String money){
         String buff = money.substring(4).replaceAll("\\.", "").replaceAll(",", "");
         return buff.substring(0, buff.length()-2);
     }
@@ -457,7 +457,7 @@ public class Text {
         Text t = new Text();
         String mon = "2000";
         System.out.println(t.toMoneyCase(mon));
-        System.out.println(t.removeMoneyCae(t.toMoneyCase(mon)));
+        System.out.println(t.removeMoneyCase(t.toMoneyCase(mon)));
         
     }
     
