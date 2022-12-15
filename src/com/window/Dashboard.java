@@ -1,7 +1,9 @@
 package com.window;
 
+import com.koneksi.Koneksi;
 import com.manage.ChartManager;
 import com.manage.Message;
+import com.manage.Text;
 import com.manage.UIManager;
 import com.manage.User;
 import com.manage.Waktu;
@@ -9,20 +11,13 @@ import com.media.Gambar;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UserProfile;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JLabel;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.chart.title.TextTitle;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
+
 
 /**
  *
@@ -35,6 +30,8 @@ public class Dashboard extends javax.swing.JFrame {
     private final ChartManager chart = new ChartManager();
     
     private final Waktu waktu = new Waktu();
+    
+    private final Text txt = new Text();
     
     private boolean status;
     
@@ -73,68 +70,55 @@ public class Dashboard extends javax.swing.JFrame {
         
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
+        
+        this.getPenjualan();
+        this.getPembelian();
     }
     
-    public void showPieChart(){
-        
-        //create dataset
-      DefaultPieDataset barDataset = new DefaultPieDataset( );
-      barDataset.setValue( "Makanan" , new Double( 20 ) );  
-      barDataset.setValue( "Minuman" , new Double( 20 ) );   
-      barDataset.setValue( "Snack" , new Double( 40 ) );    
-      barDataset.setValue( "ATK" , new Double( 10 ) );  
-      
-      //create chart
-      JFreeChart piechart = ChartFactory.createPieChart("Penjualan Produk",barDataset, false,true,false);//explain
-      piechart.setTitle(new TextTitle("Pie Chart", new java.awt.Font("Ebrima", 1, 22)));
-      
-        PiePlot piePlot =(PiePlot) piechart.getPlot();
-      
-       //changing pie chart blocks colors
-       piePlot.setSectionPaint("Makanan", new Color(240,155,94));
-       piePlot.setSectionPaint("Minuman", new Color(52,200,38));
-       piePlot.setSectionPaint("Snack", new Color(255,43,237));
-       piePlot.setSectionPaint("ATK", new Color(49,165,192));
-      
-       
-        piePlot.setBackgroundPaint(Color.white);
-        
-        //create chartPanel to display chart(graph)
-        ChartPanel barChartPanel = new ChartPanel(piechart);
-        pnlPieChart.removeAll();
-        pnlPieChart.add(barChartPanel, BorderLayout.CENTER);
-        pnlPieChart.validate();
-        pnlPieChart.setBackground(new Color(26,121,173));
-    }
-    
-    public void showLineChart(){
-        //create dataset for the graph
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for(int i = 1; i <= 31; i+=2){
-            System.out.println(i);
-            dataset.setValue(new java.util.Random().nextInt(150), "Amount", Integer.toString(i));
+    private void getPenjualan(){
+        try{
+            String sql = "SELECT SUM(tj.total_harga) AS pendapatan, COUNT(tj.id_tr_jual) AS pembeli " +
+                         "FROM transaksi_jual AS tj " +
+                         "WHERE MONTH(tj.tanggal) = "+waktu.getBulan()+" AND YEAR(tj.tanggal) = " + waktu.getTahun();
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            String pendapatan, pembeli;
+            
+            if(r.next()){
+                pendapatan = txt.toMoneyCase(r.getString("pendapatan"));
+                pembeli = r.getString("pembeli") + " Pembeli";
+                
+                this.valPendapatan.setText(" "+pendapatan.substring(0, pendapatan.lastIndexOf(".")).replaceAll(",", "."));
+                this.valPembeli.setText(pembeli);
+                c.close(); s.close(); r.close();
+            }
+            
+        }catch(SQLException ex){
+            Message.showException(this, ex);
         }
-        
-        //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Produk","Tanggal","Jumlah", 
-                dataset, PlotOrientation.VERTICAL, false,true,false);
-        linechart.setTitle(new TextTitle("Penjualan Produk Bulan Ini", new java.awt.Font("Ebrima", 1, 20)));
-        
-        //create plot object
-         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
-        lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
-        lineCategoryPlot.setBackgroundPaint(Color.WHITE);
-        
-        //create render object to change the moficy the line properties like color
-        LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
-        Color lineChartColor = new Color(255,2,9);
-        lineRenderer.setSeriesPaint(0, lineChartColor);
-        
-         //create chartPanel to display chart(graph)
-        ChartPanel lineChartPanel = new ChartPanel(linechart);
-        pnlLineChart.removeAll();
-        pnlLineChart.add(lineChartPanel, BorderLayout.CENTER);
-        pnlLineChart.validate();
+    }
+    
+    private void getPembelian(){
+        try{
+            String sql = "SELECT SUM(tb.total_harga) AS pengeluaran " +
+                         "FROM transaksi_beli AS tb " +
+                         "WHERE MONTH(tb.tanggal) = "+waktu.getBulan()+" AND YEAR(tb.tanggal) = " + waktu.getTahun();
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            String pendapatan;
+            
+            if(r.next()){
+                pendapatan = txt.toMoneyCase(r.getString("pengeluaran"));
+                
+                this.valPengeluaran.setText(pendapatan.substring(0, pendapatan.lastIndexOf(".")).replaceAll(",", "."));
+                c.close(); s.close(); r.close();
+            }
+            
+        }catch(SQLException ex){
+            Message.showException(this, ex);
+        }
     }
     
     @SuppressWarnings("unchecked")
