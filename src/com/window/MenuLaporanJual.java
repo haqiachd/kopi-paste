@@ -138,6 +138,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                   + kondisi 
                   + " ORDER BY trj.tanggal DESC"
             );
+            System.out.println(sql);
 
             // eksekusi query
             Connection c = (Connection) Koneksi.configDB();
@@ -270,6 +271,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             String sql = "SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) "
                          + "FROM transaksi_jual "
                          + "WHERE MONTH(tanggal) = "+bulan+" AND YEAR(tanggal) = " + tahun;
+            System.out.println(sql);
             
             // eksekusi query
             Connection c = (Connection) Koneksi.configDB();
@@ -291,7 +293,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                     
                     // mendapatkan data dan mengembalikan data
                     return new Object[]{
-                        waktu.getNamaBulan(r.getInt(1)-1),
+                        waktu.getNamaBulan(r.getInt(1)),
                         this.inpPilihTahun.getYear(),
                         String.format("%,d", transaksi),
                         String.format("%,d", pesanan),
@@ -300,7 +302,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 // jika pendapatan kurang dari 1 maka data dianggap kosong dan data yang akan ditampilkan akan diset default
                 }else{
                     return new Object[]{
-                        waktu.getNamaBulan(bulan-1),
+                        waktu.getNamaBulan(bulan),
                         this.inpPilihTahun.getYear(),
                         0,
                         0,
@@ -323,7 +325,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) this.tabelLpBulanan.getModel();
         
         // mendapatkan data waktu
-        int bulanSaatIni = this.waktu.getBulan()+1,
+        int bulanSaatIni = this.waktu.getBulan(),
             tahunSaatIni = this.waktu.getTahun(),
             tahunDipilih = this.inpPilihTahun.getYear();
         
@@ -350,35 +352,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.lblTotalTrBulanan.setText(String.format(" Transaksi : %,d", this.trBulanan));
         this.lblTotalPsBulanan.setText(String.format(" Pesanan : %,d", this.psBulanan));
         this.lblTotalPdBulanan.setText(String.format(" Pendapatan : %s", this.txt.toMoneyCase(Integer.toString(this.pdBulanan))));
-    }
-    
-    private int getPieData(String jenis, int bulan, int tahun){
-        // membuat query
-        String sql = "SELECT SUM(dtrj.jumlah) AS pesanan " +
-                     "FROM detail_tr_jual AS dtrj " +
-                     "JOIN transaksi_jual AS trj " +
-                     "ON trj.id_tr_jual = dtrj.id_tr_jual " +
-                     "JOIN menu AS mn " +
-                     "ON mn.id_menu = dtrj.id_menu\n" +
-                     "WHERE mn.jenis = '"+jenis+"' AND MONTH(trj.tanggal) = "+bulan+" AND YEAR(trj.tanggal) = " + tahun;
-//        System.out.println(sql);
-        
-        try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
-            
-            if(r.next()){
-                int total = r.getInt("pesanan");
-                System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
-                c.close(); s.close(); r.close();
-                return total;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-        return 0;
-    }
+    } 
+
     
     private void setEmptyChart(String text){
         this.lblEmptyChart.setText(text);

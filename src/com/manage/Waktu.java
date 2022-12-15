@@ -68,6 +68,10 @@ public class Waktu {
         }
     }
     
+    public String getNamaHari(){
+        return this.getNamaHari(kalender.get(Calendar.DAY_OF_WEEK));
+    }
+    
 //Senin = Monday.
 //Selasa = Tuesday.
 //Rabu = Wednesday.
@@ -88,12 +92,8 @@ public class Waktu {
         }
     }
     
-    public String getNamaHari(){
-        return this.getNamaHari(kalender.get(Calendar.DAY_OF_WEEK));
-    }
-    
     public String getNamaBulan(int bulan){
-        switch(bulan){
+        switch(bulan-1){
             case Calendar.JANUARY: return "Januari";
             case Calendar.FEBRUARY: return "Februari";
             case Calendar.MARCH: return "Maret";
@@ -198,7 +198,7 @@ public class Waktu {
                 while (true) {
                     kalender = Calendar.getInstance();
                     tahun = kalender.get(Calendar.YEAR);
-                    bulan = kalender.get(Calendar.MONTH);
+                    bulan = kalender.get(Calendar.MONTH)+1;
                     tanggal = kalender.get(Calendar.DAY_OF_MONTH);
                     jam = kalender.get(Calendar.HOUR_OF_DAY);
                     menit = kalender.get(Calendar.MINUTE);
@@ -214,7 +214,7 @@ public class Waktu {
     }
     
     public String getCurrentDate(){
-        return String.format("%d-%02d-%02d", getTahun(), getBulan()+1, getTanggal());
+        return String.format("%d-%02d-%02d", getTahun(), getBulan(), getTanggal());
     }
     
     public String getCurrentDateTime(){
@@ -231,27 +231,6 @@ public class Waktu {
         return String.format("%02d %s %d %02d:%02d:%02d", 
                 tanggal, this.getNamaBulan(bulan), tahun, jam, menit, detik
         );
-    }
-    
-    public static void main(String[] args) {
-        
-        Waktu w = new Waktu();
-        Waktu.updateWaktu();
-        
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{
-                    while(true){
-                        System.out.println(w.getCurrentDateTime());
-                        Thread.sleep(100);
-                    }
-                }catch(Exception ex){
-                    System.out.println(ex.getMessage());
-                }
-            }
-        }).start();
-        
     }
     
      public Date[] weekk(int tgl, int bln, int thn) throws ParseException{
@@ -397,4 +376,31 @@ public class Waktu {
         tanggal[1] = akhir;
         return tanggal;
     }
+    
+    public static void main(String[] args) {
+        
+        Waktu w = new Waktu();
+        
+        Waktu.updateWaktu();
+        
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                System.out.println(w.getDetik());
+                System.out.println(w.getMenit());
+                System.out.println(w.getJam());
+                System.out.println(w.getTanggal());
+                System.out.println(w.getBulan());
+                System.out.println(w.getTahun());
+                System.out.println(w.getNamaBulan(w.getBulan()-11));
+                System.out.println(w.getCurrentDateTime());
+            }
+        }).start();
+//        System.exit(0);
+
+    }
+    
+
+     
+     
 }

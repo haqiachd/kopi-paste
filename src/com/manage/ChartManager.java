@@ -102,7 +102,7 @@ public class ChartManager {
                      "JOIN menu AS mn " +
                      "ON mn.id_menu = dtrj.id_menu\n" +
                      "WHERE mn.jenis = '"+jenis+"' AND MONTH(trj.tanggal) = "+bulan+" AND YEAR(trj.tanggal) = " + tahun;
-//        System.out.println(sql);
+        System.out.println(sql);
         
         try{
             Connection c = (Connection) Koneksi.configDB();

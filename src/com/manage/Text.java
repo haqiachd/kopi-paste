@@ -431,7 +431,7 @@ public class Text {
         bulan = Integer.parseInt(token.nextToken());
         hari =  Integer.parseInt(token.nextToken());
         // mengubah menjadi data case
-        return String.format("%02d %s %02d", hari, new Waktu().getNamaBulan(bulan-1), tahun);   
+        return String.format("%02d %s %02d", hari, new Waktu().getNamaBulan(bulan), tahun);   
     }
     
     public void filterAngka(KeyEvent a){
