@@ -93,10 +93,8 @@ public class DetailTransaksi extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelDetail.getModel();
         
         try{
-            String sql = "SELECT d.id_tr_jual, m.nama_menu, m.harga, d.jumlah, d.total_harga "
-                       + "FROM detail_tr_jual AS d "
-                       + "JOIN menu AS m "
-                       + "ON m.id_menu = d.id_menu "
+            String sql = "SELECT id_tr_jual, nama_menu, harga_menu, jumlah, total_harga "
+                       + "FROM detail_tr_jual  "
                        + "WHERE id_tr_jual = '"+this.id+"'";
             // eksekusi query
             Connection c = (Connection) Koneksi.configDB();
@@ -109,7 +107,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
                 
                 // id transaksi hanya ditampilkan pada baris ke satu saja
                 if(row == 0){
-                    idTr = r.getString("d.id_tr_jual");
+                    idTr = r.getString("id_tr_jual");
                 }else{
                     idTr = "";
                 }
@@ -117,10 +115,10 @@ public class DetailTransaksi extends javax.swing.JDialog {
                 // menambahkan data detail ke tabel
                 model.addRow(new Object[]{
                         idTr,
-                        r.getString("m.nama_menu"),
-                        txt.toMoneyCase(r.getString("m.harga")),
-                        r.getString("d.jumlah"),
-                        txt.toMoneyCase(r.getString("d.total_harga"))
+                        r.getString("nama_menu"),
+                        txt.toMoneyCase(r.getString("harga_menu")),
+                        r.getString("jumlah"),
+                        txt.toMoneyCase(r.getString("total_harga"))
                     }
                 );
                 row++;
