@@ -155,12 +155,10 @@ public class ChartManager {
         try{
             // query untuk mendapatkan total pendapatan selama dua hari
             String sql = String.format(
-                    "SELECT SUM(dt.harga) AS total " +
-                    "FROM transaksi_jual AS t " +
-                    "JOIN detail_tr_jual AS dt " +
-                    "ON t.id_tr_jual = dt.id_tr_jual " +
-                    "WHERE MONTH(t.tanggal) = %d AND YEAR(t.tanggal) = %d AND DAY(tanggal) " + 
-                    "BETWEEN %d AND %d;", bulan, tahun, hari1, hari2
+                    "SELECT SUM(total_harga) AS total " +
+                    "FROM transaksi_jual " +
+                    "WHERE MONTH(tanggal) = %d AND YEAR(tanggal) = %d \n" +
+                    "AND DAY(tanggal) BETWEEN %d AND %d;", bulan, tahun, hari1, hari2
             );
             System.out.println(sql);
             
