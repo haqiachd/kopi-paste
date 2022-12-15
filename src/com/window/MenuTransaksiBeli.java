@@ -374,6 +374,21 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         return ttlJumlah;
     }
     
+    private String getSatuanBahan(String idBahan){
+        try{
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery("SELECT satuan FROM bahan WHERE id_bahan = '"+idBahan+"'");
+            
+            if(r.next()){
+                return r.getString("satuan");
+            }
+        }catch(SQLException ex){
+            Message.showException(this, ex);
+        }
+        return null;
+    }
+    
     private boolean transaksi(){
         try{
             // mendapatkan data id transaksi dan id karyawan
@@ -417,12 +432,18 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             PreparedStatement pst;
             // membaca semua data yang ada didalam tabel
             for(int i = 0; i < tabelData.getRowCount(); i++){
+            String idBhn = this.tabelData.getValueAt(i, 1).toString(),
+                   satuan = this.getSatuanBahan(idBhn);
                 // menyiapkan query
-                pst = conn.prepareStatement("INSERT INTO detail_tr_beli VALUES (?, ?, ?, ?)");
+                pst = conn.prepareStatement("INSERT INTO detail_tr_beli VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 pst.setString(1, this.inpIdTransaksi.getText());
-                pst.setString(2, this.tabelData.getValueAt(i, 1).toString()); // get data id bahan
-                pst.setInt(3, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
-                pst.setString(4, txt.removeMoneyCase(this.tabelData.getValueAt(i, 6).toString())); // get data harga
+                pst.setString(2, idBhn); // get data id bahan
+                pst.setString(3, this.tabelData.getValueAt(i, 2).toString()); // get data nama bahan
+                pst.setString(4, this.tabelData.getValueAt(i, 3).toString()); // get data jenis bahan
+                pst.setString(5, satuan); // get data satuan bahan
+                pst.setString(6, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 4).toString())); // get data harga bahan
+                pst.setInt(7, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
+                pst.setString(8, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 6).toString())); // get data harga total
                 
                 // eksekusi query
                 pst.executeUpdate();

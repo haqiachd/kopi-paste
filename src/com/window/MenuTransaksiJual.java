@@ -677,11 +677,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             PreparedStatement p;
             
             for(int i = 0; i < this.tabelTr.getRowCount(); i++){
-                p = c.prepareStatement("INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?)");
+                p = c.prepareStatement("INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?, ?, ?, ?)");
                 p.setString(1, this.inpIdTransaksi.getText());
                 p.setString(2, this.tabelTr.getValueAt(i, 1).toString());
-                p.setString(3, this.tabelTr.getValueAt(i, 5).toString());
-                p.setString(4, txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
+                p.setString(3, this.tabelTr.getValueAt(i, 2).toString());
+                p.setString(4, this.tabelTr.getValueAt(i, 3).toString());
+                p.setString(5, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 4).toString()));
+                p.setString(6, this.tabelTr.getValueAt(i, 5).toString());
+                p.setString(7, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
                 
                 p.executeUpdate();
                 p.close();

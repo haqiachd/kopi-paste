@@ -80,6 +80,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.showDataLaporanHarian();
         this.showLaporanBulanan();
         this.showDataLaporanBulanan("");
+        this.showR();
     }
         
     private void resetTableLpHarian(){
@@ -456,8 +457,49 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         
     }
     
-    private void tampilkanChart(){
+    private void resetTabelRiwayat(){
+        // set desain tabel
+        this.tabelRiwayat.setRowHeight(29);
+        this.tabelRiwayat.getTableHeader().setBackground(new java.awt.Color(0,105,233));
+        this.tabelRiwayat.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
         
+        // set model tabel
+        this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
+                new String[][]{},
+                new String [] {
+                    "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga Menu", "Jumlah", "Total Harga"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        
+        // set size kolom tabel
+        TableColumnModel columnModel = this.tabelRiwayat.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(110);
+        columnModel.getColumn(0).setMaxWidth(110);
+        columnModel.getColumn(1).setPreferredWidth(110);
+        columnModel.getColumn(1).setMaxWidth(110);
+        columnModel.getColumn(2).setPreferredWidth(220);
+        columnModel.getColumn(2).setMaxWidth(220);
+        columnModel.getColumn(3).setPreferredWidth(220);
+        columnModel.getColumn(3).setMaxWidth(220);
+        columnModel.getColumn(4).setPreferredWidth(160);
+        columnModel.getColumn(4).setMaxWidth(160);
+        columnModel.getColumn(5).setPreferredWidth(80);
+        columnModel.getColumn(5).setMaxWidth(80);
+        columnModel.getColumn(6).setPreferredWidth(160);
+        columnModel.getColumn(6).setMaxWidth(160);
+    }
+    
+    private void showR(){
+        this.resetTabelRiwayat();
     }
     
     @SuppressWarnings("unchecked")
@@ -525,6 +567,19 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         inpPilihTahun = new com.toedter.calendar.JYearChooser();
         cariTahun = new javax.swing.JLabel();
         lblTotalTrBulanan = new javax.swing.JLabel();
+        pnlRiwayatPenjualan = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tabelRiwayat = new javax.swing.JTable();
+        lblUrutkan = new javax.swing.JLabel();
+        inpUrutkan = new javax.swing.JComboBox();
+        lblJenisMenu = new javax.swing.JLabel();
+        inpJenisMenu = new javax.swing.JComboBox();
+        lblTotalTrRiwayat = new javax.swing.JLabel();
+        lblTotalPsRiwayat = new javax.swing.JLabel();
+        lblTotalPdRiwayat = new javax.swing.JLabel();
+        lblMenuFavRiwayat = new javax.swing.JLabel();
+        lblNamaMenu = new javax.swing.JLabel();
+        inpNamaMenu = new javax.swing.JComboBox();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -749,7 +804,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
         lblNamaWindow.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         lblNamaWindow.setForeground(new java.awt.Color(0, 21, 39));
-        lblNamaWindow.setText("Laporan Penjualan");
+        lblNamaWindow.setText("Laporan Penjualan Menu");
 
         lblTopSetting.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTopSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-top-setting.png"))); // NOI18N
@@ -1023,9 +1078,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanHarianLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
-                        .addComponent(lblDataPerhari, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDataPerhari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(inpDataPerhari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1194,8 +1249,6 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
-        inpPilihTahun.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1269,6 +1322,123 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         );
 
         tabPane.addTab("Lapoan Bulanan", pnlLaporanBulanan);
+
+        pnlRiwayatPenjualan.setBackground(new java.awt.Color(248, 249, 250));
+
+        tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga", "Jumlah", "Total Harga"
+            }
+        ));
+        jScrollPane3.setViewportView(tabelRiwayat);
+
+        lblUrutkan.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblUrutkan.setForeground(new java.awt.Color(27, 109, 235));
+        lblUrutkan.setText("Urutkan ");
+
+        inpUrutkan.setBackground(new java.awt.Color(248, 249, 250));
+        inpUrutkan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpUrutkan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ID Transaksi ASC", "ID Transaksi DESC", "Nama Menu ASC", "Nama Menu DESC", "Jumlah Menu ASC", "Jumlah Menu DESC", "Total Harga ASC", "Total Harga DESC" }));
+
+        lblJenisMenu.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblJenisMenu.setForeground(new java.awt.Color(27, 109, 235));
+        lblJenisMenu.setText("Jenis Menu");
+
+        inpJenisMenu.setBackground(new java.awt.Color(248, 249, 250));
+        inpJenisMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpJenisMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua Jenis", "Makanan", "Minuman", "Original Coffee", "Falvoured Coffee", "Snack" }));
+
+        lblTotalTrRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalTrRiwayat.setForeground(new java.awt.Color(0, 105, 233));
+        lblTotalTrRiwayat.setText(" Transaksi : 2,343");
+        lblTotalTrRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        lblTotalPsRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPsRiwayat.setForeground(new java.awt.Color(0, 105, 233));
+        lblTotalPsRiwayat.setText(" Pesanan : 2,343");
+        lblTotalPsRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        lblTotalPdRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblTotalPdRiwayat.setForeground(new java.awt.Color(0, 105, 233));
+        lblTotalPdRiwayat.setText(" Pendapatan : Rp. 3.430.123.00");
+        lblTotalPdRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        lblMenuFavRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblMenuFavRiwayat.setForeground(new java.awt.Color(0, 105, 233));
+        lblMenuFavRiwayat.setText(" Menu Favorite : Kentang Goreng");
+        lblMenuFavRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        lblNamaMenu.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblNamaMenu.setForeground(new java.awt.Color(27, 109, 235));
+        lblNamaMenu.setText("Nama Menu");
+
+        inpNamaMenu.setBackground(new java.awt.Color(248, 249, 250));
+        inpNamaMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua Menu", "Makanan", "Minuman", "Original Coffee", "Falvoured Coffee", "Snack" }));
+
+        javax.swing.GroupLayout pnlRiwayatPenjualanLayout = new javax.swing.GroupLayout(pnlRiwayatPenjualan);
+        pnlRiwayatPenjualan.setLayout(pnlRiwayatPenjualanLayout);
+        pnlRiwayatPenjualanLayout.setHorizontalGroup(
+            pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlRiwayatPenjualanLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlRiwayatPenjualanLayout.createSequentialGroup()
+                        .addComponent(lblUrutkan)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlRiwayatPenjualanLayout.createSequentialGroup()
+                        .addComponent(lblTotalTrRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTotalPsRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTotalPdRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblMenuFavRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+        pnlRiwayatPenjualanLayout.setVerticalGroup(
+            pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlRiwayatPenjualanLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(inpUrutkan, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                    .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(inpJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inpNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotalTrRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalPsRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalPdRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMenuFavRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        tabPane.addTab("Riwayat Penjualan", pnlRiwayatPenjualan);
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -1625,6 +1795,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             this.lblNamaWindow.setText("Laporan Penjualan Harian");
         }else if(this.tabPane.getSelectedIndex() == 1){
             this.lblNamaWindow.setText("Laporan Penjualan Bulanan");
+        }else if(this.tabPane.getSelectedIndex() == 2){
+            this.lblNamaWindow.setText("Riwayat Penjualan");
         }
     }//GEN-LAST:event_tabPaneMouseClicked
 
@@ -1797,9 +1969,13 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser inpDataHarianBetween1;
     private com.toedter.calendar.JDateChooser inpDataHarianBetween2;
     private com.toedter.calendar.JDateChooser inpDataPerhari;
+    private javax.swing.JComboBox inpJenisMenu;
+    private javax.swing.JComboBox inpNamaMenu;
     private com.toedter.calendar.JYearChooser inpPilihTahun;
+    private javax.swing.JComboBox inpUrutkan;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblAntara1;
     private javax.swing.JLabel lblBottom;
@@ -1809,7 +1985,10 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblDataPerhari;
     private javax.swing.JLabel lblEmptyChart;
     private javax.swing.JLabel lblIconWindow;
+    private javax.swing.JLabel lblJenisMenu;
     private javax.swing.JLabel lblMenu;
+    private javax.swing.JLabel lblMenuFavRiwayat;
+    private javax.swing.JLabel lblNamaMenu;
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
     private javax.swing.JLabel lblProfileSidebar;
@@ -1818,11 +1997,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JLabel lblTopSetting;
     private javax.swing.JLabel lblTotalPdBulanan;
+    private javax.swing.JLabel lblTotalPdRiwayat;
     private javax.swing.JLabel lblTotalPdtHarian;
     private javax.swing.JLabel lblTotalPsBulanan;
     private javax.swing.JLabel lblTotalPsHarian;
+    private javax.swing.JLabel lblTotalPsRiwayat;
     private javax.swing.JLabel lblTotalTrBulanan;
     private javax.swing.JLabel lblTotalTrHarian;
+    private javax.swing.JLabel lblTotalTrRiwayat;
+    private javax.swing.JLabel lblUrutkan;
     private javax.swing.JSeparator lineBottom;
     private javax.swing.JSeparator lineSideMenu1;
     private javax.swing.JPanel pnlChart;
@@ -1830,11 +2013,13 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private javax.swing.JPanel pnlLaporanBulanan;
     private javax.swing.JPanel pnlLaporanHarian;
     private javax.swing.JPanel pnlMain;
+    private javax.swing.JPanel pnlRiwayatPenjualan;
     private javax.swing.JPanel pnlShowChart;
     private javax.swing.JPanel pnlSidebar;
     private com.manage.RoundedPanel pnlTop;
     private javax.swing.JTabbedPane tabPane;
     private javax.swing.JTable tabelLpBulanan;
     private javax.swing.JTable tabelLpHarian;
+    private javax.swing.JTable tabelRiwayat;
     // End of variables declaration//GEN-END:variables
 }

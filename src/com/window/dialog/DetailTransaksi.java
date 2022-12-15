@@ -93,7 +93,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelDetail.getModel();
         
         try{
-            String sql = "SELECT d.id_tr_jual, m.nama_menu, m.harga, d.jumlah, d.harga "
+            String sql = "SELECT d.id_tr_jual, m.nama_menu, m.harga, d.jumlah, d.total_harga "
                        + "FROM detail_tr_jual AS d "
                        + "JOIN menu AS m "
                        + "ON m.id_menu = d.id_menu "
@@ -120,7 +120,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
                         r.getString("m.nama_menu"),
                         txt.toMoneyCase(r.getString("m.harga")),
                         r.getString("d.jumlah"),
-                        txt.toMoneyCase(r.getString("d.harga"))
+                        txt.toMoneyCase(r.getString("d.total_harga"))
                     }
                 );
                 row++;
