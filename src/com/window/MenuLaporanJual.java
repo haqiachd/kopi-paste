@@ -59,10 +59,9 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     public MenuLaporanJual() {
         initComponents();
         
-        this.setTitle("Menu Transaksi");
+        this.setTitle("Menu Laporan Penjualan");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
-//        this.chart.showPieChart(this.pnlShowChart, "Penjualan Pada Bulan " + namaBulan, 10, 15, 30, 20, 15);
         this.lblNamaWindow.setText("Laporan Penjualan Harian");
         
         // set hover button
@@ -1719,7 +1718,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
                     tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
 
-                RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan-1, tahun);
+                RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan, tahun);
                 dtl.setVisible(true);                
             }else{
                 Message.showWarning(this, "Gagal menampilkan data!\nTidak ada pembelian yang dilakukan pada bulan " + this.tabelLpBulanan.getValueAt(row, 0).toString());

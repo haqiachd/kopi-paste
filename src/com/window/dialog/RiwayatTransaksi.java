@@ -108,7 +108,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
                         "FROM transaksi_jual AS trj " +
                         "JOIN karyawan AS ky " +
                         "ON ky.id_karyawan = trj.id_karyawan " +
-                        "WHERE MONTH(tanggal) = "+(this.bulan+1)+" AND YEAR(tanggal) = " + this.tahun + 
+                        "WHERE MONTH(tanggal) = "+this.bulan+" AND YEAR(tanggal) = " + this.tahun + 
                         " ORDER BY trj.tanggal DESC";
             System.out.println(sql);
             System.out.println("NILAI BULAN : " + this.bulan);
