@@ -727,7 +727,16 @@ public class MenuLaporan extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnTrBeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrBeliActionPerformed
-        JOptionPane.showMessageDialog(this, "Nanti Dulu");
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        MenuLaporanBeli window = new MenuLaporanBeli();
+        java.awt.EventQueue.invokeLater(new Runnable(){
+            @Override
+            public void run(){
+                window.setLocation(getX(), getY());
+                window.setVisible(true);
+            }
+        });
+        this.dispose();
     }//GEN-LAST:event_btnTrBeliActionPerformed
 
     private void btnTrJualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrJualActionPerformed
