@@ -1523,6 +1523,7 @@
                                 <StringItem index="7" value="Total Harga DESC"/>
                               </StringArray>
                             </Property>
+                            <Property name="selectedIndex" type="int" value="1"/>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpUrutkanActionPerformed"/>

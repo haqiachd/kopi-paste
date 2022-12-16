@@ -641,6 +641,30 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.lblTotalTrRiwayat.setText(String.format(" Transaksi : %,d", transaksi));
         this.lblTotalPsRiwayat.setText(String.format(" Pesanan : %,d", pesanan));
         this.lblTotalPdRiwayat.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(""+pendapatan)));
+        this.lblMenuFavRiwayat.setText(String.format(" Menu Favorite : %s", this.getFavoriteMenu()));
+    }
+    
+    private String getFavoriteMenu(){
+        try{
+            String sql = String.format(
+                    "SELECT nama_menu, SUM(jumlah) AS total FROM detail_tr_jual %s %s "
+                  + "GROUP BY nama_menu ORDER BY total DESC LIMIT 0,1;", 
+                    this.getJenisMenu(), this.getNamaMenu()
+            );
+            
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            if(r.next()){
+                String fav =r.getString(1);
+                c.close(); r.close(); s.close();
+                return fav;
+            }
+        }catch(SQLException ex){
+            Message.showException(this, ex);
+        }
+        return null;
     }
     
     @SuppressWarnings("unchecked")
@@ -1491,6 +1515,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         inpUrutkan.setBackground(new java.awt.Color(248, 249, 250));
         inpUrutkan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpUrutkan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tanggal ASC", "Tanggal DESC", "Nama Menu ASC", "Nama Menu DESC", "Jumlah Menu ASC", "Jumlah Menu DESC", "Total Harga ASC", "Total Harga DESC" }));
+        inpUrutkan.setSelectedIndex(1);
         inpUrutkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inpUrutkanActionPerformed(evt);
