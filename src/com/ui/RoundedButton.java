@@ -1,4 +1,4 @@
-package com.manage;
+package com.ui;
 
 import java.awt.Component;
 import java.awt.Graphics;

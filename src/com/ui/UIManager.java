@@ -1,4 +1,4 @@
-package com.manage;
+package com.ui;
 
 import com.media.Gambar;
 import java.awt.Color;
