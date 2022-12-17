@@ -8,8 +8,8 @@ import com.manage.UIManager;
 import com.manage.User;
 import com.manage.Waktu;
 import com.media.Gambar;
-import com.window.dialog.DetailTransaksi;
-import com.window.dialog.RiwayatTransaksi;
+import com.window.dialog.DetailTransaksiJual;
+import com.window.dialog.RiwayatTransaksiJual;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UserProfile;
@@ -1990,7 +1990,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         if(this.tabelLpHarian.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
             id= this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString();
-            DetailTransaksi dtr = new DetailTransaksi(null, true, id);
+            DetailTransaksiJual dtr = new DetailTransaksiJual(null, true, id);
             dtr.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
@@ -2075,7 +2075,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
                     tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
 
-                RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan, tahun);
+                RiwayatTransaksiJual dtl = new RiwayatTransaksiJual(null, true, bulan, tahun);
                 dtl.setVisible(true);                
             }else{
                 Message.showWarning(this, "Gagal menampilkan data!\nTidak ada pembelian yang dilakukan pada bulan " + this.tabelLpBulanan.getValueAt(row, 0).toString());
