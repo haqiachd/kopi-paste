@@ -9,9 +9,11 @@ import com.manage.User;
 import com.manage.Waktu;
 import com.media.Gambar;
 import com.window.dialog.DetailTransaksi;
+import com.window.dialog.DetailTransaksiBeli;
 import com.window.dialog.RiwayatTransaksi;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
+import com.window.dialog.RiwayatTransaksiBeli;
 import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -472,7 +474,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String [] {
-                    "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga Menu", "Jumlah", "Total Harga", "Tanggal"
+                    "ID Transaksi", "ID Bahan", "Nama Bahan", "Jenis Bahan", "Harga Bahan", "Jumlah", "Total Harga", "Tanggal"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -508,74 +510,81 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         
         // mendapatkan sort by
         switch(tipe){
-            case 0 : return "id_tr_jual ASC";
-            case 1 : return "id_tr_jual DESC";
-            case 2 : return "nama_menu ASC";
-            case 3 : return "nama_menu DESC";
+            case 0 : return "id_tr_beli ASC";
+            case 1 : return "id_tr_beli DESC";
+            case 2 : return "nama_bahan ASC";
+            case 3 : return "nama_bahan DESC";
             case 4 : return "jumlah ASC";
             case 5 : return "jumlah DESC";
             case 6 : return "total_harga ASC";
             case 7 : return "total_harga DESC";
-            default : return "id_tr_jual DESC";
+            default : return "id_tr_beli DESC";
         }
     }
     
-    private String getJenisMenu(){
-        int tipe = this.inpJenisMenu.getSelectedIndex();
+    private String getJenisBahan(){
+        int tipe = this.inpJenisBahan.getSelectedIndex();
         
         switch(tipe){
-            case 1 : return "WHERE jenis_menu = 'Makanan' ";
-            case 2 : return "WHERE jenis_menu = 'Minuman' ";
-            case 3 : return "WHERE jenis_menu = 'Original Coffee' ";
-            case 4 : return "WHERE jenis_menu = 'Falvoured Coffee' ";
-            case 5 : return "WHERE jenis_menu = 'Snack' ";
+            case 1 : return "WHERE jenis_bahan = 'Hewani' ";
+            case 2 : return "WHERE jenis_bahan = 'Nabati' ";
+            case 3 : return "WHERE jenis_bahan = 'Coffee' ";
+            case 4 : return "WHERE jenis_bahan = 'Perasa' ";
+            case 5 : return "WHERE jenis_bahan = 'Cairan' ";
             default : return "";
         }
     }
     
-    private void showListNamaMenu(){
+    private void showListNamaBahan(){
         try{
-            String jenis = this.inpJenisMenu.getSelectedItem().toString();
+            String jenis = this.inpJenisBahan.getSelectedItem().toString();
             // jika user tidak meilih jenis scr spesifik
             if(jenis.equalsIgnoreCase("Semua Jenis")){
-                inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Semua Menu"}));
+                inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Semua Bahan"}));
                 return;
             }
             
             Connection c = (Connection) Koneksi.configDB();
             Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT nama_menu FROM menu WHERE jenis = '"+jenis+"'");
+            ResultSet r = s.executeQuery("SELECT nama_bahan FROM bahan WHERE jenis = '"+jenis+"'");
             ArrayList<String> list = new ArrayList();
-            list.add("Semua Menu");
+            list.add("Semua Bahan");
             
             // mendapatkan semua nama dari berdasrkan jenis menu
             while(r.next()){
-                list.add(r.getString("nama_menu"));
+                list.add(r.getString("nama_bahan"));
             }
             
             // menampilkan nama menu pada combo box
             inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(list.toArray()));
             
         }catch(SQLException ex){
+            ex.printStackTrace();
             Message.showException(this, ex);
         }
     }
     
-    private String getNamaMenu(){
+    private String getNamaBahan(){
         String item = this.inpNamaMenu.getSelectedItem().toString();
         
-        if(item.equalsIgnoreCase("Semua Menu")){
+        if(item.equalsIgnoreCase("Semua Bahan")){
             return "";
         }else{
-            return "AND nama_menu = '" + item + "'";
+            return "AND nama_bahan = '" + item + "'";
         }
     }
     
+    /**
+     * Untuk mendapatkan data tanggal transaksi
+     * 
+     * @param id
+     * @return 
+     */
     private String getTanggalRiwayat(String id){
         try{
             Connection c = (Connection) Koneksi.configDB();
             Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT DATE(tanggal)AS tgl FROM transaksi_jual WHERE id_tr_jual = '"+id+"'");
+            ResultSet r = s.executeQuery("SELECT DATE(tanggal)AS tgl FROM transaksi_beli WHERE id_tr_beli = '"+id+"'");
             
             if(r.next()){
                 String tgl = r.getString("tgl");
@@ -588,15 +597,23 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         return null;
     }
     
+    private String getSatuan(int value, String satuan){
+        switch(satuan){
+            case "gr" :  return Integer.toString((value / 1000)) + " Kg";
+            case "ml" :  return Integer.toString((value / 1000)) + " L";
+            default : return Integer.toString((value / 1000)) + " ??";
+        }
+    }
+    
     private void showRiwayatTransaksi(){
-        String kondisi = this.getJenisMenu() + this.getNamaMenu();
+        String kondisi = this.getJenisBahan() + this.getNamaBahan();
         // reset tabel riwayat
         this.resetTabelRiwayat();
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
         
         try{
             String sql = String.format(
-                    "SELECT * FROM detail_tr_jual "
+                    "SELECT * FROM detail_tr_beli "
                   + "%s "
                   + "ORDER BY %s", kondisi, this.getUrutkanRiwayat()
             );
@@ -608,15 +625,15 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
             
             // menambahkna data ke dalam tabel
             while(r.next()){
-                String id = r.getString("id_tr_jual");
+                String id = r.getString("id_tr_beli");
                 model.addRow(
                     new Object[]{
                         id,
-                        r.getString("id_menu"),
-                        r.getString("nama_menu"),
-                        r.getString("jenis_menu"),
-                        this.txt.toMoneyCase(r.getString("harga_menu")),
-                        r.getString("jumlah"),
+                        r.getString("id_bahan"),
+                        r.getString("nama_bahan"),
+                        r.getString("jenis_bahan"),
+                        this.txt.toMoneyCase(r.getString("harga_bahan")),
+                        this.getSatuan(r.getInt("jumlah"), r.getString("satuan_bahan")),
                         this.txt.toMoneyCase(r.getString("total_harga")),
                         this.txt.toDateCase(this.getTanggalRiwayat(id))
                     }
@@ -638,22 +655,21 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
             pendapatan = 0;
         
         for(int i = 0; i < transaksi; i++){
-            pesanan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 5).toString());
+            pesanan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 5).toString().replace(" Kg", "").replace(" L", "").replace(" ??", ""));
             pendapatan += Integer.parseInt(txt.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 6).toString()));
         }
         
         this.lblTotalTrRiwayat.setText(String.format(" Transaksi : %,d", transaksi));
         this.lblTotalPsRiwayat.setText(String.format(" Pesanan : %,d", pesanan));
         this.lblTotalPdRiwayat.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(""+pendapatan)));
-        this.lblMenuFavRiwayat.setText(String.format(" Menu Favorite : %s", this.getFavoriteMenu()));
+        this.lblMenuFavRiwayat.setText(String.format(" Sering Dibeli : %s", this.getFavoriteMenu()));
     }
     
     private String getFavoriteMenu(){
         try{
-            String sql = String.format(
-                    "SELECT nama_menu, SUM(jumlah) AS total FROM detail_tr_jual %s %s "
-                  + "GROUP BY nama_menu ORDER BY total DESC LIMIT 0,1;", 
-                    this.getJenisMenu(), this.getNamaMenu()
+            String sql = String.format("SELECT nama_bahan, SUM(jumlah) AS total FROM detail_tr_beli %s %s "
+                  + "GROUP BY nama_bahan ORDER BY total DESC LIMIT 0,1;", 
+                    this.getJenisBahan(), this.getNamaBahan()
             );
             
             Connection c = (Connection) Koneksi.configDB();
@@ -743,13 +759,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         inpPilihTahun = new com.toedter.calendar.JYearChooser();
         cariTahun = new javax.swing.JLabel();
         lblTotalTrBulanan = new javax.swing.JLabel();
-        pnlRiwayatPenjualan = new javax.swing.JPanel();
+        pnlRiwayatPembelian = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tabelRiwayat = new javax.swing.JTable();
         lblUrutkan = new javax.swing.JLabel();
         inpUrutkan = new javax.swing.JComboBox();
         lblJenisMenu = new javax.swing.JLabel();
-        inpJenisMenu = new javax.swing.JComboBox();
+        inpJenisBahan = new javax.swing.JComboBox();
         lblTotalTrRiwayat = new javax.swing.JLabel();
         lblTotalPsRiwayat = new javax.swing.JLabel();
         lblTotalPdRiwayat = new javax.swing.JLabel();
@@ -1499,7 +1515,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         tabPane.addTab("Lapoan Bulanan", pnlLaporanBulanan);
 
-        pnlRiwayatPenjualan.setBackground(new java.awt.Color(248, 249, 250));
+        pnlRiwayatPembelian.setBackground(new java.awt.Color(248, 249, 250));
 
         tabelRiwayat.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
@@ -1525,7 +1541,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         inpUrutkan.setBackground(new java.awt.Color(248, 249, 250));
         inpUrutkan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpUrutkan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tanggal ASC", "Tanggal DESC", "Nama Menu ASC", "Nama Menu DESC", "Jumlah Menu ASC", "Jumlah Menu DESC", "Total Harga ASC", "Total Harga DESC" }));
+        inpUrutkan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tanggal ASC", "Tanggal DESC", "Nama Bahan ASC", "Nama Bahan DESC", "Jumlah Bahan ASC", "Jumlah Bahan DESC", "Total Harga ASC", "Total Harga DESC" }));
         inpUrutkan.setSelectedIndex(1);
         inpUrutkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1537,12 +1553,12 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         lblJenisMenu.setForeground(new java.awt.Color(250, 22, 22));
         lblJenisMenu.setText("Jenis Menu");
 
-        inpJenisMenu.setBackground(new java.awt.Color(248, 249, 250));
-        inpJenisMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpJenisMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua Jenis", "Makanan", "Minuman", "Original Coffee", "Falvoured Coffee", "Snack" }));
-        inpJenisMenu.addActionListener(new java.awt.event.ActionListener() {
+        inpJenisBahan.setBackground(new java.awt.Color(248, 249, 250));
+        inpJenisBahan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpJenisBahan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua Jenis", "Hewani", "Nabati", "Coffee", "Perasa", "Cairan" }));
+        inpJenisBahan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inpJenisMenuActionPerformed(evt);
+                inpJenisBahanActionPerformed(evt);
             }
         });
 
@@ -1563,7 +1579,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblMenuFavRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblMenuFavRiwayat.setForeground(new java.awt.Color(0, 105, 233));
-        lblMenuFavRiwayat.setText(" Menu Favorite : Kentang Goreng");
+        lblMenuFavRiwayat.setText(" Sering Dibeli : Kentang Goreng");
         lblMenuFavRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         lblNamaMenu.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -1572,34 +1588,34 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         inpNamaMenu.setBackground(new java.awt.Color(248, 249, 250));
         inpNamaMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua Menu" }));
+        inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua Bahan" }));
         inpNamaMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inpNamaMenuActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout pnlRiwayatPenjualanLayout = new javax.swing.GroupLayout(pnlRiwayatPenjualan);
-        pnlRiwayatPenjualan.setLayout(pnlRiwayatPenjualanLayout);
-        pnlRiwayatPenjualanLayout.setHorizontalGroup(
-            pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlRiwayatPenjualanLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlRiwayatPembelianLayout = new javax.swing.GroupLayout(pnlRiwayatPembelian);
+        pnlRiwayatPembelian.setLayout(pnlRiwayatPembelianLayout);
+        pnlRiwayatPembelianLayout.setHorizontalGroup(
+            pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlRiwayatPembelianLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlRiwayatPenjualanLayout.createSequentialGroup()
+                .addGroup(pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlRiwayatPembelianLayout.createSequentialGroup()
                         .addComponent(lblUrutkan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(inpJenisBahan, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlRiwayatPenjualanLayout.createSequentialGroup()
+                    .addGroup(pnlRiwayatPembelianLayout.createSequentialGroup()
                         .addComponent(lblTotalTrRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblTotalPsRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1609,24 +1625,24 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         .addComponent(lblMenuFavRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
-        pnlRiwayatPenjualanLayout.setVerticalGroup(
-            pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlRiwayatPenjualanLayout.createSequentialGroup()
+        pnlRiwayatPembelianLayout.setVerticalGroup(
+            pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlRiwayatPembelianLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(lblUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(inpUrutkan, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
-                    .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(inpNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(inpJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(inpJenisBahan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlRiwayatPenjualanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotalTrRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTotalPsRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTotalPdRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1634,7 +1650,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tabPane.addTab("Riwayat Penjualan", pnlRiwayatPenjualan);
+        tabPane.addTab("Riwayat Pembelian", pnlRiwayatPembelian);
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -2001,7 +2017,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         if(this.tabelLpHarian.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
             id= this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString();
-            DetailTransaksi dtr = new DetailTransaksi(null, true, id);
+            DetailTransaksiBeli dtr = new DetailTransaksiBeli(null, true, id);
             dtr.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
@@ -2081,12 +2097,12 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         int row = this.tabelLpBulanan.getSelectedRow(),
             jmlData;
         if(row >= 0){
-            jmlData = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 3).toString());
+            jmlData = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 3).toString().replace(",", ""));
             if(jmlData > 0){
                 int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
                     tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
 
-                RiwayatTransaksi dtl = new RiwayatTransaksi(null, true, bulan, tahun);
+                RiwayatTransaksiBeli dtl = new RiwayatTransaksiBeli(null, true, bulan, tahun);
                 dtl.setVisible(true);                
             }else{
                 Message.showWarning(this, "Gagal menampilkan data!\nTidak ada pembelian yang dilakukan pada bulan " + this.tabelLpBulanan.getValueAt(row, 0).toString());
@@ -2123,13 +2139,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_inpUrutkanActionPerformed
 
-    private void inpJenisMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpJenisMenuActionPerformed
+    private void inpJenisBahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpJenisBahanActionPerformed
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        this.showListNamaMenu();
+        this.showListNamaBahan();
         this.showRiwayatTransaksi();
         this.showDataRiwayat();
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_inpJenisMenuActionPerformed
+    }//GEN-LAST:event_inpJenisBahanActionPerformed
 
     private void inpNamaMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpNamaMenuActionPerformed
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -2187,7 +2203,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser inpDataHarianBetween1;
     private com.toedter.calendar.JDateChooser inpDataHarianBetween2;
     private com.toedter.calendar.JDateChooser inpDataPerhari;
-    private javax.swing.JComboBox inpJenisMenu;
+    private javax.swing.JComboBox inpJenisBahan;
     private javax.swing.JComboBox inpNamaMenu;
     private com.toedter.calendar.JYearChooser inpPilihTahun;
     private javax.swing.JComboBox inpUrutkan;
@@ -2231,7 +2247,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     private javax.swing.JPanel pnlLaporanBulanan;
     private javax.swing.JPanel pnlLaporanHarian;
     private javax.swing.JPanel pnlMain;
-    private javax.swing.JPanel pnlRiwayatPenjualan;
+    private javax.swing.JPanel pnlRiwayatPembelian;
     private javax.swing.JPanel pnlShowChart;
     private javax.swing.JPanel pnlSidebar;
     private com.manage.RoundedPanel pnlTop;

@@ -1374,7 +1374,7 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="pnlRiwayatPenjualan">
+                    <Container class="javax.swing.JPanel" name="pnlRiwayatPembelian">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -1382,8 +1382,8 @@
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                          <JTabbedPaneConstraints tabName="Riwayat Penjualan">
-                            <Property name="tabTitle" type="java.lang.String" value="Riwayat Penjualan"/>
+                          <JTabbedPaneConstraints tabName="Riwayat Pembelian">
+                            <Property name="tabTitle" type="java.lang.String" value="Riwayat Pembelian"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
                       </Constraints>
@@ -1401,7 +1401,7 @@
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="lblJenisMenu" min="-2" pref="106" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="inpJenisMenu" min="-2" pref="169" max="-2" attributes="0"/>
+                                          <Component id="inpJenisBahan" min="-2" pref="169" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="lblNamaMenu" min="-2" pref="106" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
@@ -1437,7 +1437,7 @@
                                       </Group>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="lblJenisMenu" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
-                                          <Component id="inpJenisMenu" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                                          <Component id="inpJenisBahan" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -1515,10 +1515,10 @@
                               <StringArray count="8">
                                 <StringItem index="0" value="Tanggal ASC"/>
                                 <StringItem index="1" value="Tanggal DESC"/>
-                                <StringItem index="2" value="Nama Menu ASC"/>
-                                <StringItem index="3" value="Nama Menu DESC"/>
-                                <StringItem index="4" value="Jumlah Menu ASC"/>
-                                <StringItem index="5" value="Jumlah Menu DESC"/>
+                                <StringItem index="2" value="Nama Bahan ASC"/>
+                                <StringItem index="3" value="Nama Bahan DESC"/>
+                                <StringItem index="4" value="Jumlah Bahan ASC"/>
+                                <StringItem index="5" value="Jumlah Bahan DESC"/>
                                 <StringItem index="6" value="Total Harga ASC"/>
                                 <StringItem index="7" value="Total Harga DESC"/>
                               </StringArray>
@@ -1540,7 +1540,7 @@
                             <Property name="text" type="java.lang.String" value="Jenis Menu"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JComboBox" name="inpJenisMenu">
+                        <Component class="javax.swing.JComboBox" name="inpJenisBahan">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -1551,16 +1551,16 @@
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="6">
                                 <StringItem index="0" value="Semua Jenis"/>
-                                <StringItem index="1" value="Makanan"/>
-                                <StringItem index="2" value="Minuman"/>
-                                <StringItem index="3" value="Original Coffee"/>
-                                <StringItem index="4" value="Falvoured Coffee"/>
-                                <StringItem index="5" value="Snack"/>
+                                <StringItem index="1" value="Hewani"/>
+                                <StringItem index="2" value="Nabati"/>
+                                <StringItem index="3" value="Coffee"/>
+                                <StringItem index="4" value="Perasa"/>
+                                <StringItem index="5" value="Cairan"/>
                               </StringArray>
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpJenisMenuActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpJenisBahanActionPerformed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="lblTotalTrRiwayat">
@@ -1625,7 +1625,7 @@
                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="e9" green="69" red="0" type="rgb"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value=" Menu Favorite : Kentang Goreng"/>
+                            <Property name="text" type="java.lang.String" value=" Sering Dibeli : Kentang Goreng"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                 <LineBorder>
@@ -1656,7 +1656,7 @@
                             </Property>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="1">
-                                <StringItem index="0" value="Semua Menu"/>
+                                <StringItem index="0" value="Semua Bahan"/>
                               </StringArray>
                             </Property>
                           </Properties>
