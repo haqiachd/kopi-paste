@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -161,4 +162,55 @@ public class Tes {
         }
     }
     
+    
+//private void cariLaporanHarian(){
+//        // reset tabel laporan
+////        this.resetTableLpHarian();
+////        DefaultTableModel model = (DefaultTableModel) this.tbl_logmasuk.getModel();
+//        DefaultTableModel model = new DefaultTableModel();
+//        model.addColumn("No");
+//        model.addColumn("Tanggal");
+//        model.addColumn("Id Log Masuk");
+//        model.addColumn("Id Supplier");
+//        model.addColumn("Nama Supplier");
+//        model.addColumn("Id Produk");
+//        model.addColumn("Nama Produk");
+//        model.addColumn("Jumlah");
+//        model.addColumn("Harga Beli");
+//        model.addColumn("Total");
+//        tbl_logmasuk.setModel(model);
+//        String key = txt_cari.getText(), id ;
+//        
+//        // membaca semua is tabel laporan
+//        for(int i = 0; i < this.carimodel.getRowCount(); i++){
+//            // mendapatkan data id, nama dan tanggal
+//            id = this.carimodel.getValueAt(i, 2).toString().toLowerCase();
+////            nama = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase();
+////            tanggal = this.modelCariLaporan.getValueAt(i, 5).toString().toLowerCase();
+//            
+//            // pengecekan id, nama dan tanggal
+//            if(id.contains(key)){
+//                // jika match maka data ditampilkan kedalam tabel
+//                model.addRow(
+//                    new Object[]{
+//                        id.toUpperCase(), 
+//                        this.tbl_logmasuk.getValueAt(i, 1),
+//                        this.tbl_logmasuk.getValueAt(i, 2),
+//                        this.tbl_logmasuk.getValueAt(i, 3),
+//                        this.tbl_logmasuk.getValueAt(i, 4),
+//                        this.tbl_logmasuk.getValueAt(i, 5),
+//                        this.tbl_logmasuk.getValueAt(i, 6),
+//                        this.tbl_logmasuk.getValueAt(i, 7),
+//                        this.tbl_logmasuk.getValueAt(i, 8),
+//                        this.tbl_logmasuk.getValueAt(i, 9)
+//                    }
+//                );
+//            }
+//        }
+//        
+//        // refresh tabel laporan harian
+//        this.tbl_logmasuk.setModel(model);
+//        // refresh total data
+////        this.showDataLaporanHarian();
+//}
 }
