@@ -60,9 +60,10 @@ public class ChartManager {
               ,flavoured = this.getPieDataPenjualan("Falvoured Coffee", bulan, tahun)
               ,snack = this.getPieDataPenjualan("Snack", bulan, tahun);
         
-        //create dataset
+        // membuat data set untuk menampung data        
         DefaultPieDataset barDataset = new DefaultPieDataset();
         
+        // jika datanya kosong maka data tidak akan ditampilkan didalam chart
         if(makanan > 0){
             barDataset.setValue( "Makanan", new Double(makanan));
         }
@@ -79,11 +80,11 @@ public class ChartManager {
             barDataset.setValue("Snack", new Double(snack));
         }
 
-        //create chart
+        // membuat chart
         JFreeChart piechart = ChartFactory.createPieChart("Penjualan Produk",barDataset, false,true,false);//explain
         piechart.setTitle(new TextTitle(title, this.F_MENU));
 
-        //changing pie chart blocks colors
+        // merubah warna dari setiap data pada chart
         PiePlot piePlot =(PiePlot) piechart.getPlot();
         if(makanan > 0){
             piePlot.setSectionPaint("Makanan", this.C_MAKANAN);
@@ -102,7 +103,7 @@ public class ChartManager {
         }
         piePlot.setBackgroundPaint(this.BG_CHART);
         
-        //create chartPanel to display chart(graph)
+        // menampilkan chart ke panel
         ChartPanel barChartPanel = new ChartPanel(piechart);
         panel.removeAll();
         panel.add(barChartPanel, BorderLayout.CENTER);
@@ -117,9 +118,10 @@ public class ChartManager {
               ,flavoured = this.getPieDataPembelian("Perasa", bulan, tahun)
               ,snack = this.getPieDataPembelian("Cairan", bulan, tahun);
         
-        //create dataset
+        // membuat data set untuk menampung data      
         DefaultPieDataset barDataset = new DefaultPieDataset();
         
+        // jika datanya kosong maka data tidak akan ditampilkan didalam chart
         if(makanan > 0){
             barDataset.setValue( "Hewani", new Double(makanan));
         }
@@ -136,11 +138,11 @@ public class ChartManager {
             barDataset.setValue("Cairan", new Double(snack));
         }
 
-        //create chart
+        // membuat chart
         JFreeChart piechart = ChartFactory.createPieChart("Pembelian Produk",barDataset, false,true,false);//explain
         piechart.setTitle(new TextTitle(title, this.F_MENU));
 
-        //changing pie chart blocks colors
+        // merubah warna dari setiap data pada chart
         PiePlot piePlot =(PiePlot) piechart.getPlot();
         if(makanan > 0){
             piePlot.setSectionPaint("Hewani", this.C_MAKANAN);
@@ -159,7 +161,7 @@ public class ChartManager {
         }
         piePlot.setBackgroundPaint(this.BG_CHART);
         
-        //create chartPanel to display chart(graph)
+        // menampilkan chart ke panel
         ChartPanel barChartPanel = new ChartPanel(piechart);
         panel.removeAll();
         panel.add(barChartPanel, BorderLayout.CENTER);
@@ -180,6 +182,7 @@ public class ChartManager {
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery(sql);
             
+            // mengembalikan data total pesanan berdasarkan jenis menu
             if(r.next()){
                 int total = r.getInt("pesanan");
                 System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
@@ -188,6 +191,7 @@ public class ChartManager {
             }
         }catch(SQLException ex){
             ex.printStackTrace();
+            Message.showException(null, ex);
         }
         return 0;
     }
@@ -206,6 +210,7 @@ public class ChartManager {
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery(sql);
             
+            // mengembalikan data total pesanan berdasarkan jenis bahan
             if(r.next()){
                 int total = r.getInt("dipesan");
                 System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
@@ -241,22 +246,22 @@ public class ChartManager {
                 break;
         }
         
-        //create chart
-        JFreeChart linechart = ChartFactory.createLineChart(title,"Tanggal",valTitle, 
-                dataset, PlotOrientation.VERTICAL, false,true,false);
+        // membuat line chart
+        JFreeChart linechart = ChartFactory.createLineChart(title, "Tanggal", valTitle, 
+                dataset, PlotOrientation.VERTICAL, false, true, false);
         linechart.setTitle(new TextTitle(title, this.F_MENU));
         
-        //create plot object
-         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
+        // mengatur warna background dan grid pada chart
+        CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
         lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
         lineCategoryPlot.setBackgroundPaint(Color.WHITE);
         
-        //create render object to change the moficy the line properties like color
+        // mengatur warna line pada chart
         LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
         Color lineChartColor = new Color(255,2,9);
         lineRenderer.setSeriesPaint(0, lineChartColor);
         
-         //create chartPanel to display chart(graph)
+        // menampilkan chart ke panel
         ChartPanel lineChartPanel = new ChartPanel(linechart);
         panel.removeAll();
         panel.add(lineChartPanel, BorderLayout.CENTER);
@@ -279,6 +284,7 @@ public class ChartManager {
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery(sql);
             
+            // mendapatkan data total berdasaarkan bulan
             if(r.next()){
                 int total = r.getInt("total");
                 c.close(); r.close(); s.close();
@@ -307,6 +313,7 @@ public class ChartManager {
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery(sql);
             
+            // mendapatkan data total pengeluaran berdasarkan bulan
             if(r.next()){
                 int total = r.getInt("total");
                 c.close(); r.close(); s.close();
@@ -341,10 +348,12 @@ public class ChartManager {
                 break;
         }
         
+        // membuat bar 
         JFreeChart barchart = ChartFactory.createBarChart(title,"Minggu",valTitle, 
                 dataset, PlotOrientation.VERTICAL, false,true,false);
         barchart.setTitle(new TextTitle(title, this.F_MENU));
         
+        // mengatur warna pada bar dan background chart
         CategoryPlot categoryPlot = barchart.getCategoryPlot();
         //categoryPlot.setRangeGridlinePaint(Color.BLUE);
         categoryPlot.setBackgroundPaint(Color.WHITE);
@@ -352,13 +361,15 @@ public class ChartManager {
         Color clr3 = new Color(237,40,40);
         renderer.setSeriesPaint(0, clr3);
         
+        // menampilkan chart ke panel
         ChartPanel barpChartPanel = new ChartPanel(barchart);
         panel.removeAll();
         panel.add(barpChartPanel, BorderLayout.CENTER);
         panel.validate();
     }
 
-    public void showHistogram(JPanel panel){
+    @Deprecated
+    public void showHistogram(JPanel panel, int type, String title){
         
          double[] values = { 95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
                             12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
