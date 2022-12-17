@@ -64,7 +64,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="lblTotalPsRiwayat" min="-2" pref="194" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="lblTotalPdRiwayat" min="-2" pref="307" max="-2" attributes="0"/>
+                                  <Component id="lblTotalPdRiwayat" min="-2" pref="315" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="lblCari" min="-2" pref="135" max="-2" attributes="0"/>
@@ -173,7 +173,7 @@
                   <Table columnCount="6" rowCount="4">
                     <Column editable="true" title="ID Transaksi" type="java.lang.Object"/>
                     <Column editable="true" title="Nama Karyawan" type="java.lang.Object"/>
-                    <Column editable="true" title="Nama Pembeli" type="java.lang.Object"/>
+                    <Column editable="true" title="Nama Supplier" type="java.lang.Object"/>
                     <Column editable="true" title="Total Pesanan" type="java.lang.Object"/>
                     <Column editable="true" title="Total Harga" type="java.lang.Object"/>
                     <Column editable="true" title="Tanggal" type="java.lang.Object"/>
@@ -237,7 +237,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="e9" green="69" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value=" Total Pesanan : 5,901"/>
+            <Property name="text" type="java.lang.String" value=" Total Dipesan : 5,901"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder>
@@ -255,7 +255,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="e9" green="69" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value=" Total Pendapatan : Rp. 9.454.464.00"/>
+            <Property name="text" type="java.lang.String" value=" Total Pengeluaran : Rp. 9.454.464.00"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder>

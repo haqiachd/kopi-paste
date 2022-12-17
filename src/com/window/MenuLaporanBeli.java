@@ -180,24 +180,24 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         // jika tidak ada data pada tabel
         if(this.tabelLpHarian.getRowCount() < 1){
             this.lblTotalTrHarian.setText(" Transaksi : 0");
-            this.lblTotalPsHarian.setText(" Pesananan : 0");
+            this.lblTotalPsHarian.setText(" Dipesan : 0");
             this.lblTotalPdtHarian.setText(" Pengeluaran : Rp. 00");
             return;
         }
         
         
         int transaksi = this.tabelLpHarian.getRowCount(), 
-            pesanan = 0, pengeluaran = 0;
+            dipesan = 0, pengeluaran = 0;
         
         // menghitung data
         for(int i = 0; i < this.tabelLpHarian.getRowCount(); i++){
-            pesanan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Bahan", ""));
+            dipesan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Bahan", ""));
             pengeluaran += Integer.parseInt(txt.removeMoneyCase(this.tabelLpHarian.getValueAt(i, 4).toString()));
         }
         
         // menampilkan data
         this.lblTotalTrHarian.setText(String.format(" Transaksi : %,d", transaksi));
-        this.lblTotalPsHarian.setText(String.format(" Pesanan : %,d", pesanan));
+        this.lblTotalPsHarian.setText(String.format(" Dipesan : %,d", dipesan));
         this.lblTotalPdtHarian.setText(String.format(" Pengeluaran : %s", txt.toMoneyCase(Integer.toString(pengeluaran))));
     }
     
@@ -292,7 +292,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 pesanan = r.getInt(3);
                 pengeluaran = r.getInt(4);
                 
-                // jika pendapatan tidak kosong maka data akan diambil dari mysql
+                // jika pengeluaran tidak kosong maka data akan diambil dari mysql
                 if(pengeluaran >= 1){
                     // mengupdate total data
                     this.trBulanan += transaksi;
@@ -307,7 +307,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         String.format("%,d", pesanan),
                         String.format("%s", txt.toMoneyCase(Integer.toString(pengeluaran)))
                     };                    
-                // jika pendapatan kurang dari 1 maka data dianggap kosong dan data yang akan ditampilkan akan diset default
+                // jika pengeluaran kurang dari 1 maka data dianggap kosong dan data yang akan ditampilkan akan diset default
                 }else{
                     return new Object[]{
                         waktu.getNamaBulan(bulan),
@@ -652,16 +652,16 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     private void showDataRiwayat(){
         int transaksi = this.tabelRiwayat.getRowCount(),
             pesanan = 0,
-            pendapatan = 0;
+            pengeluaran = 0;
         
         for(int i = 0; i < transaksi; i++){
             pesanan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 5).toString().replace(" Kg", "").replace(" L", "").replace(" ??", ""));
-            pendapatan += Integer.parseInt(txt.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 6).toString()));
+            pengeluaran += Integer.parseInt(txt.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 6).toString()));
         }
         
         this.lblTotalTrRiwayat.setText(String.format(" Transaksi : %,d", transaksi));
         this.lblTotalPsRiwayat.setText(String.format(" Pesanan : %,d", pesanan));
-        this.lblTotalPdRiwayat.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(""+pendapatan)));
+        this.lblTotalPdRiwayat.setText(String.format(" Pengeluaran : %s", txt.toMoneyCase(""+pengeluaran)));
         this.lblMenuFavRiwayat.setText(String.format(" Sering Dibeli : %s", this.getFavoriteMenu()));
     }
     
@@ -1164,7 +1164,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblTotalPsHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalPsHarian.setForeground(new java.awt.Color(0, 105, 233));
-        lblTotalPsHarian.setText(" Pesanan : 2.133");
+        lblTotalPsHarian.setText(" Dipesan : 2.133");
         lblTotalPsHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         btnDetailHarian.setBackground(new java.awt.Color(204, 0, 204));
@@ -1255,7 +1255,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1328,7 +1328,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 {"Desember", "2022", "", null, ""}
             },
             new String [] {
-                "Bulan", "Tahun", "Pembeli", "Pesanan", "Total Pendapatan"
+                "Bulan", "Tahun", "Pembeli", "Pesanan", "Total Pengeluaran"
             }
         ));
         tabelLpBulanan.setGridColor(new java.awt.Color(0, 0, 0));

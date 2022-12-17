@@ -168,17 +168,18 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         // reset tabel riwayat
         this.resetTableLpRiwayat();
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
-        String key = inpCari.getText().toLowerCase(), id, nama, tanggal;
+        String key = inpCari.getText().toLowerCase(), id, nama, namaPem, tanggal;
         
         // membaca semua is tabel riwayat
         for(int i = 0; i < this.cariData.getRowCount(); i++){
             // mendapatkan data id, nama dan tanggal
             id = this.cariData.getValueAt(i, 0).toString().toLowerCase();
             nama = this.cariData.getValueAt(i, 1).toString().toLowerCase();
+            namaPem = this.cariData.getValueAt(i, 2).toString().toLowerCase();
             tanggal = this.cariData.getValueAt(i, 5).toString().toLowerCase();
             
             // pengecekan id, nama dan tanggal
-            if(id.contains(key) || nama.contains(key) || tanggal.contains(key)){
+            if(id.contains(key) || nama.contains(key) || namaPem.contains(key) || tanggal.contains(key)){
                 // jika match maka data ditampilkan kedalam tabel
                 model.addRow(
                     new Object[]{

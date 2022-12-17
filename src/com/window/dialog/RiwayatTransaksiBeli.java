@@ -147,40 +147,41 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         if(this.tabelRiwayat.getRowCount() <= 0){
             this.lblTotalTrRiwayat.setText(" Transaksi : 0");
             this.lblTotalPsRiwayat.setText(" Pesanan : 0");
-            this.lblTotalPdRiwayat.setText(" Pendapatan : Rp. 00");
+            this.lblTotalPdRiwayat.setText(" Pengeluaran : Rp. 00");
         }
      
         // inisialisasi awal
         int transaksi = this.tabelRiwayat.getRowCount(),
-            pesanan = 0, pendapatan = 0;
+            dipesan = 0, pengeluaran = 0;
         
         // menghitung total data
         for(int i = 0; i < this.tabelRiwayat.getRowCount(); i++){
-            pesanan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 3).toString().replace(" Pesanan", ""));
-            pendapatan += Integer.parseInt(text.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 4).toString()));
+            dipesan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 3).toString().replace(" Pesanan", ""));
+            pengeluaran += Integer.parseInt(text.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 4).toString()));
         }
         
         // menampilkan data
         this.lblTotalTrRiwayat.setText(String.format(" Total Transaksi : %,d" , transaksi));
-        this.lblTotalPsRiwayat.setText(String.format(" Total Pesanan : %,d" , pesanan));
-        this.lblTotalPdRiwayat.setText(String.format(" Total Pendapatan : %s " , text.toMoneyCase(""+pendapatan)));
+        this.lblTotalPsRiwayat.setText(String.format(" Total Pesanan : %,d" , dipesan));
+        this.lblTotalPdRiwayat.setText(String.format(" Total Pengeluaran : %s " , text.toMoneyCase(""+pengeluaran)));
     }
     
     private void cariRiwayatTransaksi(){
         // reset tabel riwayat
         this.resetTableLpRiwayat();
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
-        String key = inpCari.getText().toLowerCase(), id, nama, tanggal;
+        String key = inpCari.getText().toLowerCase(), id, nama, namaSup, tanggal;
         
         // membaca semua is tabel riwayat
         for(int i = 0; i < this.cariData.getRowCount(); i++){
             // mendapatkan data id, nama dan tanggal
             id = this.cariData.getValueAt(i, 0).toString().toLowerCase();
             nama = this.cariData.getValueAt(i, 1).toString().toLowerCase();
+            namaSup = this.cariData.getValueAt(i, 2).toString().toLowerCase();
             tanggal = this.cariData.getValueAt(i, 5).toString().toLowerCase();
             
             // pengecekan id, nama dan tanggal
-            if(id.contains(key) || nama.contains(key) || tanggal.contains(key)){
+            if(id.contains(key) || nama.contains(key) || namaSup.contains(key) ||  tanggal.contains(key)){
                 // jika match maka data ditampilkan kedalam tabel
                 model.addRow(
                     new Object[]{
@@ -262,7 +263,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
+                "ID Transaksi", "Nama Karyawan", "Nama Supplier", "Total Pesanan", "Total Harga", "Tanggal"
             }
         ));
         tabelRiwayat.setSelectionBackground(new java.awt.Color(71, 230, 143));
@@ -290,12 +291,12 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
 
         lblTotalPsRiwayat.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N
         lblTotalPsRiwayat.setForeground(new java.awt.Color(0, 105, 233));
-        lblTotalPsRiwayat.setText(" Total Pesanan : 5,901");
+        lblTotalPsRiwayat.setText(" Total Dipesan : 5,901");
         lblTotalPsRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 51)));
 
         lblTotalPdRiwayat.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N
         lblTotalPdRiwayat.setForeground(new java.awt.Color(0, 105, 233));
-        lblTotalPdRiwayat.setText(" Total Pendapatan : Rp. 9.454.464.00");
+        lblTotalPdRiwayat.setText(" Total Pengeluaran : Rp. 9.454.464.00");
         lblTotalPdRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 51)));
 
         btnDetail.setBackground(new java.awt.Color(0, 153, 255));
@@ -335,7 +336,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lblTotalPsRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblTotalPdRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblTotalPdRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(lblCari, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

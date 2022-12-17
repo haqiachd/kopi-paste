@@ -200,17 +200,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         // reset tabel laporan
         this.resetTableLpHarian();
         DefaultTableModel model = (DefaultTableModel) this.tabelLpHarian.getModel();
-        String key = inpCariHarian.getText().toLowerCase(), id, nama, tanggal;
+        String key = inpCariHarian.getText().toLowerCase(), id, nama, namaPem, tanggal;
         
         // membaca semua is tabel laporan
         for(int i = 0; i < this.modelCariLaporan.getRowCount(); i++){
             // mendapatkan data id, nama dan tanggal
             id = this.modelCariLaporan.getValueAt(i, 0).toString().toLowerCase();
             nama = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase();
+            namaPem = this.modelCariLaporan.getValueAt(i, 2).toString().toLowerCase();
             tanggal = this.modelCariLaporan.getValueAt(i, 5).toString().toLowerCase();
             
             // pengecekan id, nama dan tanggal
-            if(id.contains(key) || nama.contains(key) || tanggal.contains(key)){
+            if(id.contains(key) || nama.contains(key) || namaPem.contains(key) || tanggal.contains(key)){
                 // jika match maka data ditampilkan kedalam tabel
                 model.addRow(
                     new Object[]{
@@ -1932,7 +1933,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             }
         }else{
             System.out.println("EXECUTED");
-            this.setEmptyChart("Tidak ada pembelian pada bulan " + namaBulan);
+            this.setEmptyChart("Tidak ada penjualan pada bulan " + namaBulan);
         }
     }//GEN-LAST:event_tabelLpBulananMouseClicked
 
@@ -2078,7 +2079,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 RiwayatTransaksiJual dtl = new RiwayatTransaksiJual(null, true, bulan, tahun);
                 dtl.setVisible(true);                
             }else{
-                Message.showWarning(this, "Gagal menampilkan data!\nTidak ada pembelian yang dilakukan pada bulan " + this.tabelLpBulanan.getValueAt(row, 0).toString());
+                Message.showWarning(this, "Gagal menampilkan data!\nTidak ada penjualan yang dilakukan pada bulan " + this.tabelLpBulanan.getValueAt(row, 0).toString());
             }
         }else{
             Message.showWarning(this, "Tidak ada bulan yang dipilih!");

@@ -136,7 +136,7 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
             r.close();
             s.close();
             
-            String jumlah = "";
+            String jumlah;
             int jmlBuff = 0, jmlKg = 0, jmlL = 0,  harga = 0;
             // menghitung total bahan dan harga
             for(int i = 0; i < model.getRowCount(); i++){
