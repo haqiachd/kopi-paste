@@ -366,7 +366,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
 
         inpJenis.setBackground(new java.awt.Color(248, 249, 250));
         inpJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpJenis.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Makanan", "Minuman", "Coffee", "Buah" }));
+        inpJenis.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Hewani", "Nabati", "Coffee", "Perasa", "Cairan" }));
 
         inpSatuan.setBackground(new java.awt.Color(248, 249, 250));
         inpSatuan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N

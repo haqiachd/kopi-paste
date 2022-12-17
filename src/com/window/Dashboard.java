@@ -41,8 +41,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.status = true;
         this.setTitle("Menu Dashboard");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
-        this.chart.showPieChart(this.pnlPieChart, "Presentase Penjualan Bulan Ini", waktu.getBulan(), waktu.getTahun());
-        this.chart.showLineChart(this.pnlLineChart, "Penjualan Produk Bulan Ini", waktu.getBulan(), waktu.getTahun());
+        this.chart.showPieChart(this.pnlPieChart, ChartManager.PENDAPATAN, "Presentase Penjualan Bulan Ini", waktu.getBulan(), waktu.getTahun());
+        this.chart.showLineChart(this.pnlLineChart, ChartManager.PENDAPATAN, "Penjualan Produk Bulan Ini", waktu.getBulan(), waktu.getTahun());
         this.lblNamaUser.setText(User.getNamaUser());
         
         this.win.btns = new JLabel[]{

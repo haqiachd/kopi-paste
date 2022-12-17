@@ -1885,15 +1885,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         switch(tipe){
             // jika yang dipilih adalah pie chart
             case 1 : 
-                this.chart.showPieChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                this.chart.showPieChart(this.pnlShowChart, ChartManager.PENDAPATAN, title, bulanDipilih, tahunDipilih);
                 break;
             // jika yang dipilih adalah line chart
             case 2 : 
-                this.chart.showLineChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                this.chart.showLineChart(this.pnlShowChart, ChartManager.PENDAPATAN, title, bulanDipilih, tahunDipilih);
                 break;
             case 3 :
                 // jika yang dipilih adalah bar chart
-                this.chart.showBarChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);    
+                this.chart.showBarChart(this.pnlShowChart, ChartManager.PENDAPATAN, title, bulanDipilih, tahunDipilih);    
                 break;
             default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
         }
@@ -1918,15 +1918,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             switch(tipeChart){
                 // jika yang dipilih adalah pie chart
                 case 1 : 
-                    this.chart.showPieChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                    this.chart.showPieChart(this.pnlShowChart, ChartManager.PENDAPATAN, title, bulanDipilih, tahunDipilih);
                     break;
                 // jika yang dipilih adalah line chart
                 case 2 : 
-                    this.chart.showLineChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);
+                    this.chart.showLineChart(this.pnlShowChart, ChartManager.PENDAPATAN, title, bulanDipilih, tahunDipilih);
                     break;
                 case 3 :
                     // jika yang dipilih adalah bar chart
-                    this.chart.showBarChart(this.pnlShowChart, title, bulanDipilih, tahunDipilih);    
+                    this.chart.showBarChart(this.pnlShowChart, ChartManager.PENDAPATAN, title, bulanDipilih, tahunDipilih);    
                     break;
                 default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
             }
