@@ -16,7 +16,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class DetailTransaksi extends javax.swing.JDialog {
+public class DetailTransaksiJual extends javax.swing.JDialog {
 
     private final PopUpBackground pop = new PopUpBackground();
     
@@ -30,7 +30,7 @@ public class DetailTransaksi extends javax.swing.JDialog {
      * @param modal
      * @param id
      */
-    public DetailTransaksi(java.awt.Frame parent, boolean modal, String id) {
+    public DetailTransaksiJual(java.awt.Frame parent, boolean modal, String id) {
         super(parent, modal);
         this.pop.setVisible(true);
         
@@ -284,14 +284,14 @@ public class DetailTransaksi extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DetailTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DetailTransaksiJual.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DetailTransaksi dialog = new DetailTransaksi(new javax.swing.JFrame(), true, "");
+                DetailTransaksiJual dialog = new DetailTransaksiJual(new javax.swing.JFrame(), true, "");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

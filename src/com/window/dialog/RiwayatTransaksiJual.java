@@ -18,7 +18,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class RiwayatTransaksi extends javax.swing.JDialog {
+public class RiwayatTransaksiJual extends javax.swing.JDialog {
     
     private DefaultTableModel cariData;
 
@@ -37,7 +37,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
      * @param bulan
      * @param tahun
      */
-    public RiwayatTransaksi(java.awt.Frame parent, boolean modal, int bulan, int tahun) {
+    public RiwayatTransaksiJual(java.awt.Frame parent, boolean modal, int bulan, int tahun) {
         super(parent, modal);
         this.pop.setVisible(true);
         this.bulan = bulan;
@@ -407,7 +407,7 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
         if(this.tabelRiwayat.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
             id= this.tabelRiwayat.getValueAt(this.tabelRiwayat.getSelectedRow(), 0).toString();
-            DetailTransaksi dtr = new DetailTransaksi(null, true, id);
+            DetailTransaksiJual dtr = new DetailTransaksiJual(null, true, id);
             dtr.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
@@ -434,14 +434,14 @@ public class RiwayatTransaksi extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RiwayatTransaksi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RiwayatTransaksiJual.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                RiwayatTransaksi dialog = new RiwayatTransaksi(new javax.swing.JFrame(), true, 11, 2022);
+                RiwayatTransaksiJual dialog = new RiwayatTransaksiJual(new javax.swing.JFrame(), true, 11, 2022);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
