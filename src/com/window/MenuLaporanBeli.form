@@ -450,7 +450,7 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="27" green="15" red="0" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Laporan Penjualan Menu"/>
+                    <Property name="text" type="java.lang.String" value="Laporan Pembelian Bahan"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTopSetting">
@@ -696,7 +696,7 @@
                                       <Data value="Mohammad Ilham"/>
                                       <Data value="Septian Yoga"/>
                                     </Column>
-                                    <Column editable="false" title="Nama Pembeli" type="java.lang.Object"/>
+                                    <Column editable="false" title="Nama Supplier" type="java.lang.Object"/>
                                     <Column editable="false" title="Total Pesanan" type="java.lang.Object">
                                       <Data value="4"/>
                                       <Data value="7"/>
@@ -951,7 +951,7 @@
                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="e9" green="69" red="0" type="rgb"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value=" Pendapatan : Rp. 3.901.000.00"/>
+                            <Property name="text" type="java.lang.String" value=" Pengeluaran : Rp. 3.901.000.00"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                 <LineBorder>
@@ -1330,7 +1330,7 @@
                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="e9" green="69" red="0" type="rgb"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value=" Pendapatan : Rp. 12.903.902,00"/>
+                            <Property name="text" type="java.lang.String" value=" Pengeluaran : Rp. 12.903.902,00"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                 <LineBorder>
@@ -1607,7 +1607,7 @@
                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="e9" green="69" red="0" type="rgb"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value=" Pendapatan : Rp. 3.430.123.00"/>
+                            <Property name="text" type="java.lang.String" value=" Pengeluaran : Rp. 3.430.123.00"/>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                 <LineBorder>

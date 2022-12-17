@@ -60,10 +60,10 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     public MenuLaporanBeli() {
         initComponents();
         
-        this.setTitle("Menu Laporan Penjualan");
+        this.setTitle("Menu Laporan Pembelian");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
-        this.lblNamaWindow.setText("Laporan Penjualan Harian");
+        this.lblNamaWindow.setText("Laporan Pembelian Harian");
         
         // set hover button
         this.win.btns = new JLabel[]{
@@ -80,7 +80,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.showLaporanHarian("");
         this.showDataLaporanHarian();
         this.showLaporanBulanan();
-        this.showDataLaporanBulanan("");
+        this.showDataLaporanBulanan();
         this.showRiwayatTransaksi();
         this.showDataRiwayat();
     }
@@ -90,12 +90,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.tabelLpHarian.setRowHeight(29);
         this.tabelLpHarian.getTableHeader().setBackground(new java.awt.Color(0,105,233));
         this.tabelLpHarian.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
+//        this.tabelLpHarian.getTableHeader().setFont(new java.awt.Font("Dialog", 1, 8));
         
         // set model tabel
         this.tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
+                    "ID Transaksi", "Nama Karyawan", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -133,12 +134,14 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         try{
             // query untuk mengambil data laporan
             String sql = String.format(
-                    "SELECT trj.id_tr_jual, trj.id_karyawan, trj.nama_pembeli, trj.total_menu, trj.total_harga, trj.tanggal, ky.nama_karyawan, DAYNAME(trj.tanggal) AS hari "
-                  + "FROM transaksi_jual AS trj "
+                    "SELECT trb.id_tr_beli, ky.nama_karyawan, sp.nama_supplier, trb.total_bahan, trb.total_harga, trb.tanggal, DAYNAME(trb.tanggal) AS hari "
+                  + "FROM transaksi_beli AS trb "
                   + "JOIN karyawan AS ky "
-                  + "ON ky.id_karyawan = trj.id_karyawan "
+                  + "ON ky.id_karyawan = trb.id_karyawan "
+                  + "JOIN SUPPLIER AS sp "
+                  + "ON sp.id_supplier = trb.id_supplier "
                   + kondisi 
-                  + " ORDER BY trj.tanggal DESC"
+                  + " ORDER BY trb.tanggal DESC"
             );
             System.out.println(sql);
 
@@ -152,11 +155,11 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 // menambahkan data kedalam tabel
                 model.addRow(
                     new String[]{
-                        r.getString("trj.id_tr_jual"), 
+                        r.getString("trb.id_tr_beli"), 
                         r.getString("ky.nama_karyawan"),
-                        r.getString("trj.nama_pembeli"),
-                        r.getString("trj.total_menu") + " Pesanan", 
-                        txt.toMoneyCase(r.getString("trj.total_harga")), 
+                        r.getString("sp.nama_supplier"),
+                        r.getString("trb.total_bahan") + " Bahan", 
+                        txt.toMoneyCase(r.getString("trb.total_harga")), 
                         waktu.getNamaHariInIndonesian(r.getString("hari")) + ", " + txt.toDateCase(r.getString("tanggal"))
                     }
                 );
@@ -176,41 +179,42 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         if(this.tabelLpHarian.getRowCount() < 1){
             this.lblTotalTrHarian.setText(" Transaksi : 0");
             this.lblTotalPsHarian.setText(" Pesananan : 0");
-            this.lblTotalPdtHarian.setText(" Pendapatan : Rp. 00");
+            this.lblTotalPdtHarian.setText(" Pengeluaran : Rp. 00");
             return;
         }
         
         
         int transaksi = this.tabelLpHarian.getRowCount(), 
-            pesanan = 0, pendapatan = 0;
+            pesanan = 0, pengeluaran = 0;
         
         // menghitung data
         for(int i = 0; i < this.tabelLpHarian.getRowCount(); i++){
-            pesanan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Pesanan", ""));
-            pendapatan += Integer.parseInt(txt.removeMoneyCase(this.tabelLpHarian.getValueAt(i, 4).toString()));
+            pesanan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Bahan", ""));
+            pengeluaran += Integer.parseInt(txt.removeMoneyCase(this.tabelLpHarian.getValueAt(i, 4).toString()));
         }
         
         // menampilkan data
         this.lblTotalTrHarian.setText(String.format(" Transaksi : %,d", transaksi));
         this.lblTotalPsHarian.setText(String.format(" Pesanan : %,d", pesanan));
-        this.lblTotalPdtHarian.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(Integer.toString(pendapatan))));
+        this.lblTotalPdtHarian.setText(String.format(" Pengeluaran : %s", txt.toMoneyCase(Integer.toString(pengeluaran))));
     }
     
     private void cariLaporanHarian(){
         // reset tabel laporan
         this.resetTableLpHarian();
         DefaultTableModel model = (DefaultTableModel) this.tabelLpHarian.getModel();
-        String key = inpCariHarian.getText().toLowerCase(), id, nama, tanggal;
+        String key = inpCariHarian.getText().toLowerCase(), id, nama, namaSup, tanggal;
         
         // membaca semua is tabel laporan
         for(int i = 0; i < this.modelCariLaporan.getRowCount(); i++){
             // mendapatkan data id, nama dan tanggal
             id = this.modelCariLaporan.getValueAt(i, 0).toString().toLowerCase();
             nama = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase();
+            namaSup = this.modelCariLaporan.getValueAt(i, 2).toString().toLowerCase();
             tanggal = this.modelCariLaporan.getValueAt(i, 5).toString().toLowerCase();
             
             // pengecekan id, nama dan tanggal
-            if(id.contains(key) || nama.contains(key) || tanggal.contains(key)){
+            if(id.contains(key) || nama.contains(key) || namaSup.contains(key) || tanggal.contains(key)){
                 // jika match maka data ditampilkan kedalam tabel
                 model.addRow(
                     new Object[]{
@@ -241,7 +245,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.tabelLpBulanan.setModel(new javax.swing.table.DefaultTableModel(
             new String[][]{},
             new String [] {
-                "Bulan", "Tahun", "Pembeli", "Pesanan", "Total Pendapatan"
+                "Bulan", "Tahun", "Supplier", "Dipesan", "Total Pengeluaran"
             }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -268,10 +272,10 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     
     private Object[] getDataLaporan(int bulan, int tahun){
         try{
-            int pendapatan, pesanan, transaksi;
+            int pengeluaran, pesanan, transaksi;
             //SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) FROM transaksi_jual WHERE MONTH(tanggal) = 12 AND YEAR(tanggal) = 2022;
-            String sql = "SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) "
-                         + "FROM transaksi_jual "
+            String sql = "SELECT MONTH(tanggal), COUNT(id_tr_beli), SUM(total_bahan), SUM(total_harga) "
+                         + "FROM transaksi_beli "
                          + "WHERE MONTH(tanggal) = "+bulan+" AND YEAR(tanggal) = " + tahun;
             System.out.println(sql);
             
@@ -284,14 +288,14 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 // mendapatakan data
                 transaksi = r.getInt(2);
                 pesanan = r.getInt(3);
-                pendapatan = r.getInt(4);
+                pengeluaran = r.getInt(4);
                 
                 // jika pendapatan tidak kosong maka data akan diambil dari mysql
-                if(pendapatan >= 1){
+                if(pengeluaran >= 1){
                     // mengupdate total data
                     this.trBulanan += transaksi;
                     this.psBulanan += pesanan;
-                    this.pdBulanan += pendapatan;
+                    this.pdBulanan += pengeluaran;
                     
                     // mendapatkan data dan mengembalikan data
                     return new Object[]{
@@ -299,7 +303,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         this.inpPilihTahun.getYear(),
                         String.format("%,d", transaksi),
                         String.format("%,d", pesanan),
-                        String.format("%s", txt.toMoneyCase(Integer.toString(pendapatan)))
+                        String.format("%s", txt.toMoneyCase(Integer.toString(pengeluaran)))
                     };                    
                 // jika pendapatan kurang dari 1 maka data dianggap kosong dan data yang akan ditampilkan akan diset default
                 }else{
@@ -347,13 +351,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         
         // refresh tabel
         this.tabelLpBulanan.setModel(model);
-        this.showDataLaporanBulanan("");
+        this.showDataLaporanBulanan();
     }
 
-    private void showDataLaporanBulanan(String kondisi){
+    private void showDataLaporanBulanan(){
         this.lblTotalTrBulanan.setText(String.format(" Transaksi : %,d", this.trBulanan));
         this.lblTotalPsBulanan.setText(String.format(" Pesanan : %,d", this.psBulanan));
-        this.lblTotalPdBulanan.setText(String.format(" Pendapatan : %s", this.txt.toMoneyCase(Integer.toString(this.pdBulanan))));
+        this.lblTotalPdBulanan.setText(String.format(" Pengeluaran : %s", this.txt.toMoneyCase(Integer.toString(this.pdBulanan))));
     } 
 
     private void setEmptyChart(String text){
@@ -666,6 +670,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         }
         return null;
     }
+    private void jumlahData(){
+        int jumlah = 0;
+        for(int i = 0; i < this.tabelRiwayat.getRowCount(); i++){
+            jumlah += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 0).toString());
+        }
+        // set label mu mbek 
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -969,7 +980,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblNamaWindow.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         lblNamaWindow.setForeground(new java.awt.Color(0, 21, 39));
-        lblNamaWindow.setText("Laporan Penjualan Menu");
+        lblNamaWindow.setText("Laporan Pembelian Bahan");
 
         lblTopSetting.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTopSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-top-setting.png"))); // NOI18N
@@ -1068,7 +1079,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 {"TRJ008", "Septian Yoga", null, "3", "Rp. 11.000,00", "22 November 2022"}
             },
             new String [] {
-                "ID Transaksi", "Nama Karyawan", "Nama Pembeli", "Total Pesanan", "Total Harga", "Tanggal"
+                "ID Transaksi", "Nama Karyawan", "Nama Supplier", "Total Pesanan", "Total Harga", "Tanggal"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1191,7 +1202,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblTotalPdtHarian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalPdtHarian.setForeground(new java.awt.Color(0, 105, 233));
-        lblTotalPdtHarian.setText(" Pendapatan : Rp. 3.901.000.00");
+        lblTotalPdtHarian.setText(" Pengeluaran : Rp. 3.901.000.00");
         lblTotalPdtHarian.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         javax.swing.GroupLayout pnlLaporanHarianLayout = new javax.swing.GroupLayout(pnlLaporanHarian);
@@ -1411,7 +1422,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblTotalPdBulanan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
-        lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
+        lblTotalPdBulanan.setText(" Pengeluaran : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
@@ -1547,7 +1558,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblTotalPdRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalPdRiwayat.setForeground(new java.awt.Color(0, 105, 233));
-        lblTotalPdRiwayat.setText(" Pendapatan : Rp. 3.430.123.00");
+        lblTotalPdRiwayat.setText(" Pengeluaran : Rp. 3.430.123.00");
         lblTotalPdRiwayat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
         lblMenuFavRiwayat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -1949,7 +1960,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
             String tanggal = format.format(this.inpDataPerhari.getDate());
 
             // menampilkan data
-            this.showLaporanHarian("WHERE DATE(trj.tanggal) = '"+tanggal+"'");
+            this.showLaporanHarian("WHERE DATE(trb.tanggal) = '"+tanggal+"'");
             this.showDataLaporanHarian();
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
@@ -1969,7 +1980,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                      tanggal2 = format2.format(this.inpDataHarianBetween2.getDate());
 
             // menampilkan data
-            this.showLaporanHarian("WHERE DATE(trj.tanggal) BETWEEN '"+tanggal1+"' AND '"+tanggal2+"'");
+            this.showLaporanHarian("WHERE DATE(trb.tanggal) BETWEEN '"+tanggal1+"' AND '"+tanggal2+"'");
             this.showDataLaporanHarian();
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));            
         }
@@ -1977,11 +1988,11 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
     private void tabPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabPaneMouseClicked
         if(this.tabPane.getSelectedIndex() == 0){
-            this.lblNamaWindow.setText("Laporan Penjualan Harian");
+            this.lblNamaWindow.setText("Laporan Pembelian Harian");
         }else if(this.tabPane.getSelectedIndex() == 1){
-            this.lblNamaWindow.setText("Laporan Penjualan Bulanan");
+            this.lblNamaWindow.setText("Laporan Pembelian Bulanan");
         }else if(this.tabPane.getSelectedIndex() == 2){
-            this.lblNamaWindow.setText("Riwayat Penjualan");
+            this.lblNamaWindow.setText("Riwayat Pembelian");
         }
     }//GEN-LAST:event_tabPaneMouseClicked
 
