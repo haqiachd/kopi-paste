@@ -396,7 +396,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlTop">
+            <Container class="com.ui.RoundedPanel" name="pnlTop">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -527,7 +527,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlContent">
+            <Container class="com.ui.RoundedPanel" name="pnlContent">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -720,7 +720,7 @@
                         </Property>
                       </Properties>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="this.tabelData = new com.manage.StripedTabelModel(new String[][]{}, new String[]{});"/>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="this.tabelData = new com.ui.StripedTabelModel(new String[][]{}, new String[]{});"/>
                       </AuxValues>
                     </Component>
                   </SubComponents>
@@ -745,7 +745,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCari">
@@ -824,7 +824,7 @@
                     <Property name="selectionStart" type="int" value="5"/>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(50)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(50)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNama">
@@ -853,7 +853,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="inpTelephone">
@@ -871,7 +871,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTelephone">
@@ -900,7 +900,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblAlamat">

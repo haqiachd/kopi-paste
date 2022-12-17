@@ -1,6 +1,6 @@
 package com.window;
 
-import com.manage.UIManager;
+import com.ui.UIManager;
 import com.media.Gambar;
 import java.awt.Cursor;
 import javax.swing.BorderFactory;
@@ -73,7 +73,7 @@ public class TestWindow extends javax.swing.JFrame {
         btnKaryawan = new javax.swing.JLabel();
         btnPembeli = new javax.swing.JLabel();
         btnSupplier = new javax.swing.JLabel();
-        pnlTop = new com.manage.RoundedPanel();
+        pnlTop = new com.ui.RoundedPanel();
         lblIconWindow = new javax.swing.JLabel();
         lblNamaWindow = new javax.swing.JLabel();
         lblTopSetting = new javax.swing.JLabel();
@@ -81,22 +81,22 @@ public class TestWindow extends javax.swing.JFrame {
         lblTopInfo = new javax.swing.JLabel();
         lblTopProfile = new javax.swing.JLabel();
         lblTopKembali = new javax.swing.JLabel();
-        pnlContent = new com.manage.RoundedPanel();
+        pnlContent = new com.ui.RoundedPanel();
         lblTotalData = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabelData = this.tabelData = new com.manage.StripedTabelModel(new String[][]{}, new String[]{});
-        inpCari = new com.manage.RoundedTextField(15);
+        tabelData = this.tabelData = new com.ui.StripedTabelModel(new String[][]{}, new String[]{});
+        inpCari = new com.ui.RoundedTextField(15);
         lblCari = new javax.swing.JLabel();
         lblInfoData = new javax.swing.JLabel();
         lineVerCen = new javax.swing.JSeparator();
         lineHorTop = new javax.swing.JSeparator();
         lblId = new javax.swing.JLabel();
-        inpId = new com.manage.RoundedTextField(50);
+        inpId = new com.ui.RoundedTextField(50);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.manage.RoundedTextField(15);
-        inpTelephone = new com.manage.RoundedTextField(15);
+        inpNama = new com.ui.RoundedTextField(15);
+        inpTelephone = new com.ui.RoundedTextField(15);
         lblTelephone = new javax.swing.JLabel();
-        inpAlamat = new com.manage.RoundedTextField(15);
+        inpAlamat = new com.ui.RoundedTextField(15);
         lblAlamat = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnEdit = new javax.swing.JToggleButton();
@@ -1035,10 +1035,10 @@ public class TestWindow extends javax.swing.JFrame {
     private javax.swing.JSeparator lineHorTop;
     private javax.swing.JSeparator lineSideMenu1;
     private javax.swing.JSeparator lineVerCen;
-    private com.manage.RoundedPanel pnlContent;
+    private com.ui.RoundedPanel pnlContent;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
-    private com.manage.RoundedPanel pnlTop;
+    private com.ui.RoundedPanel pnlTop;
     private javax.swing.JTable tabelData;
     // End of variables declaration//GEN-END:variables
 }

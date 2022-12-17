@@ -68,8 +68,8 @@ public class LoginWindow extends javax.swing.JFrame {
         lblDesApp = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
         lblEye = new javax.swing.JLabel();
-        inpPassword = new com.manage.RoundedPasswordField(15);
-        inpUsername = new com.manage.RoundedTextField(15);
+        inpPassword = new com.ui.RoundedPasswordField(15);
+        inpUsername = new com.ui.RoundedTextField(15);
         lblPassword = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
         lblKembali = new javax.swing.JLabel();

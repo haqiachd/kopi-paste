@@ -82,13 +82,13 @@ public class UpdateDataPembeli extends javax.swing.JDialog {
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JToggleButton();
         lblId = new javax.swing.JLabel();
-        inpId = new com.manage.RoundedTextField(15);
+        inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.manage.RoundedTextField(15);
+        inpNama = new com.ui.RoundedTextField(15);
         lblData1 = new javax.swing.JLabel();
-        inpData1 = new com.manage.RoundedTextField(15);
+        inpData1 = new com.ui.RoundedTextField(15);
         lblData2 = new javax.swing.JLabel();
-        inpData2 = new com.manage.RoundedTextField(15);
+        inpData2 = new com.ui.RoundedTextField(15);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 

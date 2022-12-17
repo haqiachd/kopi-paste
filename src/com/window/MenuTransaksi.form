@@ -392,7 +392,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlTop">
+            <Container class="com.ui.RoundedPanel" name="pnlTop">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -491,7 +491,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlContent">
+            <Container class="com.ui.RoundedPanel" name="pnlContent">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -528,7 +528,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="com.manage.RoundedPanel" name="pnlTotalPenjualan1">
+                <Container class="com.ui.RoundedPanel" name="pnlTotalPenjualan1">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ea" green="dd" red="d9" type="rgb"/>
@@ -625,7 +625,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="com.manage.RoundedPanel" name="pnlTotalPenjualan2">
+                <Container class="com.ui.RoundedPanel" name="pnlTotalPenjualan2">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ea" green="dd" red="d9" type="rgb"/>

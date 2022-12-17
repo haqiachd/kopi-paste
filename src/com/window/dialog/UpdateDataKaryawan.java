@@ -273,18 +273,18 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JToggleButton();
         lblId = new javax.swing.JLabel();
-        inpId = new com.manage.RoundedTextField(15);
+        inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.manage.RoundedTextField(15);
+        inpNama = new com.ui.RoundedTextField(15);
         lblNoTelp = new javax.swing.JLabel();
-        inpNoTelp = new com.manage.RoundedTextField(15);
+        inpNoTelp = new com.ui.RoundedTextField(15);
         lblAlamat = new javax.swing.JLabel();
-        inpAlamat = new com.manage.RoundedTextField(15);
+        inpAlamat = new com.ui.RoundedTextField(15);
         lblUsername = new javax.swing.JLabel();
-        inpUsername = new com.manage.RoundedTextField(15);
+        inpUsername = new com.ui.RoundedTextField(15);
         lblShif = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
-        inpPassword = new com.manage.RoundedPasswordField(15);
+        inpPassword = new com.ui.RoundedPasswordField(15);
         lblEye = new javax.swing.JLabel();
         inpShif = new javax.swing.JComboBox();
 

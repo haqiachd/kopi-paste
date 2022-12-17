@@ -180,7 +180,7 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlMain = new com.manage.RoundedPanel();
+        pnlMain = new com.ui.RoundedPanel();
         lblDialogName = new javax.swing.JLabel();
         lineTop = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -332,7 +332,7 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDialogName;
     private javax.swing.JSeparator lineTop;
-    private com.manage.RoundedPanel pnlMain;
+    private com.ui.RoundedPanel pnlMain;
     private javax.swing.JTable tabelDetail;
     // End of variables declaration//GEN-END:variables
 }

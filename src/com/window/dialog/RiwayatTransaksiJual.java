@@ -204,7 +204,7 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlMain = new com.manage.RoundedPanel();
+        pnlMain = new com.ui.RoundedPanel();
         lblDialogName = new javax.swing.JLabel();
         lineTop = new javax.swing.JSeparator();
         lblClose = new javax.swing.JLabel();
@@ -467,7 +467,7 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
     private javax.swing.JLabel lblTotalTrRiwayat;
     private javax.swing.JSeparator lineBottom;
     private javax.swing.JSeparator lineTop;
-    private com.manage.RoundedPanel pnlMain;
+    private com.ui.RoundedPanel pnlMain;
     private javax.swing.JTable tabelRiwayat;
     // End of variables declaration//GEN-END:variables
 }

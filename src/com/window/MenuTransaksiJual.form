@@ -392,7 +392,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlTop">
+            <Container class="com.ui.RoundedPanel" name="pnlTop">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -491,7 +491,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlContent">
+            <Container class="com.ui.RoundedPanel" name="pnlContent">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -771,7 +771,7 @@
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpPembeliMouseClicked"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIdMenu">
@@ -811,7 +811,7 @@
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpIdMenuMouseClicked"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(50)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(50)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNamaMenu">
@@ -847,7 +847,7 @@
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpNamaMenuMouseClicked"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBayar">
@@ -949,7 +949,7 @@
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpHargaMouseClicked"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="inpCariMenu">
@@ -1090,7 +1090,7 @@
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpJumlahKeyTyped"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblStokMenu">

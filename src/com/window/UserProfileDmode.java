@@ -1,6 +1,6 @@
 package com.window;
 
-import com.manage.UIManager;
+import com.ui.UIManager;
 import com.media.Gambar;
 import java.awt.Cursor;
 import javax.swing.BorderFactory;
@@ -59,13 +59,13 @@ public class UserProfileDmode extends javax.swing.JFrame {
         btnKaryawan = new javax.swing.JLabel();
         btnPembeli = new javax.swing.JLabel();
         btnSupplier = new javax.swing.JLabel();
-        pnlTop = new com.manage.RoundedPanel();
+        pnlTop = new com.ui.RoundedPanel();
         lblIconWindow = new javax.swing.JLabel();
         lblNamaWindow = new javax.swing.JLabel();
         lblInfo = new javax.swing.JLabel();
         lblSetting = new javax.swing.JLabel();
         lblTopProfile = new javax.swing.JLabel();
-        pnlContent = new com.manage.RoundedPanel();
+        pnlContent = new com.ui.RoundedPanel();
         lblInfoData = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
@@ -785,9 +785,9 @@ public class UserProfileDmode extends javax.swing.JFrame {
     private javax.swing.JLabel lblSetting;
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JSeparator lineSideMenu1;
-    private com.manage.RoundedPanel pnlContent;
+    private com.ui.RoundedPanel pnlContent;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
-    private com.manage.RoundedPanel pnlTop;
+    private com.ui.RoundedPanel pnlTop;
     // End of variables declaration//GEN-END:variables
 }

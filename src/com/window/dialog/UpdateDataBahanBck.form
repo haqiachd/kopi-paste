@@ -227,7 +227,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpIdActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(50)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(50)"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblNama">
@@ -256,7 +256,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblTelephone">
@@ -314,7 +314,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JSeparator" name="lineHorBot">
@@ -391,7 +391,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JComboBox" name="inpSatuan">

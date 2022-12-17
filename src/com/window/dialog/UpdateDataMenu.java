@@ -307,12 +307,12 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JToggleButton();
         lblId = new javax.swing.JLabel();
-        inpId = new com.manage.RoundedTextField(15);
+        inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.manage.RoundedTextField(15);
+        inpNama = new com.ui.RoundedTextField(15);
         lblData1 = new javax.swing.JLabel();
         lblData2 = new javax.swing.JLabel();
-        inpHarga = new com.manage.RoundedTextField(15);
+        inpHarga = new com.ui.RoundedTextField(15);
         lblData3 = new javax.swing.JLabel();
         btnTambahBahan = new javax.swing.JButton();
         btnEditBahan = new javax.swing.JButton();

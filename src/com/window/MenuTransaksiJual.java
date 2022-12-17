@@ -3,7 +3,7 @@ package com.window;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
-import com.manage.UIManager;
+import com.ui.UIManager;
 import com.manage.User;
 import com.manage.Waktu;
 import com.media.Gambar;
@@ -752,27 +752,27 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         btnKaryawan = new javax.swing.JLabel();
         btnPembeli = new javax.swing.JLabel();
         btnSupplier = new javax.swing.JLabel();
-        pnlTop = new com.manage.RoundedPanel();
+        pnlTop = new com.ui.RoundedPanel();
         lblIconWindow = new javax.swing.JLabel();
         lblNamaWindow = new javax.swing.JLabel();
         lblTopSetting = new javax.swing.JLabel();
         lblTopInfo = new javax.swing.JLabel();
         lblTopProfile = new javax.swing.JLabel();
-        pnlContent = new com.manage.RoundedPanel();
+        pnlContent = new com.ui.RoundedPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelTr = new javax.swing.JTable();
         lineCenter = new javax.swing.JSeparator();
         lblPembeli = new javax.swing.JLabel();
-        inpPembeli = new com.manage.RoundedTextField(15);
+        inpPembeli = new com.ui.RoundedTextField(15);
         lblIdMenu = new javax.swing.JLabel();
-        inpIdMenu = new com.manage.RoundedTextField(50);
+        inpIdMenu = new com.ui.RoundedTextField(50);
         lblNamaMenu = new javax.swing.JLabel();
-        inpNamaMenu = new com.manage.RoundedTextField(15);
+        inpNamaMenu = new com.ui.RoundedTextField(15);
         btnBayar = new javax.swing.JButton();
         btnTambah = new javax.swing.JToggleButton();
         btnHapus = new javax.swing.JToggleButton();
         lblHarga = new javax.swing.JLabel();
-        inpHarga = new com.manage.RoundedTextField(15);
+        inpHarga = new com.ui.RoundedTextField(15);
         inpCariMenu = new javax.swing.JLabel();
         lblServerTime = new javax.swing.JLabel();
         lblTotalHarga = new javax.swing.JLabel();
@@ -781,7 +781,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         lblIDTransaksi = new javax.swing.JLabel();
         inpIdTransaksi = new javax.swing.JTextField();
         lblJumlah = new javax.swing.JLabel();
-        inpJumlah = new com.manage.RoundedTextField(15);
+        inpJumlah = new com.ui.RoundedTextField(15);
         lblStokMenu = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
@@ -1872,10 +1872,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblTotalHargaRp;
     private javax.swing.JSeparator lineCenter;
     private javax.swing.JSeparator lineSideMenu1;
-    private com.manage.RoundedPanel pnlContent;
+    private com.ui.RoundedPanel pnlContent;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
-    private com.manage.RoundedPanel pnlTop;
+    private com.ui.RoundedPanel pnlTop;
     private javax.swing.JTable tabelTr;
     // End of variables declaration//GEN-END:variables
 }

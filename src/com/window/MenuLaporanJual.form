@@ -395,7 +395,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlTop">
+            <Container class="com.ui.RoundedPanel" name="pnlTop">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -494,7 +494,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlContent">
+            <Container class="com.ui.RoundedPanel" name="pnlContent">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>

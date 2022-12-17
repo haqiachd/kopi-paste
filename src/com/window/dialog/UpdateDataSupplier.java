@@ -249,13 +249,13 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JToggleButton();
         lblId = new javax.swing.JLabel();
-        inpId = new com.manage.RoundedTextField(15);
+        inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.manage.RoundedTextField(15);
+        inpNama = new com.ui.RoundedTextField(15);
         lblData1 = new javax.swing.JLabel();
-        inpTelephone = new com.manage.RoundedTextField(15);
+        inpTelephone = new com.ui.RoundedTextField(15);
         lblData2 = new javax.swing.JLabel();
-        inpAlamat = new com.manage.RoundedTextField(15);
+        inpAlamat = new com.ui.RoundedTextField(15);
         lblData3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         inpBahan = new haqiachd.list.JListCustom();

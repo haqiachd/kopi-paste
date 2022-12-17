@@ -189,7 +189,7 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         lblInfoBahan = new javax.swing.JLabel();
         lblQuantity = new javax.swing.JLabel();
-        inpQuantity = new com.manage.RoundedTextField(15);
+        inpQuantity = new com.ui.RoundedTextField(15);
         lblSatuan = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
 

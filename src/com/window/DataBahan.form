@@ -397,7 +397,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlTop">
+            <Container class="com.ui.RoundedPanel" name="pnlTop">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -496,7 +496,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="com.manage.RoundedPanel" name="pnlContent">
+            <Container class="com.ui.RoundedPanel" name="pnlContent">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -720,7 +720,7 @@
                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tabelDataKeyPressed"/>
                       </Events>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="this.tabelData = new com.manage.StripedTabelModel(new String[][]{}, new String[]{});"/>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="this.tabelData = new com.ui.StripedTabelModel(new String[][]{}, new String[]{});"/>
                       </AuxValues>
                     </Component>
                   </SubComponents>
@@ -749,7 +749,7 @@
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpCariKeyReleased"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCari">
@@ -834,7 +834,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpIdActionPerformed"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(50)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(50)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNama">
@@ -863,7 +863,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTelephone">
@@ -895,7 +895,7 @@
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpStokKeyTyped"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblAlamat">
@@ -1027,7 +1027,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="inpJenis">
@@ -1045,7 +1045,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.manage.RoundedTextField(15)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
               </SubComponents>

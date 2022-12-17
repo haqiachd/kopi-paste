@@ -4,7 +4,7 @@ import com.koneksi.Database;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
-import com.manage.UIManager;
+import com.ui.UIManager;
 import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
@@ -219,27 +219,27 @@ public class DataBahan extends javax.swing.JFrame {
         btnKaryawan = new javax.swing.JLabel();
         btnPembeli = new javax.swing.JLabel();
         btnSupplier = new javax.swing.JLabel();
-        pnlTop = new com.manage.RoundedPanel();
+        pnlTop = new com.ui.RoundedPanel();
         lblIconWindow = new javax.swing.JLabel();
         lblNamaWindow = new javax.swing.JLabel();
         lblTopSetting = new javax.swing.JLabel();
         lblTopInfo = new javax.swing.JLabel();
         lblTopProfile = new javax.swing.JLabel();
-        pnlContent = new com.manage.RoundedPanel();
+        pnlContent = new com.ui.RoundedPanel();
         lblKeyword = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabelData = this.tabelData = new com.manage.StripedTabelModel(new String[][]{}, new String[]{});
-        inpCari = new com.manage.RoundedTextField(15);
+        tabelData = this.tabelData = new com.ui.StripedTabelModel(new String[][]{}, new String[]{});
+        inpCari = new com.ui.RoundedTextField(15);
         lblCari = new javax.swing.JLabel();
         lblInfoData = new javax.swing.JLabel();
         lineVerCen = new javax.swing.JSeparator();
         lineHorTop = new javax.swing.JSeparator();
         lblId = new javax.swing.JLabel();
-        inpId = new com.manage.RoundedTextField(50);
+        inpId = new com.ui.RoundedTextField(50);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.manage.RoundedTextField(15);
+        inpNama = new com.ui.RoundedTextField(15);
         lblTelephone = new javax.swing.JLabel();
-        inpStok = new com.manage.RoundedTextField(15);
+        inpStok = new com.ui.RoundedTextField(15);
         lblAlamat = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnEdit = new javax.swing.JToggleButton();
@@ -248,8 +248,8 @@ public class DataBahan extends javax.swing.JFrame {
         lineHorBot = new javax.swing.JSeparator();
         lblGajelas = new javax.swing.JLabel();
         lblHarga = new javax.swing.JLabel();
-        inpHarga = new com.manage.RoundedTextField(15);
-        inpJenis = new com.manage.RoundedTextField(15);
+        inpHarga = new com.ui.RoundedTextField(15);
+        inpJenis = new com.ui.RoundedTextField(15);
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1278,10 +1278,10 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JSeparator lineHorTop;
     private javax.swing.JSeparator lineSideMenu1;
     private javax.swing.JSeparator lineVerCen;
-    private com.manage.RoundedPanel pnlContent;
+    private com.ui.RoundedPanel pnlContent;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
-    private com.manage.RoundedPanel pnlTop;
+    private com.ui.RoundedPanel pnlTop;
     private javax.swing.JTable tabelData;
     // End of variables declaration//GEN-END:variables
 }

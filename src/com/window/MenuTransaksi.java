@@ -1,6 +1,6 @@
 package com.window;
 
-import com.manage.UIManager;
+import com.ui.UIManager;
 import com.manage.User;
 import com.media.Gambar;
 import com.window.dialog.InfoApp;
@@ -54,19 +54,19 @@ public class MenuTransaksi extends javax.swing.JFrame {
         btnKaryawan = new javax.swing.JLabel();
         btnPembeli = new javax.swing.JLabel();
         btnSupplier = new javax.swing.JLabel();
-        pnlTop = new com.manage.RoundedPanel();
+        pnlTop = new com.ui.RoundedPanel();
         lblIconWindow = new javax.swing.JLabel();
         lblNamaWindow = new javax.swing.JLabel();
         lblTopSetting = new javax.swing.JLabel();
         lblTopInfo = new javax.swing.JLabel();
         lblTopProfile = new javax.swing.JLabel();
-        pnlContent = new com.manage.RoundedPanel();
-        pnlTotalPenjualan1 = new com.manage.RoundedPanel();
+        pnlContent = new com.ui.RoundedPanel();
+        pnlTotalPenjualan1 = new com.ui.RoundedPanel();
         jLabel2 = new javax.swing.JLabel();
         btnTrBeli = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        pnlTotalPenjualan2 = new com.manage.RoundedPanel();
+        pnlTotalPenjualan2 = new com.ui.RoundedPanel();
         jLabel3 = new javax.swing.JLabel();
         btnTrJual = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -806,11 +806,11 @@ public class MenuTransaksi extends javax.swing.JFrame {
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JLabel lblTopSetting;
     private javax.swing.JSeparator lineSideMenu1;
-    private com.manage.RoundedPanel pnlContent;
+    private com.ui.RoundedPanel pnlContent;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
-    private com.manage.RoundedPanel pnlTop;
-    private com.manage.RoundedPanel pnlTotalPenjualan1;
-    private com.manage.RoundedPanel pnlTotalPenjualan2;
+    private com.ui.RoundedPanel pnlTop;
+    private com.ui.RoundedPanel pnlTotalPenjualan1;
+    private com.ui.RoundedPanel pnlTotalPenjualan2;
     // End of variables declaration//GEN-END:variables
 }

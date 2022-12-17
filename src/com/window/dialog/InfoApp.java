@@ -48,7 +48,7 @@ public class InfoApp extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlMain = new com.manage.RoundedPanel();
+        pnlMain = new com.ui.RoundedPanel();
         lblDialogName = new javax.swing.JLabel();
         lineTop = new javax.swing.JSeparator();
         lblClose = new javax.swing.JLabel();
@@ -568,7 +568,7 @@ public class InfoApp extends javax.swing.JDialog {
     private javax.swing.JLabel lblWa;
     private javax.swing.JSeparator lineTop;
     private javax.swing.JPanel pnlKontakDev;
-    private com.manage.RoundedPanel pnlMain;
+    private com.ui.RoundedPanel pnlMain;
     private javax.swing.JLabel valDev;
     private javax.swing.JLabel valNamaApp;
     private javax.swing.JLabel valVersi;
