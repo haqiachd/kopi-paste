@@ -5,6 +5,30 @@
  */
 package test;
 
+import com.koneksi.Koneksi;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.statistics.HistogramDataset;
+
 /**
  *
  * @author Achmad Baihaqi
@@ -16,6 +40,50 @@ public class tet extends javax.swing.JFrame {
      */
     public tet() {
         initComponents();
+        Connection c = null;
+        System.out.println(c);
+        pie();
+    }
+
+    private void pie() {
+
+        try {
+//            String sql = "SELECT nama_produk,sum(total_barang) as ttl FROM tbl_transaksi where yearweek(tanggal) = yearweek(NOW())group by id_produk;";
+            String sql = "SELECT nama_menu, sum(total_harga) as ttl FROM detail_tr_jual group by nama_menu;";
+
+//            Connection conn = (Connection) Koneksi.getKoneksi();
+            Connection conn = (Connection) Koneksi.configDB();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            DefaultPieDataset dataset = new DefaultPieDataset();
+//            JDBCPieDataset dataset = new JDBCPieDataset(koneksi.getKoneksi(), sql);
+//            dataset.executeQuery(sql);
+
+            while (rs.next()) {
+                System.out.println("JUMLAH ITEM : " + dataset.getItemCount());
+                String nama = rs.getString("nama_menu");
+                int total = Integer.parseInt(rs.getString("ttl"));
+                dataset.setValue(nama, Integer.valueOf(total));
+            }
+            
+            JFreeChart pieChart = ChartFactory.createPieChart3D("BARANG TERJUAL HARI INI", dataset, true, true, false);
+            PiePlot3D pie = (PiePlot3D) pieChart.getPlot();
+            pie.setBackgroundPaint(Color.white);
+            pie.setSectionPaint("Jus Jeruk", new java.awt.Color(0,0,0));
+
+            ChartPanel piepanel = new ChartPanel(pieChart);
+
+            jpanel = new javax.swing.JPanel();
+            jpanel.setLayout(new java.awt.BorderLayout());
+            jpanel.removeAll();
+            jpanel.add(piepanel, BorderLayout.CENTER);
+            jpanel.validate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+
     }
 
     /**
@@ -27,34 +95,21 @@ public class tet extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jpanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        jpanel.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 300, Short.MAX_VALUE))
+            .addComponent(jpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 200, Short.MAX_VALUE))
+            .addComponent(jpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -96,6 +151,6 @@ public class tet extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jpanel;
     // End of variables declaration//GEN-END:variables
 }
