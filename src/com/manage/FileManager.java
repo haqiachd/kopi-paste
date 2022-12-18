@@ -227,10 +227,10 @@ public class FileManager {
         
         JFileChooser fileChooser = new JFileChooser();
         // mengatur current directory sesuai yg dengan diinputkan user
-        fileChooser.setCurrentDirectory(new File(currentDirectory)); 
+        fileChooser.setCurrentDirectory(new File(currentDirectory));
         
         // mengatur format file yang didukung
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(description, format); 
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(description, format);
         fileChooser.addChoosableFileFilter(filter); 
         
         // membuka dialog untuk memilih file
@@ -262,6 +262,31 @@ public class FileManager {
     public String chooseFile(){
         return this.chooseFile(System.getProperty("user.home"), maxSizeFile, "*.DEFAULT", "java", "txt", "haqi", "sql", "properties");
     }
+    
+    public String saveFile(String currentDirectory){
+        
+        JFileChooser fileChooser = new JFileChooser();
+        // mengatur current directory sesuai yg dengan diinputkan user
+//        fileChooser.setCurrentDirectory(new File(currentDirectory));
+        
+        // mengatur format file yang didukung
+//        FileNameExtensionFilter filter = new FileNameExtensionFilter(description, format);
+//        fileChooser.addChoosableFileFilter(filter); 
+        
+        // membuka dialog untuk memilih file
+        int res = fileChooser.showOpenDialog(null); 
+        
+        // jika user memilih sebuah file
+        if(res == JFileChooser.APPROVE_OPTION){
+            // mendapatkan file yang dipilih user
+            File selected = fileChooser.getSelectedFile();
+            // mengembalikan direktori dari file yang dipilih oleh user
+            return selected.getAbsolutePath();
+        }
+        // jika user tidak jadi memilih sebuah file
+        return null;
+    }
+
     
     /**
      * Digunakan untuk mendapatkan nama file yang ada didalam direktory. Method akan 
