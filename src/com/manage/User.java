@@ -3,16 +3,13 @@ package com.manage;
 
 import com.koneksi.Koneksi;
 import com.window.LoginWindow;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  *
@@ -27,7 +24,6 @@ public class User {
       m.update(s.getBytes(),0,s.length());     
       return new BigInteger(1,m.digest()).toString(512); 
    }
-    private Object DigestUtils;
     
     public boolean login(String usernameOrID, String password){
         USERNAME = usernameOrID;
@@ -36,8 +32,7 @@ public class User {
             String query = 
                     String.format("SELECT karyawan.id_karyawan, karyawan.nama_karyawan, user.username, user.password, user.level "
                             + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
-                            + "WHERE user.username = '%s' OR karyawan.id_karyawan = '%s'", USERNAME, usernameOrID),
-                    passEncrypt, passDecrypt;
+                            + "WHERE user.username = '%s' OR karyawan.id_karyawan = '%s'", USERNAME, usernameOrID);
             
             // eksekusi query
             Connection conn = (Connection) Koneksi.configDB();
@@ -46,19 +41,7 @@ public class User {
             
             // cek username ada atau tidak
             if(res.next()){
-//                passEncrypt = res.getString("user.password");
-//                MessageDigest md = MessageDigest.getInstance("SHA-256");
-//                byte[]hashInBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
-//                //bytes to hex
-//                StringBuilder sb = new StringBuilder();
-//                for (byte b : hashInBytes) {
-//                        sb.append(String.format("%02x", b));
-//                }
-//                passDecrypt = sb.toString();
-//                System.out.println("Encrypt : " + passEncrypt);
-//                System.out.println("Decrypt : " + passDecrypt);
-                // cek password cocok atau tidak
-                if(password.equals(res.getString("password"))){
+                if(BCrypt.checkpw(password, res.getString("password"))){
                     // mendapatkan nama dari user yang sedang login
                     User.ID_KY = res.getString("karyawan.id_karyawan");
                     User.NAMA_USER = res.getString("karyawan.nama_karyawan");
@@ -125,7 +108,4 @@ public class User {
             }
         });   
     }
-    
-    
-
 }

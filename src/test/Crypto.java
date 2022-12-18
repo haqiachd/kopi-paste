@@ -53,6 +53,9 @@ public class Crypto {
     }
     
     private String decrypt(String msg) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException{
+        if(this.eCihpher == null){
+            eCihpher = Cipher.getInstance("AES/GCM/NoPadding");
+        }
         byte[] msgBytes = this.decode(msg);
         Cipher dCipher = Cipher.getInstance("AES/GCM/NoPadding");
         GCMParameterSpec spec = new GCMParameterSpec(T_LEN, this.eCihpher.getIV());
@@ -65,29 +68,16 @@ public class Crypto {
         
         Crypto cr = new Crypto();
         cr.init();
-        String kata = "haqi1234";
-        String encrypt = cr.encrypt(kata),
-               e1 = cr.encrypt(kata),
-               decrypt = cr.decrypt(encrypt),
-               d1 = cr.decrypt(e1);
+//        String kata = "haqi1234";
+//        String encrypt = cr.encrypt(kata),
+//               e1 = cr.encrypt(kata);
+//        
+//        System.out.println("Word : " + kata);
+//        System.out.println("Encrypt : " + encrypt);
         
-        System.out.println("Word : " + kata);
-        System.out.println("Encrypt : " + encrypt);
-        System.out.println("Decrypt : " + decrypt);
-        System.out.println("Decrypt : " + d1);
+        String enk = "/6O5sk5/Mr91UQN9xqGPo+KNAzuiM+P7";
+        System.out.println(cr.decrypt(enk));
 //        
-//        Crypto cr = new Crypto();
-//        cr.init();
-//        
-//        String hash1 = cr.encrypt("terserah"),
-//               hash2 = cr.encrypt("terserah");
-//        
-//        String pass1 = cr.decrypt(hash1),
-//               pass2 = cr.decrypt(hash2);
-//        
-//        System.out.println("Encrypted : " + hash1);
-//        System.out.println("Decrypted : " + pass1);
-//        System.out.println("Decrypted : " + pass2);
     }
     
 }
