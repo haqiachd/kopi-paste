@@ -384,7 +384,7 @@ public class Waktu {
         return tanggal;
     }
      
-     private Object[] getMinggu(int bulan, int tahun){
+     public Object[] getMinggu(int bulan, int tahun){
          // menampung data minggu
          SortedMap<String, String> data = new TreeMap<>();
          
@@ -464,12 +464,12 @@ public class Waktu {
         int week = 1;
         Object[] minggu = w.getMinggu(12, 2022);
         System.out.println(minggu[0]);
-//        System.out.println("\n\n\n");
-//        for(Object m : minggu){
-////            System.out.println(String.format("Minggu %d : %s ", week, m.toString().replace("=",  " --> ")));
-//            System.out.println(String.format("Minggu %d : %s ", week, m));
-//            week++;
-//        }
+        System.out.println("\n\n\n");
+        for(Object m : minggu){
+//            System.out.println(String.format("Minggu %d : %s ", week, m.toString().replace("=",  " --> ")));
+            System.out.println(String.format("Minggu %d : %s ", week, m));
+            week++;
+        }
         
 
     }
