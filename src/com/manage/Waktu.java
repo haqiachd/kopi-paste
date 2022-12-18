@@ -5,6 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  *
@@ -55,8 +60,9 @@ public class Waktu {
         );
     }
     
+    
     public String getNamaHari(int dayOfWeek){
-        switch(kalender.get(Calendar.DAY_OF_WEEK)){
+        switch(dayOfWeek){
             case Calendar.SUNDAY: return "Minggu";
             case Calendar.MONDAY: return "Senin";
             case Calendar.TUESDAY: return "Selasa";
@@ -233,6 +239,7 @@ public class Waktu {
         );
     }
     
+    @Deprecated
      public Date[] weekk(int tgl, int bln, int thn) throws ParseException{
         SimpleDateFormat formatTanggal = new SimpleDateFormat("dd-MM-yyyy");
         Date d = new Date(thn, bln, tgl);
@@ -376,27 +383,94 @@ public class Waktu {
         tanggal[1] = akhir;
         return tanggal;
     }
-    
+     
+     private Object[] getMinggu(int bulan, int tahun){
+         // menampung data minggu
+         SortedMap<String, String> data = new TreeMap<>();
+         
+         // inisialisasi waktu awal
+         bulan--;
+         int hari = 1, week = 1;
+         String minggu, sabtu;
+         Date d = new Date(tahun-1900, bulan, hari);
+         Calendar c = Calendar.getInstance();
+         c.setTime(d);
+         System.out.printf("Menampilkan data minggu pada bulan %s %d\n", this.getNamaBulan(bulan+1), tahun);
+         
+         // mendapatkan sisa hari pada awal bulan
+         int tgl1 = c.get(Calendar.DAY_OF_WEEK),
+             sisaHari = 7, totalHari = this.getTotalHari(bulan+1);
+         System.out.printf("Hari pertama pada %s adalah hari %s\n", this.getNamaBulan(bulan+1), this.getNamaHari(tgl1));
+         
+         // jika bulan tidak diawali dengan hari minggu
+         if(tgl1 > 1){
+             // mengurangi sisahari
+             sisaHari = sisaHari - (7 - tgl1+1);
+         }
+         else{
+             sisaHari = 0;
+         }
+         
+         // mendapatkan hari minggu pertama
+         hari = hari - sisaHari;
+         d = new Date(tahun-1900, bulan, hari);
+         c.setTime(d);
+         minggu = String.format("%d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
+         
+         // mendapatkan hari sabtu pertama
+         hari = 7 - sisaHari;
+         d = new Date(tahun-1900, bulan, hari);
+         c.setTime(d);
+         sabtu = String.format("%d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
+         
+         // menyimpan data minggu
+         data.put(minggu, sabtu);
+         System.out.println(String.format("Minggu ke-%d : %s ---> %s", week, minggu, sabtu));
+         
+         // mendapatkan data minggu ke 2 sampai minggu terakhir
+         while(hari <= totalHari){
+//             System.out.println("HARI KE -> " + hari);
+             // inisialisasi ulang waktu
+             d = new Date(tahun-1900, bulan, hari);
+             c.setTime(d);
+             
+             // mendapatkan data minggu pada bulan
+             int fWeek = c.get(Calendar.DAY_OF_WEEK);
+             if(fWeek == 1){
+                 // mendapatkan awal minggu
+                 minggu = String.format("%d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
+                 hari+=6;
+                 // mendapatkan akhir minggu
+                 d = new Date(tahun-1900, bulan, hari);
+                 c.setTime(d);
+                 sabtu = String.format("%d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
+                 
+                 // menyimpan data minggu
+                 week++;
+                 data.put(minggu, sabtu);
+                 System.out.println(String.format("Minggu ke-%d : %s ---> %s", week, minggu, sabtu));
+             }
+             hari++;
+         }
+         
+         System.out.println("\nAKHIR METHOD\n\n");
+         return data.entrySet().toArray();
+     }
+     
     public static void main(String[] args) {
         
         Waktu w = new Waktu();
         
-        Waktu.updateWaktu();
+        int week = 1;
+        Object[] minggu = w.getMinggu(12, 2022);
+        System.out.println(minggu[0]);
+//        System.out.println("\n\n\n");
+//        for(Object m : minggu){
+////            System.out.println(String.format("Minggu %d : %s ", week, m.toString().replace("=",  " --> ")));
+//            System.out.println(String.format("Minggu %d : %s ", week, m));
+//            week++;
+//        }
         
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                System.out.println(w.getDetik());
-                System.out.println(w.getMenit());
-                System.out.println(w.getJam());
-                System.out.println(w.getTanggal());
-                System.out.println(w.getBulan());
-                System.out.println(w.getTahun());
-                System.out.println(w.getNamaBulan(w.getBulan()-11));
-                System.out.println(w.getCurrentDateTime());
-            }
-        }).start();
-//        System.exit(0);
 
     }
     
