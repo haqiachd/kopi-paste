@@ -79,7 +79,8 @@ public class ChartManager {
         if(snack > 0){
             barDataset.setValue("Snack", new Double(snack));
         }
-
+        
+        System.out.println("JUMLAH ITEM -> : " + barDataset.getItemCount());
         // membuat chart
         JFreeChart piechart = ChartFactory.createPieChart("Penjualan Produk",barDataset, false,true,false);//explain
         piechart.setTitle(new TextTitle(title, this.F_MENU));
@@ -274,7 +275,7 @@ public class ChartManager {
             String sql = String.format(
                     "SELECT SUM(total_harga) AS total " +
                     "FROM transaksi_jual " +
-                    "WHERE MONTH(tanggal) = %d AND YEAR(tanggal) = %d \n" +
+                    "WHERE MONTH(tanggal) = %d AND YEAR(tanggal) = %d " +
                     "AND DAY(tanggal) BETWEEN %d AND %d;", bulan, tahun, hari1, hari2
             );
             System.out.println(sql);
@@ -303,7 +304,7 @@ public class ChartManager {
             String sql = String.format(
                     "SELECT SUM(total_harga) AS total " +
                     "FROM transaksi_beli " +
-                    "WHERE MONTH(tanggal) = %d AND YEAR(tanggal) = %d \n" +
+                    "WHERE MONTH(tanggal) = %d AND YEAR(tanggal) = %d " +
                     "AND DAY(tanggal) BETWEEN %d AND %d;", bulan, tahun, hari1, hari2
             );
             System.out.println(sql);
@@ -333,18 +334,34 @@ public class ChartManager {
         // menambahkan value ke dalam chart
         switch(type){
             // mendapatkan data pendapatan
-            case PENDAPATAN : 
+            case PENDAPATAN :
                 valTitle = "Jumlah Pendapatan";
-                for(int i = 1; i <= 4; i++){
-                    dataset.setValue(new java.util.Random().nextInt(150), "Amount", "Minggu ke-"+Integer.toString(i));
-                }         
+                // mendapatkan data mingguan
+                Object[] mingguJual = new Waktu().getMinggu(bulan, tahun);
+                String minggu1Jual, minggu2Jual;
+                int weekJual = 1;
+                // menambahkan data pendapatan ke dataset
+                for(Object m : mingguJual){
+                    minggu1Jual = m.toString().substring(0, m.toString().indexOf("="));
+                    minggu2Jual = m.toString().substring(m.toString().indexOf("=")+1);
+                    dataset.setValue(this.getBarDataPenjualan(minggu1Jual, minggu2Jual), "Amount", "Minggu " + weekJual);
+                    weekJual++;
+                }
                 break;
             // mendapatkan data pengeluaran
             case PENGELUARAN :
                 valTitle = "Jumlah Pengeluaran";
-                for(int i = 1; i <= 4; i++){
-                    dataset.setValue(new java.util.Random().nextInt(150), "Amount", "Minggu ke-"+Integer.toString(i));
-                }             
+                // mendapatkan data mingguan
+                Object[] mingguBeli = new Waktu().getMinggu(bulan, tahun);
+                String minggu1Beli, minggu2Beli;
+                int weekBeli = 1;
+                // menambahkan data pendapatan ke dataset
+                for(Object m : mingguBeli){
+                    minggu1Beli = m.toString().substring(0, m.toString().indexOf("="));
+                    minggu2Beli = m.toString().substring(m.toString().indexOf("=")+1);
+                    dataset.setValue(this.getBarDataPembelian(minggu1Beli, minggu2Beli), "Amount", "Minggu " + weekBeli);
+                    weekBeli++;
+                }      
                 break;
         }
         
@@ -368,6 +385,56 @@ public class ChartManager {
         panel.validate();
     }
 
+    private int getBarDataPenjualan(String minggu1, String minggu2){
+        try{
+            // mendapatkan query untuk mendapatkan total pendapatan mingguan
+            String sql = "SELECT SUM(total_harga) AS total "
+                       + "FROM transaksi_jual "
+                       + "WHERE DATE(tanggal) BETWEEN '"+minggu1+"' AND '"+minggu2+"'";
+            System.out.println(sql);
+            
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            // mendapatkan data total pendapatan mingguan
+            if(r.next()){
+                int total = r.getInt("total");
+                c.close(); s.close(); r.close();
+                return total;
+            }
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+   
+    private int getBarDataPembelian(String minggu1, String minggu2){
+        try{
+            // mendapatkan query untuk mendapatkan total pendapatan mingguan
+            String sql = "SELECT SUM(total_harga) AS total "
+                       + "FROM transaksi_beli "
+                       + "WHERE DATE(tanggal) BETWEEN '"+minggu1+"' AND '"+minggu2+"'";
+            System.out.println(sql);
+            
+            // eksekusi query
+            Connection c = (Connection) Koneksi.configDB();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            // mendapatkan data total pendapatan mingguan
+            if(r.next()){
+                int total = r.getInt("total");
+                c.close(); s.close(); r.close();
+                return total;
+            }
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+    
     @Deprecated
     public void showHistogram(JPanel panel, int type, String title){
         
