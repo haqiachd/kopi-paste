@@ -41,6 +41,7 @@ public class User {
             
             // cek username ada atau tidak
             if(res.next()){
+                // mengecek password 
                 if(BCrypt.checkpw(password, res.getString("password"))){
                     // mendapatkan nama dari user yang sedang login
                     User.ID_KY = res.getString("karyawan.id_karyawan");
