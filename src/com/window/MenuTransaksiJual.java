@@ -10,7 +10,7 @@ import com.media.Gambar;
 import com.window.dialog.GetDataMenu;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.dialog.TransaksiSuccess;
+import com.window.dialog.CetakStrukJual;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -1667,7 +1667,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
 //        Message.showInformation(this, "Transaksi berhasil!");
         if(this.trJual()){
-            TransaksiSuccess dia = new TransaksiSuccess(null, true, this.inpIdTransaksi.getText());
+            CetakStrukJual dia = new CetakStrukJual(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
             this.resetTransaksi();            
         }

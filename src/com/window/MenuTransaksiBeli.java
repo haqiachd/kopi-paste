@@ -11,7 +11,7 @@ import com.window.dialog.GetDataSupplierJualBahan;
 import com.window.dialog.GetDataSupplier;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.dialog.TransaksiSuccess;
+import com.window.dialog.CetakStrukBeli;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -1441,7 +1441,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
         if(this.transaksi()){
-            TransaksiSuccess dia = new TransaksiSuccess(null, true, this.inpIdTransaksi.getText());
+            CetakStrukBeli dia = new CetakStrukBeli(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
             this.resetTransaksi();            
         }
