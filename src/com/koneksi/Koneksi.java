@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
  */
 public class Koneksi {
     
+    private static int JUMLAH = 0;
+    
     private static Connection mysqlconfig;
     
     public static Connection configDB() throws SQLException{
@@ -21,7 +23,8 @@ public class Koneksi {
             String pass = "";
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             mysqlconfig = DriverManager.getConnection(url, user, pass);
-            System.out.println("Koneksi berhasil;");
+            JUMLAH++;
+            System.out.println("Koneksi berhasil ---> " + JUMLAH);
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
         }
