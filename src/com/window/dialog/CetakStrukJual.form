@@ -87,10 +87,10 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="icTop" min="-2" pref="47" max="-2" attributes="0"/>
+                  <Component id="icTop" min="-2" pref="54" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="lblTop" min="-2" pref="43" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="lineTop" min="-2" pref="10" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="269" max="-2" attributes="0"/>
@@ -114,10 +114,10 @@
         <Component class="javax.swing.JLabel" name="lblTop">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Dialog" size="24" style="1"/>
+              <Font name="Dialog" size="26" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Transaksi Berhasil!"/>
+            <Property name="text" type="java.lang.String" value="Penjualan Berhasil!"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSeparator" name="lineTop">
@@ -183,7 +183,7 @@
             <Component class="javax.swing.JTable" name="tabelData">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Ebrima" size="12" style="1"/>
+                  <Font name="Ebrima" size="14" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="5" rowCount="4">
@@ -214,7 +214,7 @@
         <Component class="javax.swing.JLabel" name="lblNamaKy">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Dialog" size="14" style="1"/>
+              <Font name="Dialog" size="16" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Nama Karyawan : "/>
           </Properties>
@@ -222,9 +222,9 @@
         <Component class="javax.swing.JLabel" name="lblNamaSp">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Dialog" size="14" style="1"/>
+              <Font name="Dialog" size="16" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nama Supplier   : "/>
+            <Property name="text" type="java.lang.String" value="Nama Pembeli     : "/>
           </Properties>
         </Component>
       </SubComponents>

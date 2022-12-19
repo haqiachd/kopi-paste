@@ -4,8 +4,6 @@ import com.koneksi.Dbase;
 import com.manage.Message;
 import com.manage.Text;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -13,7 +11,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class TransaksiSuccess extends javax.swing.JDialog {
+public class CetakStrukJual extends javax.swing.JDialog {
 
     private final Dbase db = new Dbase();
     
@@ -29,7 +27,7 @@ public class TransaksiSuccess extends javax.swing.JDialog {
      * @param modal
      * @param idTr
      */
-    public TransaksiSuccess(java.awt.Frame parent, boolean modal, String idTr) {
+    public CetakStrukJual(java.awt.Frame parent, boolean modal, String idTr) {
         super(parent, modal);
         this.pop.setVisible(true);
         this.idTr = idTr;
@@ -60,11 +58,11 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         this.tabelData.setModel(new DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "No", "Nama Bahan", "Harga", "Jumlah", "Total Harga"
+                    "No", "Nama Menu", "Harga", "Jumlah", "Total Harga"
                 }
         ){
             boolean[] canEdit = new boolean[]{
-                true, true, true, true, true
+                false, false, false, false, false
             };
             
             @Override
@@ -77,10 +75,10 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(50);
         columnModel.getColumn(0).setMaxWidth(50);
-        columnModel.getColumn(1).setPreferredWidth(190);
-        columnModel.getColumn(1).setMaxWidth(190);
-        columnModel.getColumn(2).setPreferredWidth(100);
-        columnModel.getColumn(2).setMaxWidth(100);
+        columnModel.getColumn(1).setPreferredWidth(170);
+        columnModel.getColumn(1).setMaxWidth(170);
+        columnModel.getColumn(2).setPreferredWidth(110);
+        columnModel.getColumn(2).setMaxWidth(110);
         columnModel.getColumn(3).setPreferredWidth(60);
         columnModel.getColumn(3).setMaxWidth(60);
     }
@@ -90,28 +88,25 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
         // query untuk mengambil data transaksi
-        String sql = "SELECT ky.nama_karyawan, sp.nama_supplier, tr.total_harga, tr.total_bahan, dtr.nama_bahan, dtr.harga_bahan, dtr.jumlah, dtr.total_harga "
-                   + "FROM transaksi_beli AS tr "
-                   + "JOIN detail_tr_beli AS dtr "
-                   + "ON tr.id_tr_beli = dtr.id_tr_beli "
+        String sql = "SELECT ky.nama_karyawan, tr.nama_pembeli, tr.total_harga, tr.total_menu, dtr.nama_menu, dtr.harga_menu, dtr.jumlah, dtr.total_harga "
+                   + "FROM transaksi_jual AS tr "
+                   + "JOIN detail_tr_jual AS dtr "
+                   + "ON tr.id_tr_jual = dtr.id_tr_jual "
                    + "JOIN karyawan AS ky "
                    + "ON ky.id_karyawan = tr.id_karyawan "
-                   + "JOIN supplier AS sp "
-                   + "ON sp.id_supplier = tr.id_supplier "
-                   + "WHERE tr.id_tr_beli = '"+this.idTr+"';",
-                   totalHarga, totalBahan, namaSupplier, namaKaryawan;
+                   + "WHERE tr.id_tr_jual = '"+this.idTr+"';";
         
         try {
             // eksekusi query
             db.res = db.stat.executeQuery(sql);
             
-            int row = 0;
+            int row = 1;
             while(db.res.next()){
                 // menambahkan data transaksi ke dalam tabel
                 model.addRow(new Object[]{
                     row,
-                    db.res.getString("dtr.nama_bahan"),
-                    txt.toMoneyCase(db.res.getString("dtr.harga_bahan")),
+                    db.res.getString("dtr.nama_menu"),
+                    txt.toMoneyCase(db.res.getString("dtr.harga_menu")),
                     db.res.getString("dtr.jumlah"),
                     txt.toMoneyCase(db.res.getString("dtr.total_harga"))
                 });
@@ -121,18 +116,19 @@ public class TransaksiSuccess extends javax.swing.JDialog {
                 if(db.res.isLast()){
                     // menambahkan total harga
                     model.addRow(new Object[]{
-                        "", "Total", "", db.res.getString("tr.total_bahan"), txt.toMoneyCase(db.res.getString("tr.total_harga"))
+                        "", "Total", "", db.res.getString("tr.total_menu"), txt.toMoneyCase(db.res.getString("tr.total_harga"))
                     });
                     
                     // menampilkan data transaksi
                     this.lblNamaKy.setText(this.lblNamaKy.getText() + db.res.getString("ky.nama_karyawan"));
-                    this.lblNamaSp.setText(this.lblNamaSp.getText() + db.res.getString("sp.nama_supplier"));
+                    this.lblNamaSp.setText(this.lblNamaSp.getText() + db.res.getString("tr.nama_pembeli"));
                 }
             }
             
-            
+            // menampilkan data transaksi ke tabel
             this.tabelData.setModel(model);
             this.tabelData.setRowHeight(this.tabelData.getRowCount()-1, 40);
+            this.tabelData.setRowSelectionInterval(this.tabelData.getRowCount()-1, this.tabelData.getRowCount()-1);
             
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -163,9 +159,9 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         pnlMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 136, 211), 7));
         pnlMain.setForeground(new java.awt.Color(0, 90, 215));
 
-        lblTop.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        lblTop.setFont(new java.awt.Font("Dialog", 1, 26)); // NOI18N
         lblTop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTop.setText("Transaksi Berhasil!");
+        lblTop.setText("Penjualan Berhasil!");
 
         lineTop.setBackground(new java.awt.Color(0, 0, 0));
         lineTop.setForeground(new java.awt.Color(0, 0, 0));
@@ -194,7 +190,7 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         icTop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/aaaa.gif"))); // NOI18N
         icTop.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
-        tabelData.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
+        tabelData.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         tabelData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -212,11 +208,11 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
 
-        lblNamaKy.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lblNamaKy.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNamaKy.setText("Nama Karyawan : ");
 
-        lblNamaSp.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lblNamaSp.setText("Nama Supplier   : ");
+        lblNamaSp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblNamaSp.setText("Nama Pembeli     : ");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -247,10 +243,10 @@ public class TransaksiSuccess extends javax.swing.JDialog {
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addComponent(icTop, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(icTop, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblTop, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -302,14 +298,14 @@ public class TransaksiSuccess extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TransaksiSuccess.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CetakStrukJual.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                TransaksiSuccess dialog = new TransaksiSuccess(new javax.swing.JFrame(), true, "TRB0048");
+                CetakStrukJual dialog = new CetakStrukJual(new javax.swing.JFrame(), true, "TRJ0048");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
