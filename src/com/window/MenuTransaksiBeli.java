@@ -1441,7 +1441,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
         if(this.transaksi()){
-            TransaksiSuccess dia = new TransaksiSuccess(null, true);;
+            TransaksiSuccess dia = new TransaksiSuccess(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
             this.resetTransaksi();            
         }
