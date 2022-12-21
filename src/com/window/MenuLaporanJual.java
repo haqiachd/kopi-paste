@@ -16,15 +16,18 @@ import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import org.jfree.chart.ChartFactory;
@@ -2031,7 +2034,21 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
-        
+        try {
+            // set header dan footer
+            MessageFormat header = new MessageFormat("Laporan Penjualan Harian");
+            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
+            // cek tabel kosong atau tidak
+            if (this.tabelLpHarian.getRowCount() > 0) {
+                // print tabel
+                this.tabelLpHarian.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+            } else {
+                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
+            }
+        } catch (PrinterException ex) {
+            Message.showException(this, "Tabel gagal diprint", ex);
+        }
+
     }//GEN-LAST:event_btnCetakHarianActionPerformed
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
