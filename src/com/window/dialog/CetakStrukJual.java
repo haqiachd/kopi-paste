@@ -35,8 +35,8 @@ public class CetakStrukJual extends javax.swing.JDialog {
         
         this.setLocationRelativeTo(null);
         
-        this.btnCetak.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        this.btnClose.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+//        this.btnCetak.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+//        this.btnClose.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
         this.showDetailTransaksi();
     }
@@ -143,7 +143,6 @@ public class CetakStrukJual extends javax.swing.JDialog {
         pnlMain = new javax.swing.JPanel();
         lblTop = new javax.swing.JLabel();
         lineTop = new javax.swing.JSeparator();
-        btnCetak = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         icTop = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -165,16 +164,6 @@ public class CetakStrukJual extends javax.swing.JDialog {
 
         lineTop.setBackground(new java.awt.Color(0, 0, 0));
         lineTop.setForeground(new java.awt.Color(0, 0, 0));
-
-        btnCetak.setBackground(new java.awt.Color(255, 102, 0));
-        btnCetak.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnCetak.setForeground(new java.awt.Color(255, 255, 255));
-        btnCetak.setText("Cetak Struk");
-        btnCetak.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCetakActionPerformed(evt);
-            }
-        });
 
         btnClose.setBackground(new java.awt.Color(255, 0, 0));
         btnClose.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -203,16 +192,21 @@ public class CetakStrukJual extends javax.swing.JDialog {
             }
         ));
         tabelData.getTableHeader().setReorderingAllowed(false);
+        tabelData.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tabelDataKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelData);
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
 
         lblNamaKy.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblNamaKy.setText("Nama Karyawan : ");
+        lblNamaKy.setText("Nama Karyawan   : ");
 
         lblNamaSp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblNamaSp.setText("Nama Pembeli     : ");
+        lblNamaSp.setText("Nama Pembeli       : ");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -226,18 +220,14 @@ public class CetakStrukJual extends javax.swing.JDialog {
                     .addComponent(lblNamaKy, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(pnlMainLayout.createSequentialGroup()
-                            .addGap(19, 19, 19)
-                            .addComponent(btnCetak)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pnlMainLayout.createSequentialGroup()
                             .addContainerGap()
                             .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(pnlMainLayout.createSequentialGroup()
                             .addContainerGap()
                             .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
@@ -257,10 +247,8 @@ public class CetakStrukJual extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblNamaSp, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCetak)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addComponent(btnClose)
+                .addGap(12, 12, 12))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -277,13 +265,13 @@ public class CetakStrukJual extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tabelDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyPressed
+        this.dispose();
+    }//GEN-LAST:event_tabelDataKeyPressed
+
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
-
-    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnCetakActionPerformed
 
     /**
      * @param args the command line arguments
@@ -318,7 +306,6 @@ public class CetakStrukJual extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnClose;
     private javax.swing.JLabel icTop;
     private javax.swing.JScrollPane jScrollPane1;
