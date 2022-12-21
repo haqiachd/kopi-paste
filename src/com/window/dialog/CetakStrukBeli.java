@@ -3,6 +3,7 @@ package com.window.dialog;
 import com.koneksi.Dbase;
 import com.manage.Message;
 import com.manage.Text;
+import com.sun.glass.events.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -272,7 +273,9 @@ public class CetakStrukBeli extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void tabelDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyPressed
-        this.dispose();
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.dispose();
+        }
     }//GEN-LAST:event_tabelDataKeyPressed
 
     /**

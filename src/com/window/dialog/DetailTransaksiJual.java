@@ -4,11 +4,15 @@ package com.window.dialog;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
+import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
+import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -162,8 +166,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         lineTop = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelDetail = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -196,20 +199,20 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                 "ID Transaksi", "Nama Menu", "Harga", "Jumlah", "Total Harga"
             }
         ));
+        tabelDetail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tabelDetailKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelDetail);
 
-        jButton2.setBackground(new java.awt.Color(255, 102, 0));
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Cetak");
-
-        jButton1.setBackground(new java.awt.Color(246, 70, 70));
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Tutup");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnClose.setBackground(new java.awt.Color(246, 70, 70));
+        btnClose.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        btnClose.setForeground(new java.awt.Color(255, 255, 255));
+        btnClose.setText("Tutup");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCloseActionPerformed(evt);
             }
         });
 
@@ -228,9 +231,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                             .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -243,9 +244,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                .addComponent(btnClose)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -268,9 +267,15 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void tabelDetailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDetailKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.dispose();
+        }
+    }//GEN-LAST:event_tabelDetailKeyPressed
 
     /**
      * @param args the command line arguments
@@ -304,8 +309,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnClose;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDialogName;
     private javax.swing.JSeparator lineTop;
