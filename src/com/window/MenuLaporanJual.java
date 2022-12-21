@@ -2048,7 +2048,6 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         } catch (PrinterException ex) {
             Message.showException(this, "Tabel gagal diprint", ex);
         }
-
     }//GEN-LAST:event_btnCetakHarianActionPerformed
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
@@ -2104,7 +2103,20 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRiwayatBulananActionPerformed
 
     private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed
-        
+        try {
+            // set header dan footer
+            MessageFormat header = new MessageFormat("Laporan Penjualan Harian");
+            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
+            // cek tabel kosong atau tidak
+            if (this.tabelLpBulanan.getRowCount() > 0) {
+                // print tabel
+                this.tabelLpBulanan.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+            } else {
+                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
+            }
+        } catch (PrinterException ex) {
+            Message.showException(this, "Tabel gagal diprint", ex);
+        }        
     }//GEN-LAST:event_btnCetakBulananActionPerformed
 
     private void btnCetakBulananMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCetakBulananMouseEntered

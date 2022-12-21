@@ -7,10 +7,13 @@ import com.manage.Waktu;
 import com.media.Gambar;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -313,6 +316,11 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         btnCetak.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnCetak.setForeground(new java.awt.Color(255, 255, 255));
         btnCetak.setText("Cetak");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
 
         lineBottom.setBackground(new java.awt.Color(0, 0, 0));
         lineBottom.setForeground(new java.awt.Color(0, 0, 0));
@@ -424,6 +432,23 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
         this.cariRiwayatTransaksi();
     }//GEN-LAST:event_inpCariKeyTyped
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        try {
+            // set header dan footer
+            MessageFormat header = new MessageFormat("Riwayat Pembelian Bulan " + this.waktu.getNamaBulan(this.bulan) + " " + this.tahun);
+            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
+            // cek tabel kosong atau tidak
+            if (this.tabelRiwayat.getRowCount() > 0) {
+                // print tabel
+                this.tabelRiwayat.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+            } else {
+                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
+            }
+        } catch (PrinterException ex) {
+            Message.showException(this, "Tabel gagal diprint", ex);
+        }   
+    }//GEN-LAST:event_btnCetakActionPerformed
 
     /**
      * @param args the command line arguments

@@ -5,10 +5,13 @@ import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
 import java.awt.Color;
+import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -225,6 +228,11 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
         jButton2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Cetak");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(246, 70, 70));
         jButton1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -294,6 +302,23 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            // set header dan footer
+            MessageFormat header = new MessageFormat("Detail Transaksi " + this.id);
+            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
+            // cek tabel kosong atau tidak
+            if (this.tabelDetail.getRowCount() > 0) {
+                // print tabel
+                this.tabelDetail.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+            } else {
+                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
+            }
+        } catch (PrinterException ex) {
+            Message.showException(this, "Tabel gagal diprint", ex);
+        } 
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
