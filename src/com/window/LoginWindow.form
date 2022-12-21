@@ -120,7 +120,7 @@
                   <Font name="Dialog" size="12" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Smart App For Your Business."/>
+                <Property name="text" type="java.lang.String" value="KOPI Pelayanan ASPIRASI Terpadu"/>
               </Properties>
             </Component>
           </SubComponents>

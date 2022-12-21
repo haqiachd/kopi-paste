@@ -457,6 +457,11 @@
             </Property>
             <Property name="text" type="java.lang.String" value=": Achmad Baihaqi"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol1MouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol1MouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol1MouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblCol2">
           <Properties>
@@ -465,6 +470,11 @@
             </Property>
             <Property name="text" type="java.lang.String" value="  Mohammad Ilham Islamy"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol2MouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol2MouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol2MouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblCol3">
           <Properties>
@@ -473,6 +483,11 @@
             </Property>
             <Property name="text" type="java.lang.String" value="  Septian Yoga Pamungkas"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol3MouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol3MouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol3MouseExited"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblCol4">
           <Properties>
@@ -481,6 +496,11 @@
             </Property>
             <Property name="text" type="java.lang.String" value="  Widyasari Raisya Salsabilla"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol4MouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol4MouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol4MouseExited"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

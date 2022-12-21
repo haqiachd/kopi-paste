@@ -288,15 +288,59 @@ public class InfoApp extends javax.swing.JDialog {
 
         lblCol1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol1.setText(": Achmad Baihaqi");
+        lblCol1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCol1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCol1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCol1MouseExited(evt);
+            }
+        });
 
         lblCol2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol2.setText("  Mohammad Ilham Islamy");
+        lblCol2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCol2MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCol2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCol2MouseExited(evt);
+            }
+        });
 
         lblCol3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol3.setText("  Septian Yoga Pamungkas");
+        lblCol3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCol3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCol3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCol3MouseExited(evt);
+            }
+        });
 
         lblCol4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol4.setText("  Widyasari Raisya Salsabilla");
+        lblCol4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCol4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCol4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCol4MouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -502,6 +546,78 @@ public class InfoApp extends javax.swing.JDialog {
         this.iconTwit.setIcon(Gambar.getIcon("ic-dialog-infoapp-tt-entered.png"));
         this.lblTwit.setForeground(new Color(0,0,0));
     }//GEN-LAST:event_iconTwitMouseExited
+
+    private void lblCol1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol1MouseClicked
+        try {
+            this.inet.openLink("https://wa.me/6285655864624");
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
+    }//GEN-LAST:event_lblCol1MouseClicked
+
+    private void lblCol1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol1MouseEntered
+        this.lblCol1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblCol1.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">:&nbsp;Achmad Baihaqi</p></html>");
+    }//GEN-LAST:event_lblCol1MouseEntered
+
+    private void lblCol1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol1MouseExited
+        this.lblCol1.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblCol1.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">:&nbsp;Achmad Baihaqi</p></html>");
+    }//GEN-LAST:event_lblCol1MouseExited
+
+    private void lblCol2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol2MouseClicked
+        try {
+            this.inet.openLink("https://wa.me/6285784626830");
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
+    }//GEN-LAST:event_lblCol2MouseClicked
+
+    private void lblCol2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol2MouseEntered
+        this.lblCol2.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblCol2.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Mohammad Ilham Islamy</p></html>");
+    }//GEN-LAST:event_lblCol2MouseEntered
+
+    private void lblCol2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol2MouseExited
+        this.lblCol2.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblCol2.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Mohammad Ilham Islamy</p></html>");
+    }//GEN-LAST:event_lblCol2MouseExited
+
+    private void lblCol3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseClicked
+        try {
+            this.inet.openLink("https://wa.me/6285806531609");
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
+    }//GEN-LAST:event_lblCol3MouseClicked
+
+    private void lblCol3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseEntered
+        this.lblCol3.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblCol3.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Septian Yoga Pamungkas</p></html>");
+    }//GEN-LAST:event_lblCol3MouseEntered
+
+    private void lblCol3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseExited
+        this.lblCol3.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblCol3.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Septian Yoga Pamungkas</p></html>");
+    }//GEN-LAST:event_lblCol3MouseExited
+
+    private void lblCol4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseClicked
+        try {
+            this.inet.openLink("https://wa.me/6289637652216");
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
+    }//GEN-LAST:event_lblCol4MouseClicked
+
+    private void lblCol4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseEntered
+        this.lblCol4.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblCol4.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Widyasari Raisya Salsabilla</p></html>");
+    }//GEN-LAST:event_lblCol4MouseEntered
+
+    private void lblCol4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseExited
+        this.lblCol4.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblCol4.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Widyasari Raisya Salsabilla</p></html>");
+    }//GEN-LAST:event_lblCol4MouseExited
 
     /**
      * @param args the command line arguments

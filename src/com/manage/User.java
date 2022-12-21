@@ -26,13 +26,12 @@ public class User {
    }
     
     public boolean login(String usernameOrID, String password){
-        USERNAME = usernameOrID;
         try{
             // membuat query
             String query = 
                     String.format("SELECT karyawan.id_karyawan, karyawan.nama_karyawan, user.username, user.password, user.level "
                             + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
-                            + "WHERE user.username = '%s' OR karyawan.id_karyawan = '%s'", USERNAME, usernameOrID);
+                            + "WHERE user.username = '%s' OR karyawan.id_karyawan = '%s'", usernameOrID, usernameOrID);
             
             // eksekusi query
             Connection conn = (Connection) Koneksi.configDB();
@@ -44,6 +43,7 @@ public class User {
                 // mengecek password 
                 if(BCrypt.checkpw(password, res.getString("password"))){
                     // mendapatkan nama dari user yang sedang login
+                    User.USERNAME = res.getString("user.username");
                     User.ID_KY = res.getString("karyawan.id_karyawan");
                     User.NAMA_USER = res.getString("karyawan.nama_karyawan");
                     User.LEVEL = res.getString("user.level");

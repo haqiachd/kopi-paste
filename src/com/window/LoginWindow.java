@@ -48,6 +48,7 @@ public class LoginWindow extends javax.swing.JFrame {
         if(user.login(username, password)){
             // membuka window dashboard jika login berhasil
             java.awt.EventQueue.invokeLater(new Runnable(){
+                @Override
                 public void run(){
                     new Dashboard().setVisible(true);
                 }
@@ -125,7 +126,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
         lblDesApp.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblDesApp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDesApp.setText("Smart App For Your Business.");
+        lblDesApp.setText("KOPI Pelayanan ASPIRASI Terpadu");
 
         javax.swing.GroupLayout pnlLeftLayout = new javax.swing.GroupLayout(pnlLeft);
         pnlLeft.setLayout(pnlLeftLayout);
@@ -357,21 +358,7 @@ public class LoginWindow extends javax.swing.JFrame {
 //        Application.closeApplication();
         System.exit(0);
     }//GEN-LAST:event_lblCloseMouseClicked
-    private Connection mysqlconfig;
-    private Connection koneksi(){
-        try{
-            String url = "jdbc:mysql://localhost:3306/appbaju";
-            String user = "root";
-            String pass = "";
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            mysqlconfig = DriverManager.getConnection(url, user, pass);
-            System.out.println("Koneksi Done");
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-    
+ 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         this.login();
     }//GEN-LAST:event_btnLoginActionPerformed
