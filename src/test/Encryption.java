@@ -8,8 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 public class Encryption {
     
     public static void main(String[] args) {
-//        String pw_hash = BCrypt.hashpw("haqi12345", BCrypt.gensalt(12));
-        String pw_hash = "$2a$12$G9rldUjX0SjYYn169mMO3uLoRJOnlYKggCG5nojWOeOYSFxRnckNm";
+        String pw_hash = BCrypt.hashpw("haqi12345", BCrypt.gensalt(12));
         System.out.println(pw_hash);
 
         if (BCrypt.checkpw("ilham12345", pw_hash)) {
