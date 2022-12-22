@@ -1,7 +1,11 @@
 package com.manage;
 
 import com.media.Audio;
+import haqiachd.list.JListCustom;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
@@ -10,13 +14,8 @@ import javax.swing.JOptionPane;
  */
 public class Validation {
     
-    /**
-     * Digunakan untuk mengecek apakah didalam sebuah text mengandung sebuah angka atau tidak
-     * 
-     * @param text text yang akan dicek 
-     * @return Jika didalam text mengandung number maka akan mengembalikan nilai True
-     *         Tapi jika didalam text tidak mengandung number maka akan mengembalikan nilai False
-     */
+    private static final Text txt = new Text();
+    
     public static boolean containsNumber(String text){
         String number = "1234567890";
         char a, b;
@@ -31,13 +30,6 @@ public class Validation {
         return false;
     }
     
-    /**
-     * Digunakan untuk mengecek apakah sebuah String dapat dikonversi ke Integer atau tidak.
-     * 
-     * @param text text yang ingin dicek
-     * @return jika bisa dikonversi maka akan mengembalikan nilai true
-     *         tapi jika tidak maka akan mengembalikan nilai false.
-     */
     public static boolean isNumber(String text){
         if(text == null){
             return false;
@@ -56,81 +48,6 @@ public class Validation {
         return true;
     }
     
-    public static boolean isIdLogin(String idLogin){
-        return idLogin.length() == 8;
-    }
-    
-    /**
-     * id user harus terdiri dari 5 karakter
-     * 
-     * @param idUser
-     * @return 
-     */
-    public static boolean isIdUser(String idUser){
-        if(idUser.length() == 5){
-            return true;
-        }else{
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "'" + idUser + "' ID tersebut tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
-        }
-        return false;
-    }
-    
-    public static boolean isIdPetugas(String idKaryawan){
-        if(Validation.isIdUser(idKaryawan)){
-            if(idKaryawan.substring(0, 2).equalsIgnoreCase("PG")){
-                return true;
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "'" + idKaryawan + "' Kode ID Petugas tersebut tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return false;
-    }
-    
-    public static boolean isIdSupplier(String idSupplier){
-        if(Validation.isIdUser(idSupplier)){
-            if(idSupplier.substring(0, 2).equalsIgnoreCase("SP")){
-                return true;
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "'" + idSupplier + "' Kode ID Supplier tersebut tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return false;
-    }
-    
-    public static boolean isIdPembeli(String idPembeli){
-        if(Validation.isIdUser(idPembeli)){
-             if(idPembeli.substring(0, 2).equalsIgnoreCase("PB")){
-                return true;
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "'" + idPembeli + "' Kode ID Pembeli tersebut tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return false;
-    }
-    
-    public static boolean isIdBarang(String idBarang){
-        if(Validation.isIdUser(idBarang)){
-             if(idBarang.substring(0, 2).equalsIgnoreCase("BG")){
-                return true;
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "'" + idBarang + "' Kode ID Barang tersebut tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return false;
-    }
-    
-    /**
-     *  - nama harus terdiri dari 6-50 karakter
-     *  - nama tidak boleh mengandung angka
-     * 
-     * @param nama nama yang akan dicek
-     * @return 
-     */
     public static boolean isNamaOrang(String nama){
         if(nama.length() >= 6 && nama.length() <= 50){
             if(!containsNumber(nama)){
@@ -146,53 +63,6 @@ public class Validation {
         return false;
     }
     
-    public static boolean isGender(String gender){
-        return gender.equalsIgnoreCase("L") || gender.equalsIgnoreCase("P");
-    }
-    
-    /**
-     * @param bulan
-     * @param tahun
-     * @return 
-     */
-    public static boolean isValidPembayaran(String bulan, int tahun){
-       String tahunAjaran = "";
-       int tahunAwal = Integer.parseInt(tahunAjaran.substring(0, tahunAjaran.indexOf("-"))),
-           tahunAkhir = Integer.parseInt(tahunAjaran.substring(tahunAjaran.indexOf("-")+1));
-       if(tahun == tahunAwal){
-           if(bulan.equalsIgnoreCase(Waktu.JULI) || bulan.equalsIgnoreCase(Waktu.AGUSTUS) || bulan.equalsIgnoreCase(Waktu.SEPTEMBER) || 
-              bulan.equalsIgnoreCase(Waktu.OKTOBER) || bulan.equalsIgnoreCase(Waktu.NOVEMBER) || bulan.equalsIgnoreCase(Waktu.DESEMBER)
-            ){
-               return true;
-           }else{
-               Audio.play(Audio.SOUND_WARNING);
-               JOptionPane.showMessageDialog(null, "Bulan Pembayaran Tidak Valid!!", "Pesan!", JOptionPane.WARNING_MESSAGE);
-               return false;
-           }
-       }else if(tahun == tahunAkhir){
-           if(bulan.equalsIgnoreCase(Waktu.JANUARI) || bulan.equalsIgnoreCase(Waktu.FEBRUARI) || bulan.equalsIgnoreCase(Waktu.MARET) || 
-              bulan.equalsIgnoreCase(Waktu.APRIL) || bulan.equalsIgnoreCase(Waktu.MEI) || bulan.equalsIgnoreCase(Waktu.JUNI)
-            ){
-               return true;
-           }else{
-               Audio.play(Audio.SOUND_WARNING);
-               JOptionPane.showMessageDialog(null, "Bulan Pembayaran Tidak Valid!!", "Pesan!", JOptionPane.WARNING_MESSAGE);
-               return false;
-           }
-       }else{
-           Audio.play(Audio.SOUND_WARNING);
-           JOptionPane.showMessageDialog(null, "Tahun Pembayaran Tidak Valid!!", "Pesan!", JOptionPane.WARNING_MESSAGE);
-           return false;
-       }
-    }
-    
-    /**
-     * - panjang dari username harus diantara 4 sampai 50 karakter
-     * - username tidak boleh mengandung spasi
-     * 
-     * @param username username yang akan dicek
-     * @return 
-     */
     public static boolean isUsername(String username){
         if(username.length() >= 4 && username.length() <= 50){
             if(!username.contains(" ")){
@@ -208,12 +78,6 @@ public class Validation {
         return false;
     }
     
-    /**
-     * - panjang dari password harus diantara 5-50 karakter
-     * 
-     * @param password password yang akan dicek
-     * @return 
-     */
     public static boolean isPassword(String password){
         if(password.length() >= 5 && password.length() <= 50){
             return true;
@@ -223,12 +87,6 @@ public class Validation {
         return false;
     }
     
-    /**
-     * - panjangnya harus diantara 5-50 karakter
-     * 
-     * @param namaTempat nama tempat yang akan dicek
-     * @return 
-     */
     public static boolean isNamaTempat(String namaTempat){
         if(namaTempat.length() >= 5 && namaTempat.length() <= 50){
 
@@ -240,13 +98,6 @@ public class Validation {
         return false;
     }
     
-    /**
-     * - panjang dari email harus terdiri dari 10-60 karakter
-     * - alamat email yang didukung hanyalah @gmail, @yahoo dan @smkn1kts.sch.id
-     * 
-     * @param email email yang akan dicek
-     * @return 
-     */
     public static boolean isEmail(String email){
         String gmail = "@gmail.com", ymail = "@yahoo.com", sekolah = "@smkn1kts.sch.id", alamat;
         if(email.length() >= 10 && email.length() <= 60){
@@ -269,12 +120,6 @@ public class Validation {
         return false;
     }
     
-    /**
-     * - panjang dari nomor hp harus diantara 10-15 karakter
-     * 
-     * @param noHp nohp yang akan dicek
-     * @return 
-     */
     public static boolean isNoHp(String noHp){
         if(noHp.length() >= 10 && noHp.length() <= 15){
             if(noHp.startsWith("08")){
@@ -290,155 +135,56 @@ public class Validation {
         return false;
     }
     
-//    public static boolean isLevel(com.users.UserLevels level){
-//        switch(level.name()){
-//            case "ADMIN" : return true;
-//            case "KARYAWAN" : return true;
-//            case "SUPPLIER" : return true;
-//            case "PEMBELI" : return true;
-//            default : return false;
-//        }
-//    }
-    
-    /**
-     * - panjangnya harus diantara 5-50 karakter
-     * 
-     * @param namaBarang nama tempat yang akan dicek
-     * @return 
-     */
-    public static boolean isNamaBarang(String namaBarang){
-        if(namaBarang.length() >= 5 && namaBarang.length() <= 50){
-            return true;
-        }else{
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Panjang dari Nama Barang harus diantara 5-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
-        }
-        return false;
-    }
-    
-    public static boolean isJenisBarang(String jenis){
-        jenis = jenis.toUpperCase();
-        if("MAKANAN".equals(jenis) || "MINUMAN".equals(jenis) || "ATK".equals(jenis) || "SNACK".equals(jenis)){
-            return true;
-        }else{
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "jenis dari Barang harus Makanan, Minuman, Snack, ATK!", "Pesan", JOptionPane.WARNING_MESSAGE);
-        }
-        return false;
-    }
-    
-    public static boolean isJumlahBarang(String jumlah){
-        
-        if(jumlah == null || jumlah.equals("")){
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Jumlah barang tidak boleh kosong!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }else{
-            if(isNumber(jumlah)){
-                if(Integer.parseInt(jumlah) > 0){
-                    return true;
-                }else{
-                    Audio.play(Audio.SOUND_WARNING);
-                    JOptionPane.showMessageDialog(null, "Jumlah barang harus minimal 0", "Pesan", JOptionPane.WARNING_MESSAGE);
-                }            
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "Jumlah barang harus berupa angka!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return false;
-    }
-    
-    public static boolean isStokBarang(String jumlah){
-        
-        if(jumlah == null || jumlah.equals("")){
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Stok barang tidak boleh kosong!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }else{
-            if(isNumber(jumlah)){
-                if(Integer.parseInt(jumlah) >= 1){
-                    return true;
-                }else{
-                    Audio.play(Audio.SOUND_WARNING);
-                    JOptionPane.showMessageDialog(null, "Stok barang harus minimal 0", "Pesan", JOptionPane.WARNING_MESSAGE);
-                }            
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "Stok barang harus berupa angka!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        return false;
-    }
-    
-    public static boolean isHargaBeli(String hargaBeli){
-        
-        if(hargaBeli == null || hargaBeli.equals("")){
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Harga beli tidak boleh kosong!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }else{
-            if(isNumber(hargaBeli)){
-                if(Integer.parseInt(hargaBeli) >= 0){
-                    return true;
-                }else{
-                    Audio.play(Audio.SOUND_WARNING);
-                    JOptionPane.showMessageDialog(null, "Harga beli harus minimal 0", "Pesan", JOptionPane.WARNING_MESSAGE);
-                }            
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "Harga beli harus berupa angka!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }            
-        }
-        
-        return false;
-    }
-    
-    public static boolean isHargaJual(String hargaJual, String hargaBeli){
-        
-        if(hargaJual == null || hargaJual.equals("")){
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Harga jual tidak boleh kosong!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }else{
-            if(isNumber(hargaJual) && isNumber(hargaBeli)){
-                if(Integer.parseInt(hargaJual) >= Integer.parseInt(hargaBeli)){
-                    return true;
-                }else{
-                    Audio.play(Audio.SOUND_WARNING);
-                    JOptionPane.showMessageDialog(null, "Harga jual harus minimal 0", "Pesan", JOptionPane.WARNING_MESSAGE);
-                }            
-            }else{
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "Harga jual harus berupa angka!", "Pesan", JOptionPane.WARNING_MESSAGE);
-            }            
-        }
-        return false;
-    }
-    
-    public static boolean isIdTransaksi(String idTr){
-        if(idTr.length() == 7){
-            return true;
-        }else{
-            Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "'" + idTr + "' ID tersebut tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
-        }
-        return false;
-    }
-
-    public static boolean isMetodeBayar(String metode){
-        switch(metode){
-            case "CASH" : return true;
-            case "E-WALLET" : return true;
-            default : 
-                Audio.play(Audio.SOUND_WARNING);
-                JOptionPane.showMessageDialog(null, "'" + metode + "' Metode pembayaran tidak valid!", "Pesan", JOptionPane.WARNING_MESSAGE);
+    public static boolean isEmptyTextField(JTextField... fields){
+        // mengecek semua field apakah kosong atau tidak
+        for(JTextField field : fields){
+            // jika field kosong
+            if(field.getText().isEmpty() || txt.isBlank(field.getText())){
+                Message.showWarning(null, "Data " + field.getName() + " tidak boleh kosong!");
                 return false;
+            }
         }
+        return true;
+    }
+    
+    public static boolean isEmptyPasswordField(JPasswordField... fields){
+        // mengecek semua field apakah kosong atau tidak
+        for(JPasswordField field : fields){
+            // jika field kosong
+            if(field.getText().isEmpty()){
+                Message.showWarning(null, "Data " + field.getName() + " tidak boleh kosong!");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean isEmptyComboBox(JComboBox... combos){
+        // mengecek semua combo box apakah kosong atau tidak
+        for(JComboBox combo : combos){
+            // jika combo box
+            if(combo.getSelectedIndex() == 0){
+                Message.showWarning(null, "Data " + combo.getName() + " tidak boleh kosong!");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean isEmptyList(JListCustom... lists){
+        // mengecek semua list apakah kosong atau tidak
+        for(JListCustom list : lists){
+            // jika list kosong
+            if(list.getAllList().length == 0){
+                Message.showWarning(null, "Data " + list.getName() + " tidak boleh kosong!");
+                return false;
+            }
+        }
+        return true;
     }
     
     public static void main(String[] args) {
-        System.out.println(Validation.isIdUser("KY001"));
+        
     }
     
 }
