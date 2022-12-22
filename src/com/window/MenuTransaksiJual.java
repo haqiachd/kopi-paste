@@ -360,7 +360,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
                 // mengupdate data yang ada di textfield dan di tabel
                 this.tabelTr.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
-                this.inpTotalHarga.setText(txt.toMoneyCase(""+this.ttlHargaBayar));
+                this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlHargaBayar).substring(4));
                 
                 // mengupdate stok menu
                 if(newJml > this.oldJumlah){
@@ -1682,7 +1682,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTambahMouseExited
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-        this.tambahMenu();
+        if(Integer.parseInt(this.inpJumlah.getText()) > this.tempStokMenu.get(this.inpIdMenu.getText())){
+            Message.showWarning(this, "Jumlah stok tidak cukup!");
+        }else if(Integer.parseInt(this.inpJumlah.getText()) == 0){
+            Message.showWarning(this, "Jumlah stok tidak boleh 0");
+        }else{
+            this.tambahMenu();
+        }
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnHapusMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseEntered
@@ -1694,7 +1700,12 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusMouseExited
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        this.hapusDataMenu();
+        String nmMenu = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 2).toString()+"?";
+        int konf = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus " + nmMenu, "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+        // cek konfirmasi delete
+        if(konf == JOptionPane.YES_OPTION){
+            this.hapusDataMenu();
+        }
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void inpIdMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpIdMenuMouseClicked
@@ -1790,7 +1801,12 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         
         // untuk hapus data
         if(evt.getKeyCode() == KeyEvent.VK_DELETE){
-            this.hapusDataMenu();
+            String nmMenu = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 2).toString()+"?";
+            int konf = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus " + nmMenu, "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+            // cek konfirmasi delete
+            if(konf == JOptionPane.YES_OPTION){
+                this.hapusDataMenu();
+            }
         }
     }//GEN-LAST:event_tabelTrKeyReleased
 

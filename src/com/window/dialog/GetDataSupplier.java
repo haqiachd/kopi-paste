@@ -335,14 +335,16 @@ public class GetDataSupplier extends javax.swing.JDialog {
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         if(evt.getKeyCode() == KeyEvent.VK_UP){
             this.idSelected = this.tabelData.getValueAt(tabelData.getSelectedRow() - 1, 0).toString();
-            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1);
+            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow()-1, 1);
             this.lblInfoBahan.setText(": " + idName);
+            System.out.println("ID SELECTED : " + this.idSelected);
             this.showData();
         }else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
             this.idSelected = this.tabelData.getValueAt(tabelData.getSelectedRow() + 1, 0).toString();
-            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1);
+            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow()+1, 1);
             this.lblInfoBahan.setText(": " + idName);
             this.showData();
+            System.out.println("ID SELECTED : " + this.idSelected);
         }
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_tabelDataKeyPressed

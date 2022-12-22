@@ -54,7 +54,7 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new String[][]{}, // default valuenya kosong
                 new String [] {
-                    "ID Bahan", "Nama Bahan", "Stok", "Harga"
+                    "ID Bahan", "Nama Bahan", "Jenis", "Harga"
                 }
         ) {
             // set agar data pada tabel tidak bisa diedit
@@ -63,9 +63,9 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
                 return false;
             }
         };
-
+        
         try{
-            String sql = "SELECT DISTINCT bahan.id_bahan, bahan.nama_bahan, bahan.stok, bahan.harga "
+            String sql = "SELECT DISTINCT bahan.id_bahan, bahan.nama_bahan, bahan.jenis, bahan.harga "
                         + "FROM bahan JOIN detail_supplier "
                         + "ON bahan.id_bahan = detail_supplier.id_bahan "
                         + "WHERE detail_supplier.id_supplier = '"+this.idSupplier+"' " + keyword
@@ -79,11 +79,11 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
                 // mendapatkan data dari database
                 String idPembeli = rs.getString("bahan.id_bahan");
                 String namaBarang = rs.getString("bahan.nama_bahan");
-                String stok = rs.getString("bahan.stok");
-                String harga = rs.getString("bahan.harga");
-
+                String jenisBarang = rs.getString("bahan.jenis");
+                String harga = text.toMoneyCase(rs.getString("bahan.harga"));
+                
                 // menambahkan data kedalam array
-                String[] data = { idPembeli, namaBarang, stok, harga} ;
+                String[] data = { idPembeli, namaBarang, jenisBarang, harga} ;
 
                 // menambahkan data kedalam tabel
                 tableModel.addRow(data);
@@ -94,6 +94,15 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
     }
         // set model
         tabelData.setModel(tableModel); 
+        
+        TableColumnModel columnModel = tabelData.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(70);
+        columnModel.getColumn(0).setMaxWidth(70);
+        columnModel.getColumn(1).setPreferredWidth(220);
+        columnModel.getColumn(1).setMaxWidth(220);
+        columnModel.getColumn(2).setPreferredWidth(130);
+        columnModel.getColumn(2).setMaxWidth(130);
+
     }
     
     public boolean isSelected(){
@@ -289,11 +298,11 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         if(evt.getKeyCode() == KeyEvent.VK_UP){
             this.idSelected = this.tabelData.getValueAt(tabelData.getSelectedRow() - 1, 0).toString();
-            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1);
+            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow()-1, 1);
             this.lblInfoBahan.setText(": " + idName);
         }else if(evt.getKeyCode() == KeyEvent.VK_DOWN){
             this.idSelected = this.tabelData.getValueAt(tabelData.getSelectedRow() + 1, 0).toString();
-            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1);
+            this.idName = this.idSelected + " | " + this.tabelData.getValueAt(this.tabelData.getSelectedRow()+1, 1);
             this.lblInfoBahan.setText(": " + idName);
         }
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -342,11 +351,13 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void tabelDataKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyReleased
-        if(this.idSelected.equals("")){
-            JOptionPane.showMessageDialog(this, "Tidak ada bahan yang dipilih!");
-        }else{
-            this.isSelected = true;
-            this.dispose();
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if(this.idSelected.equals("")){
+                JOptionPane.showMessageDialog(this, "Tidak ada bahan yang dipilih!");
+            }else{
+                this.isSelected = true;
+                this.dispose();
+            }            
         }
     }//GEN-LAST:event_tabelDataKeyReleased
 

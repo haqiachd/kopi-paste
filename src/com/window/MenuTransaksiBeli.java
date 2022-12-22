@@ -337,7 +337,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
 
                 // mengupdate data yang ada di textfield dan di tabel
                 this.tabelData.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
-                this.inpTotalHarga.setText(txt.toMoneyCase(""+this.ttlHargaBayar));
+                this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlHargaBayar).substring(4));
             }
             
         }catch(NumberFormatException ex){
@@ -1459,8 +1459,8 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         // cek apakah data bahan sudah dipilih
         if(!this.inpIdBahan.getText().isEmpty()){
             // cek apakah data jumlah sudah dimasukan
-            if (this.inpJumlah.getText().isEmpty()) {
-                Message.showWarning(this, "Jumlah bahan belum dimasukan!");
+            if (this.inpJumlah.getText().isEmpty() || Integer.parseInt(this.inpJumlah.getText()) == 0) {
+                Message.showWarning(this, "Jumlah bahan tidak boleh kosong atau 0!");
             } else {
                 this.tambahDataBahan();
             }                
@@ -1478,7 +1478,12 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusMouseExited
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        this.hapusDataBahan();
+        String nmBahan = this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 2).toString()+"?";
+        int konf = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus "+nmBahan , "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+        // cek konfirmasi hapus
+        if(konf == JOptionPane.YES_OPTION){
+            this.hapusDataBahan();
+        }
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void inpIdBahanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpIdBahanMouseClicked
@@ -1576,7 +1581,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             if(!this.inpIdBahan.getText().isEmpty()){
                 // cek apakah data jumlah sudah dimasukan
                 if (this.inpJumlah.getText().isEmpty() || Integer.parseInt(this.inpJumlah.getText()) == 0) {
-                    Message.showWarning(this, "Jumlah bahan belum dimasukan!");
+                    Message.showWarning(this, "Jumlah bahan tidak boleh kosong atau 0!");
                 } else {
                     this.tambahDataBahan();
                 }                
@@ -1596,7 +1601,12 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         
         // untuk hapus data
         if(evt.getKeyCode() == KeyEvent.VK_DELETE){
-            this.hapusDataBahan();
+            String nmBahan = this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 2).toString()+"?";
+            int konf = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus "+nmBahan , "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+            // cek konfirmasi hapus
+            if(konf == JOptionPane.YES_OPTION){
+                this.hapusDataBahan();
+            }
         }
     }//GEN-LAST:event_tabelDataKeyReleased
 
