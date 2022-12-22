@@ -30,6 +30,12 @@ public class MenuTransaksi extends javax.swing.JFrame {
         };
         
         this.win.hoverButton();
+        
+        // set ui button
+        this.btnTrBeli.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnTrJual.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        
+        // set hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
     }

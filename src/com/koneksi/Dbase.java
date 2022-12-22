@@ -99,7 +99,6 @@ public class Dbase {
         
         Dbase dbase = new Dbase();
         dbase.closeConnection();
-        
     }
     
 }

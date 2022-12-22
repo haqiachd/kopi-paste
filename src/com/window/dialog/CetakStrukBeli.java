@@ -76,12 +76,20 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(50);
         columnModel.getColumn(0).setMaxWidth(50);
-        columnModel.getColumn(1).setPreferredWidth(170);
-        columnModel.getColumn(1).setMaxWidth(170);
+        columnModel.getColumn(1).setPreferredWidth(150);
+        columnModel.getColumn(1).setMaxWidth(150);
         columnModel.getColumn(2).setPreferredWidth(110);
         columnModel.getColumn(2).setMaxWidth(110);
-        columnModel.getColumn(3).setPreferredWidth(60);
-        columnModel.getColumn(3).setMaxWidth(60);
+        columnModel.getColumn(3).setPreferredWidth(80);
+        columnModel.getColumn(3).setMaxWidth(80);
+    }
+    
+    private String getSatuan(int value, String satuan){
+        switch(satuan){
+            case "gr" :  return Integer.toString((value / 1000)) + " Kg";
+            case "ml" :  return Integer.toString((value / 1000)) + " L";
+            default : return Integer.toString((value / 1000)) + " ??";
+        }
     }
     
     private void showDetailTransaksi(){
@@ -89,7 +97,7 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
         // query untuk mengambil data transaksi
-        String sql = "SELECT ky.nama_karyawan, sp.nama_supplier, tr.total_harga, tr.total_bahan, dtr.nama_bahan, dtr.harga_bahan, dtr.jumlah, dtr.total_harga "
+        String sql = "SELECT ky.nama_karyawan, sp.nama_supplier, tr.total_harga, tr.total_bahan, dtr.nama_bahan, dtr.harga_bahan, dtr.satuan_bahan, dtr.jumlah, dtr.total_harga "
                    + "FROM transaksi_beli AS tr "
                    + "JOIN detail_tr_beli AS dtr "
                    + "ON tr.id_tr_beli = dtr.id_tr_beli "
@@ -108,18 +116,41 @@ public class CetakStrukBeli extends javax.swing.JDialog {
                 // menambahkan data transaksi ke dalam tabel
                 model.addRow(new Object[]{
                     row,
-                    db.res.getString("dtr.nama_bahan"),
+                    this.db.res.getString("dtr.nama_bahan"),
                     txt.toMoneyCase(db.res.getString("dtr.harga_bahan")),
-                    db.res.getString("dtr.jumlah"),
-                    txt.toMoneyCase(db.res.getString("dtr.total_harga"))
+                    this.getSatuan(db.res.getInt("jumlah"), db.res.getString("satuan_bahan")),
+                    this.txt.toMoneyCase(db.res.getString("dtr.total_harga"))
                 });
                 row++;
                 
                 // jika query pada baris terakhir maka akan 
                 if(db.res.isLast()){
+                    
+                    String jumlah;
+                    int jmlBuff, jmlKg = 0, jmlL = 0,  harga = 0;
+                    // menghitung total bahan dan harga
+                    for(int i = 0; i < model.getRowCount(); i++){
+                        jumlah = model.getValueAt(i, 3).toString();
+                        jmlBuff = Integer.parseInt(jumlah.replace(" Kg", "").replace(" L", "").replace(" ??", ""));
+                        if(jumlah.contains("Kg")){
+                            jmlKg += jmlBuff;
+                        }else if(jumlah.contains("L")){
+                            jmlL += jmlBuff;
+                        }
+                        harga += Integer.parseInt(txt.removeMoneyCase(model.getValueAt(i, 4).toString()));
+                    }
+
+                    String ttlJml = "";
+                    if(jmlKg > 0 && jmlL > 0){
+                        ttlJml += jmlKg + " Kg/" + jmlL + " L"; 
+                    }else if(jmlKg > 0){
+                        ttlJml += jmlKg + " Kg";
+                    }else if(jmlL > 0){
+                        ttlJml += jmlL + " L";
+                    }
                     // menambahkan total harga
                     model.addRow(new Object[]{
-                        "", "Total", "", db.res.getString("tr.total_bahan"), txt.toMoneyCase(db.res.getString("tr.total_harga"))
+                        "", "Total", "", ttlJml, txt.toMoneyCase(db.res.getString("tr.total_harga"))
                     });
                     
                     // menampilkan data transaksi

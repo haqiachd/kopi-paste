@@ -7,6 +7,7 @@ import com.manage.Waktu;
 import com.media.Gambar;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -269,6 +270,11 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         ));
         tabelRiwayat.setSelectionBackground(new java.awt.Color(71, 230, 143));
         tabelRiwayat.getTableHeader().setReorderingAllowed(false);
+        tabelRiwayat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tabelRiwayatKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelRiwayat);
 
         lblCari.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -447,6 +453,12 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
             Message.showException(this, "Tabel gagal diprint", ex);
         }   
     }//GEN-LAST:event_btnCetakActionPerformed
+
+    private void tabelRiwayatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelRiwayatKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_D){
+            this.btnDetailActionPerformed(null);
+        }
+    }//GEN-LAST:event_tabelRiwayatKeyPressed
 
     /**
      * @param args the command line arguments

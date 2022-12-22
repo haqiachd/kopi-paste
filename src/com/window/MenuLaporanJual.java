@@ -16,6 +16,7 @@ import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -76,6 +77,14 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.win.hoverButton();
         
         // set ui button
+        this.btnCetakBulanan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnRiwayatBulanan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnDetailHarian.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnCetakHarian.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnDetailHarian.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnSemuaHarian.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        
+        // hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
         
@@ -1086,6 +1095,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         tabelLpHarian.setGridColor(new java.awt.Color(0, 0, 0));
         tabelLpHarian.setSelectionBackground(new java.awt.Color(71, 230, 143));
         tabelLpHarian.getTableHeader().setReorderingAllowed(false);
+        tabelLpHarian.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tabelLpHarianKeyPressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabelLpHarian);
 
         inpDataPerhari.setForeground(new java.awt.Color(102, 204, 0));
@@ -1314,6 +1328,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         tabelLpBulanan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelLpBulananMouseClicked(evt);
+            }
+        });
+        tabelLpBulanan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tabelLpBulananKeyPressed(evt);
             }
         });
         jScrollPane4.setViewportView(tabelLpBulanan);
@@ -2052,26 +2071,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        // jika input tahun valid
-        if(this.inpPilihTahun.getYear() <= this.waktu.getTahun()){
-            // reset total data
-            this.trBulanan = 0;
-            this.psBulanan = 0;
-            this.pdBulanan = 0;
-            // menampilkan data laporan
-            this.showLaporanBulanan();
-        }else{
-            // jika input tahun melebihi tahun saat ini
-            Message.showWarning(this, "'" + this.inpPilihTahun.getYear() + "' Tidak bisa menampilkan data di masa depan!");
-            // menampilkan data tahun ini
-            this.inpPilihTahun.setYear(this.waktu.getTahun());
-            // reset total data
-            this.trBulanan = 0;
-            this.psBulanan = 0;
-            this.pdBulanan = 0;
-            // menampilkan data laporan
-            this.showLaporanBulanan();
-        }
+        this.trBulanan = 0;
+        this.psBulanan = 0;
+        this.pdBulanan = 0;
+        // menampilkan data laporan
+        this.showLaporanBulanan();
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_cariTahunMouseClicked
 
@@ -2105,7 +2109,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed
         try {
             // set header dan footer
-            MessageFormat header = new MessageFormat("Laporan Penjualan Harian");
+            MessageFormat header = new MessageFormat("Laporan Penjualan Bulanan");
             MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
             // cek tabel kosong atau tidak
             if (this.tabelLpBulanan.getRowCount() > 0) {
@@ -2156,6 +2160,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.showDataRiwayat();
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_inpNamaMenuActionPerformed
+
+    private void tabelLpHarianKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelLpHarianKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_D){
+            this.btnDetailHarianActionPerformed(null);
+        }
+    }//GEN-LAST:event_tabelLpHarianKeyPressed
+
+    private void tabelLpBulananKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelLpBulananKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_R){
+            this.btnRiwayatBulananActionPerformed(null);
+        }
+    }//GEN-LAST:event_tabelLpBulananKeyPressed
 
     /**
      * @param args the command line arguments

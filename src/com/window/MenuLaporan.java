@@ -31,6 +31,11 @@ public class MenuLaporan extends javax.swing.JFrame {
         
         this.win.hoverButton();
         
+        // set ui button
+        this.btnLpBeli.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnLpJual.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        
+        // hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
     }
@@ -64,12 +69,12 @@ public class MenuLaporan extends javax.swing.JFrame {
         pnlContent = new com.ui.RoundedPanel();
         pnlTotalPenjualan1 = new com.ui.RoundedPanel();
         jLabel2 = new javax.swing.JLabel();
-        btnTrBeli = new javax.swing.JButton();
+        btnLpBeli = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         pnlTotalPenjualan2 = new com.ui.RoundedPanel();
         jLabel3 = new javax.swing.JLabel();
-        btnTrJual = new javax.swing.JButton();
+        btnLpJual = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         lblBottom = new javax.swing.JLabel();
@@ -382,13 +387,13 @@ public class MenuLaporan extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(0, 90, 225));
         jLabel2.setText("  Laporan Pembelian");
 
-        btnTrBeli.setBackground(new java.awt.Color(84, 173, 247));
-        btnTrBeli.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnTrBeli.setForeground(new java.awt.Color(255, 255, 255));
-        btnTrBeli.setText("Buka");
-        btnTrBeli.addActionListener(new java.awt.event.ActionListener() {
+        btnLpBeli.setBackground(new java.awt.Color(84, 173, 247));
+        btnLpBeli.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnLpBeli.setForeground(new java.awt.Color(255, 255, 255));
+        btnLpBeli.setText("Buka");
+        btnLpBeli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTrBeliActionPerformed(evt);
+                btnLpBeliActionPerformed(evt);
             }
         });
 
@@ -413,7 +418,7 @@ public class MenuLaporan extends javax.swing.JFrame {
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlTotalPenjualan1Layout.createSequentialGroup()
                         .addGap(84, 84, 84)
-                        .addComponent(btnTrBeli, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnLpBeli, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlTotalPenjualan1Layout.setVerticalGroup(
@@ -426,7 +431,7 @@ public class MenuLaporan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnTrBeli, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLpBeli, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -440,13 +445,13 @@ public class MenuLaporan extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 90, 225));
         jLabel3.setText("  Laporan Penjualan");
 
-        btnTrJual.setBackground(new java.awt.Color(84, 173, 247));
-        btnTrJual.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnTrJual.setForeground(new java.awt.Color(255, 255, 255));
-        btnTrJual.setText("Buka");
-        btnTrJual.addActionListener(new java.awt.event.ActionListener() {
+        btnLpJual.setBackground(new java.awt.Color(84, 173, 247));
+        btnLpJual.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnLpJual.setForeground(new java.awt.Color(255, 255, 255));
+        btnLpJual.setText("Buka");
+        btnLpJual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTrJualActionPerformed(evt);
+                btnLpJualActionPerformed(evt);
             }
         });
 
@@ -471,7 +476,7 @@ public class MenuLaporan extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlTotalPenjualan2Layout.createSequentialGroup()
                         .addGap(84, 84, 84)
-                        .addComponent(btnTrJual, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnLpJual, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlTotalPenjualan2Layout.setVerticalGroup(
@@ -484,7 +489,7 @@ public class MenuLaporan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnTrJual, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLpJual, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -726,7 +731,7 @@ public class MenuLaporan extends javax.swing.JFrame {
         System.out.println(this.getClass().getName() + " closing");
     }//GEN-LAST:event_formWindowClosing
 
-    private void btnTrBeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrBeliActionPerformed
+    private void btnLpBeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLpBeliActionPerformed
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         MenuLaporanBeli window = new MenuLaporanBeli();
         java.awt.EventQueue.invokeLater(new Runnable(){
@@ -737,9 +742,9 @@ public class MenuLaporan extends javax.swing.JFrame {
             }
         });
         this.dispose();
-    }//GEN-LAST:event_btnTrBeliActionPerformed
+    }//GEN-LAST:event_btnLpBeliActionPerformed
 
-    private void btnTrJualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrJualActionPerformed
+    private void btnLpJualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLpJualActionPerformed
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         MenuLaporanJual window = new MenuLaporanJual();
         java.awt.EventQueue.invokeLater(new Runnable(){
@@ -750,7 +755,7 @@ public class MenuLaporan extends javax.swing.JFrame {
             }
         });
         this.dispose();
-    }//GEN-LAST:event_btnTrJualActionPerformed
+    }//GEN-LAST:event_btnLpJualActionPerformed
 
     
     /**
@@ -785,11 +790,11 @@ public class MenuLaporan extends javax.swing.JFrame {
     private javax.swing.JLabel btnKaryawan;
     private javax.swing.JLabel btnLaporan;
     private javax.swing.JLabel btnLogout;
+    private javax.swing.JButton btnLpBeli;
+    private javax.swing.JButton btnLpJual;
     private javax.swing.JLabel btnMenu;
     private javax.swing.JLabel btnPembeli;
     private javax.swing.JLabel btnSupplier;
-    private javax.swing.JButton btnTrBeli;
-    private javax.swing.JButton btnTrJual;
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

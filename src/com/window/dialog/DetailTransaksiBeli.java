@@ -128,9 +128,9 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
                 model.addRow(new Object[]{
                         idTr,
                         r.getString("nama_bahan"),
-                        txt.toMoneyCase(r.getString("harga_bahan")),
+                        this.txt.toMoneyCase(r.getString("harga_bahan")),
                         this.getSatuan(r.getInt("jumlah"), r.getString("satuan_bahan")),
-                        txt.toMoneyCase(r.getString("total_harga"))
+                        this.txt.toMoneyCase(r.getString("total_harga"))
                     }
                 );
                 row++;
