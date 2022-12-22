@@ -79,10 +79,10 @@ public class Validation {
     }
     
     public static boolean isPassword(String password){
-        if(password.length() >= 5 && password.length() <= 50){
+        if(password.length() >= 8){
             return true;
         }else{
-            JOptionPane.showMessageDialog(null, "Panjang dari Password harus diantara 5-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Panjang dari Password harus lebih dari 8 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }

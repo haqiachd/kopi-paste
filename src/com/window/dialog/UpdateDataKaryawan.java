@@ -4,7 +4,7 @@ import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.User;
-import com.media.Audio;
+import com.manage.Validation;
 import com.media.Gambar;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  *
@@ -24,7 +25,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     
     private int kondisi;
     
-    private String idSelected;
+    private String idSelected, oldUsername;
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -67,6 +68,8 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                 this.showData();
                 break;
         }
+        
+        this.oldUsername = this.inpUsername.getText();
     }
 
     @Override
@@ -160,7 +163,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         Connection c = (Connection) Koneksi.configDB();
         PreparedStatement p = c.prepareStatement(sql);
         p.setString(1, username);
-        p.setString(2, password);
+        p.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(12)));
         p.setString(3, "KARYAWAN");
         p.setString(4, idKaryawan);
         
@@ -171,17 +174,22 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     
     
     private void tambahData(){
-        // cek apakah username sudah exist atau belum
-        if(User.isExistUsername(this.inpUsername.getText())){
-            JOptionPane.showMessageDialog(this, "Username tersebut sudah terpakai");
+        // cek validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpUsername)){
+            return;
+        }else if(User.isExistUsername(this.inpUsername.getText())){
+            Message.showWarning(this, "Username tersebut sudah terpakai");
+            return;
+        }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpAlamat)){
+            return;
+        }else if(!Validation.isEmptyComboBox(this.inpShif)){
+            return;
+        }else if(!Validation.isEmptyPasswordField(this.inpPassword)){
+            return;
+        }else if(!Validation.isPassword(this.inpPassword.getText())){
             return;
         }
         
-        // cek apakah password minimal 8 karakter atau belum
-        if(!this.isValidPass()){
-            JOptionPane.showMessageDialog(this, "Password minimal harus 8 karakter!");
-            return;
-        }
         try{
             boolean karyawan = this.addDataKaryawan(),
                     user = this.addDataUser();
@@ -231,7 +239,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                password = this.inpPassword.getText(),
                sql = String.format("UPDATE user "
                         + "SET username = '%s', password = '%s'"
-                        + "WHERE id_karyawan = '%s'", username, password, idKaryawan);
+                        + "WHERE id_karyawan = '%s'", username, BCrypt.hashpw(password, BCrypt.gensalt(12)), idKaryawan);
         // membuat koneksi 
         Connection c = (Connection) Koneksi.configDB();
         Statement s = c.createStatement();
@@ -242,6 +250,24 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     }
     
     private void editData(){
+        // cek validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpUsername)){
+            return;
+        }else if(!this.oldUsername.equalsIgnoreCase(this.inpUsername.getText())){
+            if(User.isExistUsername(this.inpUsername.getText())){
+                Message.showWarning(this, "Username tersebut sudah terpakai");
+                return;
+            }
+        }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpAlamat)){
+            return;
+        }else if(!Validation.isEmptyComboBox(this.inpShif)){
+            return;
+        }else if(!Validation.isEmptyPasswordField(this.inpPassword)){
+            return;
+        }else if(!Validation.isPassword(this.inpPassword.getText())){
+            return;
+        }
+        
         try{
             boolean karyawan = this.editDataKaryawan(),
                     user = this.editDataUser();
@@ -356,6 +382,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpNama.setBackground(new java.awt.Color(248, 249, 250));
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpNama.setName("Nama Karyawan"); // NOI18N
 
         lblNoTelp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNoTelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
@@ -364,6 +391,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpNoTelp.setBackground(new java.awt.Color(248, 249, 250));
         inpNoTelp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNoTelp.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpNoTelp.setName("No Telephone"); // NOI18N
         inpNoTelp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpNoTelpKeyTyped(evt);
@@ -377,6 +405,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpAlamat.setBackground(new java.awt.Color(248, 249, 250));
         inpAlamat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpAlamat.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpAlamat.setName("Alamat"); // NOI18N
 
         lblUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
@@ -385,6 +414,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpUsername.setBackground(new java.awt.Color(248, 249, 250));
         inpUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpUsername.setName("Username"); // NOI18N
 
         lblShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblShif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-shift.png"))); // NOI18N
@@ -397,6 +427,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpPassword.setBackground(new java.awt.Color(248, 249, 250));
         inpPassword.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        inpPassword.setName("Password"); // NOI18N
 
         lblEye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
         lblEye.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -411,6 +442,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpShif.setBackground(new java.awt.Color(248, 249, 250));
         inpShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang (07:00-17:59)", "Malam (18:00-22:59)" }));
+        inpShif.setName("Shif"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

@@ -1,7 +1,9 @@
 package com.window.dialog;
 
 import com.koneksi.Koneksi;
+import com.manage.Message;
 import com.manage.Text;
+import com.manage.Validation;
 import com.media.Gambar;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -166,6 +168,15 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     }
     
     private boolean tambahDataSupplier() throws SQLException{
+        
+        // validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpNama, this.inpTelephone, this.inpAlamat)){
+            return false;
+        }else if(!Validation.isEmptyList(this.inpBahan)){
+            return false;
+        }
+        
+        // mendapatkan data dari input
         String id = this.inpId.getText(),
                nama = this.inpNama.getText(),
                noTelp = this.inpTelephone.getText(),
@@ -208,6 +219,14 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     }
     
     private boolean editDataSupplier() throws SQLException{
+        // validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpNama, this.inpTelephone, this.inpAlamat)){
+            return false;
+        }else if(!Validation.isEmptyList(this.inpBahan)){
+            return false;
+        }
+        
+        // mendapatkan input data
         String id = this.inpId.getText(),
                nama = this.inpNama.getText(),
                noTelp = this.inpTelephone.getText(),
@@ -330,6 +349,7 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
         inpNama.setBackground(new java.awt.Color(248, 249, 250));
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpNama.setName("Nama Supplier"); // NOI18N
 
         lblData1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblData1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
@@ -338,6 +358,7 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
         inpTelephone.setBackground(new java.awt.Color(248, 249, 250));
         inpTelephone.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpTelephone.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpTelephone.setName("No Telephone"); // NOI18N
         inpTelephone.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpTelephoneKeyTyped(evt);
@@ -351,12 +372,14 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
         inpAlamat.setBackground(new java.awt.Color(248, 249, 250));
         inpAlamat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpAlamat.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpAlamat.setName("Alamat"); // NOI18N
 
         lblData3.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblData3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-idbahan.png"))); // NOI18N
         lblData3.setText("Bahan Dijual");
 
         inpBahan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpBahan.setName("Bahan Dijual"); // NOI18N
         jScrollPane2.setViewportView(inpBahan);
 
         btnTambahBahan.setBackground(new java.awt.Color(154, 156, 172));

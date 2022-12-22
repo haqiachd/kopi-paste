@@ -1,7 +1,9 @@
 package com.window.dialog;
 
 import com.koneksi.Koneksi;
+import com.manage.Message;
 import com.manage.Text;
+import com.manage.Validation;
 import com.media.Audio;
 import com.media.Gambar;
 import java.sql.Connection;
@@ -211,6 +213,19 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }
     
     private boolean tambahDataMenu() throws SQLException{
+        // validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpNama)){
+            return false;
+        }else if(!Validation.isEmptyComboBox(this.inpJenis)){
+            return false;
+        }else if(!Validation.isEmptyTextField(this.inpHarga)){
+            return false;
+        }else if(Integer.parseInt(this.inpHarga.getText()) <= 0){
+            Message.showWarning(this, "Harga tidak boleh 0");
+            return false;
+        }else if(!Validation.isEmptyList(this.inpBahan)){
+            return false;
+        }
         // mendapatkan data
         String id = this.inpId.getText(),
                nama = this.inpNama.getText(),
@@ -231,7 +246,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         return result > 0;
     }
     
-    private void updateDetail() throws SQLException{
+    private void updateTableDetailMenu() throws SQLException{
         this.resetDetailMenu();
         this.updateListData();
         
@@ -254,7 +269,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         try {
             boolean s = this.tambahDataMenu();
             if(s){
-                this.updateDetail();
+                this.updateTableDetailMenu();
                 JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!");
                 this.dispose();
             }
@@ -265,6 +280,21 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }
     
     private boolean editDataMenu() throws SQLException{
+        
+        // validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpNama)){
+            return false;
+        }else if(!Validation.isEmptyComboBox(this.inpJenis)){
+            return false;
+        }else if(!Validation.isEmptyTextField(this.inpHarga)){
+            return false;
+        }else if(Integer.parseInt(this.inpHarga.getText()) <= 0){
+            Message.showWarning(this, "Harga tidak boleh 0");
+            return false;
+        }else if(!Validation.isEmptyList(this.inpBahan)){
+            return false;
+        }
+        
         // mendapatkan data
         String id = this.inpId.getText(),
                nama = this.inpNama.getText(),
@@ -286,7 +316,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         try {
             boolean s = this.editDataMenu();
             if(s){
-                this.updateDetail();
+                this.updateTableDetailMenu();
                 JOptionPane.showMessageDialog(this, "Data berhasil diedit!");
                 this.dispose();
             }
@@ -389,6 +419,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         inpNama.setBackground(new java.awt.Color(248, 249, 250));
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpNama.setName("Nama Menu"); // NOI18N
 
         lblData1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblData1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
@@ -401,6 +432,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         inpHarga.setBackground(new java.awt.Color(248, 249, 250));
         inpHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpHarga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpHarga.setName("Harga"); // NOI18N
         inpHarga.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpHargaKeyTyped(evt);
@@ -410,6 +442,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         lblData3.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblData3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-idbahan.png"))); // NOI18N
         lblData3.setText("Bahan Menu");
+        lblData3.setName("Bahan Menu"); // NOI18N
 
         btnTambahBahan.setBackground(new java.awt.Color(154, 156, 172));
         btnTambahBahan.setForeground(new java.awt.Color(255, 255, 255));
@@ -447,11 +480,13 @@ public class UpdateDataMenu extends javax.swing.JDialog {
 
         inpBahan.setBackground(new java.awt.Color(248, 249, 250));
         inpBahan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpBahan.setName("Data Bahan"); // NOI18N
         jScrollPane2.setViewportView(inpBahan);
 
         inpJenis.setBackground(new java.awt.Color(248, 249, 250));
         inpJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpJenis.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Minuman", "Makanan", "Original Coffee", "Falvoured Coffee", "Snack" }));
+        inpJenis.setName("Jenis Menu"); // NOI18N
 
         btnHapusBahan1.setBackground(new java.awt.Color(154, 156, 172));
         btnHapusBahan1.setForeground(new java.awt.Color(255, 255, 255));
