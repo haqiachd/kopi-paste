@@ -99,6 +99,57 @@ public class Dbase {
         
         Dbase dbase = new Dbase();
         dbase.closeConnection();
+        
+//        this.txt_stok.setText(String.format("%,d", res.getInt("total")).replaceAll(",", ".")); 
+
     }
     
+//    private String getNamaBulan(int bulan){
+//        switch(bulan-1){
+//            case Calendar.JANUARY: return "Januari";
+//            case Calendar.FEBRUARY: return "Februari";
+//            case Calendar.MARCH: return "Maret";
+//            case Calendar.APRIL: return "April";
+//            case Calendar.MAY: return "Mei";
+//            case Calendar.JUNE: return "Juni";
+//            case Calendar.JULY: return "Juli";
+//            case Calendar.AUGUST: return "Agustus";
+//            case Calendar.SEPTEMBER: return "September";
+//            case Calendar.OCTOBER: return "Oktober";
+//            case Calendar.NOVEMBER: return "November";
+//            case Calendar.DECEMBER: return "Desember";
+//            default: return "null";
+//        }
+//    }  
+//    
+//    private void sho() {
+//        DefaultTableModel tbl = new DefaultTableModel();
+//        tbl.addColumn("Tahun");
+//        tbl.addColumn("Bulan Ke");
+//        tbl.addColumn("Total Perbulan");
+//        tbl_laporan.setModel(tbl);
+//        try {
+//            String sql = "SELECT SUM(harga_total) AS totalPerbulan ,  MONTH(tgl_transaksi) AS Bulan_ke , YEAR(tgl_transaksi) AS Tahun FROM transaksi_jual "
+//                    + "WHERE MONTH(tgl_transaksi) >=1 AND YEAR(tgl_transaksi) = '" + year.getYear() + "' GROUP BY MONTH(tgl_transaksi)";
+//            Connection conn = (Connection) koneksi.configDB();
+//            Statement st = conn.createStatement();
+//            ResultSet res = st.executeQuery(sql);
+//            while (res.next()) {
+//                tbl.addRow(new Object[]{
+//                    res.getString("Tahun"),
+//                    this.getNamaBulan(res.getInt("Bulan_ke")),
+//                    Util.convertToRupiah(Integer.parseInt(res.getString("totalPerbulan")))
+//                });
+//                tbl_laporan.setModel(tbl);
+//                HeaderColumn();
+//                total();
+//            }
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(rootPane, "salah " + e
+//        
+//    
+//
+//);
+//        }
+//}
 }
