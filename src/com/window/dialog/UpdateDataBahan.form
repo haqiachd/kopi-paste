@@ -292,6 +292,7 @@
                 <LineBorder/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="Nama Bahan" noResource="true"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
@@ -343,6 +344,7 @@
                 <LineBorder/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="Stok" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpStokKeyTyped"/>
@@ -375,6 +377,7 @@
                 <LineBorder/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="Harga" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpHargaKeyTyped"/>
@@ -401,6 +404,7 @@
                 <StringItem index="5" value="Cairan"/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="Jenis Bahan" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="inpSatuan">
@@ -418,6 +422,7 @@
                 <StringItem index="2" value="MiliLiter"/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="Satuan Bahan" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpSatuanActionPerformed"/>

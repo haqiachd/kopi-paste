@@ -1,7 +1,9 @@
 package com.window.dialog;
 
 import com.koneksi.Koneksi;
+import com.manage.Message;
 import com.manage.Text;
+import com.manage.Validation;
 import com.media.Audio;
 import com.media.Gambar;
 import java.sql.Connection;
@@ -38,8 +40,8 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         this.setUndecorated(true);
         win.setVisible(true);
         initComponents();
-        this.setLocationRelativeTo(null);
         
+        this.setLocationRelativeTo(null);
         this.inpId.setEditable(false);
         this.btnSimpan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
@@ -114,7 +116,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 this.inpJenis.setSelectedItem(jenisBahan);
                 this.inpStok.setText(stok);
                 this.inpHarga.setText(harga);
-                this.inpSatuan.setSelectedItem(this.getStatuanName(satuan));
+                this.inpSatuan.setSelectedItem(this.getNamaSatuan(satuan));
                 
                 if(this.inpSatuan.getSelectedIndex() == 1){
                     this.lblStokSatuan.setText("Gram");
@@ -136,7 +138,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         this.win.dispose();
     }
     
-    private String getStatuanName(String satuan){
+    private String getNamaSatuan(String satuan){
        switch(satuan){
             case "gr" : 
                 return "Gram";
@@ -146,7 +148,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         }
     }
     
-    private String getStatuanCode(String satuan){
+    private String getkodeSatuan(String satuan){
         switch(satuan){
             case "Gram" : return "gr";
             case "MiliLiter" : return "ml";
@@ -155,6 +157,18 @@ public class UpdateDataBahan extends javax.swing.JDialog {
     }
     
     private void tambahData(){
+        // validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpNama)){
+            return;
+        }else if(!Validation.isEmptyComboBox(this.inpJenis, this.inpSatuan)){
+            return;
+        }else if(!Validation.isEmptyTextField(this.inpStok, this.inpHarga)){
+            return;
+        }else if(Integer.parseInt(this.inpHarga.getText()) <= 0){
+            Message.showWarning(this, "Harga tidak boleh 0");
+            return;
+        }
+        
         // mendapatkan data dari textfield
         String idBahan = this.inpId.getText(),
         namaBahan = this.inpNama.getText(),
@@ -173,7 +187,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             pst.setString(2, namaBahan);
             pst.setString(3, jenisBahan);
             pst.setInt(4, Integer.parseInt(stok));
-            pst.setString(5, this.getStatuanCode(satuan));
+            pst.setString(5, this.getkodeSatuan(satuan));
             pst.setInt(6, Integer.parseInt(harga));
 
             // eksekusi query
@@ -193,13 +207,25 @@ public class UpdateDataBahan extends javax.swing.JDialog {
     
     private void editData(){
         try{
+            // validasi data kosong atau tidak
+            if(!Validation.isEmptyTextField(this.inpNama)){
+                return;
+            }else if(!Validation.isEmptyComboBox(this.inpJenis, this.inpSatuan)){
+                return;
+            }else if(!Validation.isEmptyTextField(this.inpStok, this.inpHarga)){
+                return;
+            }else if(Integer.parseInt(this.inpHarga.getText()) <= 0){
+                Message.showWarning(this, "Harga tidak boleh 0");
+                return;
+            }
+        
             // mendapatkan input dari textfield
             String idBahan = this.inpId.getText(),
                    namaBahan = this.inpNama.getText(),
                    jenisBahan = this.inpJenis.getSelectedItem().toString(),
                    stok = this.inpStok.getText(),
                    harga = this.inpHarga.getText(),
-                   satuan = this.getStatuanCode(this.inpSatuan.getSelectedItem().toString()),
+                   satuan = this.getkodeSatuan(this.inpSatuan.getSelectedItem().toString()),
                     
                    // membuat query sql
                    sql = String.format("UPDATE bahan "
@@ -329,6 +355,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         inpNama.setBackground(new java.awt.Color(248, 249, 250));
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        inpNama.setName("Nama Bahan"); // NOI18N
 
         lblJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblJenis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
@@ -345,6 +372,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         inpStok.setBackground(new java.awt.Color(248, 249, 250));
         inpStok.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpStok.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        inpStok.setName("Stok"); // NOI18N
         inpStok.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpStokKeyTyped(evt);
@@ -358,6 +386,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         inpHarga.setBackground(new java.awt.Color(248, 249, 250));
         inpHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpHarga.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        inpHarga.setName("Harga"); // NOI18N
         inpHarga.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpHargaKeyTyped(evt);
@@ -367,10 +396,12 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         inpJenis.setBackground(new java.awt.Color(248, 249, 250));
         inpJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpJenis.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Hewani", "Nabati", "Coffee", "Perasa", "Cairan" }));
+        inpJenis.setName("Jenis Bahan"); // NOI18N
 
         inpSatuan.setBackground(new java.awt.Color(248, 249, 250));
         inpSatuan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpSatuan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Gram", "MiliLiter" }));
+        inpSatuan.setName("Satuan Bahan"); // NOI18N
         inpSatuan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inpSatuanActionPerformed(evt);
@@ -529,6 +560,9 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         }else if(this.inpSatuan.getSelectedIndex() == 2){
             this.lblStokSatuan.setText("Mililiter");
             this.lblHargaPerSatuan.setText("/ Liter");            
+        }else{
+            this.lblStokSatuan.setText("");
+            this.lblHargaPerSatuan.setText("");      
         }
     }//GEN-LAST:event_inpSatuanActionPerformed
 
