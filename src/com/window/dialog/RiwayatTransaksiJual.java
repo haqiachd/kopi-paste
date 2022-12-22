@@ -108,10 +108,8 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
         
         try{
-            String sql = "SELECT trj.id_tr_jual, ky.nama_karyawan, trj.nama_pembeli, trj.total_menu, trj.total_harga, DATE(trj.tanggal), DAYNAME(trj.tanggal) " +
+            String sql = "SELECT trj.id_tr_jual, trj.nama_karyawan, trj.nama_pembeli, trj.total_menu, trj.total_harga, DATE(trj.tanggal), DAYNAME(trj.tanggal) " +
                         "FROM transaksi_jual AS trj " +
-                        "JOIN karyawan AS ky " +
-                        "ON ky.id_karyawan = trj.id_karyawan " +
                         "WHERE MONTH(tanggal) = "+this.bulan+" AND YEAR(tanggal) = " + this.tahun + 
                         " ORDER BY trj.tanggal DESC";
             System.out.println(sql);

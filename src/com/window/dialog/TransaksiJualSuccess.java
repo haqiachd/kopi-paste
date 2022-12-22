@@ -12,7 +12,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class CetakStrukBeli extends javax.swing.JDialog {
+public class TransaksiJualSuccess extends javax.swing.JDialog {
 
     private final Dbase db = new Dbase();
     
@@ -28,7 +28,7 @@ public class CetakStrukBeli extends javax.swing.JDialog {
      * @param modal
      * @param idTr
      */
-    public CetakStrukBeli(java.awt.Frame parent, boolean modal, String idTr) {
+    public TransaksiJualSuccess(java.awt.Frame parent, boolean modal, String idTr) {
         super(parent, modal);
         this.pop.setVisible(true);
         this.idTr = idTr;
@@ -37,7 +37,7 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
         
 //        this.btnCetak.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        this.btnClose.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+//        this.btnClose.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
         this.showDetailTransaksi();
     }
@@ -59,7 +59,7 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         this.tabelData.setModel(new DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "No", "Nama Bahan", "Harga", "Jumlah", "Total Harga"
+                    "No", "Nama Menu", "Harga", "Jumlah", "Total Harga"
                 }
         ){
             boolean[] canEdit = new boolean[]{
@@ -76,20 +76,12 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(50);
         columnModel.getColumn(0).setMaxWidth(50);
-        columnModel.getColumn(1).setPreferredWidth(150);
-        columnModel.getColumn(1).setMaxWidth(150);
+        columnModel.getColumn(1).setPreferredWidth(170);
+        columnModel.getColumn(1).setMaxWidth(170);
         columnModel.getColumn(2).setPreferredWidth(110);
         columnModel.getColumn(2).setMaxWidth(110);
-        columnModel.getColumn(3).setPreferredWidth(80);
-        columnModel.getColumn(3).setMaxWidth(80);
-    }
-    
-    private String getSatuan(int value, String satuan){
-        switch(satuan){
-            case "gr" :  return Integer.toString((value / 1000)) + " Kg";
-            case "ml" :  return Integer.toString((value / 1000)) + " L";
-            default : return Integer.toString((value / 1000)) + " ??";
-        }
+        columnModel.getColumn(3).setPreferredWidth(60);
+        columnModel.getColumn(3).setMaxWidth(60);
     }
     
     private void showDetailTransaksi(){
@@ -97,15 +89,11 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
         // query untuk mengambil data transaksi
-        String sql = "SELECT ky.nama_karyawan, sp.nama_supplier, tr.total_harga, tr.total_bahan, dtr.nama_bahan, dtr.harga_bahan, dtr.satuan_bahan, dtr.jumlah, dtr.total_harga "
-                   + "FROM transaksi_beli AS tr "
-                   + "JOIN detail_tr_beli AS dtr "
-                   + "ON tr.id_tr_beli = dtr.id_tr_beli "
-                   + "JOIN karyawan AS ky "
-                   + "ON ky.id_karyawan = tr.id_karyawan "
-                   + "JOIN supplier AS sp "
-                   + "ON sp.id_supplier = tr.id_supplier "
-                   + "WHERE tr.id_tr_beli = '"+this.idTr+"';";
+        String sql = "SELECT tr.nama_karyawan, tr.nama_pembeli, tr.total_harga, tr.total_menu, dtr.nama_menu, dtr.harga_menu, dtr.jumlah, dtr.total_harga "
+                   + "FROM transaksi_jual AS tr "
+                   + "JOIN detail_tr_jual AS dtr "
+                   + "ON tr.id_tr_jual = dtr.id_tr_jual "
+                   + "WHERE tr.id_tr_jual = '"+this.idTr+"';";
         
         try {
             // eksekusi query
@@ -116,46 +104,23 @@ public class CetakStrukBeli extends javax.swing.JDialog {
                 // menambahkan data transaksi ke dalam tabel
                 model.addRow(new Object[]{
                     row,
-                    this.db.res.getString("dtr.nama_bahan"),
-                    txt.toMoneyCase(db.res.getString("dtr.harga_bahan")),
-                    this.getSatuan(db.res.getInt("jumlah"), db.res.getString("satuan_bahan")),
-                    this.txt.toMoneyCase(db.res.getString("dtr.total_harga"))
+                    db.res.getString("dtr.nama_menu"),
+                    txt.toMoneyCase(db.res.getString("dtr.harga_menu")),
+                    db.res.getString("dtr.jumlah"),
+                    txt.toMoneyCase(db.res.getString("dtr.total_harga"))
                 });
                 row++;
                 
                 // jika query pada baris terakhir maka akan 
                 if(db.res.isLast()){
-                    
-                    String jumlah;
-                    int jmlBuff, jmlKg = 0, jmlL = 0,  harga = 0;
-                    // menghitung total bahan dan harga
-                    for(int i = 0; i < model.getRowCount(); i++){
-                        jumlah = model.getValueAt(i, 3).toString();
-                        jmlBuff = Integer.parseInt(jumlah.replace(" Kg", "").replace(" L", "").replace(" ??", ""));
-                        if(jumlah.contains("Kg")){
-                            jmlKg += jmlBuff;
-                        }else if(jumlah.contains("L")){
-                            jmlL += jmlBuff;
-                        }
-                        harga += Integer.parseInt(txt.removeMoneyCase(model.getValueAt(i, 4).toString()));
-                    }
-
-                    String ttlJml = "";
-                    if(jmlKg > 0 && jmlL > 0){
-                        ttlJml += jmlKg + " Kg/" + jmlL + " L"; 
-                    }else if(jmlKg > 0){
-                        ttlJml += jmlKg + " Kg";
-                    }else if(jmlL > 0){
-                        ttlJml += jmlL + " L";
-                    }
                     // menambahkan total harga
                     model.addRow(new Object[]{
-                        "", "Total", "", ttlJml, txt.toMoneyCase(db.res.getString("tr.total_harga"))
+                        "", "Total", "", db.res.getString("tr.total_menu"), txt.toMoneyCase(db.res.getString("tr.total_harga"))
                     });
                     
                     // menampilkan data transaksi
-                    this.lblNamaKy.setText(this.lblNamaKy.getText() + db.res.getString("ky.nama_karyawan"));
-                    this.lblNamaSp.setText(this.lblNamaSp.getText() + db.res.getString("sp.nama_supplier"));
+                    this.lblNamaKy.setText(this.lblNamaKy.getText() + db.res.getString("tr.nama_karyawan"));
+                    this.lblNamaSp.setText(this.lblNamaSp.getText() + db.res.getString("tr.nama_pembeli"));
                 }
             }
             
@@ -194,7 +159,7 @@ public class CetakStrukBeli extends javax.swing.JDialog {
 
         lblTop.setFont(new java.awt.Font("Dialog", 1, 26)); // NOI18N
         lblTop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTop.setText("Pembelian Berhasil!");
+        lblTop.setText("Penjualan Berhasil!");
 
         lineTop.setBackground(new java.awt.Color(0, 0, 0));
         lineTop.setForeground(new java.awt.Color(0, 0, 0));
@@ -240,7 +205,7 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         lblNamaKy.setText("Nama Karyawan   : ");
 
         lblNamaSp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblNamaSp.setText("Nama Supplier      : ");
+        lblNamaSp.setText("Nama Pembeli       : ");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -249,19 +214,16 @@ public class CetakStrukBeli extends javax.swing.JDialog {
             .addComponent(lblTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(icTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblNamaSp, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNamaKy, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlMainLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pnlMainLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
@@ -281,8 +243,8 @@ public class CetakStrukBeli extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblNamaSp, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(btnClose)
+                .addGap(12, 12, 12))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,15 +261,15 @@ public class CetakStrukBeli extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnCloseActionPerformed
-
     private void tabelDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
             this.dispose();
         }
     }//GEN-LAST:event_tabelDataKeyPressed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCloseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -322,14 +284,14 @@ public class CetakStrukBeli extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CetakStrukBeli.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TransaksiJualSuccess.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                CetakStrukBeli dialog = new CetakStrukBeli(new javax.swing.JFrame(), true, "TRB0048");
+                TransaksiJualSuccess dialog = new TransaksiJualSuccess(new javax.swing.JFrame(), true, "TRJ0048");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

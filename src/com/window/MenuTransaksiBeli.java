@@ -11,7 +11,7 @@ import com.window.dialog.GetDataSupplierJualBahan;
 import com.window.dialog.GetDataSupplier;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.dialog.CetakStrukBeli;
+import com.window.dialog.TransaksiBeliSuccess;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -391,21 +391,19 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private boolean transaksi(){
         try{
-            // mendapatkan data id transaksi dan id karyawan
-            String idTransaksi = this.inpIdTransaksi.getText(),
-                   idKaryawan = User.getIDKaryawan(), tanggal = "";
-            
             // membuat koneksi       
             Connection conn = (Connection) Koneksi.configDB();
-            PreparedStatement pst = conn.prepareStatement("INSERT INTO transaksi_beli VALUES(?, ?, ?, ?, ?, ?)");
+            PreparedStatement pst = conn.prepareStatement("INSERT INTO transaksi_beli VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
             
             // menambahkan data transaksi ke query
-            pst.setString(1, idTransaksi);
-            pst.setString(2, idKaryawan);
-            pst.setString(3, this.idSupplier);
-            pst.setInt(4, this.getTotalJumlahBahan());
-            pst.setInt(5, this.ttlHargaBayar);
-            pst.setString(6, this.waktu.getCurrentDateTime());
+            pst.setString(1, this.inpIdTransaksi.getText());
+            pst.setString(2, User.getIDKaryawan());
+            pst.setString(3, User.getNamaUser());
+            pst.setString(4, this.idSupplier);
+            pst.setString(5, this.namaSupplier);
+            pst.setInt(6, this.getTotalJumlahBahan());
+            pst.setInt(7, this.ttlHargaBayar);
+            pst.setString(8, this.waktu.getCurrentDateTime());
             
             // eksekusi query
             boolean isSuccess = pst.executeUpdate() > 0;
@@ -1441,7 +1439,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
         if(this.transaksi()){
-            CetakStrukBeli dia = new CetakStrukBeli(null, true, this.inpIdTransaksi.getText());
+            TransaksiBeliSuccess dia = new TransaksiBeliSuccess(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
             this.resetTransaksi();            
         }

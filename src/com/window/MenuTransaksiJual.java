@@ -1,5 +1,6 @@
 package com.window;
 
+import com.koneksi.Dbase;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
@@ -10,7 +11,7 @@ import com.media.Gambar;
 import com.window.dialog.GetDataMenu;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.dialog.CetakStrukJual;
+import com.window.dialog.TransaksiJualSuccess;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -43,6 +44,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                ,ttlHrgMenu // total harga dari menu (harga menu * jumlah menu)
                ,ttlHargaBayar = 0 // total keseluruhan harga dari menu
                ,oldJumlah;
+    
+    private final Dbase db = new Dbase();
     
     private final UIManager win = new UIManager();
     
@@ -646,13 +649,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private boolean trJual(){
         try{
             Connection c = (Connection) Koneksi.configDB();
-            PreparedStatement p = c.prepareStatement("INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement p = c.prepareStatement("INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?)");
             p.setString(1, this.inpIdTransaksi.getText());
             p.setString(2, User.getIDKaryawan());
-            p.setString(3, this.inpPembeli.getText()+"");
-            p.setInt(4, this.getTotalJumlahMenu());
-            p.setInt(5, this.ttlHargaBayar);
-            p.setString(6, waktu.getCurrentDateTime());
+            p.setString(3, User.getNamaUser());
+            p.setString(4, this.inpPembeli.getText()+"");
+            p.setInt(5, this.getTotalJumlahMenu());
+            p.setInt(6, this.ttlHargaBayar);
+            p.setString(7, waktu.getCurrentDateTime());
             
             boolean isSuccess = p.executeUpdate() > 0;
             c.close();
@@ -1667,7 +1671,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
 //        Message.showInformation(this, "Transaksi berhasil!");
         if(this.trJual()){
-            CetakStrukJual dia = new CetakStrukJual(null, true, this.inpIdTransaksi.getText());
+            TransaksiJualSuccess dia = new TransaksiJualSuccess(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
             this.resetTransaksi();            
         }

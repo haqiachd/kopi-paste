@@ -14,7 +14,6 @@ import com.window.dialog.Pengaturan;
 import com.window.dialog.RiwayatTransaksiBeli;
 import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
@@ -31,15 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.chart.title.TextTitle;
-import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
  *
@@ -102,7 +92,6 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.tabelLpHarian.setRowHeight(29);
         this.tabelLpHarian.getTableHeader().setBackground(new java.awt.Color(0,105,233));
         this.tabelLpHarian.getTableHeader().setForeground(new java.awt.Color(255, 255, 255)); 
-//        this.tabelLpHarian.getTableHeader().setFont(new java.awt.Font("Dialog", 1, 8));
         
         // set model tabel
         this.tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
@@ -146,12 +135,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         try{
             // query untuk mengambil data laporan
             String sql = String.format(
-                    "SELECT trb.id_tr_beli, ky.nama_karyawan, sp.nama_supplier, trb.total_bahan, trb.total_harga, trb.tanggal, DAYNAME(trb.tanggal) AS hari "
+                    "SELECT trb.id_tr_beli, trb.nama_karyawan, trb.nama_supplier, trb.total_bahan, trb.total_harga, trb.tanggal, DAYNAME(trb.tanggal) AS hari "
                   + "FROM transaksi_beli AS trb "
-                  + "JOIN karyawan AS ky "
-                  + "ON ky.id_karyawan = trb.id_karyawan "
-                  + "JOIN SUPPLIER AS sp "
-                  + "ON sp.id_supplier = trb.id_supplier "
                   + kondisi 
                   + " ORDER BY trb.tanggal DESC"
             );
@@ -168,8 +153,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 model.addRow(
                     new String[]{
                         r.getString("trb.id_tr_beli"), 
-                        r.getString("ky.nama_karyawan"),
-                        r.getString("sp.nama_supplier"),
+                        r.getString("trb.nama_karyawan"),
+                        r.getString("trb.nama_supplier"),
                         r.getString("trb.total_bahan") + " Bahan", 
                         txt.toMoneyCase(r.getString("trb.total_harga")), 
                         waktu.getNamaHariInIndonesian(r.getString("hari")) + ", " + txt.toDateCase(r.getString("tanggal"))
@@ -382,96 +367,6 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.pnlShowChart.add(new JPanel().add(this.lblEmptyChart), BorderLayout.CENTER);
         this.pnlShowChart.repaint();
         this.pnlShowChart.revalidate();
-    }
-    
-    public void showLineChartOld(){
-        //create dataset for the graph
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(170, "Amount", "Minggu Ke-1");
-//        dataset.setValue(150, "Amount", "");
-        dataset.setValue(80, "Amount", "Minggu Ke-2");
-//        dataset.setValue(50, "Amount", "");
-        dataset.setValue(180, "Amount", "Minggu Ke-3");
-//        dataset.setValue(200, "Amount", "");
-        dataset.setValue(150, "Amount", "Minggu Ke-4");
-        
-        //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Pada Bulan "+namaBulan,"Minggu","Jumlah Pembeli", 
-                dataset, PlotOrientation.VERTICAL, false,true,false);
-        linechart.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
-        
-        //create plot object
-         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
-        lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
-        lineCategoryPlot.setBackgroundPaint(Color.WHITE);
-        
-        //create render object to change the moficy the line properties like color
-        LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
-        Color lineChartColor = new Color(255,2,9);
-        lineRenderer.setSeriesPaint(0, lineChartColor);
-        
-         //create chartPanel to display chart(graph)
-        ChartPanel lineChartPanel = new ChartPanel(linechart);
-        pnlShowChart.removeAll();
-        pnlShowChart.add(lineChartPanel, BorderLayout.CENTER);
-        pnlShowChart.validate();
-    }
-    
-    public void showLineChart(){
-        //create dataset for the graph
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for(int i = 1; i <= 31; i+=2){
-            System.out.println(i);
-            dataset.setValue(new java.util.Random().nextInt(500_000), "Amount", Integer.toString(i));
-        }
-        
-        //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Penjualan Pada Bulan "+namaBulan,"Tanggal","Jumlah Pembeli", 
-                dataset, PlotOrientation.VERTICAL, false,true,false);
-        linechart.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
-        
-        //create plot object
-         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
-        lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
-        lineCategoryPlot.setBackgroundPaint(Color.WHITE);
-        
-        //create render object to change the moficy the line properties like color
-        LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
-        Color lineChartColor = new Color(255,2,9);
-        lineRenderer.setSeriesPaint(0, lineChartColor);
-        
-         //create chartPanel to display chart(graph)
-        ChartPanel lineChartPanel = new ChartPanel(linechart);
-        pnlShowChart.removeAll();
-        pnlShowChart.add(lineChartPanel, BorderLayout.CENTER);
-        pnlShowChart.validate();
-    }
-    
-    public void showBarChart(){
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(200, "Amount", "Minggu Ke-1");
-        dataset.setValue(150, "Amount", "Minggu Ke-2");
-        dataset.setValue(220, "Amount", "Minggu Ke-3");
-        dataset.setValue(100, "Amount", "Minggu Ke-4");
-//        dataset.setValue(80, "Amount", "may");
-//        dataset.setValue(250, "Amount", "june");
-        
-        JFreeChart c = ChartFactory.createBarChart("penjualan","mingguan","jumlah penjualan", 
-                dataset, PlotOrientation.VERTICAL, false,true,false);
-        c.setTitle(new TextTitle("Penjualan Pada Bulan "+namaBulan, new java.awt.Font("Ebrima", 1, 20)));
-        
-        CategoryPlot categoryPlot = c.getCategoryPlot();
-        //categoryPlot.setRangeGridlinePaint(Color.BLUE);
-        categoryPlot.setBackgroundPaint(Color.WHITE);
-        BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
-        Color clr3 = new Color(230,47,69);
-        renderer.setSeriesPaint(0, clr3);
-        
-        ChartPanel barpChartPanel = new ChartPanel(c);
-        pnlShowChart.removeAll();
-        pnlShowChart.add(barpChartPanel, BorderLayout.CENTER);
-        pnlShowChart.validate();
-        
     }
     
     private void resetTabelRiwayat(){
