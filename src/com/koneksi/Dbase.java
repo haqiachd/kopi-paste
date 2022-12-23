@@ -7,10 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  *
  * @author Achmad Baihaqi
+ * @since 2020-11-14
  */
 public class Dbase {
     
@@ -27,7 +29,7 @@ public class Dbase {
      */
     public ResultSet res;
     /**
-     * Digunakan untuk insert query
+     * Digunakan untuk menyiapkan query sebelum dieksekusqi
      */
     public PreparedStatement pst;
     
@@ -40,8 +42,14 @@ public class Dbase {
                                 USER = "root",
                                 PASS = "";
     
-    private static int POOL = 0;
+    /**
+     * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
+     */
+    public static int CONN_COUNT = 0;
     
+    /**
+     * Saat class pertama kali diinisialisasi maka akan otomatis membuat koneksi baru
+     */
     public Dbase(){
         this.startConnection();
     }
@@ -55,8 +63,8 @@ public class Dbase {
             // membuat object statement
             stat = conn.createStatement();
 
-            POOL++;
-            System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, POOL);
+            CONN_COUNT++;
+            System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
         } catch (ClassNotFoundException | SQLException ex) {
             // Menanggani exception yang terjadi dengan cara mendapatkan pesan error dari exception tersebut.
             if (ex.getMessage().contains("com.mysql.jdbc.Driver")) {
@@ -88,8 +96,8 @@ public class Dbase {
             if (res != null) {
                 res.close();
             }
-            POOL--;
-            System.out.printf("Berhasil koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, POOL);
+            CONN_COUNT--;
+            System.out.printf("Berhasil koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
@@ -97,59 +105,12 @@ public class Dbase {
 
     public static void main(String[] args) {
         
-        Dbase dbase = new Dbase();
-        dbase.closeConnection();
+        Dbase db = new Dbase();
         
-//        this.txt_stok.setText(String.format("%,d", res.getInt("total")).replaceAll(",", ".")); 
+        
+        System.out.println("Jumlah Koneksi : " + Dbase.CONN_COUNT);
+        
+        System.out.println(BCrypt.hashpw("haqi12345", BCrypt.gensalt(12)));
 
     }
-    
-//    private String getNamaBulan(int bulan){
-//        switch(bulan-1){
-//            case Calendar.JANUARY: return "Januari";
-//            case Calendar.FEBRUARY: return "Februari";
-//            case Calendar.MARCH: return "Maret";
-//            case Calendar.APRIL: return "April";
-//            case Calendar.MAY: return "Mei";
-//            case Calendar.JUNE: return "Juni";
-//            case Calendar.JULY: return "Juli";
-//            case Calendar.AUGUST: return "Agustus";
-//            case Calendar.SEPTEMBER: return "September";
-//            case Calendar.OCTOBER: return "Oktober";
-//            case Calendar.NOVEMBER: return "November";
-//            case Calendar.DECEMBER: return "Desember";
-//            default: return "null";
-//        }
-//    }  
-//    
-//    private void sho() {
-//        DefaultTableModel tbl = new DefaultTableModel();
-//        tbl.addColumn("Tahun");
-//        tbl.addColumn("Bulan Ke");
-//        tbl.addColumn("Total Perbulan");
-//        tbl_laporan.setModel(tbl);
-//        try {
-//            String sql = "SELECT SUM(harga_total) AS totalPerbulan ,  MONTH(tgl_transaksi) AS Bulan_ke , YEAR(tgl_transaksi) AS Tahun FROM transaksi_jual "
-//                    + "WHERE MONTH(tgl_transaksi) >=1 AND YEAR(tgl_transaksi) = '" + year.getYear() + "' GROUP BY MONTH(tgl_transaksi)";
-//            Connection conn = (Connection) koneksi.configDB();
-//            Statement st = conn.createStatement();
-//            ResultSet res = st.executeQuery(sql);
-//            while (res.next()) {
-//                tbl.addRow(new Object[]{
-//                    res.getString("Tahun"),
-//                    this.getNamaBulan(res.getInt("Bulan_ke")),
-//                    Util.convertToRupiah(Integer.parseInt(res.getString("totalPerbulan")))
-//                });
-//                tbl_laporan.setModel(tbl);
-//                HeaderColumn();
-//                total();
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(rootPane, "salah " + e
-//        
-//    
-//
-//);
-//        }
-//}
 }

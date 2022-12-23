@@ -4,6 +4,7 @@ import com.koneksi.Database;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
+import com.manage.Validation;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
 import java.sql.Connection;
@@ -299,6 +300,7 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
         inpQuantity.setBackground(new java.awt.Color(248, 249, 250));
         inpQuantity.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpQuantity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        inpQuantity.setName("Quantity"); // NOI18N
         inpQuantity.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 inpQuantityKeyReleased(evt);
@@ -419,21 +421,23 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_tabelDataMouseClicked
 
     private void btnPilihActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPilihActionPerformed
-//        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        if(this.idSelected.equals("")){
-            JOptionPane.showMessageDialog(this, "Tidak ada bahan yang dipilih!");
-        }else{
-            if(!this.inpQuantity.getText().isEmpty()){
-                this.quantity = this.inpQuantity.getText();
-                this.bahanCode = String.format("%s#%s#%s#%s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
-                this.idName = String.format("%s | %s.%s, %s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
-                this.isSelected = true;
-                this.dispose();                
-            }else{
-                Message.showWarning(this, "Masukan quantity terlebih dahulu");
-            }
-        }                    
-//        }
+
+        if (this.idSelected.equals("")) {
+            Message.showWarning(this, "Tidak ada bahan yang dipilih!");
+            return;
+        } else if (!Validation.isEmptyTextField(this.inpQuantity)) {
+            return;
+        } else if (Integer.parseInt(this.inpQuantity.getText()) <= 0) {
+            Message.showWarning(this, "Quantity harus lebih besar dari 0!");
+            return;
+        }
+        
+        // mendapatkan data quantity
+        this.quantity = this.inpQuantity.getText();
+        this.bahanCode = String.format("%s#%s#%s#%s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
+        this.idName = String.format("%s | %s.%s, %s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
+        this.isSelected = true;
+        this.dispose();
     }//GEN-LAST:event_btnPilihActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
@@ -468,21 +472,26 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_tabelDataKeyReleased
 
     private void inpQuantityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpQuantityKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            if(this.idSelected.equals("")){
-                JOptionPane.showMessageDialog(this, "Tidak ada bahan yang dipilih!");
-            }else{
-                if(!this.inpQuantity.getText().isEmpty()){
-                    this.quantity = this.inpQuantity.getText();
-                    this.bahanCode = String.format("%s#%s#%s#%s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
-                    this.idName = String.format("%s | %s.%s, %s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
-                    this.isSelected = true;
-                    this.dispose();                
-                }else{
-                    Message.showWarning(this, "Masukan quantity terlebih dahulu");
-                }
-            }                    
+     
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (this.idSelected.equals("")) {
+                Message.showWarning(this, "Tidak ada bahan yang dipilih!");
+                return;
+            }else if(!Validation.isEmptyTextField(this.inpQuantity)){
+                return;
+            }else if(Integer.parseInt(this.inpQuantity.getText()) <= 0){
+                Message.showWarning(this, "Quantity harus lebih besar dari 0!");
+                return;
+            }
+            // mendapatkan data quantity
+            this.quantity = this.inpQuantity.getText();
+            this.bahanCode = String.format("%s#%s#%s#%s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
+            this.idName = String.format("%s | %s.%s, %s", this.idSelected, this.quantity, this.satuan, this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 1));
+            this.isSelected = true;
+            this.dispose();
         }
+        
+
     }//GEN-LAST:event_inpQuantityKeyReleased
 
     private void inpQuantityKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpQuantityKeyTyped
@@ -508,6 +517,7 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 GetDataBahanMenu dialog = new GetDataBahanMenu(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
