@@ -157,7 +157,7 @@ public class DataMenu extends javax.swing.JFrame {
         this.inpBahan.removeAllList();
         try{
             String sql = "SELECT menu.nama_menu, menu.jenis, menu.jenis, menu.harga, "
-                       + "detail_menu.id_bahan, detail_menu.nama_bahan, detail_menu.quantity, detail_menu.satuan, bahan.nama_bahan "
+                       + "detail_menu.id_bahan, detail_menu.quantity, bahan.satuan, bahan.nama_bahan "
                        + "FROM menu "
                        + "JOIN detail_menu AS detail_menu "
                        + "ON menu.id_menu = detail_menu.id_menu "
@@ -177,13 +177,13 @@ public class DataMenu extends javax.swing.JFrame {
                 // BA001 | 10.gr, Nama Bahab
                 this.inpBahan.addList(
                         String.format(
-                                "%s | %s %s %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("detail_menu.satuan"), r.getString("bahan.nama_bahan")
+                                "%s | %s %s %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
                         ));
 //                this.inpBahan.addList(r.getString("detail_menu.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
                 while(r.next()){
                this.inpBahan.addList(
                         String.format(
-                                "%s | %s %s %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("detail_menu.satuan"), r.getString("bahan.nama_bahan")
+                                "%s | %s %s %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
                         ));
                 }
             }

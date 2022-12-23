@@ -4,7 +4,6 @@ import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Validation;
-import com.media.Audio;
 import com.media.Gambar;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,10 +43,12 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         
+        // set ui button
         this.inpId.setEditable(false);
         this.btnSimpan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
+        // set margin text field
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -55,6 +56,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.idSelected = id;
         this.kondisi = kondisi;
         
+        // pilih kondisi tambah atau edit
         switch(kondisi){
             case TAMBAH : 
                 this.lblTitle.setText("Tambah Data Menu");
@@ -106,20 +108,23 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private void showData(){
         this.inpBahan.removeAllList();
         try{
-            String sql = "SELECT menu.nama_menu, menu.jenis, menu.jenis, menu.harga, "
-                       + "detail_menu.id_bahan, detail_menu.nama_bahan, detail_menu.quantity, detail_menu.satuan, bahan.nama_bahan "
+            // membuat query untuk menampilkan data menu
+            String sql = "SELECT menu.nama_menu, menu.jenis, menu.harga, "
+                       + "detail_menu.id_bahan, bahan.nama_bahan, detail_menu.quantity, bahan.satuan "
                        + "FROM menu "
-                       + "JOIN detail_menu AS detail_menu "
+                       + "JOIN detail_menu  "
                        + "ON menu.id_menu = detail_menu.id_menu "
                        + "JOIN bahan "
                        + "ON bahan.id_bahan = detail_menu.id_bahan "
                        + "WHERE menu.id_menu = '"+this.idSelected+"'";
             System.out.println(sql);
+            
+            // eksekusi query
             Connection c = (Connection) Koneksi.configDB();
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery(sql);
             
-            if(r.next()){
+            if (r.next()) {
                 this.inpId.setText(this.idSelected);
                 this.inpNama.setText(r.getString("menu.nama_menu"));
                 this.inpJenis.setSelectedItem(r.getString("menu.jenis"));
@@ -127,15 +132,13 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 // BA001 | 10.gr, Nama Bahab
                 this.inpBahan.addList(
                         String.format(
-                                "%s | %s.%s, %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("detail_menu.satuan"), r.getString("bahan.nama_bahan")
+                                "%s | %s.%s, %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
                         ));
-//                this.inpBahan.addList(r.getString("detail_menu.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
-                while(r.next()){
-//                    this.inpBahan.addList(r.getString("detail_menu.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
-               this.inpBahan.addList(
-                        String.format(
-                                "%s | %s.%s, %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("detail_menu.satuan"), r.getString("bahan.nama_bahan")
-                        ));
+                while (r.next()) {
+                    this.inpBahan.addList(
+                            String.format(
+                                    "%s | %s.%s, %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
+                            ));
                 }
             }
         }catch(SQLException ex){
@@ -250,17 +253,15 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.resetDetailMenu();
         this.updateListData();
         
-        String idBahan, namaBahan, quantity, satuan;
+        String idBahan, quantity;
         for(int i = 0; i < this.mainList.length; i++){
             // mendapatkan data
             idBahan = this.listID[i].toString();
-            namaBahan = this.listNama[i].toString();
             quantity = this.listQuantity[i].toString();
-            satuan = this.listSatuan[i].toString();
             // membuat koneksi
             Connection c = (Connection) Koneksi.configDB();
             Statement s = c.createStatement();
-            s.executeUpdate(String.format("INSERT INTO detail_menu VALUES ('%s', '%s', '%s', '%s', '%s')", this.inpId.getText(), idBahan, namaBahan, quantity, satuan));
+            s.executeUpdate(String.format("INSERT INTO detail_menu VALUES ('%s', '%s', '%s')", this.inpId.getText(), idBahan, quantity));
             c.close();
         }
     }
