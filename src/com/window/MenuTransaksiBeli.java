@@ -1,5 +1,6 @@
 package com.window;
 
+import com.koneksi.Dbase;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
@@ -36,11 +37,13 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private DefaultTableModel tblModel;
     
+    private final Dbase db = new Dbase();
+    
     private final UIManager win = new UIManager();
     
     private final Text txt = new Text();
     
-    private Waktu waktu = new Waktu();
+    private final Waktu waktu = new Waktu();
 
     private String idSupplier = "", namaSupplier, idBahan, namaBahan, jenisBahan, satuanBahan;
     
@@ -109,28 +112,23 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     private String createID(){
         try{
             // menyiapkan query untuk mendapatkan id terakhir
-            String query = "SELECT * FROM transaksi_beli ORDER BY id_tr_beli DESC LIMIT 0,1", lastID, nomor;
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery(query);
+            String query = "SELECT * FROM transaksi_beli ORDER BY id_tr_beli DESC LIMIT 0,1", lastID, nomor = "0000";
+            db.res = db.stat.executeQuery(query);
             
             // cek apakah query berhasil dieksekusi
-            if(res.next()){
+            if(db.res.next()){
                 // mendapatkan id terakhir
-                lastID =  res.getString("id_tr_beli");
+                lastID =  db.res.getString("id_tr_beli");
                 if(lastID != null){
                     // mendapatkan nomor id
                     nomor = lastID.substring(3);
-                }else{
-                    nomor = "0000";
-                }
-                conn.close();
-            
-                // jika id barang belum exist maka id akan dibuat
-                return String.format("TRB%04d", Integer.parseInt(nomor)+1);
+                }            
             }
+            
+            // membuat id baru
+            return String.format("TRB%04d", Integer.parseInt(nomor)+1);
         }catch(SQLException ex){
-            ex.printStackTrace();
+            Message.showException(this, ex);
         }
         return null;
     }

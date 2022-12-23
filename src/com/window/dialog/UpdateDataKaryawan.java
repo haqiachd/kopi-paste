@@ -1,5 +1,6 @@
 package com.window.dialog;
 
+import com.koneksi.Dbase;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
@@ -26,6 +27,8 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     private int kondisi;
     
     private String idSelected, oldUsername;
+    
+    private final Dbase db = new Dbase();
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -81,26 +84,23 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     private String createID(){
         try{
             // menyiapkan query untuk mendapatkan id terakhir
-            String query = "SELECT * FROM karyawan ORDER BY id_karyawan DESC LIMIT 0,1", lastID, nomor;
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery(query);
+            String query = "SELECT * FROM karyawan ORDER BY id_karyawan DESC LIMIT 0,1", lastID, nomor = "000";
+            db.res = db.stat.executeQuery(query);
+            
             // cek apakah query berhasil dieksekusi
-            if(res.next()){
+            if(db.res.next()){
                 // mendapatkan id terakhir
-                lastID =  res.getString("id_karyawan");
+                lastID =  db.res.getString("id_karyawan");
                 if(lastID != null){
                     // mendapatkan nomor id
                     nomor = lastID.substring(2);
-                }else{
-                    nomor = "000";
                 }
-                conn.close();
-                // jika id barang belum exist maka id akan dibuat
-                return String.format("KY%03d", Integer.parseInt(nomor)+1);
             }
+            
+            // membuat id baru
+            return String.format("KY%03d", Integer.parseInt(nomor)+1);
         }catch(SQLException ex){
-            ex.printStackTrace();
+            Message.showException(this, ex);
         }
         return null;
     }
