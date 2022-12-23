@@ -356,6 +356,8 @@ public class TesValidasi extends javax.swing.JFrame {
             }
         });
     }
+    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField inp1;
