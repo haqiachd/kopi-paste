@@ -1,6 +1,6 @@
 package com.window;
 
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.ChartManager;
 import com.manage.Message;
 import com.manage.Text;
@@ -13,14 +13,12 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.RiwayatTransaksiBeli;
 import com.window.dialog.UserProfile;
+
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +40,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     private final UIManager win = new UIManager();
     
     private final ChartManager chart = new ChartManager();
+    
+    private final Database db = new Database();
     
     private final Waktu waktu = new Waktu();
     
@@ -97,7 +97,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Transaksi", "Nama Karyawan", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal"
+                    "ID Transaksi", "Nama Karyawan", "Nama Supplier", "Total Bahan", "Total Harga", "Tanggal"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -143,21 +143,19 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
             System.out.println(sql);
 
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
             // membaca semua data yang ada didalam tabel
-            while(r.next()){
+            while(this.db.res.next()){
                 // menambahkan data kedalam tabel
                 model.addRow(
                     new String[]{
-                        r.getString("trb.id_tr_beli"), 
-                        r.getString("trb.nama_karyawan"),
-                        r.getString("trb.nama_supplier"),
-                        r.getString("trb.total_bahan") + " Bahan", 
-                        txt.toMoneyCase(r.getString("trb.total_harga")), 
-                        waktu.getNamaHariInIndonesian(r.getString("hari")) + ", " + txt.toDateCase(r.getString("tanggal"))
+                        this.db.res.getString("trb.id_tr_beli"), 
+                        this.db.res.getString("trb.nama_karyawan"),
+                        this.db.res.getString("trb.nama_supplier"),
+                        this.db.res.getString("trb.total_bahan") + " Bahan", 
+                        this.txt.toMoneyCase(this.db.res.getString("trb.total_harga")), 
+                        this.waktu.getNamaHariInIndonesian(this.db.res.getString("hari")) + ", " + txt.toDateCase(this.db.res.getString("tanggal"))
                     }
                 );
             }
@@ -277,15 +275,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
             System.out.println(sql);
             
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
+            if(this.db.res.next()){
                 // mendapatakan data
-                transaksi = r.getInt(2);
-                pesanan = r.getInt(3);
-                pengeluaran = r.getInt(4);
+                transaksi = this.db.res.getInt(2);
+                pesanan = this.db.res.getInt(3);
+                pengeluaran = this.db.res.getInt(4);
                 
                 // jika pengeluaran tidak kosong maka data akan diambil dari mysql
                 if(pengeluaran >= 1){
@@ -296,7 +292,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                     
                     // mendapatkan data dan mengembalikan data
                     return new Object[]{
-                        waktu.getNamaBulan(r.getInt(1)),
+                        waktu.getNamaBulan(this.db.res.getInt(1)),
                         this.inpPilihTahun.getYear(),
                         String.format("%,d", transaksi),
                         String.format("%,d", pesanan),
@@ -413,33 +409,38 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     private String getUrutkanRiwayat(){
         int tipe = this.inpUrutkan.getSelectedIndex();
         
-        // mendapatkan sort by
+        // mendapatkan tipe sort by yang dipilih
         switch(tipe){
-            case 0 : return "id_tr_beli ASC";
-            case 1 : return "id_tr_beli DESC";
-            case 2 : return "nama_bahan ASC";
-            case 3 : return "nama_bahan DESC";
-            case 4 : return "jumlah ASC";
-            case 5 : return "jumlah DESC";
-            case 6 : return "total_harga ASC";
-            case 7 : return "total_harga DESC";
-            default : return "id_tr_beli DESC";
+            case 0 : return "d.id_tr_beli ASC";
+            case 1 : return "d.id_tr_beli DESC";
+            case 2 : return "d.nama_bahan ASC";
+            case 3 : return "d.nama_bahan DESC";
+            case 4 : return "d.jumlah ASC";
+            case 5 : return "d.jumlah DESC";
+            case 6 : return "d.total_harga ASC";
+            case 7 : return "d.total_harga DESC";
+            default : return "d.id_tr_beli DESC";
         }
     }
     
     private String getJenisBahan(){
         int tipe = this.inpJenisBahan.getSelectedIndex();
         
+        // mendapatkan jenis bahan yang dipilih
         switch(tipe){
-            case 1 : return "WHERE jenis_bahan = 'Hewani' ";
-            case 2 : return "WHERE jenis_bahan = 'Nabati' ";
-            case 3 : return "WHERE jenis_bahan = 'Coffee' ";
-            case 4 : return "WHERE jenis_bahan = 'Perasa' ";
-            case 5 : return "WHERE jenis_bahan = 'Cairan' ";
+            case 1 : return "WHERE d.jenis_bahan = 'Hewani' ";
+            case 2 : return "WHERE d.jenis_bahan = 'Nabati' ";
+            case 3 : return "WHERE d.jenis_bahan = 'Coffee' ";
+            case 4 : return "WHERE d.jenis_bahan = 'Perasa' ";
+            case 5 : return "WHERE d.jenis_bahan = 'Cairan' ";
             default : return "";
         }
     }
     
+    /**
+     * Menampilkan list nama bahan ke jcombobox
+     * 
+     */
     private void showListNamaBahan(){
         try{
             String jenis = this.inpJenisBahan.getSelectedItem().toString();
@@ -449,15 +450,19 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 return;
             }
             
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT nama_bahan FROM bahan WHERE jenis = '"+jenis+"'");
+            // digunakan untuk menyimpan data nama bahan
             ArrayList<String> list = new ArrayList();
             list.add("Semua Bahan");
             
+            // membuat query
+            String sql = "SELECT nama_bahan FROM bahan WHERE jenis = '"+jenis+"'";
+            
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
             // mendapatkan semua nama dari berdasrkan jenis menu
-            while(r.next()){
-                list.add(r.getString("nama_bahan"));
+            while(this.db.res.next()){
+                list.add(this.db.res.getString("nama_bahan"));
             }
             
             // menampilkan nama menu pada combo box
@@ -472,37 +477,16 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     private String getNamaBahan(){
         String item = this.inpNamaMenu.getSelectedItem().toString();
         
+        // mendapatkan nama bahan yang dipilih
         if(item.equalsIgnoreCase("Semua Bahan")){
             return "";
         }else{
-            return "AND nama_bahan = '" + item + "'";
+            return "AND d.nama_bahan = '" + item + "'";
         }
-    }
-    
-    /**
-     * Untuk mendapatkan data tanggal transaksi
-     * 
-     * @param id
-     * @return 
-     */
-    private String getTanggalRiwayat(String id){
-        try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT DATE(tanggal)AS tgl FROM transaksi_beli WHERE id_tr_beli = '"+id+"'");
-            
-            if(r.next()){
-                String tgl = r.getString("tgl");
-                c.close(); s.close(); r.close();
-                return tgl;
-            }
-        }catch(SQLException ex){
-            Message.showException(this, ex);
-        }
-        return null;
     }
     
     private String getSatuan(int value, String satuan){
+        // mendapatkan satuan bahan
         switch(satuan){
             case "gr" :  return Integer.toString((value / 1000)) + " Kg";
             case "ml" :  return Integer.toString((value / 1000)) + " L";
@@ -511,43 +495,46 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }
     
     private void showRiwayatTransaksi(){
-        String kondisi = this.getJenisBahan() + this.getNamaBahan();
         // reset tabel riwayat
         this.resetTabelRiwayat();
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
         
         try{
-            String sql = String.format(
-                    "SELECT * FROM detail_tr_beli "
-                  + "%s "
-                  + "ORDER BY %s", kondisi, this.getUrutkanRiwayat()
+            // membuat query
+            String kondisi = this.getJenisBahan() + this.getNamaBahan(),
+                   sql = String.format(
+                   "SELECT d.id_tr_beli, d.id_bahan, d.nama_bahan, d.jenis_bahan, d.satuan_bahan, d.harga_bahan, d.jumlah, d.total_harga, t.tanggal "
+                   + "FROM detail_tr_beli AS d "
+                   + "JOIN transaksi_beli AS t "
+                   + "ON t.id_tr_beli = d.id_tr_beli "
+                   + "%s "
+                   + "ORDER BY %s", kondisi, this.getUrutkanRiwayat()
             );
-            // ekseksuqi query
             System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             
-            // menambahkna data ke dalam tabel
-            while(r.next()){
-                String id = r.getString("id_tr_beli");
+            // ekseksusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // menambahkan data ke dalam tabel
+            while(this.db.res.next()){
+                String id = this.db.res.getString("d.id_tr_beli");
                 model.addRow(
+                    // menambahkan data kedalam tabel
                     new Object[]{
                         id,
-                        r.getString("id_bahan"),
-                        r.getString("nama_bahan"),
-                        r.getString("jenis_bahan"),
-                        this.txt.toMoneyCase(r.getString("harga_bahan")),
-                        this.getSatuan(r.getInt("jumlah"), r.getString("satuan_bahan")),
-                        this.txt.toMoneyCase(r.getString("total_harga")),
-                        this.txt.toDateCase(this.getTanggalRiwayat(id))
+                        this.db.res.getString("d.id_bahan"),
+                        this.db.res.getString("d.nama_bahan"),
+                        this.db.res.getString("d.jenis_bahan"),
+                        this.txt.toMoneyCase(this.db.res.getString("d.harga_bahan")),
+                        this.getSatuan(this.db.res.getInt("d.jumlah"), this.db.res.getString("d.satuan_bahan")),
+                        this.txt.toMoneyCase(this.db.res.getString("d.total_harga")),
+                        this.txt.toDateCase(this.db.res.getString("t.tanggal"))
                     }
                 );
             }
             
             // refresh tabel
             this.tabelRiwayat.setModel(model);
-            
         }catch(SQLException ex){
             ex.printStackTrace();
             Message.showException(this, ex);
@@ -559,44 +546,41 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
             pesanan = 0,
             pengeluaran = 0;
         
+        // menghitung total pesanan dan pengeluaran
         for(int i = 0; i < transaksi; i++){
             pesanan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 5).toString().replace(" Kg", "").replace(" L", "").replace(" ??", ""));
             pengeluaran += Integer.parseInt(txt.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 6).toString()));
         }
         
+        // menampilkan data riwayat
         this.lblTotalTrRiwayat.setText(String.format(" Transaksi : %,d", transaksi));
         this.lblTotalPsRiwayat.setText(String.format(" Pesanan : %,d", pesanan));
         this.lblTotalPdRiwayat.setText(String.format(" Pengeluaran : %s", txt.toMoneyCase(""+pengeluaran)));
-        this.lblMenuFavRiwayat.setText(String.format(" Sering Dibeli : %s", this.getFavoriteMenu()));
+        this.lblMenuFavRiwayat.setText(String.format(" Sering Dibeli : %s", this.getFavoriteBahan()));
     }
     
-    private String getFavoriteMenu(){
+    private String getFavoriteBahan(){
         try{
+            // membuat query
             String sql = String.format("SELECT nama_bahan, SUM(jumlah) AS total FROM detail_tr_beli %s %s "
                   + "GROUP BY nama_bahan ORDER BY total DESC LIMIT 0,1;", 
-                    this.getJenisBahan(), this.getNamaBahan()
+                    this.getJenisBahan().replaceAll("d.", ""), this.getNamaBahan().replaceAll("d.", "")
             );
+            System.out.println(sql);
             
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
-                String fav =r.getString(1);
-                c.close(); r.close(); s.close();
+            if(this.db.res.next()){
+                // mendapatkan bahan favorite
+                String fav = this.db.res.getString(1);
                 return fav;
             }
         }catch(SQLException ex){
+            ex.printStackTrace();
             Message.showException(this, ex);
         }
         return null;
-    }
-    private void jumlahData(){
-        int jumlah = 0;
-        for(int i = 0; i < this.tabelRiwayat.getRowCount(); i++){
-            jumlah += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 0).toString());
-        }
-        // set label mu mbek 
     }
     
     @SuppressWarnings("unchecked")
@@ -892,6 +876,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         );
 
         pnlTop.setBackground(new java.awt.Color(248, 249, 250));
+        pnlTop.setPreferredSize(new java.awt.Dimension(810, 48));
         pnlTop.setRoundBottomLeft(20);
         pnlTop.setRoundBottomRight(20);
         pnlTop.setRoundTopLeft(20);
@@ -1158,23 +1143,25 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                             .addComponent(lblDataAntara, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(inpCariHarian)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanHarianLayout.createSequentialGroup()
-                        .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(120, 120, 120)
-                        .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2)
-                    .addComponent(lineBottom))
-                .addContainerGap(22, Short.MAX_VALUE))
+                            .addComponent(inpCariHarian)
+                            .addComponent(lblCari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
+                                .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         pnlLaporanHarianLayout.setVerticalGroup(
             pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1196,25 +1183,22 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                             .addComponent(cariDataAntara, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                             .addComponent(inpDataHarianBetween2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
-                        .addComponent(lblCari, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblCari, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpCariHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
-                .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlLaporanHarianLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTotalTrHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlLaporanHarianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1403,7 +1387,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         .addComponent(lblTotalPsBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblTotalPdBulanan, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlLaporanBulananLayout.setVerticalGroup(
             pnlLaporanBulananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1443,7 +1427,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga", "Jumlah", "Total Harga", "Tanggal"
+                "ID Transaksi", "ID Bahan", "Nama Bahan", "Jenis Bahan", "Harga", "Jumlah", "Total Harga", "Tanggal"
             }
         ));
         tabelRiwayat.setGridColor(new java.awt.Color(0, 0, 0));
@@ -1467,7 +1451,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblJenisMenu.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblJenisMenu.setForeground(new java.awt.Color(250, 22, 22));
-        lblJenisMenu.setText("Jenis Menu");
+        lblJenisMenu.setText("Jenis Bahan");
 
         inpJenisBahan.setBackground(new java.awt.Color(248, 249, 250));
         inpJenisBahan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -1500,7 +1484,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
         lblNamaMenu.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblNamaMenu.setForeground(new java.awt.Color(250, 22, 22));
-        lblNamaMenu.setText("Nama Menu");
+        lblNamaMenu.setText("Nama Bahan");
 
         inpNamaMenu.setBackground(new java.awt.Color(248, 249, 250));
         inpNamaMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -1522,12 +1506,12 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         .addComponent(lblUrutkan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpUrutkan, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblJenisMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)
+                        .addComponent(lblJenisMenu)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpJenisBahan, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1539,7 +1523,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         .addComponent(lblTotalPdRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblMenuFavRiwayat, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap())
         );
         pnlRiwayatPembelianLayout.setVerticalGroup(
             pnlRiwayatPembelianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1572,10 +1556,10 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
             pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
+            .addGroup(pnlContentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabPane)
-                .addContainerGap())
+                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         pnlContentLayout.setVerticalGroup(
             pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1596,9 +1580,9 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                     .addComponent(lblBottom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 11, Short.MAX_VALUE)))
+                            .addComponent(pnlTop, javax.swing.GroupLayout.DEFAULT_SIZE, 1066, Short.MAX_VALUE)
+                            .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 19, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlMainLayout.setVerticalGroup(
@@ -1619,11 +1603,13 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1360, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -1796,6 +1782,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.chart.closeConnection();
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1881,6 +1869,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
     private void cariDataHarianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseClicked
         this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // mereset input tanggal antara
         this.inpDataHarianBetween1.setDate(null);
         this.inpDataHarianBetween2.setDate(null);
  
@@ -1900,6 +1889,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
     private void cariDataAntaraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataAntaraMouseClicked
         this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // mereset input tanggal perhari
         this.inpDataPerhari.setDate(null);
         
         // mendapatkan input dari jdatechooser
@@ -1919,6 +1909,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_cariDataAntaraMouseClicked
 
     private void tabPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabPaneMouseClicked
+        // aksi jika user memilih tab pane lain
         if(this.tabPane.getSelectedIndex() == 0){
             this.lblNamaWindow.setText("Laporan Pembelian Harian");
         }else if(this.tabPane.getSelectedIndex() == 1){
@@ -1930,6 +1921,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
     private void btnDetailHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailHarianActionPerformed
         String id;
+        // cek apakah ada data transaksi yang dipilih
         if(this.tabelLpHarian.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
             id= this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString();
@@ -1957,14 +1949,17 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_cariDataAntaraMouseExited
 
     private void inpCariHarianKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariHarianKeyTyped
+        // memanggil method untuk cari laporan harian
         this.cariLaporanHarian();
     }//GEN-LAST:event_inpCariHarianKeyTyped
 
     private void inpCariHarianKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariHarianKeyReleased
+        // memanggil method untuk cari laporan harian
         this.cariLaporanHarian();
     }//GEN-LAST:event_inpCariHarianKeyReleased
 
     private void btnSemuaHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemuaHarianActionPerformed
+        // menampilkan semua data transaksi
         this.showLaporanHarian("");
         this.showDataLaporanHarian();
         this.inpDataPerhari.setDate(null);
@@ -1991,6 +1986,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        // reset data bulanan
         this.trBulanan = 0;
         this.psBulanan = 0;
         this.pdBulanan = 0;
@@ -2008,14 +2004,21 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_cariTahunMouseExited
 
     private void btnRiwayatBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatBulananActionPerformed
+        // mendapatkan baris yang dipilih user
         int row = this.tabelLpBulanan.getSelectedRow(),
             jmlData;
+        
+        // cek apakah ada baris yang dipilih
         if(row >= 0){
+            // mendapatkan data pesanan
             jmlData = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 3).toString().replace(",", ""));
+            // cek apakah ada data pembelian pada bulan yang dipilih
             if(jmlData > 0){
+                // mendapatkan nilai bulan dan tahun
                 int bulan = waktu.getNilaiBulan(this.tabelLpBulanan.getValueAt(row, 0).toString()),
                     tahun = Integer.parseInt(this.tabelLpBulanan.getValueAt(row, 1).toString());
 
+                // membuka window riwayat transaksi beli
                 RiwayatTransaksiBeli dtl = new RiwayatTransaksiBeli(null, true, bulan, tahun);
                 dtl.setVisible(true);                
             }else{
@@ -2060,6 +2063,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRiwayatBulananMouseExited
 
     private void inpUrutkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpUrutkanActionPerformed
+        // aksi saat user mengurutkan data riwayat pembelian
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.showRiwayatTransaksi();
         this.showDataRiwayat();
@@ -2067,6 +2071,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_inpUrutkanActionPerformed
 
     private void inpJenisBahanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpJenisBahanActionPerformed
+        // aksi saat user memilih data jenis bahan pada riwayat pembelian
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.showListNamaBahan();
         this.showRiwayatTransaksi();
@@ -2075,6 +2080,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_inpJenisBahanActionPerformed
 
     private void inpNamaMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpNamaMenuActionPerformed
+        // aksi saat user memilih data jenis nama menu pada riwayat pembelian
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.showRiwayatTransaksi();
         this.showDataRiwayat();
@@ -2082,12 +2088,14 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_inpNamaMenuActionPerformed
 
     private void tabelLpHarianKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelLpHarianKeyPressed
+        // shortcut untuk menampilkan detail transaksi
         if(evt.getKeyCode() == KeyEvent.VK_D){
             this.btnDetailHarianActionPerformed(null);
         }
     }//GEN-LAST:event_tabelLpHarianKeyPressed
 
     private void tabelLpBulananKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelLpBulananKeyPressed
+        // shorcut untuk menampilkan riwayat pembelian
         if(evt.getKeyCode() == KeyEvent.VK_R){
             this.btnRiwayatBulananActionPerformed(null);
         }

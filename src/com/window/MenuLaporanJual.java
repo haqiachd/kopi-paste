@@ -1,6 +1,6 @@
 package com.window;
 
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.ChartManager;
 import com.manage.Message;
 import com.manage.Text;
@@ -13,14 +13,12 @@ import com.window.dialog.RiwayatTransaksiJual;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UserProfile;
+
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +34,9 @@ import javax.swing.table.TableColumnModel;
  * @author Achmad Baihaqi
  */
 public class MenuLaporanJual extends javax.swing.JFrame {
+    
+    
+    private final Database db = new Database(); 
     
     private DefaultTableModel modelCariLaporan;
     
@@ -143,21 +144,19 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             System.out.println(sql);
 
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
             // membaca semua data yang ada didalam tabel
-            while(r.next()){
+            while(this.db.res.next()){
                 // menambahkan data kedalam tabel
                 model.addRow(
                     new String[]{
-                        r.getString("trj.id_tr_jual"), 
-                        r.getString("trj.nama_karyawan"),
-                        r.getString("trj.nama_pembeli"),
-                        r.getString("trj.total_menu") + " Pesanan", 
-                        txt.toMoneyCase(r.getString("trj.total_harga")), 
-                        waktu.getNamaHariInIndonesian(r.getString("hari")) + ", " + txt.toDateCase(r.getString("tanggal"))
+                        this.db.res.getString("trj.id_tr_jual"), 
+                        this.db.res.getString("trj.nama_karyawan"),
+                        this.db.res.getString("trj.nama_pembeli"),
+                        this.db.res.getString("trj.total_menu") + " Pesanan", 
+                        txt.toMoneyCase(this.db.res.getString("trj.total_harga")), 
+                        waktu.getNamaHariInIndonesian(this.db.res.getString("hari")) + ", " + txt.toDateCase(this.db.res.getString("tanggal"))
                     }
                 );
             }
@@ -180,11 +179,11 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             return;
         }
         
-        
+        // mendapatkan total transaksi
         int transaksi = this.tabelLpHarian.getRowCount(), 
             pesanan = 0, pendapatan = 0;
         
-        // menghitung data
+        // menghitung data pesanan dan pendapatan
         for(int i = 0; i < this.tabelLpHarian.getRowCount(); i++){
             pesanan += Integer.parseInt(this.tabelLpHarian.getValueAt(i, 3).toString().replace(" Pesanan", ""));
             pendapatan += Integer.parseInt(txt.removeMoneyCase(this.tabelLpHarian.getValueAt(i, 4).toString()));
@@ -270,22 +269,20 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     private Object[] getDataLaporan(int bulan, int tahun){
         try{
             int pendapatan, pesanan, transaksi;
-            //SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) FROM transaksi_jual WHERE MONTH(tanggal) = 12 AND YEAR(tanggal) = 2022;
+            // membuat query untuk menampilkan data laporan
             String sql = "SELECT MONTH(tanggal), COUNT(id_tr_jual), SUM(total_menu), SUM(total_harga) "
                          + "FROM transaksi_jual "
                          + "WHERE MONTH(tanggal) = "+bulan+" AND YEAR(tanggal) = " + tahun;
             System.out.println(sql);
             
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
-                // mendapatakan data
-                transaksi = r.getInt(2);
-                pesanan = r.getInt(3);
-                pendapatan = r.getInt(4);
+            if(this.db.res.next()){
+                // mendapatakan data transaksi, pesanan dan pendapatan
+                transaksi = this.db.res.getInt(2);
+                pesanan = this.db.res.getInt(3);
+                pendapatan = this.db.res.getInt(4);
                 
                 // jika pendapatan tidak kosong maka data akan diambil dari mysql
                 if(pendapatan >= 1){
@@ -296,7 +293,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                     
                     // mendapatkan data dan mengembalikan data
                     return new Object[]{
-                        waktu.getNamaBulan(r.getInt(1)),
+                        waktu.getNamaBulan(this.db.res.getInt(1)),
                         this.inpPilihTahun.getYear(),
                         String.format("%,d", transaksi),
                         String.format("%,d", pesanan),
@@ -312,7 +309,6 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                         "Rp. 00"
                     };    
                 }
-                
             }
             
         }catch(SQLException ex){
@@ -415,15 +411,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         
         // mendapatkan sort by
         switch(tipe){
-            case 0 : return "id_tr_jual ASC";
-            case 1 : return "id_tr_jual DESC";
-            case 2 : return "nama_menu ASC";
-            case 3 : return "nama_menu DESC";
-            case 4 : return "jumlah ASC";
-            case 5 : return "jumlah DESC";
-            case 6 : return "total_harga ASC";
-            case 7 : return "total_harga DESC";
-            default : return "id_tr_jual DESC";
+            case 0 : return "d.id_tr_jual ASC";
+            case 1 : return "d.id_tr_jual DESC";
+            case 2 : return "d.nama_menu ASC";
+            case 3 : return "d.nama_menu DESC";
+            case 4 : return "d.jumlah ASC";
+            case 5 : return "d.jumlah DESC";
+            case 6 : return "d.total_harga ASC";
+            case 7 : return "d.total_harga DESC";
+            default : return "d.id_tr_jual DESC";
         }
     }
     
@@ -431,105 +427,96 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         int tipe = this.inpJenisMenu.getSelectedIndex();
         
         switch(tipe){
-            case 1 : return "WHERE jenis_menu = 'Makanan' ";
-            case 2 : return "WHERE jenis_menu = 'Minuman' ";
-            case 3 : return "WHERE jenis_menu = 'Original Coffee' ";
-            case 4 : return "WHERE jenis_menu = 'Falvoured Coffee' ";
-            case 5 : return "WHERE jenis_menu = 'Snack' ";
+            case 1 : return "WHERE d.jenis_menu = 'Makanan' ";
+            case 2 : return "WHERE d.jenis_menu = 'Minuman' ";
+            case 3 : return "WHERE d.jenis_menu = 'Original Coffee' ";
+            case 4 : return "WHERE d.jenis_menu = 'Falvoured Coffee' ";
+            case 5 : return "WHERE d.jenis_menu = 'Snack' ";
             default : return "";
         }
     }
     
     private void showListNamaMenu(){
         try{
+            // mendapatkan jenis menu yang dipilih user
             String jenis = this.inpJenisMenu.getSelectedItem().toString();
+            
             // jika user tidak meilih jenis scr spesifik
             if(jenis.equalsIgnoreCase("Semua Jenis")){
                 inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Semua Menu"}));
                 return;
             }
-            
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT nama_menu FROM menu WHERE jenis = '"+jenis+"'");
+
+            // untuk menyimpan nama2 bahan berdasarkan jenis
             ArrayList<String> list = new ArrayList();
             list.add("Semua Menu");
+            // membuat query untuk mendapatkan nama menu
+            String sql = "SELECT nama_menu FROM menu WHERE jenis = '"+jenis+"'";
+            
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
             
             // mendapatkan semua nama dari berdasrkan jenis menu
-            while(r.next()){
-                list.add(r.getString("nama_menu"));
+            while(this.db.res.next()){
+                list.add(this.db.res.getString("nama_menu"));
             }
             
             // menampilkan nama menu pada combo box
             inpNamaMenu.setModel(new javax.swing.DefaultComboBoxModel(list.toArray()));
-            
         }catch(SQLException ex){
             Message.showException(this, ex);
         }
     }
     
     private String getNamaMenu(){
+        // mendapatkan nama menu yang dipilih user
         String item = this.inpNamaMenu.getSelectedItem().toString();
         
+        // jika user tidak memilih nama menu scr spesifik
         if(item.equalsIgnoreCase("Semua Menu")){
             return "";
         }else{
+            // mengembalikan nama menu yang dipilih user
             return "AND nama_menu = '" + item + "'";
         }
     }
     
-    private String getTanggalRiwayat(String id){
-        try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT DATE(tanggal)AS tgl FROM transaksi_jual WHERE id_tr_jual = '"+id+"'");
-            
-            if(r.next()){
-                String tgl = r.getString("tgl");
-                c.close(); s.close(); r.close();
-                return tgl;
-            }
-        }catch(SQLException ex){
-            Message.showException(this, ex);
-        }
-        return null;
-    }
-    
     private void showRiwayatTransaksi(){
-        String kondisi = this.getJenisMenu() + this.getNamaMenu();
         // reset tabel riwayat
         this.resetTabelRiwayat();
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
         
         try{
-            String sql = String.format(
-                    "SELECT * FROM detail_tr_jual "
-                  + "%s "
-                  + "ORDER BY %s", kondisi, this.getUrutkanRiwayat()
+            // membuat query
+            String kondisi = this.getJenisMenu() + this.getNamaMenu(),
+                   sql = String.format(
+                     "SELECT d.id_tr_jual, d.id_menu, d.nama_menu, d.jenis_menu, d.harga_menu, d.jumlah, d.total_harga, t.tanggal "
+                   + "FROM detail_tr_jual AS d "
+                   + "JOIN transaksi_jual AS t "
+                   + "ON t.id_tr_jual = d.id_tr_jual "
+                   + "%s "
+                   + "ORDER BY %s", kondisi, this.getUrutkanRiwayat()
             );
-            // ekseksuqi query
-            System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             
-            // menambahkna data ke dalam tabel
-            while(r.next()){
-                String id = r.getString("id_tr_jual"),
-                       idMenu = r.getString("id_menu");
-//                if(idMenu == null){
-//                    idMenu = "DIHAPUS";
-//                }
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                String id = this.db.res.getString("d.id_tr_jual"),
+                       idMenu = this.db.res.getString("d.id_menu");
+                
                 model.addRow(
                     new Object[]{
+                        // menambahkan data ke dalam tabel
                         id,
                         idMenu,
-                        r.getString("nama_menu"),
-                        r.getString("jenis_menu"),
-                        this.txt.toMoneyCase(r.getString("harga_menu")),
-                        r.getString("jumlah"),
-                        this.txt.toMoneyCase(r.getString("total_harga")),
-                        this.txt.toDateCase(this.getTanggalRiwayat(id))
+                        this.db.res.getString("d.nama_menu"),
+                        this.db.res.getString("d.jenis_menu"),
+                        this.txt.toMoneyCase(this.db.res.getString("d.harga_menu")),
+                        this.db.res.getString("d.jumlah"),
+                        this.txt.toMoneyCase(this.db.res.getString("d.total_harga")),
+                        this.txt.toDateCase(this.db.res.getString("t.tanggal"))
                     }
                 );
             }
@@ -544,15 +531,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }
     
     private void showDataRiwayat(){
+        // mendapatkan data total transaksi
         int transaksi = this.tabelRiwayat.getRowCount(),
             pesanan = 0,
             pendapatan = 0;
         
+        // mendapatkan data total pesanan dan total pendapatan
         for(int i = 0; i < transaksi; i++){
             pesanan += Integer.parseInt(this.tabelRiwayat.getValueAt(i, 5).toString());
             pendapatan += Integer.parseInt(txt.removeMoneyCase(this.tabelRiwayat.getValueAt(i, 6).toString()));
         }
         
+        // menampilkan data riwayat transaksi
         this.lblTotalTrRiwayat.setText(String.format(" Transaksi : %,d", transaksi));
         this.lblTotalPsRiwayat.setText(String.format(" Pesanan : %,d", pesanan));
         this.lblTotalPdRiwayat.setText(String.format(" Pendapatan : %s", txt.toMoneyCase(""+pendapatan)));
@@ -561,20 +551,19 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     
     private String getFavoriteMenu(){
         try{
+            // membuat query untuk mnedapatkan menu favorite
             String sql = String.format(
-                    "SELECT nama_menu, SUM(jumlah) AS total FROM detail_tr_jual %s %s "
+                    "SELECT nama_menu, COUNT(jumlah) AS total FROM detail_tr_jual %s %s "
                   + "GROUP BY nama_menu ORDER BY total DESC LIMIT 0,1;", 
-                    this.getJenisMenu(), this.getNamaMenu()
+                    this.getJenisMenu().replaceAll("d.", ""), this.getNamaMenu().replaceAll("d.", "")
             );
             
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
-                String fav =r.getString(1);
-                c.close(); r.close(); s.close();
-                return fav;
+            if(this.db.res.next()){
+                // mengembalikan menu favorite
+                return this.db.res.getString(1);
             }
         }catch(SQLException ex){
             Message.showException(this, ex);
