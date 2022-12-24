@@ -7,9 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
+ * Digunakan untuk menghubungkan aplikasi ke Database MySQL
  *
  * @author Achmad Baihaqi
  * @since 2020-11-14
@@ -54,6 +54,9 @@ public class Dbase {
         this.startConnection();
     }
     
+    /**
+     * Digunakan untuk membuat koneksi baru ke database
+     */
     public final void startConnection() {
         try {
             // meregristrasi driver
@@ -82,6 +85,10 @@ public class Dbase {
         }
     }
 
+    /**
+     * Digunakan untuk menutup koneksi pada Database
+     * 
+     */
     public final void closeConnection() {
         try {
             // Mengecek apakah conn kosong atau tidak, jika tidak maka akan diclose
@@ -96,21 +103,12 @@ public class Dbase {
             if (res != null) {
                 res.close();
             }
+            
             CONN_COUNT--;
             System.out.printf("Berhasil koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
     }
-
-    public static void main(String[] args) {
-        
-        Dbase db = new Dbase();
-        
-        
-        System.out.println("Jumlah Koneksi : " + Dbase.CONN_COUNT);
-        
-        System.out.println(BCrypt.hashpw("haqi12345", BCrypt.gensalt(12)));
-
-    }
+    
 }

@@ -36,7 +36,7 @@ public class Gambar {
     public static ImageIcon getIcon(final String icon){
         File file = new File(Gambar.DIREKTORY_ICONS + icon);
         
-        // mengecek apakah file icon ada atau tidakww
+        // mengecek apakah file icon ada atau tidak
         if(file.exists()){
             return new ImageIcon(file.toString());
         }else{

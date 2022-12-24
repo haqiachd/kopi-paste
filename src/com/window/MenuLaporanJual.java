@@ -515,11 +515,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
             
             // menambahkna data ke dalam tabel
             while(r.next()){
-                String id = r.getString("id_tr_jual");
+                String id = r.getString("id_tr_jual"),
+                       idMenu = r.getString("id_menu");
+//                if(idMenu == null){
+//                    idMenu = "DIHAPUS";
+//                }
                 model.addRow(
                     new Object[]{
                         id,
-                        r.getString("id_menu"),
+                        idMenu,
                         r.getString("nama_menu"),
                         r.getString("jenis_menu"),
                         this.txt.toMoneyCase(r.getString("harga_menu")),

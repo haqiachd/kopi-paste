@@ -595,14 +595,14 @@
                                           <Component id="lblTotalPsHarian" min="-2" pref="143" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="lblTotalPdtHarian" min="-2" pref="271" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="btnSemuaHarian" min="-2" pref="108" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="btnCetakHarian" min="-2" pref="108" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="btnSemuaHarian" min="-2" pref="108" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
                                           <Component id="btnDetailHarian" min="-2" pref="108" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jScrollPane2" alignment="0" pref="985" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                                       <Component id="lineBottom" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="22" max="32767" attributes="0"/>
@@ -648,13 +648,15 @@
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
                                               <Component id="btnDetailHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                                              <Component id="btnCetakHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                               <Component id="btnSemuaHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Component id="lblTotalPsHarian" alignment="0" max="32767" attributes="0"/>
                                       <Component id="lblTotalTrHarian" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="lblTotalPdtHarian" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                          <Component id="lblTotalPdtHarian" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="btnCetakHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -1012,7 +1014,7 @@
                                           <Component id="lblTotalPdBulanan" min="-2" pref="266" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                                  <EmptySpace pref="85" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1422,7 +1424,7 @@
                                           <Component id="lblMenuFavRiwayat" min="-2" pref="337" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="21" max="32767" attributes="0"/>
+                                  <EmptySpace pref="84" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>

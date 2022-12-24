@@ -487,20 +487,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
      */
     private HashMap<String, Integer> getBahanMenu(String idMenu){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT id_bahan, quantity FROM detail_menu WHERE id_menu = '"+idMenu+"'");
+            db.res = db.stat.executeQuery("SELECT id_bahan, quantity FROM detail_menu WHERE id_menu = '"+idMenu+"'");
             // menyimpan data sementara dari bahan
             HashMap<String, Integer> data = new HashMap();
             
             // mendapatkan data bahan-bahan
-            while(r.next()){
-                data.put(r.getString("id_bahan"), r.getInt("quantity"));
+            while(db.res.next()){
+                data.put(db.res.getString("id_bahan"), db.res.getInt("quantity"));
             }
-            
-            c.close();
-            s.close();
-            r.close();
             
             return data;
         }catch(SQLException ex){
@@ -698,29 +692,35 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     
     private boolean triggerTrJual(){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            PreparedStatement p;
+            System.out.println("TRIGGER JUAL-------------------------------->");
             HashMap data;
             
+            // mendapatkan semua menu yang dipesan
             for(int i = 0; i < this.tabelTr.getRowCount(); i++){
-                String id = this.tabelTr.getValueAt(i, 1).toString();
-                data = this.getBahanMenu(idMenu);
+                // mendapatkan data id menu untuk mendapatkan bahan-bahan dari menu
+                String idMn = this.tabelTr.getValueAt(i, 1).toString();
+                data = this.getBahanMenu(idMn);
+                System.out.println("NAMA MENU : " + this.tabelTr.getValueAt(i, 2));
+                
+                // mendapatkan bahan bahan dari menu
                 Object[] idBahan = data.keySet().toArray(),
                          quantity = data.values().toArray();
+                
+                // mengurangi stok pada bahan
                 for(int j = 0; j < idBahan.length; j++){
                     System.out.println("id bahan : "+idBahan[j].toString());
                     System.out.println("quantity : "+quantity[j].toString());
-                    p = c.prepareStatement("INSERT INTO log_tr_jual VALUES (?, ?, ?, ?)");
-                    p.setString(1, this.inpIdTransaksi.getText());
-                    p.setString(2, id);
-                    p.setString(3, idBahan[j].toString());
-                    p.setInt(4, (Integer.parseInt(quantity[j].toString()) * Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString())));
                     
-                    p.executeUpdate();
-                    p.close();
+                    // menambahkan data ke tabel log_tr_jual untuk melakukan trigger
+                    db.pst = db.conn.prepareStatement("INSERT INTO log_tr_jual VALUES (?, ?, ?, ?)");
+                    db.pst.setString(1, this.inpIdTransaksi.getText());
+                    db.pst.setString(2, idMn);
+                    db.pst.setString(3, idBahan[j].toString());
+                    db.pst.setInt(4, (Integer.parseInt(quantity[j].toString()) * Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString())));
+                    
+                    db.pst.executeUpdate();
                 }                
             }
-            c.close();
             return true;
         }catch(SQLException ex){
             ex.printStackTrace();
