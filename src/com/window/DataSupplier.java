@@ -1,7 +1,7 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.ui.UIManager;
 import com.manage.User;
@@ -12,10 +12,8 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataSupplier;
 import com.window.dialog.UserProfile;
+
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -31,7 +29,9 @@ public class DataSupplier extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
-    private Database barang = new Database();
+    private final Database db = new Database();
+    
+    private DatabaseOld barang = new DatabaseOld();
     
     private final UIManager win = new UIManager();
     
@@ -144,6 +144,7 @@ public class DataSupplier extends javax.swing.JFrame {
     private void showData(){
         this.inpBahan.removeAllList();
         try{
+            // menyiapkan query untuk mendapatkan data
             String sql = "SELECT supplier.id_supplier, supplier.nama_supplier, supplier.no_telp, supplier.alamat, detail_supplier.id_bahan, bahan.nama_bahan "
                        + "FROM supplier "
                        + "JOIN detail_supplier "
@@ -152,24 +153,36 @@ public class DataSupplier extends javax.swing.JFrame {
                        + "ON bahan.id_bahan = detail_supplier.id_bahan "
                        + "HAVING supplier.id_supplier = '"+this.idSelected+"'";
             System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             
-            if(r.next()){
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
+                // menampilkan data ke window
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("supplier.nama_supplier"));
-                this.inpTelephone.setText(r.getString("supplier.no_telp"));
-                this.inpAlamat.setText(r.getString("supplier.alamat"));
-                    this.inpBahan.addList(r.getString("detail_supplier.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
-                while(r.next()){
-                    this.inpBahan.addList(r.getString("detail_supplier.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
+                this.inpNama.setText(this.db.res.getString("supplier.nama_supplier"));
+                this.inpTelephone.setText(this.db.res.getString("supplier.no_telp"));
+                this.inpAlamat.setText(this.db.res.getString("supplier.alamat"));
+                
+                // menampilkan list bahan
+                this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
+                while(this.db.res.next()){
+                    this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
                 }
             }
         }catch(SQLException ex){
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+            Message.showException(this, ex);
         }
+    }
+    
+    private void resetData(){
+        this.inpId.setText("");
+        this.inpNama.setText("");
+        this.inpTelephone.setText("");
+        this.inpAlamat.setText("");
+        this.inpBahan.removeAllList();
+        this.idSelected = "";
     }
     
     @SuppressWarnings("unchecked")
@@ -1026,6 +1039,7 @@ public class DataSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1046,11 +1060,7 @@ public class DataSupplier extends javax.swing.JFrame {
         d.setVisible(true);
         this.updateTabel();
         // referesh data
-        this.inpId.setText("");
-        this.inpNama.setText("");
-        this.inpTelephone.setText("");
-        this.inpAlamat.setText("");
-        this.inpBahan.removeAllList();
+        this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseEntered
@@ -1081,49 +1091,41 @@ public class DataSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusMouseExited
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        int status;
-        // mengecek apakah ada data yang dipilih atau tidak
-        if(tabelData.getSelectedRow() > -1){
-            // membuka confirm dialog untuk menghapus data
-            Audio.play(Audio.SOUND_INFO);
-            status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
-            // mengecek pilihan dari barang
-            switch(status){
-                // jika yes maka data akan dihapus
-                case JOptionPane.YES_OPTION : 
-                    // menghapus data pembeli
-                    this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        try{
-                            String idSupplier = this.inpId.getText(),
-                                   sql = "DELETE FROM supplier WHERE id_supplier = '" + idSupplier + "'";
+        try {
+            int status;
+            // mengecek apakah ada data yang dipilih atau tidak
+            if (tabelData.getSelectedRow() > -1) {
+                // membuka confirm dialog untuk menghapus data
+                Audio.play(Audio.SOUND_INFO);
+                status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+                // mengecek pilihan dari barang
+                switch (status) {
+                    // jika yes maka data akan dihapus
+                    case JOptionPane.YES_OPTION:
+                        // menghapus data pembeli
+                        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                        String idSupplier = this.inpId.getText(),
+                         sql = "DELETE FROM supplier WHERE id_supplier = '" + idSupplier + "'";
 
-                                Connection koneksi = (Connection) Koneksi.configDB();
-                                Statement stat = koneksi.createStatement();
-                                // mengecek apakah data supplier berhasil terhapus atau tidak
-                                if(stat.executeUpdate(sql) > 0){
-                                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                                    // mengupdate tabel
-                                    this.updateTabel();
-                                    // reset textfield
-                                    this.inpId.setText("");
-                                    this.inpNama.setText("");
-                                    this.inpTelephone.setText("");
-                                    this.inpAlamat.setText("");
-                                    this.inpBahan.removeAllList();
-                                    this.idSelected = "";
-                                }else{
-                                    JOptionPane.showMessageDialog(this, "Data gagal dihapus!");
-                                }
-                                koneksi.close();
-                        }catch(SQLException ex){
-                            ex.printStackTrace();
-                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // mengecek apakah data supplier berhasil terhapus atau tidak
+                        if (this.db.stat.executeUpdate(sql) > 0) {
+                            Message.showInformation(this, "Data berhasil dihapus!");
+                            // mengupdate tabel
+                            this.updateTabel();
+                            // reset textfield
+                            this.resetData();
+                        } else {
+                            Message.showWarning(this, "Data gagal dihapus!");
                         }
-                    this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    break;
-            }            
-        }else{
-            JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
+                        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        break;
+                }
+            } else {
+                Message.showWarning(this, "Tidak ada data yang dipilih!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Message.showException(this, ex);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 

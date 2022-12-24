@@ -1,7 +1,7 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.ui.UIManager;
 import com.manage.User;
@@ -11,11 +11,9 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataPembeli;
 import com.window.dialog.UserProfile;
+
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +29,9 @@ public class DataPembeli extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
-    private Database barang = new Database();
+    private final Database db = new Database();
+    
+    private DatabaseOld barang = new DatabaseOld();
     
     private final UIManager win = new UIManager();
     
@@ -86,13 +86,11 @@ public class DataPembeli extends javax.swing.JFrame {
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery("SELECT id_pembeli, nama_pembeli from pembeli");
+            this.db.res = this.db.stat.executeQuery("SELECT id_pembeli, nama_pembeli from pembeli");
 
-            while (rs.next()) {
-                String idPembeli = rs.getString("id_pembeli");
-                String namaBarang = rs.getString("nama_pembeli");
+            while (this.db.res.next()) {
+                String idPembeli = this.db.res.getString("id_pembeli");
+                String namaBarang = this.db.res.getString("nama_pembeli");
 
                 // create a single array of one row's worth of data
                 String[] data = { idPembeli, namaBarang} ;
@@ -158,15 +156,13 @@ public class DataPembeli extends javax.swing.JFrame {
     private void showData(){
         try{
             String sql = "SELECT * FROM pembeli WHERE id_pembeli = '"+this.idSelected+"'";
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
+            if(this.db.res.next()){
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("nama_pembeli"));
-                this.inpTelephone.setText(r.getString("no_telp"));
-                this.inpAlamat.setText(r.getString("alamat"));
+                this.inpNama.setText(this.db.res.getString("nama_pembeli"));
+                this.inpTelephone.setText(this.db.res.getString("no_telp"));
+                this.inpAlamat.setText(this.db.res.getString("alamat"));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -1068,6 +1064,7 @@ public class DataPembeli extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 

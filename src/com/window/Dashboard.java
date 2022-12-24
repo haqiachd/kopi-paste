@@ -1,5 +1,6 @@
 package com.window;
 
+import com.koneksi.Database;
 import com.koneksi.Koneksi;
 import com.manage.ChartManager;
 import com.manage.Message;
@@ -24,6 +25,8 @@ import javax.swing.JLabel;
  * @author Achmad Baihaqi
  */
 public class Dashboard extends javax.swing.JFrame {
+    
+    private final Database db = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -80,18 +83,18 @@ public class Dashboard extends javax.swing.JFrame {
             String sql = "SELECT SUM(tj.total_harga) AS pendapatan, COUNT(tj.id_tr_jual) AS pembeli " +
                          "FROM transaksi_jual AS tj " +
                          "WHERE MONTH(tj.tanggal) = "+waktu.getBulan()+" AND YEAR(tj.tanggal) = " + waktu.getTahun();
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             String pendapatan, pembeli;
             
-            if(r.next()){
-                pendapatan = txt.toMoneyCase(r.getString("pendapatan"));
-                pembeli = r.getString("pembeli") + " Pembeli";
-                
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
+                // mendapatkan data
+                pendapatan = txt.toMoneyCase(this.db.res.getString("pendapatan"));
+                pembeli = this.db.res.getString("pembeli") + " Pembeli";
+                // menampilkan data
                 this.valPendapatan.setText(" "+pendapatan.substring(0, pendapatan.lastIndexOf(".")).replaceAll(",", "."));
                 this.valPembeli.setText(pembeli);
-                c.close(); s.close(); r.close();
             }
             
         }catch(SQLException ex){
@@ -104,16 +107,15 @@ public class Dashboard extends javax.swing.JFrame {
             String sql = "SELECT SUM(tb.total_harga) AS pengeluaran " +
                          "FROM transaksi_beli AS tb " +
                          "WHERE MONTH(tb.tanggal) = "+waktu.getBulan()+" AND YEAR(tb.tanggal) = " + waktu.getTahun();
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             String pendapatan;
             
-            if(r.next()){
-                pendapatan = txt.toMoneyCase(r.getString("pengeluaran"));
-                
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
+                // mendapatkan dan menampilkan data
+                pendapatan = txt.toMoneyCase(this.db.res.getString("pengeluaran"));
                 this.valPengeluaran.setText(pendapatan.substring(0, pendapatan.lastIndexOf(".")).replaceAll(",", "."));
-                c.close(); s.close(); r.close();
             }
             
         }catch(SQLException ex){
@@ -920,6 +922,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.status = false;
+        this.chart.closeConnection();
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 

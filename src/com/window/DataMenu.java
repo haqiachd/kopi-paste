@@ -1,7 +1,8 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
+import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
 import com.manage.User;
@@ -12,11 +13,9 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataMenu;
 import com.window.dialog.UserProfile;
+
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -32,11 +31,13 @@ public class DataMenu extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
-    private Database menu = new Database();
+    private final Database db = new Database();
+    
+    private DatabaseOld menu = new DatabaseOld();
     
     private final UIManager win = new UIManager();
     
-    private Text text = new Text();
+    private final Text text = new Text();
     
     public DataMenu() {
         initComponents();
@@ -64,7 +65,7 @@ public class DataMenu extends javax.swing.JFrame {
         this.inpJenis.setEditable(false);
         this.inpHarga.setEditable(false);
         
-        
+        // set hover pada sidebar
         this.win.hoverButton();
         this.win.updateData(fields);
 
@@ -156,6 +157,7 @@ public class DataMenu extends javax.swing.JFrame {
     private void showData(){
         this.inpBahan.removeAllList();
         try{
+            // menyiapkan query untuk mendapatkan data dari menu
             String sql = "SELECT menu.nama_menu, menu.jenis, menu.jenis, menu.harga, "
                        + "detail_menu.id_bahan, detail_menu.quantity, bahan.satuan, bahan.nama_bahan "
                        + "FROM menu "
@@ -165,25 +167,26 @@ public class DataMenu extends javax.swing.JFrame {
                        + "ON bahan.id_bahan = detail_menu.id_bahan "
                        + "WHERE menu.id_menu = '"+this.idSelected+"'";
             System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             
-            if(r.next()){
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // menampilkan data ke window
+            if(this.db.res.next()){
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("menu.nama_menu"));
-                this.inpJenis.setText(r.getString("menu.jenis"));
-                this.inpHarga.setText(text.toMoneyCase(r.getString("menu.harga")));
-                // BA001 | 10.gr, Nama Bahab
+                this.inpNama.setText(this.db.res.getString("menu.nama_menu"));
+                this.inpJenis.setText(this.db.res.getString("menu.jenis"));
+                this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("menu.harga")));
+                
+                // menampilkan data list bahan
                 this.inpBahan.addList(
                         String.format(
-                                "%s | %s %s %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
+                                "%s | %s %s %s", this.db.res.getString("detail_menu.id_bahan"), this.db.res.getString("detail_menu.quantity"), this.db.res.getString("bahan.satuan"), this.db.res.getString("bahan.nama_bahan")
                         ));
-//                this.inpBahan.addList(r.getString("detail_menu.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
-                while(r.next()){
+                while(this.db.res.next()){
                this.inpBahan.addList(
                         String.format(
-                                "%s | %s %s %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
+                                "%s | %s %s %s", this.db.res.getString("detail_menu.id_bahan"), this.db.res.getString("detail_menu.quantity"), this.db.res.getString("bahan.satuan"), this.db.res.getString("bahan.nama_bahan")
                         ));
                 }
             }
@@ -193,57 +196,14 @@ public class DataMenu extends javax.swing.JFrame {
         }
     }
     
-    private int getStokBahan(String idBahan){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT stok FROM bahan WHERE id_bahan = '"+idBahan+"'");
-            
-            if(res.next()){
-                int val = res.getInt("stok");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
-    private int getQuantity(String idMenu, String idBahan){
-        try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT quantity FROM detail_menu WHERE id_menu = '"+idMenu+"' AND id_bahan = '"+idBahan+"'");
-            
-            if(res.next()){
-                int val = res.getInt("quantity");
-                conn.close();
-                stat.close();
-                res.close();
-                return val;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-        return -1;
-    }
-    
     private int getJumlahBahan(String idMenu){
         try{
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT COUNT(id_bahan) AS total FROM detail_menu WHERE id_menu = '"+idMenu+"'");
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery("SELECT COUNT(id_bahan) AS total FROM detail_menu WHERE id_menu = '"+idMenu+"'");
             
-            if(res.next()){
-                int val = res.getInt("total");
-                conn.close();
-                stat.close();
-                res.close();
+            if(this.db.res.next()){
+                // mendapatkan total bahan
+                int val = this.db.res.getInt("total");
                 return val;
             }
         }catch(SQLException ex){
@@ -255,41 +215,62 @@ public class DataMenu extends javax.swing.JFrame {
     
     private int hitungStokMenu(String idMenu){
         try{
-            if(this.getJumlahBahan(idMenu) < 1){
+            // mendapatkan dan mengecek apakah jmlbahan kosong atau tidak
+            int jmlBahan = this.getJumlahBahan(idMenu);
+            if(jmlBahan < 1){
                 return 0;
             }
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery("SELECT id_bahan FROM detail_menu WHERE id_menu = '"+idMenu+"'");
-            int[] qCek = new int[this.getJumlahBahan(idMenu)];
+            
+            // digunakan untuk menampung data bahan dari menu
+            int[] stok = new int[jmlBahan];
             int stokBahan, quantity, index = 0;
             String idBahan;
             
-            while(res.next()){
-                idBahan = res.getString("id_bahan");
-                stokBahan = this.getStokBahan(idBahan);
-                quantity = this.getQuantity(idMenu, idBahan);
+            // membuat query untuk menghitung jumlah stok dari menu
+            String sql = "SELECT d.id_menu, d.id_bahan, b.nama_bahan, b.stok, d.quantity "
+                       + "FROM detail_menu AS d "
+                       + "JOIN bahan AS b "
+                       + "ON b.id_bahan = d.id_bahan "
+                       + "WHERE d.id_menu = '"+idMenu+"';";
+            
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua id bahan didalam menu
+            while(this.db.res.next()){
+                // mendapatkan data id bahan, stok bahan dan 
+                idBahan = this.db.res.getString("d.id_bahan");
+                stokBahan = this.db.res.getInt("b.stok");
+                quantity = this.db.res.getInt("d.quantity");
                 
+                // jika quantity adalah nol maka stok menu = 0
                 if(quantity == 0){
                     return 0;
                 }
                 
-                qCek[index] = (int)stokBahan / quantity;
-                System.out.println(idBahan + " : " + (int)stokBahan / quantity);
+                // menghitung stok dari menu (total stok bahan / quantity)
+                stok[index] = (int)stokBahan / quantity;
+                System.out.printf("%s | %s : %d\n", idBahan, this.db.res.getString("b.nama_bahan"), (int)stokBahan / quantity);
                 index++;
             }
             
-            conn.close();
-            stat.close();
-            res.close();
-            
-            Arrays.sort(qCek);
-            return qCek[0];
+            // mendapatkan stok terendah
+            Arrays.sort(stok);
+            return stok[0];
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
         }
         return -1;
+    }
+    
+    private void resetData(){
+        this.inpId.setText("");
+        this.inpNama.setText("");
+        this.inpJenis.setText("");
+        this.inpHarga.setText("");
+        this.inpBahan.removeAllList();
+        this.idSelected = "";
     }
     
     @SuppressWarnings("unchecked")
@@ -1141,6 +1122,7 @@ public class DataMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1157,15 +1139,12 @@ public class DataMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddMouseExited
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // membuka window upddate menu
         UpdateDataMenu d = new UpdateDataMenu(null, true, 1, "");
         d.setVisible(true);
         this.updateTable();
         // referesh data
-        this.inpId.setText("");
-        this.inpNama.setText("");
-        this.inpJenis.setText("");
-        this.inpHarga.setText("");
-        this.inpBahan.removeAllList();
+        this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseEntered
@@ -1177,12 +1156,15 @@ public class DataMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditMouseExited
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // cek apakah ada data yang dipilih user
         if(this.idSelected.equals("") || this.idSelected == null){
             JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
         }else{
+            // membuka window update data menu
             UpdateDataMenu d = new UpdateDataMenu(null, true, 2, this.idSelected);
             d.setVisible(true);
             this.updateTable();
+            // merefresh data setelah update
             this.showData();
         }
     }//GEN-LAST:event_btnEditActionPerformed
@@ -1197,47 +1179,39 @@ public class DataMenu extends javax.swing.JFrame {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         int status;
-        // mengecek apakah ada data yang dipilih atau tidak
-        if(tabelData.getSelectedRow() > -1){
-            // membuka confirm dialog untuk menghapus data
-            Audio.play(Audio.SOUND_INFO);
-            status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
-            // mengecek pilihan dari barang
-            switch(status){
-                // jika yes maka data akan dihapus
-                case JOptionPane.YES_OPTION : 
-                    // menghapus data pembeli
-                    this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        try{
-                            String idBahan = this.inpId.getText(),
-                                   sql = "DELETE FROM menu WHERE id_menu = '" + idBahan + "'";
+        try {
+            // mengecek apakah ada data yang dipilih atau tidak
+            if (tabelData.getSelectedRow() > -1) {
+                // membuka confirm dialog untuk menghapus data
+                Audio.play(Audio.SOUND_INFO);
+                status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+                // mengecek pilihan dari jdialog
+                switch (status) {
+                    // jika yes maka data akan dihapus
+                    case JOptionPane.YES_OPTION:
+                        // menghapus data pembeli
+                        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                        String idBahan = this.inpId.getText(),
+                         sql = "DELETE FROM menu WHERE id_menu = '" + idBahan + "'";
 
-                                Connection koneksi = (Connection) Koneksi.configDB();
-                                Statement stat = koneksi.createStatement();
-                                // mengecek apakah data supplier berhasil terhapus atau tidak
-                                if(stat.executeUpdate(sql) > 0){
-                                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                                    // mengupdate tabel
-                                        this.updateTable();
-                                    // referesh data
-                                    this.inpId.setText("");
-                                    this.inpNama.setText("");
-                                    this.inpJenis.setText("");
-                                    this.inpHarga.setText("");
-                                    this.inpBahan.removeAllList();
-                                    this.idSelected = "";
-                                }else{
-                                    JOptionPane.showMessageDialog(this, "Data gagal dihapus!");
-                                }
-                                koneksi.close();
-                        }catch(SQLException ex){
-                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // mengecek apakah data supplier berhasil terhapus atau tidak
+                        if (this.db.stat.executeUpdate(sql) > 0) {
+                            Message.showInformation(this, "Data berhasil dihapus!");
+                            // mengupdate tabel
+                            this.updateTable();
+                            // referesh data
+                            this.resetData();
+                        } else {
+                            Message.showWarning(this, "Data gagal dihapus!");
                         }
-                    this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    break;
-            }            
-        }else{
-            JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
+                        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        break;
+                }
+            } else {
+                Message.showWarning(this, "Tidak ada data yang dipilih!");
+            }
+        } catch (SQLException ex) {
+            Message.showException(this, ex);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 

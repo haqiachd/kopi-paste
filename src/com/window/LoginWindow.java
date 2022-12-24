@@ -1,22 +1,10 @@
 package com.window;
 
 import com.manage.User;
-import com.koneksi.Database;
-import com.koneksi.Koneksi;
-import com.manage.Message;
 import com.media.Gambar;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  * Digunakan untuk login bagi admin, petugas dan siswa.
@@ -26,7 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class LoginWindow extends javax.swing.JFrame {
 
-    private final Database dbase = new Database();
+    private final User user = new User();
     
     private int x, y;
     
@@ -39,13 +27,12 @@ public class LoginWindow extends javax.swing.JFrame {
     }
 
     private void login(){
-        User user = new User();
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // mendapatkan data dari textfield
         String username = this.inpUsername.getText(),
                password = this.inpPassword.getText();
         // login
-        if(user.login(username, password)){
+        if(this.user.login(username, password)){
             // membuka window dashboard jika login berhasil
             java.awt.EventQueue.invokeLater(new Runnable(){
                 @Override
@@ -311,10 +298,11 @@ public class LoginWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlMainMouseDragged
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        
+        this.user.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.user.closeConnection();
 
     }//GEN-LAST:event_formWindowClosing
 
@@ -391,7 +379,7 @@ public class LoginWindow extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                new User().login("admin", "haqi12345");
+                user.login("admin", "haqi12345");
                 new Dashboard().setVisible(true);
             }
         });

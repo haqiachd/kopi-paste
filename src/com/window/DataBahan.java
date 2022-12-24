@@ -1,7 +1,7 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -13,11 +13,9 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataBahan;
 import com.window.dialog.UserProfile;
+
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -30,9 +28,11 @@ import javax.swing.table.TableColumnModel;
  */
 public class DataBahan extends javax.swing.JFrame {
     
+    private final Database db = new Database();
+    
     private final UIManager win = new UIManager();
     
-    Database barang = new Database();
+    DatabaseOld barang = new DatabaseOld();
     
     Text text = new Text();
    
@@ -170,17 +170,15 @@ public class DataBahan extends javax.swing.JFrame {
 //        this.idSelected = this.jTabel1.getValueAt(this.jTabel1.getSelectedRow(), 0).toString();
         try {
             String sql = "SELECT * FROM bahan WHERE id_bahan = '" + this.idSelected + "'";
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
             // mendapatkan data
-            if(r.next()){
-                String namaBahan = r.getString("nama_bahan"),
-                       jenisBahan = r.getString("jenis"),
-                       stok = r.getString("stok"),
-                       satuan = r.getString("satuan"),
-                       harga = r.getString("harga"),
+            if(this.db.res.next()){
+                String namaBahan = this.db.res.getString("nama_bahan"),
+                       jenisBahan = this.db.res.getString("jenis"),
+                       stok = this.db.res.getString("stok"),
+                       satuan = this.db.res.getString("satuan"),
+                       harga = this.db.res.getString("harga"),
                        satuanName = this.getStatuanName(satuan),
                        satuanBesaran = this.getStatuanBesaran(satuan);
                 
@@ -192,10 +190,18 @@ public class DataBahan extends javax.swing.JFrame {
                 this.inpHarga.setText(text.toMoneyCase(harga) + " / " + satuanBesaran);
             }
             
-            c.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
+    }
+    
+    private void resetData(){
+        this.inpId.setText("");
+        this.inpNama.setText("");
+        this.inpStok.setText("");
+        this.inpHarga.setText("");
+        this.inpJenis.setText("");
+        this.idSelected = "";
     }
     
     @SuppressWarnings("unchecked")
@@ -1061,6 +1067,7 @@ public class DataBahan extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1082,11 +1089,7 @@ public class DataBahan extends javax.swing.JFrame {
         d.setVisible(true);
         this.updateTabel();
         // referesh data
-        this.inpId.setText("");
-        this.inpNama.setText("");
-        this.inpStok.setText("");
-        this.inpHarga.setText("");
-        this.inpJenis.setText("");
+        this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseEntered
@@ -1118,47 +1121,39 @@ public class DataBahan extends javax.swing.JFrame {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         int status;
-        // mengecek apakah ada data yang dipilih atau tidak
-        if(tabelData.getSelectedRow() > -1){
-            // membuka confirm dialog untuk menghapus data
-            Audio.play(Audio.SOUND_INFO);
-            status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
-            // mengecek pilihan dari barang
-            switch(status){
-                // jika yes maka data akan dihapus
-                case JOptionPane.YES_OPTION : 
-                    // menghapus data pembeli
-                    this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        try{
-                            String idBahan = this.inpId.getText(),
-                                   sql = "DELETE FROM bahan WHERE id_bahan = '" + idBahan + "'";
+        try {
+            // mengecek apakah ada data yang dipilih atau tidak
+            if (tabelData.getSelectedRow() > -1) {
+                // membuka confirm dialog untuk menghapus data
+                Audio.play(Audio.SOUND_INFO);
+                status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+                // mengecek pilihan dari barang
+                switch (status) {
+                    // jika yes maka data akan dihapus
+                    case JOptionPane.YES_OPTION:
+                        // menghapus data pembeli
+                        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                        String idBahan = this.inpId.getText(),
+                               sql = "DELETE FROM bahan WHERE id_bahan = '" + idBahan + "'";
 
-                                Connection koneksi = (Connection) Koneksi.configDB();
-                                Statement stat = koneksi.createStatement();
-                                // mengecek apakah data pembeli berhasil terhapus atau tidak
-                                if(stat.executeUpdate(sql) > 0){
-                                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                                    // mengupdate tabel
-                                    this.updateTabel();
-                                    // reset textfield
-                                    this.inpId.setText("");
-                                    this.inpNama.setText("");
-                                    this.inpStok.setText("");
-                                    this.inpHarga.setText("");
-                                    this.inpJenis.setText("");
-                                    this.idSelected = "";
-                                }else{
-                                    JOptionPane.showMessageDialog(this, "Data gagal dihapus!");
-                                }
-                                koneksi.close();
-                        }catch(SQLException ex){
-                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // mengecek apakah data pembeli berhasil terhapus atau tidak
+                        if (this.db.stat.executeUpdate(sql) > 0) {
+                            Message.showInformation(this, "Data berhasil dihapus!");
+                            // mengupdate tabel
+                            this.updateTabel();
+                            // reset textfield
+                            this.resetData();
+                        } else {
+                            Message.showWarning(this, "Data gagal dihapus!");
                         }
-                    this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    break;
-            }            
-        }else{
-            JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
+                        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        break;
+                }
+            } else {
+                Message.showWarning(this, "Tidak ada data yang dipilih!");
+            }
+        } catch (SQLException ex) {
+            Message.showException(this, ex);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 

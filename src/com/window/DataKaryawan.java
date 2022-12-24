@@ -1,7 +1,7 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.ui.UIManager;
 import com.manage.User;
@@ -12,11 +12,9 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataKaryawan;
 import com.window.dialog.UserProfile;
+
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +29,9 @@ public class DataKaryawan extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
-    private Database barang = new Database();
+    private final Database db = new Database();
+    
+    private DatabaseOld barang = new DatabaseOld();
     
     private final UIManager win = new UIManager();
     
@@ -153,24 +153,32 @@ public class DataKaryawan extends javax.swing.JFrame {
                     + "WHERE karyawan.id_karyawan = '"+this.idSelected+"'";
             
             // membuat koneksi
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
+            if(this.db.res.next()){
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("karyawan.nama_karyawan"));
-                this.inpAlamat.setText(r.getString("karyawan.alamat"));
-                this.inpTelephone.setText(r.getString("karyawan.no_telp"));
-                this.inpShift.setText(r.getString("karyawan.shif"));
-                this.inpUsername.setText(r.getString("user.username"));
-                this.inpPassword.setText(r.getString("user.password"));
+                this.inpNama.setText(this.db.res.getString("karyawan.nama_karyawan"));
+                this.inpAlamat.setText(this.db.res.getString("karyawan.alamat"));
+                this.inpTelephone.setText(this.db.res.getString("karyawan.no_telp"));
+                this.inpShift.setText(this.db.res.getString("karyawan.shif"));
+                this.inpUsername.setText(this.db.res.getString("user.username"));
+                this.inpPassword.setText(this.db.res.getString("user.password"));
             }
-            c.close();
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
+    }
+    
+    private void resetData(){
+        this.inpId.setText("");
+        this.inpNama.setText("");
+        this.inpTelephone.setText("");
+        this.inpAlamat.setText("");
+        this.inpShift.setText("");
+        this.inpUsername.setText("");
+        this.inpPassword.setText("");
+        this.idSelected = "";
     }
     
     @SuppressWarnings("unchecked")
@@ -1080,6 +1088,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1100,13 +1109,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         d.setVisible(true);
         this.updateTabel();
         // refresh data
-        this.inpId.setText("");
-        this.inpNama.setText("");
-        this.inpTelephone.setText("");
-        this.inpAlamat.setText("");
-        this.inpShift.setText("");
-        this.inpUsername.setText("");
-        this.inpPassword.setText("");
+        this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnEditMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseEntered
@@ -1137,51 +1140,41 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusMouseExited
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-       int status;
-        // mengecek apakah ada data yang dipilih atau tidak
-        if(tabelData.getSelectedRow() > -1){
-            // membuka confirm dialog untuk menghapus data
-            Audio.play(Audio.SOUND_INFO);
-            status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
-            // mengecek pilihan dari barang
-            switch(status){
-                // jika yes maka data akan dihapus
-                case JOptionPane.YES_OPTION : 
-                    // menghapus data pembeli
-                    this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        try{
-                            String idBahan = this.inpId.getText(),
-                                   sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idBahan + "'";
+        int status;
+        try {
+            // mengecek apakah ada data yang dipilih atau tidak
+            if (tabelData.getSelectedRow() > -1) {
+                // membuka confirm dialog untuk menghapus data
+                Audio.play(Audio.SOUND_INFO);
+                status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+                // mengecek pilihan dari barang
+                switch (status) {
+                    // jika yes maka data akan dihapus
+                    case JOptionPane.YES_OPTION:
+                        // menghapus data pembeli
+                        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                        String idBahan = this.inpId.getText(),
+                         sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idBahan + "'";
 
-                                Connection koneksi = (Connection) Koneksi.configDB();
-                                Statement stat = koneksi.createStatement();
-                                // mengecek apakah data berhasil terhapus atau tidak
-                                if(stat.executeUpdate(sql) > 0){
-                                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                                    // mengupdate tabel
-                                    this.updateTabel();
-                                    // reset textfield
-                                    this.inpId.setText("");
-                                    this.inpNama.setText("");
-                                    this.inpTelephone.setText("");
-                                    this.inpAlamat.setText("");
-                                    this.inpShift.setText("");
-                                    this.inpUsername.setText("");
-                                    this.inpPassword.setText("");
-                                    this.idSelected = "";
-                                }else{
-                                    JOptionPane.showMessageDialog(this, "Data gagal dihapus!");
-                                }
-                                koneksi.close();
-                        }catch(SQLException ex){
-                            ex.printStackTrace();
-                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // mengecek apakah data berhasil terhapus atau tidak
+                        if (this.db.stat.executeUpdate(sql) > 0) {
+                            Message.showInformation(this, "Data berhasil dihapus!");
+                            // mengupdate tabel
+                            this.updateTabel();
+                            // reset textfield
+                            this.resetData();
+                        } else {
+                            Message.showWarning(this, "Data gagal dihapus!");
                         }
-                    this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    break;
-            }            
-        }else{
-            JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
+                        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        break;
+                }
+            } else {
+                Message.showWarning(this, "Tidak ada data yang dipilih!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Message.showException(this, ex);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
