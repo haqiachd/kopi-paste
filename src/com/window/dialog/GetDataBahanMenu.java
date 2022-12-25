@@ -57,7 +57,7 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
         this(parent, modal);
         
         this.idSelected = idBahan;
-        this.inpQuantity.setText(quantity);
+        this.inpQuantity.setText(quantity.replaceAll(" ", ""));
         this.lblInfoBahan.setText(idBahan);
         
         // set selected pada tabel
@@ -474,7 +474,6 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased

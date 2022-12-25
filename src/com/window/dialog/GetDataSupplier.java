@@ -415,7 +415,6 @@ public class GetDataSupplier extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.isSelected = false;
         this.dispose();
-        this.db.closeConnection();
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -425,7 +424,6 @@ public class GetDataSupplier extends javax.swing.JDialog {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased

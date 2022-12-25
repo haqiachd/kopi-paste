@@ -1618,8 +1618,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         System.out.println(this.getClass().getName() + " closing");
-        this.db.closeConnection();
-        this.db2.closeConnection();
+//        this.db.closeConnection();
+//        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void btnBayarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBayarMouseEntered

@@ -471,7 +471,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.db.closeConnection();
+
     }//GEN-LAST:event_formWindowClosing
 
     /**

@@ -350,8 +350,6 @@ public class GetDataMenu extends javax.swing.JDialog {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.db.closeConnection();
-        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased

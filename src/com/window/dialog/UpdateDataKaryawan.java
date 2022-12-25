@@ -596,9 +596,11 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
+        this.us.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.db.closeConnection();
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
