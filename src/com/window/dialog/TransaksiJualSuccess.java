@@ -46,7 +46,6 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
     public void dispose(){
         super.dispose();
         this.pop.setVisible(false);
-        this.db.closeConnection();
     }
     
     private void resetTransaksi(){
@@ -152,6 +151,11 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
         pnlMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 136, 211), 7));
@@ -270,6 +274,10 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
