@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  * @author Achmad Baihaqi
  * @since 2020-11-14
  */
-public class DatabaseOld {
+public class DatabasefgvOld {
     
     public DatabaseOld(){
         this.startConnections();
@@ -52,7 +52,7 @@ public class DatabaseOld {
                                 USER = "root",
                                 PASS = "";
     
-    public final void startConnections(){
+    public final void startConnection(){
         try{
             // meregristrasi driver
             Class.forName(DRIVER); 

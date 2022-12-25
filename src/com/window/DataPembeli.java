@@ -1,8 +1,6 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.DatabaseOld;
-import com.manage.Message;
 import com.ui.UIManager;
 import com.manage.User;
 import com.media.Gambar;
@@ -22,16 +20,16 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
+ * DEPRECATED CLASS
  *
  * @author Achmad Baihaqi
  */
+@Deprecated
 public class DataPembeli extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
     private final Database db = new Database();
-    
-    private DatabaseOld barang = new DatabaseOld();
     
     private final UIManager win = new UIManager();
     
@@ -41,6 +39,7 @@ public class DataPembeli extends javax.swing.JFrame {
         this.setTitle("Test Window");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
+        
         // set ui button
         this.btnAdd.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnEdit.setUI(new javax.swing.plaf.basic.BasicButtonUI());
@@ -78,72 +77,33 @@ public class DataPembeli extends javax.swing.JFrame {
         this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
 //        this.tabelData = new com.manage.StripedEvenInWhitePartsTable(new String[][]{}, new String[]{});
   
-        this.updateTabel();
+        this.showTabel();
     }
     
-    private void loadTable(){
-        String[] columnNames = {"ID Pembeli", "Nama Pembeli"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-
-        try{
-            this.db.res = this.db.stat.executeQuery("SELECT id_pembeli, nama_pembeli from pembeli");
-
-            while (this.db.res.next()) {
-                String idPembeli = this.db.res.getString("id_pembeli");
-                String namaBarang = this.db.res.getString("nama_pembeli");
-
-                // create a single array of one row's worth of data
-                String[] data = { idPembeli, namaBarang} ;
-
-                // and add this row of data into the table model
-                tableModel.addRow(data);
-        }
-        }catch(SQLException ex){
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
-    }
-        tabelData.setModel(tableModel); // place model into JTable
-    }
-    
-    private Object[][] getData(){
-        try{
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT * FROM pembeli " + keyword;
-            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
-            obj = new Object[barang.getJumlahData("pembeli", keyword)][4];
-            // mengeksekusi query
-            barang.res = barang.stat.executeQuery(sql);
-            // mendapatkan semua data yang ada didalam tabel
-            while(barang.res.next()){
-                // menyimpan data dari tabel ke object
-                obj[rows][0] = barang.res.getString("id_pembeli");
-                obj[rows][1] = barang.res.getString("nama_pembeli");
-                obj[rows][2] = barang.res.getString("alamat");
-                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
-            }
-            return obj;
-        }catch(SQLException ex){
-            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
-            ex.printStackTrace();
-        }
-        return null;
-    }
-    
-    private void updateTabel(){
+    private void resetTabel(){
+        // set desain tabel
+        this.tabelData.setRowHeight(29);
+        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
+        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
+        
+        // set model tabel
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            getData(),
-            new String [] {
-                "ID Pembeli", "Nama Pembeli", "Alamat"
-            }
-        ){
-            boolean[] canEdit = new boolean [] {
+                new String[][]{},
+                new String[]{
+                    "ID Supplier", "Nama Supplier", "Alamat"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
                 false, false, false
             };
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
+        
+        // set ukuran kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
@@ -151,6 +111,40 @@ public class DataPembeli extends javax.swing.JFrame {
         columnModel.getColumn(1).setMaxWidth(250);
         columnModel.getColumn(2).setPreferredWidth(170);
         columnModel.getColumn(2).setMaxWidth(170);
+    }
+    
+    private void showTabel(){
+        // mereset tabel menu
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data menu pada tabel mysql
+            String sql = "SELECT * FROM pembeli " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new Object[]{
+                        this.db.res.getString("id_pembeli"),
+                        this.db.res.getString("nama_pembeli"),
+                        this.db.res.getString("no_telephone"),
+                        this.db.res.getString("fjdsl")
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
     }
     
     private void showData(){
@@ -1099,7 +1093,7 @@ public class DataPembeli extends javax.swing.JFrame {
         }else{
             UpdateDataPembeli d = new UpdateDataPembeli(null, true, 2, this.idSelected);
             d.setVisible(true);
-            this.updateTabel();
+            this.showTabel();
             this.showData();
         }
     }//GEN-LAST:event_btnEditActionPerformed
@@ -1140,14 +1134,14 @@ public class DataPembeli extends javax.swing.JFrame {
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_pembeli LIKE '%"+key+"%' OR nama_pembeli LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data pembeli dengan keyword \""+key+"\"");
-        this.updateTabel();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_pembeli LIKE '%"+key+"%' OR nama_pembeli LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data pembeli dengan keyword \""+key+"\"");
-        this.updateTabel();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
     /**

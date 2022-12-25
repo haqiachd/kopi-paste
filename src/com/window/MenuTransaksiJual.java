@@ -40,7 +40,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                ,ttlHargaBayar = 0 // total keseluruhan harga dari menu
                ,oldJumlah;
     
-    private final Database db = new Database();
+    private final Database db = new Database(), db2 = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -421,32 +421,20 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         try{
             String sql = "SELECT id_bahan, stok FROM bahan";
             // eksekusi query
-            this.db.res = this.db.stat.executeQuery(sql);
+            this.db2.res = this.db2.stat.executeQuery(sql);
             
             // inisialisasi hashmap
             tempStokBahan = new HashMap<>();
             
             // membaca semua data yang ada didalam tabel bahan
-            while(this.db.res.next()){
+            while(this.db2.res.next()){
                 // menyimpan id bahan dan stok kedalam hashmap
-                tempStokBahan.put(this.db.res.getString("id_bahan"), this.db.res.getInt("stok"));
+                tempStokBahan.put(this.db2.res.getString("id_bahan"), this.db2.res.getInt("stok"));
             }
             
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-    }
-    
-    /**
-     * Digunakan untuk menampilkan semua data stok bahan
-     */
-    private void showStokBahan(){
-        // konversi hashmap ke object
-        Object obj[] = this.tempStokBahan.entrySet().toArray();
-        // membaca semua data
-        for(Object o : obj){
-            System.out.println(o);
         }
     }
     
@@ -478,13 +466,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
      */
     private HashMap<String, Integer> getBahanMenu(String idMenu){
         try{
-            db.res = db.stat.executeQuery("SELECT id_bahan, quantity FROM detail_menu WHERE id_menu = '"+idMenu+"'");
+            db2.res = db2.stat.executeQuery("SELECT id_bahan, quantity FROM detail_menu WHERE id_menu = '"+idMenu+"'");
             // menyimpan data sementara dari bahan
             HashMap<String, Integer> data = new HashMap();
             
             // mendapatkan data bahan-bahan
-            while(db.res.next()){
-                data.put(db.res.getString("id_bahan"), db.res.getInt("quantity"));
+            while(db2.res.next()){
+                data.put(db2.res.getString("id_bahan"), db2.res.getInt("quantity"));
             }
             
             return data;
@@ -493,18 +481,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
         }
         return null;
-    }
-
-    /**
-     * Digunakan untuk menampilkan bahan-bahan dari menu
-     * 
-     * @param idMenu id menu yang akan ditampilkan bahan-bahannya
-     */
-    private void showBahanMenu(String idMenu){
-        Object[] obj = this.getBahanMenu(idMenu).entrySet().toArray();
-        for(Object o : obj){
-            System.out.println(o);
-        }
     }
     
     /**
@@ -570,18 +546,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
-        }
-    }
-    
-    /**
-     * Menampilkan semua stok dari menu
-     */
-    private void showStokMenu(){
-        // konversi hashmap ke array objct
-        Object[] obj = this.tempStokMenu.entrySet().toArray();
-        // menampilkan semua data
-        for(Object o : obj){
-            System.out.println(o);
         }
     }
     
@@ -1648,10 +1612,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.status = false;
         System.out.println(this.getClass().getName() + " closed");
+        this.db.closeConnection();
+        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         System.out.println(this.getClass().getName() + " closing");
+        this.db.closeConnection();
+        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void btnBayarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBayarMouseEntered

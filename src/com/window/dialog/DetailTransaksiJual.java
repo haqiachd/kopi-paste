@@ -162,6 +162,14 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlMain.setBackground(new java.awt.Color(248, 249, 250));
         pnlMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 136, 211), 10));
@@ -268,6 +276,14 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
             this.dispose();
         }
     }//GEN-LAST:event_tabelDetailKeyPressed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.db.closeConnection();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

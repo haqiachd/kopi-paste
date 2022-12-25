@@ -299,6 +299,14 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpShif = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(248, 249, 250));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 136, 211), 10));
@@ -585,6 +593,14 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         this.txt.filterAngka(evt);
         this.txt.filterChar(evt);
     }//GEN-LAST:event_inpNoTelpKeyTyped
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.db.closeConnection();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

@@ -1,15 +1,13 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.DatabaseOld;
-import com.manage.Message;
-import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -22,75 +20,124 @@ public class GetDataSupplier extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    private Database db = new Database();
-    
-    DatabaseOld barang = new DatabaseOld();
-    
-    Text text = new Text();
+    private final Database db = new Database();
     
     public GetDataSupplier(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+         
+        // menampilkan data tabel
+        this.showTabel();
+    }
+    
+    private void resetTabel(){
+        // set desain tabel
+        this.tabelData.setRowHeight(29);
+        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
+        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
         
+        // set model tabel
+        this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
+                new String[][]{},
+                new String[]{
+                    "ID Supplier", "Nama Supplier"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        
+        // set ukuran kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
         columnModel.getColumn(1).setPreferredWidth(330);
         columnModel.getColumn(1).setMaxWidth(330);
-        
-        this.tabelData.setRowHeight(29);
-        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
-        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
-        
-        this.updateTabel();
-//        this.tabelData.requestFocus();
-    }
-
-    private Object[][] getData(){
-        try{
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT id_supplier, nama_supplier FROM supplier " + keyword;
-            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
-            obj = new Object[barang.getJumlahData("supplier", keyword)][2];
-            // mengeksekusi query
-            barang.res = barang.stat.executeQuery(sql);
-            // mendapatkan semua data yang ada didalam tabel
-            while(barang.res.next()){
-                // menyimpan data dari tabel ke object
-                obj[rows][0] = barang.res.getString("id_supplier");
-                obj[rows][1] = barang.res.getString("nama_supplier");
-                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
-            }
-            return obj;
-        }catch(SQLException ex){
-            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
-        }
-        return null;
     }
     
-    private void updateTabel(){
-        this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            getData(),
-            new String [] {
-                "ID Supplier", "Nama Supplier"
+    private void showTabel(){
+        // mereset tabel menu
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data bahan menu pada tabel mysql
+            String sql = "SELECT id_supplier, nama_supplier FROM supplier " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new Object[]{
+                        this.db.res.getString("id_supplier"),
+                        this.db.res.getString("nama_supplier"),
+                    }
+                );
             }
-        ){
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(70);
-        columnModel.getColumn(0).setMaxWidth(70);
-//        columnModel.getColumn(1).setPreferredWidth(200);
-//        columnModel.getColumn(1).setMaxWidth(200);
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
     }
+    
+//    private Object[][] getData(){
+//        try{
+//            Object obj[][];
+//            int rows = 0;
+//            String sql = "SELECT id_supplier, nama_supplier FROM supplier " + keyword;
+//            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
+//            obj = new Object[barang.getJumlahData("supplier", keyword)][2];
+//            // mengeksekusi query
+//            barang.res = barang.stat.executeQuery(sql);
+//            // mendapatkan semua data yang ada didalam tabel
+//            while(barang.res.next()){
+//                // menyimpan data dari tabel ke object
+//                obj[rows][0] = barang.res.getString("id_supplier");
+//                obj[rows][1] = barang.res.getString("nama_supplier");
+//                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
+//            }
+//            return obj;
+//        }catch(SQLException ex){
+//            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
+//        }
+//        return null;
+//    }
+//    
+//    private void updateTabel(){
+//        this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
+//            getData(),
+//            new String [] {
+//                "ID Supplier", "Nama Supplier"
+//            }
+//        ){
+//            boolean[] canEdit = new boolean [] {
+//                false, false
+//            };
+//            @Override
+//            public boolean isCellEditable(int rowIndex, int columnIndex) {
+//                return canEdit [columnIndex];
+//            }
+//        });
+//        TableColumnModel columnModel = tabelData.getColumnModel();
+//        columnModel.getColumn(0).setPreferredWidth(70);
+//        columnModel.getColumn(0).setMaxWidth(70);
+////        columnModel.getColumn(1).setPreferredWidth(200);
+////        columnModel.getColumn(1).setMaxWidth(200);
+//    }
     
     private void showData(){
         this.listbahan.removeAllList();
@@ -368,30 +415,29 @@ public class GetDataSupplier extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.isSelected = false;
         this.dispose();
-        this.barang.closeConnections();
+        this.db.closeConnection();
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.isSelected = false;
-        this.barang.closeConnections();
+        this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.barang.closeConnections();
+        this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_supplier LIKE '%"+key+"%' OR nama_supplier LIKE '%"+key+"%'";
-        this.updateTabel();
-//        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_supplier LIKE '%"+key+"%' OR nama_supplier LIKE '%"+key+"%'";
-        this.updateTabel();
+        this.showTabel();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
     }//GEN-LAST:event_inpCariKeyTyped
 

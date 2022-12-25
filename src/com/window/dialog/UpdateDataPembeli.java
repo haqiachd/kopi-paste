@@ -1,15 +1,9 @@
 package com.window.dialog;
 
-import com.koneksi.Koneksi;
-import com.media.Audio;
+
 import com.media.Gambar;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
+
 
 /**
  *

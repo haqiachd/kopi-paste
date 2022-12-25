@@ -1,12 +1,13 @@
 package com.window.dialog;
 
-import com.koneksi.DatabaseOld;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -19,67 +20,43 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    DatabaseOld barang = new DatabaseOld();
+    private final Database db = new Database();
     
-    Text text = new Text();
+    private final Text text = new Text();
     
     public GetDataBahanSupplier(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
         
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(90);
-        columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(330);
-        columnModel.getColumn(1).setMaxWidth(330);
-        
+        // menampilkan data tabel
+        this.showTabel();
+    }
+    
+    private void resetTabel(){
+        // set desain tabel
         this.tabelData.setRowHeight(29);
         this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
         this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
         
-        this.updateTabel();
-    }
-
-    private Object[][] getData(){
-        try{
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT id_bahan, nama_bahan, harga FROM bahan " + keyword;
-            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
-            obj = new Object[barang.getJumlahData("bahan", keyword)][4];
-            // mengeksekusi query
-            barang.res = barang.stat.executeQuery(sql);
-            // mendapatkan semua data yang ada didalam tabel
-            while(barang.res.next()){
-                // menyimpan data dari tabel ke object
-                obj[rows][0] = barang.res.getString("id_bahan");
-                obj[rows][1] = barang.res.getString("nama_bahan");
-                obj[rows][2] = text.toMoneyCase(barang.res.getString("harga"));
-                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
-            }
-            return obj;
-        }catch(SQLException ex){
-            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
-        }
-        return null;
-    }
-    
-    private void updateTabel(){
+        // set model tabel
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            getData(),
-            new String [] {
-                "ID Bahan", "Nama Bahan", "Harga"
-            }
-        ){
-            boolean[] canEdit = new boolean [] {
+                new String[][]{},
+                new String[]{
+                    "ID Bahan", "Nama Bahan", "Harga"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
                 false, false, false
             };
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
+        
+        // set ukuran kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
@@ -87,6 +64,85 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
         columnModel.getColumn(1).setMaxWidth(330);
     }
     
+    private void showTabel(){
+        // mereset tabel menu
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data bahan supplier pada tabel mysql
+            String sql = "SELECT id_bahan, nama_bahan, harga FROM bahan " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new Object[]{
+                        this.db.res.getString("id_bahan"),
+                        this.db.res.getString("nama_bahan"),
+                        this.text.toMoneyCase(this.db.res.getString("harga"))
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+
+//    private Object[][] getData(){
+//        try{
+//            Object obj[][];
+//            int rows = 0;
+//            String sql = "SELECT id_bahan, nama_bahan, harga FROM bahan " + keyword;
+//            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
+//            obj = new Object[barang.getJumlahData("bahan", keyword)][4];
+//            // mengeksekusi query
+//            barang.res = barang.stat.executeQuery(sql);
+//            // mendapatkan semua data yang ada didalam tabel
+//            while(barang.res.next()){
+//                // menyimpan data dari tabel ke object
+//                obj[rows][0] = barang.res.getString("id_bahan");
+//                obj[rows][1] = barang.res.getString("nama_bahan");
+//                obj[rows][2] = text.toMoneyCase(barang.res.getString("harga"));
+//                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
+//            }
+//            return obj;
+//        }catch(SQLException ex){
+//            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
+//        }
+//        return null;
+//    }
+//    
+//    private void updateTabel(){
+//        this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
+//            getData(),
+//            new String [] {
+//                "ID Bahan", "Nama Bahan", "Harga"
+//            }
+//        ){
+//            boolean[] canEdit = new boolean [] {
+//                false, false, false
+//            };
+//            @Override
+//            public boolean isCellEditable(int rowIndex, int columnIndex) {
+//                return canEdit [columnIndex];
+//            }
+//        });
+//        TableColumnModel columnModel = tabelData.getColumnModel();
+//        columnModel.getColumn(0).setPreferredWidth(90);
+//        columnModel.getColumn(0).setMaxWidth(90);
+//        columnModel.getColumn(1).setPreferredWidth(330);
+//        columnModel.getColumn(1).setMaxWidth(330);
+//    }
+//    
     public boolean isSelected(){
         return this.isSelected;
     }
@@ -318,15 +374,13 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
-        this.updateTabel();
-//        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
-        this.updateTabel();
-//        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyTyped
 
     /**
@@ -374,4 +428,5 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     private javax.swing.JLabel lblInfoBahan;
     private javax.swing.JTable tabelData;
     // End of variables declaration//GEN-END:variables
+
 }

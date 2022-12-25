@@ -1,7 +1,6 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
 import com.manage.ChartManager;
 import com.manage.Message;
 import com.manage.Text;

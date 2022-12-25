@@ -1,6 +1,6 @@
 package com.window.dialog;
 
-import com.koneksi.DatabaseOld;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
@@ -8,6 +8,7 @@ import java.awt.Cursor;
 import java.sql.SQLException;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -22,70 +23,46 @@ public class GetDataMenu extends javax.swing.JDialog {
     
     private final HashMap<String, Integer> tempStokMenu;
     
-    DatabaseOld barang = new DatabaseOld();
+    private final Database db = new Database(), db2 = new Database();
     
-    Text text = new Text();
+    private final Text text = new Text();
     
     public GetDataMenu(java.awt.Frame parent, boolean modal, HashMap tempStokMenu) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        // mendapatkan data stok sementara
         this.tempStokMenu = tempStokMenu;
         
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(90);
-        columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(330);
-        columnModel.getColumn(1).setMaxWidth(330);
-        
+        // menampilkan data tabel
+        this.showTabel();
+    }
+    
+    private void resetTabel(){
+        // set desain tabel
         this.tabelData.setRowHeight(29);
         this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
         this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
         
-        this.updateTabel();
-    }
-
-    private Object[][] getData(){
-        try{
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT id_menu, nama_menu, harga FROM menu " + keyword;
-            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
-            obj = new Object[barang.getJumlahData("menu", keyword)][4];
-            // mengeksekusi query
-            barang.res = barang.stat.executeQuery(sql);
-            // mendapatkan semua data yang ada didalam tabel
-            while(barang.res.next()){
-                String id = barang.res.getString("id_menu");
-                // menyimpan data dari tabel ke object
-                obj[rows][0] = id;
-                obj[rows][1] = barang.res.getString("nama_menu");
-                obj[rows][2] = this.tempStokMenu.get(id);
-                obj[rows][3] = text.toMoneyCase(barang.res.getString("harga"));
-                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
-            }
-            return obj;
-        }catch(SQLException ex){
-            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
-        }
-        return null;
-    }
-    
-    private void updateTabel(){
+        // set model tabel
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            getData(),
-            new String [] {
-                "ID Menu", "Nama Menu", "Stok", "Harga"
-            }
-        ){
-            boolean[] canEdit = new boolean [] {
+                new String[][]{},
+                new String[]{
+                    "ID Menu", "Nama Menu", "Stok", "Harga"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false
             };
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
+        
+        // set ukuran kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(70);
         columnModel.getColumn(0).setMaxWidth(70);
@@ -95,12 +72,51 @@ public class GetDataMenu extends javax.swing.JDialog {
         columnModel.getColumn(2).setMaxWidth(70);
     }
     
+    private void showTabel(){
+        // mereset tabel menu
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data bahan menu pada tabel mysql
+            String sql = "SELECT id_menu, nama_menu, harga FROM menu " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db2.res = this.db2.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db2.res.next()){
+                // mendapatkan id menu
+                String id = this.db2.res.getString("id_menu");
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new Object[]{
+                        id,
+                        this.db2.res.getString("nama_menu"),
+                        this.tempStokMenu.get(id),
+                        text.toMoneyCase(this.db2.res.getString("harga"))
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+    
     private void pilihMenu(){
+        // jika user belum memilih menu
         if(this.idSelected.equals("")){
             JOptionPane.showMessageDialog(this, "Tidak ada menu yang dipilih!");
         }else{
             System.out.println("TEMP STOK MENU : "+tempStokMenu);
+            // cek apakah stok habis atau tidak
             if(this.tempStokMenu.get(this.idSelected) > 0){
+                // mendapatkan menu yang dipilih
                 this.isSelected = true;
                 this.dispose();                    
             }else{
@@ -322,30 +338,33 @@ public class GetDataMenu extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.isSelected = false;
         this.dispose();
-        this.barang.closeConnections();
+        this.db.closeConnection();
+        this.db2.closeConnection();
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.isSelected = false;
-        this.barang.closeConnections();
+        this.db.closeConnection();
+        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.barang.closeConnections();
+        this.db.closeConnection();
+        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
-        this.updateTabel();
+        this.showTabel();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
-        this.updateTabel();
+        this.showTabel();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
     }//GEN-LAST:event_inpCariKeyTyped
 

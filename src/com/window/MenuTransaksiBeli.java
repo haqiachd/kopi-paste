@@ -1419,6 +1419,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.status = false;
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 

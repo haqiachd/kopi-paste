@@ -1,7 +1,6 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -21,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -31,9 +31,7 @@ public class DataMenu extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
-    private final Database db = new Database();
-    
-    private DatabaseOld menu = new DatabaseOld();
+    private final Database db = new Database(), db2 = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -57,76 +55,47 @@ public class DataMenu extends javax.swing.JFrame {
             this.btnKaryawan, this.btnSupplier, this.btnPembeli, 
             this.btnTransaksi, this.btnLaporan, this.btnBahan, this.btnLogout, this.btnDashboard
         };
-        // set update tabel
-        JTextField[] fields = {this.inpNama, this.inpJenis, this.inpHarga};
-        
-//        this.inpIdBahan.setEditable(false);
-        this.inpNama.setEditable(false);
-        this.inpJenis.setEditable(false);
-        this.inpHarga.setEditable(false);
-        
-        // set hover pada sidebar
         this.win.hoverButton();
+        
+        // set update data
+        JTextField[] fields = {this.inpNama, this.inpJenis, this.inpHarga};
+        this.inpNama.setEditable(false);
+        this.inpHarga.setEditable(false);
+        this.inpJenis.setEditable(false);
         this.win.updateData(fields);
-
-        // set desain tabel
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
         
-        this.tabelData.setRowHeight(29);
-        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
-        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
-//        this.tabelData.setModel(this.);
-        
+        // set margin button
         this.inpCari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpBahan.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJenis.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-//        this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
-//        this.tabelData = new com.manage.StripedEvenInWhitePartsTable(new String[][]{}, new String[]{});
-        this.updateTable();
         
+        // hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
         
+        // batas akses karyawan
         if(!User.isAdmin()){
             this.btnAdd.setVisible(false);
             this.btnEdit.setVisible(false);
             this.btnHapus.setVisible(false);
         }
+        
+        // menampilkan data tabel
+        this.showTabel();
     }
-
-    private Object[][] getData() {
-        try {
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT id_menu, nama_menu, jenis, harga FROM menu " + keyword;
-            obj = new Object[menu.getJumlahData("menu", keyword)][5];
-            menu.res = menu.stat.executeQuery(sql);
-
-            while (menu.res.next()) {
-                String id = menu.res.getString("id_menu");
-                obj[rows][0] = id;
-                obj[rows][1] = menu.res.getString("nama_menu");
-                obj[rows][2] = menu.res.getString("jenis");
-                obj[rows][3] = this.hitungStokMenu(id);
-                obj[rows][4] = text.toMoneyCase(menu.res.getString("harga"));
-                rows++;
-            }
-            return obj;
-
-        } catch (SQLException ex) {
-//                Message.showException(this, ex.getMessage());
-        }
-        return null;
-    }
-
-    private void updateTable() {
+    
+    private void resetTabel(){
+        // set desain tabel
+        this.tabelData.setRowHeight(29);
+        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
+        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
+        
+        // set model tabel
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-                getData(),
+                new String[][]{},
                 new String[]{
                     "ID Menu", "Nama Menu", "Jenis", "Stok", "Harga"
                 }
@@ -140,6 +109,7 @@ public class DataMenu extends javax.swing.JFrame {
                 return canEdit[columnIndex];
             }
         });
+        
         // set desain tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(80);
@@ -152,6 +122,42 @@ public class DataMenu extends javax.swing.JFrame {
         columnModel.getColumn(3).setMaxWidth(60);
         columnModel.getColumn(4).setPreferredWidth(140);
         columnModel.getColumn(4).setMaxWidth(140);
+    }
+    
+    private void showTabel(){
+        // mereset tabel menu
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data menu pada tabel mysql
+            String sql = "SELECT id_menu, nama_menu, jenis, harga FROM menu " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db2.res = this.db2.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db2.res.next()){
+                // menambahkan data kedalam tabel
+                String id = this.db2.res.getString("id_menu");
+                model.addRow(
+                    new Object[]{
+                        id,
+                        this.db2.res.getString("nama_menu"),
+                        this.db2.res.getString("jenis"),
+                        this.hitungStokMenu(id),
+                        text.toMoneyCase(this.db2.res.getString("harga")),
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
     }
         
     private void showData(){
@@ -1123,6 +1129,7 @@ public class DataMenu extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
+        this.db2.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1142,7 +1149,7 @@ public class DataMenu extends javax.swing.JFrame {
         // membuka window upddate menu
         UpdateDataMenu d = new UpdateDataMenu(null, true, 1, "");
         d.setVisible(true);
-        this.updateTable();
+        this.showTabel();
         // referesh data
         this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
@@ -1163,7 +1170,7 @@ public class DataMenu extends javax.swing.JFrame {
             // membuka window update data menu
             UpdateDataMenu d = new UpdateDataMenu(null, true, 2, this.idSelected);
             d.setVisible(true);
-            this.updateTable();
+            this.showTabel();
             // merefresh data setelah update
             this.showData();
         }
@@ -1198,7 +1205,7 @@ public class DataMenu extends javax.swing.JFrame {
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
                             // mengupdate tabel
-                            this.updateTable();
+                            this.showTabel();
                             // referesh data
                             this.resetData();
                         } else {
@@ -1239,14 +1246,14 @@ public class DataMenu extends javax.swing.JFrame {
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
-        this.updateTable();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
-        this.updateTable();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
     /**

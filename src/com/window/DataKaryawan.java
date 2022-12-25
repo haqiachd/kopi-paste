@@ -1,7 +1,6 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.ui.UIManager;
 import com.manage.User;
@@ -19,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -31,11 +31,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     
     private final Database db = new Database();
     
-    private DatabaseOld barang = new DatabaseOld();
-    
     private final UIManager win = new UIManager();
-    
-    private Object tableModel;
     
     public DataKaryawan() {
         initComponents();
@@ -43,38 +39,29 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.setTitle("Test Window");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
+        
         // set ui button
         this.btnAdd.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnEdit.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-//        this.jComboBox1.setUI(new com.manage.RoundComboBoxUI());
         
         // set hover sidebar
         this.win.btns = new JLabel[]{
             this.btnDashboard, this.btnSupplier, this.btnPembeli, 
             this.btnTransaksi, this.btnLaporan, this.btnBahan, this.btnLogout, this.btnMenu
         };
+        this.win.hoverButton();
+        
         // set update data
         JTextField[] fields = {this.inpNama, this.inpAlamat, this.inpPassword, this.inpShift, this.inpTelephone};
-        
         this.inpNama.setEditable(false);
         this.inpAlamat.setEditable(false);
         this.inpPassword.setEditable(false);
         this.inpShift.setEditable(false);
         this.inpTelephone.setEditable(false);
-        
-        this.win.hoverButton();
         this.win.updateData(fields);
         
-        // set desain tabel
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
-        
-        this.tabelData.setRowHeight(29);
-        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
-        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
-        
+        // set margin tabel
         this.inpCari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpUsername.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -82,67 +69,87 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.inpTelephone.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
         this.inpShift.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
-//        this.tabelData = new com.manage.StripedEvenInWhitePartsTable(new String[][]{}, new String[]{});
+        this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
-        this.updateTabel();
-        
+        // hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
         
+        // batas akses karyawan
         if(!User.isAdmin()){
             this.btnAdd.setVisible(false);
             this.btnEdit.setVisible(false);
             this.btnHapus.setVisible(false);
             this.lblEye.setVisible(false);
         }
+        
+        // menampilkan data tabel
+        this.showTabel();
     }
     
-    private Object[][] getData(){
-        try{
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT * FROM karyawan " + keyword;
-            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
-            obj = new Object[barang.getJumlahData("karyawan", keyword)][3];
-            // mengeksekusi query
-            barang.res = barang.stat.executeQuery(sql);
-            // mendapatkan semua data yang ada didalam tabel
-            while(barang.res.next()){
-                // menyimpan data dari tabel ke object
-                obj[rows][0] = barang.res.getString("id_karyawan");
-                obj[rows][1] = barang.res.getString("nama_karyawan");
-                obj[rows][2] = barang.res.getString("shif");
-                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
-            }
-            return obj;
-        }catch(SQLException ex){
-            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
-            ex.printStackTrace();
-        }
-        return null;
-    }
-    
-    private void updateTabel(){
+    private void resetTabel(){
+        // set desain tabel
+        this.tabelData.setRowHeight(29);
+        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
+        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
+        
+        // set model tabel
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            getData(),
-            new String [] {
-                "ID Karyawan", "Nama Karyawan", "Shif"
-            }
-        ){
-            boolean[] canEdit = new boolean [] {
+                new String[][]{},
+                new String[]{
+                    "ID Karyawan", "Nama Karyawan", "Shif"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
                 false, false, false
             };
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
+        
+        // set size kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(110);
         columnModel.getColumn(0).setMaxWidth(110);
         columnModel.getColumn(1).setPreferredWidth(220);
         columnModel.getColumn(1).setMaxWidth(220);
+    }
+    
+    private void showTabel(){
+        
+        // mereset tabel karywan
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data karyawan pada tabel mysql
+            String sql = "SELECT * FROM karyawan " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new String[]{
+                        this.db.res.getString("id_karyawan"),
+                        this.db.res.getString("nama_karyawan"),
+                        this.db.res.getString("shif")
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
     }
     
     private void showData(){
@@ -1107,7 +1114,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         UpdateDataKaryawan d = new UpdateDataKaryawan(null, true, 1, "");
         d.setVisible(true);
-        this.updateTabel();
+        this.showTabel();
         // refresh data
         this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
@@ -1126,7 +1133,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         }else{
             UpdateDataKaryawan d = new UpdateDataKaryawan(null, true, 2, this.idSelected);
             d.setVisible(true);
-            this.updateTabel();
+            this.showTabel();
             this.showData();
         }
     }//GEN-LAST:event_btnEditActionPerformed
@@ -1160,7 +1167,7 @@ public class DataKaryawan extends javax.swing.JFrame {
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
                             // mengupdate tabel
-                            this.updateTabel();
+                            this.showTabel();
                             // reset textfield
                             this.resetData();
                         } else {
@@ -1218,7 +1225,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
-        this.updateTabel();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyPressed
@@ -1229,7 +1236,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
-        this.updateTabel();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
     /**

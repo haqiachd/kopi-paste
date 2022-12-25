@@ -1,7 +1,6 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -20,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -32,9 +32,9 @@ public class DataBahan extends javax.swing.JFrame {
     
     private final UIManager win = new UIManager();
     
-    DatabaseOld barang = new DatabaseOld();
-    
     private final Text text = new Text();
+    
+     private String idSelected, keyword = "";
    
     public DataBahan() {
         initComponents();
@@ -42,6 +42,7 @@ public class DataBahan extends javax.swing.JFrame {
         this.setTitle("Test Window");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
+        
         // set ui button
         this.btnAdd.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnEdit.setUI(new javax.swing.plaf.basic.BasicButtonUI());
@@ -52,8 +53,11 @@ public class DataBahan extends javax.swing.JFrame {
             this.btnKaryawan, this.btnSupplier, this.btnPembeli, 
             this.btnTransaksi, this.btnLaporan, this.btnDashboard, this.btnLogout, this.btnMenu
         };
+        this.win.hoverButton();
+        
         // set update data
         JTextField fields[] = {this.inpNama, this.inpJenis, this.inpStok, this.inpHarga};
+        this.win.updateData(fields);
         
         // set editable false pada textfield
         this.inpId.setEditable(false);
@@ -62,35 +66,28 @@ public class DataBahan extends javax.swing.JFrame {
         this.inpStok.setEditable(false);
         this.inpHarga.setEditable(false);
         
-        this.win.hoverButton();
-        this.win.updateData(fields);
-        this.updateTabel();
-        
-        // set desain tabel
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
-        
-        this.tabelData.setRowHeight(29);
-        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
-        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
-        
+        // set margin textfield
         this.inpCari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJenis.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpStok.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-//        this.tabelData = new com.manage.StripedEvenInWhitePartsTable(new String[][]{}, new String[]{});
-
+        
+        // visible button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
         
+        // batas akses karyawan
         if(!User.isAdmin()){
             this.btnAdd.setVisible(false);
             this.btnEdit.setVisible(false);
             this.btnHapus.setVisible(false);
         }
+        
+        // menampilkan data tabel bahan
+        this.showTabel();
+        
     }
     
     private String getStatuanName(String satuan){
@@ -113,48 +110,30 @@ public class DataBahan extends javax.swing.JFrame {
         }
     }
     
-    private String keyword = "";
-    
-    private Object[][] getData(){
-        try{
-            Object obj[][];
-            int rows = 0;
-            String sql = "SELECT id_bahan, nama_bahan, stok, satuan, harga FROM bahan " + keyword;
-            // mendefinisikan object berdasarkan total rows dan cols yang ada didalam tabel
-            obj = new Object[barang.getJumlahData("bahan", keyword)][4];
-            // mengeksekusi query
-            barang.res = barang.stat.executeQuery(sql);
-            // mendapatkan semua data yang ada didalam tabel
-            while(barang.res.next()){
-                // menyimpan data dari tabel ke object
-                obj[rows][0] = barang.res.getString("id_bahan");
-                obj[rows][1] = barang.res.getString("nama_bahan");
-                obj[rows][2] = String.format("%,d %s", Integer.parseInt(barang.res.getString("stok")), barang.res.getString("satuan")).toLowerCase();
-                obj[rows][3] = text.toMoneyCase(barang.res.getString("harga"));
-                rows++; // rows akan bertambah 1 setiap selesai membaca 1 row pada tabel
-            }
-            return obj;
-        }catch(SQLException ex){
-            Message.showException(this, "Terjadi kesalahan saat mengambil data dari database\n" + ex.getMessage(), ex);
-        }
-        return null;
-    }
-    
-    private void updateTabel(){
+    private void resetTabel(){
+        // set desain tabel
+        this.tabelData.setRowHeight(29);
+        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
+        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
+        
+        // set model tabel
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
-            getData(),
-            new String [] {
-                "ID Bahan", "Nama Bahan", "Stok", "Harga"
-            }
-        ){
-            boolean[] canEdit = new boolean [] {
+                new String[][]{},
+                new String[]{
+                    "ID Bahan", "Nama Bahan", "Stok", "Harga"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
                 false, false, false, false
             };
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
+        
+        // set size kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(110);
         columnModel.getColumn(0).setMaxWidth(110);
@@ -166,7 +145,40 @@ public class DataBahan extends javax.swing.JFrame {
         columnModel.getColumn(3).setMaxWidth(160);
     }
     
-    private String idSelected;
+    private void showTabel(){
+        
+        // mereset tabel bahan
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data bahan pada tabel mysql
+            String sql = "SELECT id_bahan, nama_bahan, stok, satuan, harga FROM bahan " + keyword;
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new String[]{
+                        this.db.res.getString("id_bahan"),
+                        this.db.res.getString("nama_bahan"),
+                        String.format("%,d %s", Integer.parseInt(this.db.res.getString("stok")), this.db.res.getString("satuan")).toLowerCase(),
+                        text.toMoneyCase(this.db.res.getString("harga"))
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
     
     private void showData(){
         try {
@@ -1090,7 +1102,7 @@ public class DataBahan extends javax.swing.JFrame {
         // membuka window input data
         UpdateDataBahan d = new UpdateDataBahan(null, true, 1, "");
         d.setVisible(true);
-        this.updateTabel();
+        this.showTabel();
         // referesh data
         this.resetData();
     }//GEN-LAST:event_btnAddActionPerformed
@@ -1109,7 +1121,7 @@ public class DataBahan extends javax.swing.JFrame {
         }else{
             UpdateDataBahan d = new UpdateDataBahan(null, true, 2, this.idSelected);
             d.setVisible(true);
-            this.updateTabel();
+            this.showTabel();
             this.showData();
         }
     }//GEN-LAST:event_btnEditActionPerformed
@@ -1143,7 +1155,7 @@ public class DataBahan extends javax.swing.JFrame {
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
                             // mengupdate tabel
-                            this.updateTabel();
+                            this.showTabel();
                             // reset textfield
                             this.resetData();
                         } else {
@@ -1182,14 +1194,14 @@ public class DataBahan extends javax.swing.JFrame {
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
-        this.updateTabel();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyPressed
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
         String key = this.inpCari.getText();
         this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
         this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
-        this.updateTabel();
+        this.showTabel();
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpIdActionPerformed

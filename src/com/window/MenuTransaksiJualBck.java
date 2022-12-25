@@ -1,7 +1,6 @@
 package com.window;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -1178,6 +1177,7 @@ public class MenuTransaksiJualBck extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowDeactivated
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 

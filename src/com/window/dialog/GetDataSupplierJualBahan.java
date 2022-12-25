@@ -1,7 +1,6 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.DatabaseOld;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
@@ -22,32 +21,95 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
     
     private final Database db = new Database();
     
-    DatabaseOld barang = new DatabaseOld();
-    
-    Text text = new Text();
+    private final Text text = new Text();
     
     public GetDataSupplierJualBahan(java.awt.Frame parent, boolean modal, String idSupplier, String namaSupplier) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
         
+        // mendapatkan data dan menampilkan data supplier
         this.idSupplier = idSupplier;
         this.namaSupplier = namaSupplier;
         this.lblTop.setText(this.lblTop.getText() + this.namaSupplier);
         
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(90);
-        columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(330);
-        columnModel.getColumn(1).setMaxWidth(330);
-        
+        // menampilkan data tabel
+        this.showTabel();
+    }
+    
+    private void resetTabel(){
+        // set desain tabel
         this.tabelData.setRowHeight(29);
         this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
         this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
         
-        this.updateTabel();
+        // set model tabel
+        this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
+                new String[][]{},
+                new String[]{
+                    "ID Bahan", "Nama Bahan", "Jenis", "Harga"
+                }
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        
+        // set ukuran kolom tabel
+        TableColumnModel columnModel = tabelData.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(70);
+        columnModel.getColumn(0).setMaxWidth(70);
+        columnModel.getColumn(1).setPreferredWidth(220);
+        columnModel.getColumn(1).setMaxWidth(220);
+        columnModel.getColumn(2).setPreferredWidth(130);
+        columnModel.getColumn(2).setMaxWidth(130);
     }
     
+    private void showTabel(){
+        // mereset tabel menu
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        try{
+            // query untuk mengambil data bahan menu pada tabel mysql
+            // membuat query
+            String sql = "SELECT DISTINCT bahan.id_bahan, bahan.nama_bahan, bahan.jenis, bahan.harga "
+                        + "FROM bahan JOIN detail_supplier "
+                        + "ON bahan.id_bahan = detail_supplier.id_bahan "
+                        + "WHERE detail_supplier.id_supplier = '"+this.idSupplier+"' " + keyword
+                        + " ORDER BY bahan.stok ASC";
+            System.out.println(sql);
+
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // membaca semua data yang ada didalam tabel
+            while(this.db.res.next()){
+                // menambahkan data kedalam tabel
+                model.addRow(
+                    new Object[]{
+                        this.db.res.getString("bahan.id_bahan"),
+                        this.db.res.getString("bahan.nama_bahan"),
+                        this.db.res.getString("bahan.jenis"),
+                        this.text.toMoneyCase(this.db.res.getString("bahan.harga"))
+                    }
+                );
+            }
+            
+            // menampilkan data tabel
+            this.tabelData.setModel(model);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+    
+    @Deprecated
     private void updateTabel(){
         
         DefaultTableModel tableModel = new DefaultTableModel(
@@ -330,10 +392,12 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.isSelected = false;
+        this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
+        this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
