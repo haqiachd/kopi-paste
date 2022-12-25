@@ -48,25 +48,28 @@ public class Pengaturan extends javax.swing.JDialog {
     public void backupDB() {
         try {
             // membuka file chooser untuk menginputkan nama file
-            String savePath = fm.saveFile(null);
-            if(savePath == null){
+            String dir = fm.saveFile(null);
+            if(dir == null){
                 return;
             }
-             savePath += "-" + waktu.getCurrentDate() + ".sql";
-            System.out.println("Save Path : " + savePath);
+            
+            // membuat direktori
+            dir += "-" + waktu.getCurrentDate() + ".sql";
+            System.out.println("Save Path : " + dir);
             
             // membuat command untuk membackup database dengan mysqldump
-            String cmdCommand = "C:\\xampp\\mysql\\bin\\mysqldump -u root kopi_paste -r \"" + savePath + "\"";
+            String cmdCommand = "C:\\xampp\\mysql\\bin\\mysqldump -u root kopi_paste -r \"" + dir + "\"";
             System.out.println(cmdCommand);
             
             // eksekusi command untuk backup database
-            Process runtimeProcess = Runtime.getRuntime().exec(cmdCommand);
-            int processComplete = runtimeProcess.waitFor();
+            Process run = Runtime.getRuntime().exec(cmdCommand);
+            int proses = run.waitFor();
 
             // cek apakah proses backup berhasil
-            if (processComplete == 0) {
+            if (proses == 0) {
                 Message.showInformation(this, "Proses Backup Berhasil");
-                File open = new File(new File(savePath).getAbsolutePath());
+                // membuka file backup
+                File open = new File(new File(dir).getAbsolutePath());
                 Desktop desktop = Desktop.getDesktop();
                 desktop.open(open);
             } else {
@@ -222,6 +225,7 @@ public class Pengaturan extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 Pengaturan dialog = new Pengaturan(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
