@@ -1,6 +1,6 @@
 package test;
 
-import com.koneksi.Dbase;
+import com.koneksi.Database;
 import java.sql.SQLException;
 
 /**
@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public class UpdateNamaTrJual {
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private String[] getIdKaryawan(){
         try{

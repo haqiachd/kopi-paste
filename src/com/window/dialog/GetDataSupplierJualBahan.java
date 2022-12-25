@@ -1,14 +1,11 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -23,7 +20,9 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    Database barang = new Database();
+    private final Database db = new Database();
+    
+    DatabaseOld barang = new DatabaseOld();
     
     Text text = new Text();
     
@@ -65,22 +64,23 @@ public class GetDataSupplierJualBahan extends javax.swing.JDialog {
         };
         
         try{
+            // membuat query
             String sql = "SELECT DISTINCT bahan.id_bahan, bahan.nama_bahan, bahan.jenis, bahan.harga "
                         + "FROM bahan JOIN detail_supplier "
                         + "ON bahan.id_bahan = detail_supplier.id_bahan "
                         + "WHERE detail_supplier.id_supplier = '"+this.idSupplier+"' " + keyword
                         + " ORDER BY bahan.stok ASC";
             System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery(sql);
+            
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
 
-            while (rs.next()) {
+            while (this.db.res.next()) {
                 // mendapatkan data dari database
-                String idPembeli = rs.getString("bahan.id_bahan");
-                String namaBarang = rs.getString("bahan.nama_bahan");
-                String jenisBarang = rs.getString("bahan.jenis");
-                String harga = text.toMoneyCase(rs.getString("bahan.harga"));
+                String idPembeli = this.db.res.getString("bahan.id_bahan");
+                String namaBarang = this.db.res.getString("bahan.nama_bahan");
+                String jenisBarang = this.db.res.getString("bahan.jenis");
+                String harga = text.toMoneyCase(this.db.res.getString("bahan.harga"));
                 
                 // menambahkan data kedalam array
                 String[] data = { idPembeli, namaBarang, jenisBarang, harga} ;

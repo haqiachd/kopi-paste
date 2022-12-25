@@ -1,6 +1,6 @@
 package com.window.dialog;
 
-import com.koneksi.Database;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
@@ -22,7 +22,7 @@ public class GetDataMenu extends javax.swing.JDialog {
     
     private final HashMap<String, Integer> tempStokMenu;
     
-    Database barang = new Database();
+    DatabaseOld barang = new DatabaseOld();
     
     Text text = new Text();
     
@@ -99,6 +99,7 @@ public class GetDataMenu extends javax.swing.JDialog {
         if(this.idSelected.equals("")){
             JOptionPane.showMessageDialog(this, "Tidak ada menu yang dipilih!");
         }else{
+            System.out.println("TEMP STOK MENU : "+tempStokMenu);
             if(this.tempStokMenu.get(this.idSelected) > 0){
                 this.isSelected = true;
                 this.dispose();                    
@@ -321,17 +322,17 @@ public class GetDataMenu extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.isSelected = false;
         this.dispose();
-        this.barang.closeConnection();
+        this.barang.closeConnections();
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.isSelected = false;
-        this.barang.closeConnection();
+        this.barang.closeConnections();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.barang.closeConnection();
+        this.barang.closeConnections();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased

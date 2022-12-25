@@ -1,13 +1,10 @@
 package com.manage;
 
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -28,7 +25,7 @@ import org.jfree.data.statistics.HistogramDataset;
  * @author Achmad Baihaqi
  * @since 2022-10-12
  */
-public class ChartManager {
+public class ChartManager extends Database{
     
     private final Color C_MAKANAN = new Color(250,138,16), C_MINUMAN = new Color(64,123,250), 
                         C_ORIGINAL = new Color(32,245,15), C_FLAVOURED = new Color(204,34,245), C_SNACK = new Color(245,38,41),
@@ -178,16 +175,13 @@ public class ChartManager {
                      "WHERE dtrj.jenis_menu = '"+jenis+"' AND MONTH(trj.tanggal) = "+bulan+" AND YEAR(trj.tanggal) = " + tahun;
         System.out.println(sql);
         
-        try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+        try{            
+            super.res = super.stat.executeQuery(sql);
             
             // mengembalikan data total pesanan berdasarkan jenis menu
-            if(r.next()){
-                int total = r.getInt("pesanan");
+            if(super.res.next()){
+                int total = super.res.getInt("pesanan");
                 System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
-                c.close(); s.close(); r.close();
                 return total;
             }
         }catch(SQLException ex){
@@ -207,15 +201,12 @@ public class ChartManager {
         System.out.println(sql);
         
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            super.res = super.stat.executeQuery(sql);
             
             // mengembalikan data total pesanan berdasarkan jenis bahan
-            if(r.next()){
-                int total = r.getInt("dipesan");
+            if(super.res.next()){
+                int total = super.res.getInt("dipesan");
                 System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
-                c.close(); s.close(); r.close();
                 return total;
             }
         }catch(SQLException ex){
@@ -281,14 +272,11 @@ public class ChartManager {
             System.out.println(sql);
             
             // membuat koneksi
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            super.res = super.stat.executeQuery(sql);
             
             // mendapatkan data total berdasaarkan bulan
-            if(r.next()){
-                int total = r.getInt("total");
-                c.close(); r.close(); s.close();
+            if(super.res.next()){
+                int total = super.res.getInt("total");
                 return total;
             }
             
@@ -309,15 +297,12 @@ public class ChartManager {
             );
             System.out.println(sql);
             
-            // membuat koneksi
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            // eksekusi query
+            super.res = super.stat.executeQuery(sql);
             
             // mendapatkan data total pengeluaran berdasarkan bulan
-            if(r.next()){
-                int total = r.getInt("total");
-                c.close(); r.close(); s.close();
+            if(super.res.next()){
+                int total = super.res.getInt("total");
                 return total;
             }
             
@@ -394,14 +379,11 @@ public class ChartManager {
             System.out.println(sql);
             
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            super.res = super.stat.executeQuery(sql);
             
             // mendapatkan data total pendapatan mingguan
-            if(r.next()){
-                int total = r.getInt("total");
-                c.close(); s.close(); r.close();
+            if(super.res.next()){
+                int total = super.res.getInt("total");
                 return total;
             }
         }catch(SQLException ex){
@@ -419,14 +401,11 @@ public class ChartManager {
             System.out.println(sql);
             
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            super.res = super.stat.executeQuery(sql);
             
             // mendapatkan data total pendapatan mingguan
-            if(r.next()){
-                int total = r.getInt("total");
-                c.close(); s.close(); r.close();
+            if(super.res.next()){
+                int total = super.res.getInt("total");
                 return total;
             }
         }catch(SQLException ex){

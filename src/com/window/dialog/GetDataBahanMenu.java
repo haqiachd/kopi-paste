@@ -1,16 +1,13 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Validation;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumnModel;
@@ -25,9 +22,11 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    Database barang = new Database();
+    private final Database db = new Database();
     
-    Text txt = new Text();
+    DatabaseOld barang = new DatabaseOld();
+    
+    private final Text txt = new Text();
     
     public GetDataBahanMenu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -128,14 +127,15 @@ public class GetDataBahanMenu extends javax.swing.JDialog {
     
     private String getSatuan(){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT satuan FROM bahan WHERE id_bahan = '"+this.idSelected+"'");
+            // membuat query
+            String sql = "SELECT satuan FROM bahan WHERE id_bahan = '"+this.idSelected+"'";
             
-            if(r.next()){
-                return r.getString("satuan");
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
+                return this.db.res.getString("satuan");
             }
-            c.close();
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : "+ex.getMessage());

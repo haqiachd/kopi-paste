@@ -1,7 +1,6 @@
 package com.window;
 
-import com.koneksi.Dbase;
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -16,11 +15,7 @@ import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -45,7 +40,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                ,ttlHargaBayar = 0 // total keseluruhan harga dari menu
                ,oldJumlah;
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -155,16 +150,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
      */
     private void showMenuSelected(){
 
-        try (Connection c = (Connection) Koneksi.configDB()) {
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM menu WHERE id_menu = '"+this.idMenu+"'");
+        try {
+            // membuat query
+            String sql = "SELECT * FROM menu WHERE id_menu = '"+this.idMenu+"'";
+            
+            // mengeksekusqi query
+            this.db.res = this.db.stat.executeQuery(sql);
 
-            if(r.next()){
+            if(this.db.res.next()){
                 this.inpIdMenu.setText(idMenu);
                 // mendapatkan data menu
-                this.namaMenu = r.getString("nama_menu");
-                this.jenisMenu = r.getString("jenis");
-                this.hargaMenu = Integer.parseInt(r.getString("harga"));
+                this.namaMenu = this.db.res.getString("nama_menu");
+                this.jenisMenu = this.db.res.getString("jenis");
+                this.hargaMenu = Integer.parseInt(this.db.res.getString("harga"));
                 // menampilkan data menu ke window
                 this.inpNamaMenu.setText(namaMenu);
                 this.inpHarga.setText(txt.toMoneyCase(""+hargaMenu));
@@ -231,25 +229,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         tabelTr.setModel(model);
     }
     
-    private void setColumnSize(){
-        // setting panjang kolom
-        TableColumnModel columnModel = tabelTr.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
-        columnModel.getColumn(1).setPreferredWidth(110);
-        columnModel.getColumn(1).setMaxWidth(110);
-        columnModel.getColumn(2).setPreferredWidth(220);
-        columnModel.getColumn(2).setMaxWidth(220);
-        columnModel.getColumn(3).setPreferredWidth(220);
-        columnModel.getColumn(3).setMaxWidth(220);
-        columnModel.getColumn(4).setPreferredWidth(160);
-        columnModel.getColumn(4).setMaxWidth(160);
-        columnModel.getColumn(5).setPreferredWidth(80);
-        columnModel.getColumn(5).setMaxWidth(80);
-        columnModel.getColumn(6).setPreferredWidth(160);
-        columnModel.getColumn(6).setMaxWidth(160);
-    }
-    
     private void resetTabel(){
         // setting tabel model
         tblModel = new DefaultTableModel(
@@ -269,10 +248,26 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             }
         };
         
+        
         this.tabelTr.setModel(tblModel);
         
         // set ukuran kolom
-        this.setColumnSize();
+        // setting panjang kolom
+        TableColumnModel columnModel = tabelTr.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(110);
+        columnModel.getColumn(0).setMaxWidth(110);
+        columnModel.getColumn(1).setPreferredWidth(110);
+        columnModel.getColumn(1).setMaxWidth(110);
+        columnModel.getColumn(2).setPreferredWidth(220);
+        columnModel.getColumn(2).setMaxWidth(220);
+        columnModel.getColumn(3).setPreferredWidth(220);
+        columnModel.getColumn(3).setMaxWidth(220);
+        columnModel.getColumn(4).setPreferredWidth(160);
+        columnModel.getColumn(4).setMaxWidth(160);
+        columnModel.getColumn(5).setPreferredWidth(80);
+        columnModel.getColumn(5).setMaxWidth(80);
+        columnModel.getColumn(6).setPreferredWidth(160);
+        columnModel.getColumn(6).setMaxWidth(160);
     }
     
     // resset saat menamkan tombol tambah menu
@@ -424,23 +419,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
      */
     private void getAllStokBahan(){
         try{
+            String sql = "SELECT id_bahan, stok FROM bahan";
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT id_bahan, stok FROM bahan");
+            this.db.res = this.db.stat.executeQuery(sql);
+            
             // inisialisasi hashmap
             tempStokBahan = new HashMap<>();
             
             // membaca semua data yang ada didalam tabel bahan
-            while(r.next()){
+            while(this.db.res.next()){
                 // menyimpan id bahan dan stok kedalam hashmap
-                tempStokBahan.put(r.getString("id_bahan"), r.getInt("stok"));
+                tempStokBahan.put(this.db.res.getString("id_bahan"), this.db.res.getInt("stok"));
             }
             
-            // menutup koneksi
-            s.close();
-            r.close();
-            c.close();
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error : " + ex.getMessage());
@@ -559,17 +550,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
      */
     private void getAllStokMenu(){
         try{
+            // membuat query
+            String sql = "SELECT id_menu FROM menu";
+            
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT id_menu FROM menu");
+            this.db.res = this.db.stat.executeQuery(sql);
+            
             String id;
             // inisialisasi hashmap
             tempStokMenu = new HashMap();
             
             // membaca semua data menu
-            while(r.next()){
-                id = r.getString("id_menu");
+            while(this.db.res.next()){
+                id = this.db.res.getString("id_menu");
                 // menghitung stok dari menu
                 tempStokMenu.put(id, this.hitungStokMenu(id));
             }
@@ -634,27 +627,30 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.getAllStokMenu();
     }
     
-    private boolean trJual(){
+    private boolean transaksi(){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            PreparedStatement p = c.prepareStatement("INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?)");
-            p.setString(1, this.inpIdTransaksi.getText());
-            p.setString(2, User.getIDKaryawan());
-            p.setString(3, User.getNamaUser());
-            p.setString(4, this.inpPembeli.getText()+"");
-            p.setInt(5, this.getTotalJumlahMenu());
-            p.setInt(6, this.ttlHargaBayar);
-            p.setString(7, waktu.getCurrentDateTime());
+            // membuat query
+            String sql = "INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?)";
             
-            boolean isSuccess = p.executeUpdate() > 0;
-            c.close();
-            p.close();
+            // membuat preparedstatement
+            this.db.pst = this.db.conn.prepareStatement(sql);
             
+            // menambahkan data transaksi ke query
+            this.db.pst.setString(1, this.inpIdTransaksi.getText());
+            this.db.pst.setString(2, User.getIDKaryawan());
+            this.db.pst.setString(3, User.getNamaUser());
+            this.db.pst.setString(4, this.inpPembeli.getText()+"");
+            this.db.pst.setInt(5, this.getTotalJumlahMenu());
+            this.db.pst.setInt(6, this.ttlHargaBayar);
+            this.db.pst.setString(7, waktu.getCurrentDateTime());
+            
+            // eksekusi query
+            boolean isSuccess = this.db.pst.executeUpdate() > 0;
+            
+            // cek apakah transaksi berhasil atau tidak
             if(isSuccess){
-                boolean detail = this.detailTrJual(),
-                        log = this.triggerTrJual();
-                
-                return detail && log;
+                // jika transaksi berhasil maka akan memanggil method detail transaksi dan triger transaksi
+                return this.detailTransaksi() && this.triggerTransaksi();
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -663,25 +659,27 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         return false;
     }
     
-    private boolean detailTrJual(){
+    private boolean detailTransaksi(){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            PreparedStatement p;
+            // membuat query
+            String sql = "INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?, ?, ?, ?)";
             
+            // membaca semua data yang ada didalam tabel
             for(int i = 0; i < this.tabelTr.getRowCount(); i++){
-                p = c.prepareStatement("INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?, ?, ?, ?)");
-                p.setString(1, this.inpIdTransaksi.getText());
-                p.setString(2, this.tabelTr.getValueAt(i, 1).toString());
-                p.setString(3, this.tabelTr.getValueAt(i, 2).toString());
-                p.setString(4, this.tabelTr.getValueAt(i, 3).toString());
-                p.setString(5, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 4).toString()));
-                p.setString(6, this.tabelTr.getValueAt(i, 5).toString());
-                p.setString(7, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
+                // menyiapkan query
+                this.db.pst = this.db.conn.prepareStatement(sql);
+                // menambahkan data transaksi ke query
+                this.db.pst.setString(1, this.inpIdTransaksi.getText());
+                this.db.pst.setString(2, this.tabelTr.getValueAt(i, 1).toString());
+                this.db.pst.setString(3, this.tabelTr.getValueAt(i, 2).toString());
+                this.db.pst.setString(4, this.tabelTr.getValueAt(i, 3).toString());
+                this.db.pst.setString(5, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 4).toString()));
+                this.db.pst.setString(6, this.tabelTr.getValueAt(i, 5).toString());
+                this.db.pst.setString(7, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
                 
-                p.executeUpdate();
-                p.close();
+                // eksekusi query
+                this.db.pst.executeUpdate();
             }
-            c.close();
             return true;
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -690,21 +688,22 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         return false;
     }
     
-    private boolean triggerTrJual(){
+    private boolean triggerTransaksi(){
         try{
-            System.out.println("TRIGGER JUAL-------------------------------->");
-            HashMap data;
+            HashMap dataBahan;
+            String sql = "INSERT INTO log_tr_jual VALUES (?, ?, ?, ?)";
             
             // mendapatkan semua menu yang dipesan
             for(int i = 0; i < this.tabelTr.getRowCount(); i++){
+                
                 // mendapatkan data id menu untuk mendapatkan bahan-bahan dari menu
                 String idMn = this.tabelTr.getValueAt(i, 1).toString();
-                data = this.getBahanMenu(idMn);
+                dataBahan = this.getBahanMenu(idMn);
                 System.out.println("NAMA MENU : " + this.tabelTr.getValueAt(i, 2));
                 
                 // mendapatkan bahan bahan dari menu
-                Object[] idBahan = data.keySet().toArray(),
-                         quantity = data.values().toArray();
+                Object[] idBahan = dataBahan.keySet().toArray(),
+                         quantity = dataBahan.values().toArray();
                 
                 // mengurangi stok pada bahan
                 for(int j = 0; j < idBahan.length; j++){
@@ -712,12 +711,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                     System.out.println("quantity : "+quantity[j].toString());
                     
                     // menambahkan data ke tabel log_tr_jual untuk melakukan trigger
-                    db.pst = db.conn.prepareStatement("INSERT INTO log_tr_jual VALUES (?, ?, ?, ?)");
+                    db.pst = db.conn.prepareStatement(sql);
                     db.pst.setString(1, this.inpIdTransaksi.getText());
                     db.pst.setString(2, idMn);
                     db.pst.setString(3, idBahan[j].toString());
                     db.pst.setInt(4, (Integer.parseInt(quantity[j].toString()) * Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString())));
                     
+                    // mengeksekusi query
                     db.pst.executeUpdate();
                 }                
             }
@@ -1664,7 +1664,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
 //        Message.showInformation(this, "Transaksi berhasil!");
-        if(this.trJual()){
+        if(this.transaksi()){
             TransaksiJualSuccess dia = new TransaksiJualSuccess(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
             this.resetTransaksi();            

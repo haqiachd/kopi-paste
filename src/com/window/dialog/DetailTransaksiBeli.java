@@ -1,15 +1,12 @@
 package com.window.dialog;
 
-
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
+
 import java.awt.Color;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -19,6 +16,8 @@ import javax.swing.table.TableColumnModel;
  */
 public class DetailTransaksiBeli extends javax.swing.JDialog {
 
+    private final Database db = new Database();
+    
     private final PopUpBackground pop = new PopUpBackground();
     
     private final Text txt = new Text();
@@ -102,21 +101,21 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelDetail.getModel();
         
         try{
+            // membuat query
             String sql = "SELECT * "
                        + "FROM detail_tr_beli  "
                        + "WHERE id_tr_beli = '"+this.id+"'";
+            
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
             int row = 0;
-            while(r.next()){
+            while(this.db.res.next()){
                 String idTr; 
                 
                 // id transaksi hanya ditampilkan pada baris ke satu saja
                 if(row == 0){
-                    idTr = r.getString("id_tr_beli");
+                    idTr = this.db.res.getString("id_tr_beli");
                 }else{
                     idTr = "";
                 }
@@ -124,18 +123,14 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
                 // menambahkan data detail ke tabel
                 model.addRow(new Object[]{
                         idTr,
-                        r.getString("nama_bahan"),
-                        this.txt.toMoneyCase(r.getString("harga_bahan")),
-                        this.getSatuan(r.getInt("jumlah"), r.getString("satuan_bahan")),
-                        this.txt.toMoneyCase(r.getString("total_harga"))
+                        this.db.res.getString("nama_bahan"),
+                        this.txt.toMoneyCase(this.db.res.getString("harga_bahan")),
+                        this.getSatuan(this.db.res.getInt("jumlah"), this.db.res.getString("satuan_bahan")),
+                        this.txt.toMoneyCase(this.db.res.getString("total_harga"))
                     }
                 );
                 row++;
             }
-            
-            c.close();
-            r.close();
-            s.close();
             
             String jumlah;
             int jmlBuff = 0, jmlKg = 0, jmlL = 0,  harga = 0;
@@ -316,7 +311,7 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DetailTransaksiBeli dialog = new DetailTransaksiBeli(new javax.swing.JFrame(), true, "");
+                DetailTransaksiBeli dialog = new DetailTransaksiBeli(new javax.swing.JFrame(), true, "TRB0097");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

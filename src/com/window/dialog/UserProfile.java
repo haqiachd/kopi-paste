@@ -1,6 +1,7 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.User;
 import com.media.Audio;
@@ -8,8 +9,6 @@ import com.media.Gambar;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -19,7 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class UserProfile extends javax.swing.JDialog {
 
-    private final Database conn = new Database();
+    private final Database db = new Database();
     
     private final PopUpBackground pop = new PopUpBackground();
     
@@ -49,22 +48,23 @@ public class UserProfile extends javax.swing.JDialog {
     public void dispose(){
         super.dispose();
         this.pop.dispose();
-        conn.closeConnection();
     }
     
     private void showDataAkun(){
         try {
+            // membuat query
             String sql = "SELECT * FROM karyawan WHERE id_karyawan = '"+User.getIDKaryawan()+"'";
-            conn.stat = conn.conn.createStatement();
-            conn.res = conn.stat.executeQuery(sql);
             
-            if(conn.res.next()){
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
                 this.valUsername.setText(": " + User.getUsername());
                 this.valId.setText(": " + User.getIDKaryawan());
                 this.valNama.setText(": " + User.getNamaUser());
-                this.valAlamat.setText(": " + conn.res.getString("alamat"));
-                this.valNoTelp.setText(": " + conn.res.getString("no_telp"));
-                this.valShif.setText(": " + conn.res.getString("shif"));
+                this.valAlamat.setText(": " + this.db.res.getString("alamat"));
+                this.valNoTelp.setText(": " + this.db.res.getString("no_telp"));
+                this.valShif.setText(": " + this.db.res.getString("shif"));
             }
         } catch (SQLException ex) {
             Message.showException(this, ex);

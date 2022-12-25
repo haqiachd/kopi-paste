@@ -1,16 +1,11 @@
 package com.window.dialog;
 
-import com.koneksi.Dbase;
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Validation;
 import com.media.Gambar;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
@@ -28,7 +23,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     
     private Object[] mainList, listID, listNama, listQuantity, listSatuan;
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -120,24 +115,22 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             System.out.println(sql);
             
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if (r.next()) {
+            if (this.db.res.next()) {
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("menu.nama_menu"));
-                this.inpJenis.setSelectedItem(r.getString("menu.jenis"));
-                this.inpHarga.setText(r.getString("menu.harga"));
+                this.inpNama.setText(this.db.res.getString("menu.nama_menu"));
+                this.inpJenis.setSelectedItem(this.db.res.getString("menu.jenis"));
+                this.inpHarga.setText(this.db.res.getString("menu.harga"));
                 // BA001 | 10.gr, Nama Bahab
                 this.inpBahan.addList(
                         String.format(
-                                "%s | %s.%s, %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
+                                "%s | %s.%s, %s", this.db.res.getString("detail_menu.id_bahan"), this.db.res.getString("detail_menu.quantity"), this.db.res.getString("bahan.satuan"), this.db.res.getString("bahan.nama_bahan")
                         ));
-                while (r.next()) {
+                while (this.db.res.next()) {
                     this.inpBahan.addList(
                             String.format(
-                                    "%s | %s.%s, %s", r.getString("detail_menu.id_bahan"), r.getString("detail_menu.quantity"), r.getString("bahan.satuan"), r.getString("bahan.nama_bahan")
+                                    "%s | %s.%s, %s", this.db.res.getString("detail_menu.id_bahan"), this.db.res.getString("detail_menu.quantity"), this.db.res.getString("bahan.satuan"), this.db.res.getString("bahan.nama_bahan")
                             ));
                 }
             }
@@ -206,13 +199,10 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }
     
     private void resetDetailMenu() throws SQLException{
-        Connection c = (Connection) Koneksi.configDB();
-        Statement s = c.createStatement();
-        int result = s.executeUpdate("DELETE FROM detail_menu WHERE id_menu = '"+this.idSelected+"'");
+        int result = this.db.stat.executeUpdate("DELETE FROM detail_menu WHERE id_menu = '"+this.idSelected+"'");
         if(result > 0){
             System.out.println("Reset detail menu");
         }
-        c.close();
     }
     
     private boolean tambahDataMenu() throws SQLException{
@@ -236,17 +226,16 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                harga = this.inpHarga.getText();
         
         // menyiapkan query
-        Connection c = (Connection) Koneksi.configDB();
-        PreparedStatement p = c.prepareCall("INSERT INTO menu VALUES(?, ?, ?, ?)");
-        p.setString(1, id);
-        p.setString(2, nama);
-        p.setString(3, jenis);
-        p.setString(4, harga);
+        String sql = "INSERT INTO menu VALUES(?, ?, ?, ?)";
+        this.db.pst = this.db.conn.prepareStatement(sql);
+        
+        this.db.pst.setString(1, id);
+        this.db.pst.setString(2, nama);
+        this.db.pst.setString(3, jenis);
+        this.db.pst.setString(4, harga);
         
         // eksekusi query
-        int result = p.executeUpdate();
-        c.close();
-        return result > 0;
+        return this.db.pst.executeUpdate() > 0;
     }
     
     private void updateTableDetailMenu() throws SQLException{
@@ -258,11 +247,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             // mendapatkan data
             idBahan = this.listID[i].toString();
             quantity = this.listQuantity[i].toString();
-            // membuat koneksi
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            s.executeUpdate(String.format("INSERT INTO detail_menu VALUES ('%s', '%s', '%s')", this.inpId.getText(), idBahan, quantity));
-            c.close();
+            // menambahkan data ke tabel
+            this.db.stat.executeUpdate(String.format("INSERT INTO detail_menu VALUES ('%s', '%s', '%s')", this.inpId.getText(), idBahan, quantity));
         }
     }
     
@@ -306,10 +292,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                      + "SET nama_menu = '%s', jenis = '%s', harga = '%s' "
                      + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, id);
         
-        Connection c = (Connection) Koneksi.configDB();
-        Statement s = c.createStatement();
-        int result = s.executeUpdate(sql);
-        c.close();
+        int result = this.db.stat.executeUpdate(sql);
         return result > 0;
     }
     

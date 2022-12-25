@@ -1,7 +1,6 @@
 package com.window;
 
-import com.koneksi.Dbase;
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -17,11 +16,7 @@ import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,7 +32,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private DefaultTableModel tblModel;
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -133,7 +128,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         return null;
     }
     
-    private String getStatuanBesaran(String satuan){
+    private String getSatuanBesaran(String satuan){
        switch(satuan){
             case "gr" : 
                 return "Kilogram";
@@ -143,24 +138,30 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Digunakan untuk menampilkan data bahan yang dipilih user
+     */
     public void showBahanSelected(){
         
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM bahan WHERE id_bahan = '"+this.idBahan+"'");
+            // membuat query
+            String sql = "SELECT * FROM bahan WHERE id_bahan = '"+this.idBahan+"'";
             
-            if(r.next()){
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
                 // mendapatkan data bahan
-                this.namaBahan = r.getString("nama_bahan");
-                this.hargaBahan = Integer.parseInt(r.getString("harga"));
-                this.jenisBahan = r.getString("jenis");
-                this.satuanBahan = r.getString("satuan");
+                this.namaBahan = this.db.res.getString("nama_bahan");
+                this.hargaBahan = Integer.parseInt(this.db.res.getString("harga"));
+                this.jenisBahan = this.db.res.getString("jenis");
+                this.satuanBahan = this.db.res.getString("satuan");
+                
                 // menampilkan data bahan
                 this.inpNamaBahan.setText(namaBahan);
                 this.inpHarga.setText(txt.toMoneyCase(Integer.toString(hargaBahan)));
-                this.inpSatuanHarga.setText("/ "+this.getStatuanBesaran(this.satuanBahan));
-                this.inpStokSatuan.setText(this.getStatuanBesaran(this.satuanBahan));
+                this.inpSatuanHarga.setText("/ "+this.getSatuanBesaran(this.satuanBahan));
+                this.inpStokSatuan.setText(this.getSatuanBesaran(this.satuanBahan));
             }
             
         }catch(SQLException ex){
@@ -210,6 +211,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         // jika id bahan belum ada didalam tabel maka data bahan akan ditambahkan pada baris baru
         if (dataBaru) {
 
+            // menambahkan data ke tabel
             model.addRow(new Object[]{
                 this.inpIdTransaksi.getText(),
                 this.idBahan,
@@ -221,27 +223,8 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             });
         }
         
-        // meyimpan update tabel
+        // merefresh update tabel
         tabelData.setModel(model);
-    }
-    
-    private void setColumnSize(){
-        // setting panjang kolom
-        TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
-        columnModel.getColumn(1).setPreferredWidth(110);
-        columnModel.getColumn(1).setMaxWidth(110);
-        columnModel.getColumn(2).setPreferredWidth(220);
-        columnModel.getColumn(2).setMaxWidth(220);
-        columnModel.getColumn(3).setPreferredWidth(220);
-        columnModel.getColumn(3).setMaxWidth(220);
-        columnModel.getColumn(4).setPreferredWidth(160);
-        columnModel.getColumn(4).setMaxWidth(160);
-        columnModel.getColumn(5).setPreferredWidth(80);
-        columnModel.getColumn(5).setMaxWidth(80);
-        columnModel.getColumn(6).setPreferredWidth(160);
-        columnModel.getColumn(6).setMaxWidth(160);
     }
     
     private void resetTabel(){
@@ -266,12 +249,25 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         this.tabelData.setModel(tblModel);
         
         // set ukuran kolom
-        this.setColumnSize();
+        TableColumnModel columnModel = tabelData.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(110);
+        columnModel.getColumn(0).setMaxWidth(110);
+        columnModel.getColumn(1).setPreferredWidth(110);
+        columnModel.getColumn(1).setMaxWidth(110);
+        columnModel.getColumn(2).setPreferredWidth(220);
+        columnModel.getColumn(2).setMaxWidth(220);
+        columnModel.getColumn(3).setPreferredWidth(220);
+        columnModel.getColumn(3).setMaxWidth(220);
+        columnModel.getColumn(4).setPreferredWidth(160);
+        columnModel.getColumn(4).setMaxWidth(160);
+        columnModel.getColumn(5).setPreferredWidth(80);
+        columnModel.getColumn(5).setMaxWidth(80);
+        columnModel.getColumn(6).setPreferredWidth(160);
+        columnModel.getColumn(6).setMaxWidth(160);
     }
     
     // reset saat menekan tombol transaksi
     private void resetTransaksi(){
-        
         // reset textfield dan data
         this.resetTambah();
         this.inpIdSupplier.setText("");
@@ -291,7 +287,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         this.inpIdTransaksi.setText(this.createID());
     }
     
-    // reset saat menambahkan data
+    // reset saat menambahkan 
     private void resetTambah(){
         this.inpSatuanHarga.setText(" ");
         this.inpStokSatuan.setText(" ");
@@ -374,12 +370,15 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private String getSatuanBahan(String idBahan){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT satuan FROM bahan WHERE id_bahan = '"+idBahan+"'");
+            // membuat query
+            String sql = "SELECT satuan FROM bahan WHERE id_bahan = '"+idBahan+"'";
             
-            if(r.next()){
-                return r.getString("satuan");
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // mendapatkan data satuan
+            if(this.db.res.next()){
+                return this.db.res.getString("satuan");
             }
         }catch(SQLException ex){
             Message.showException(this, ex);
@@ -389,28 +388,28 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private boolean transaksi(){
         try{
-            // membuat koneksi       
-            Connection conn = (Connection) Koneksi.configDB();
-            PreparedStatement pst = conn.prepareStatement("INSERT INTO transaksi_beli VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+            // menyiapkan query
+            String sql = "INSERT INTO transaksi_beli VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            // membuat preparestatemnt
+            this.db.pst = this.db.conn.prepareCall(sql);
             
             // menambahkan data transaksi ke query
-            pst.setString(1, this.inpIdTransaksi.getText());
-            pst.setString(2, User.getIDKaryawan());
-            pst.setString(3, User.getNamaUser());
-            pst.setString(4, this.idSupplier);
-            pst.setString(5, this.namaSupplier);
-            pst.setInt(6, this.getTotalJumlahBahan());
-            pst.setInt(7, this.ttlHargaBayar);
-            pst.setString(8, this.waktu.getCurrentDateTime());
+            this.db.pst.setString(1, this.inpIdTransaksi.getText());
+            this.db.pst.setString(2, User.getIDKaryawan());
+            this.db.pst.setString(3, User.getNamaUser());
+            this.db.pst.setString(4, this.idSupplier);
+            this.db.pst.setString(5, this.namaSupplier);
+            this.db.pst.setInt(6, this.getTotalJumlahBahan());
+            this.db.pst.setInt(7, this.ttlHargaBayar);
+            this.db.pst.setString(8, this.waktu.getCurrentDateTime());
             
             // eksekusi query
-            boolean isSuccess = pst.executeUpdate() > 0;
-            conn.close();
-            pst.close();
+            boolean isSuccess = this.db.pst.executeUpdate() > 0;
             
             // cek apakah transaksi berhasil atau tidak
             if(isSuccess){
-                // jika transaksi berhasil maka akan memanggil method detail transaksi
+                // jika transaksi berhasil maka akan memanggil method detail transaksi dan triger transaksi
                 return this.detailTransaksi() && this.triggerTransaksi();
             }
             
@@ -423,27 +422,28 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private boolean detailTransaksi(){
         try{
-            // menyiapkan koneksi
-            Connection conn = (Connection) Koneksi.configDB();
-            PreparedStatement pst;
+            // membuat query
+            String sql = "INSERT INTO detail_tr_beli VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            
             // membaca semua data yang ada didalam tabel
             for(int i = 0; i < tabelData.getRowCount(); i++){
+            // mendapatkan id bahan dan satuan bahan
             String idBhn = this.tabelData.getValueAt(i, 1).toString(),
                    satuan = this.getSatuanBahan(idBhn);
+            
                 // menyiapkan query
-                pst = conn.prepareStatement("INSERT INTO detail_tr_beli VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                pst.setString(1, this.inpIdTransaksi.getText());
-                pst.setString(2, idBhn); // get data id bahan
-                pst.setString(3, this.tabelData.getValueAt(i, 2).toString()); // get data nama bahan
-                pst.setString(4, this.tabelData.getValueAt(i, 3).toString()); // get data jenis bahan
-                pst.setString(5, satuan); // get data satuan bahan
-                pst.setString(6, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 4).toString())); // get data harga bahan
-                pst.setInt(7, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
-                pst.setString(8, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 6).toString())); // get data harga total
+                this.db.pst = this.db.conn.prepareCall(sql);
+                this.db.pst.setString(1, this.inpIdTransaksi.getText());
+                this.db.pst.setString(2, idBhn); // get data id bahan
+                this.db.pst.setString(3, this.tabelData.getValueAt(i, 2).toString()); // get data nama bahan
+                this.db.pst.setString(4, this.tabelData.getValueAt(i, 3).toString()); // get data jenis bahan
+                this.db.pst.setString(5, satuan); // get data satuan bahan
+                this.db.pst.setString(6, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 4).toString())); // get data harga bahan
+                this.db.pst.setInt(7, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
+                this.db.pst.setString(8, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 6).toString())); // get data harga total
                 
                 // eksekusi query
-                pst.executeUpdate();
-                pst.close();
+                this.db.pst.executeUpdate();
             }
             return true;
         }catch(SQLException ex){
@@ -455,20 +455,19 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private boolean triggerTransaksi(){
         try{
-            // menyiapkan koneksi
-            Connection conn = (Connection) Koneksi.configDB();
-            PreparedStatement pst;
+            // membuat query
+            String sql = "INSERT INTO log_tr_beli VALUES (?, ?, ?)";
+            
             // membaca semua data yang ada didalam tabel
             for(int i = 0; i < tabelData.getRowCount(); i++){
                 // menyiapkan query
-                pst = conn.prepareStatement("INSERT INTO log_tr_beli VALUES (?, ?, ?)");
-                pst.setString(1, this.inpIdTransaksi.getText());
-                pst.setString(2, this.tabelData.getValueAt(i, 1).toString()); // get data id bahan
-                pst.setInt(3, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
+                this.db.pst = this.db.conn.prepareCall(sql);
+                this.db.pst.setString(1, this.inpIdTransaksi.getText());
+                this.db.pst.setString(2, this.tabelData.getValueAt(i, 1).toString()); // get data id bahan
+                this.db.pst.setInt(3, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
                 
                 // eksekusi query
-                pst.executeUpdate();
-                pst.close();
+                this.db.pst.executeUpdate();
             }
             return true;
         }catch(SQLException ex){

@@ -1,6 +1,6 @@
 package com.window.dialog;
 
-import com.koneksi.Dbase;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
@@ -14,7 +14,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class TransaksiBeliSuccess extends javax.swing.JDialog {
 
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private final PopUpBackground pop = new PopUpBackground();
     

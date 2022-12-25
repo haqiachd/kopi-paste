@@ -1,6 +1,6 @@
 package com.window.dialog;
 
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Waktu;
@@ -9,10 +9,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.MessageFormat;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +23,8 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
     
     private DefaultTableModel cariData;
 
+    private final Database db = new Database();
+    
     private final PopUpBackground pop = new PopUpBackground();
     
     private final Waktu waktu = new Waktu();
@@ -108,6 +107,8 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
         
         try{
+            
+            // membuat query
             String sql = "SELECT trb.id_tr_beli, trb.nama_karyawan, trb.nama_supplier, trb.total_bahan, trb.total_harga, DATE(trb.tanggal), DAYNAME(trb.tanggal) " +
                         "FROM transaksi_beli AS trb " +
                         "WHERE MONTH(tanggal) = "+this.bulan+" AND YEAR(tanggal) = " + this.tahun + 
@@ -116,19 +117,18 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
             System.out.println("NILAI BULAN : " + this.bulan);
             System.out.println("MENAMPILKAN DATA BULAN " + this.waktu.getNamaBulan(this.bulan));
             
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            while(r.next()){
+            while(this.db.res.next()){
                 model.addRow(
                     new Object[]{
-                        r.getString(1),
-                        r.getString(2),
-                        r.getString(3),
-                        r.getString(4) + " Pesanan",
-                        this.text.toMoneyCase(r.getString(5)),
-                        this.waktu.getNamaHariInIndonesian(r.getString(7)) + ", " + this.text.toDateCase(r.getString(6))
+                        this.db.res.getString(1),
+                        this.db.res.getString(2),
+                        this.db.res.getString(3),
+                        this.db.res.getString(4) + " Pesanan",
+                        this.text.toMoneyCase(this.db.res.getString(5)),
+                        this.waktu.getNamaHariInIndonesian(this.db.res.getString(7)) + ", " + this.text.toDateCase(this.db.res.getString(6))
                     }
                 );
             }

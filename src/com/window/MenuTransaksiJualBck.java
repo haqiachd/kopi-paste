@@ -1,5 +1,6 @@
 package com.window;
 
+import com.koneksi.Database;
 import com.koneksi.Koneksi;
 import com.manage.Message;
 import com.manage.Text;
@@ -30,6 +31,8 @@ public class MenuTransaksiJualBck extends javax.swing.JFrame {
     private int jumlah // jumlah menu yg dipilih
                ,ttlHrgMenu // total harga dari menu (harga menu * jumlah menu)
                ,ttlHargaBayar = 0; // total keseluruhan harga dari menu
+    
+    private final Database db = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -117,16 +120,16 @@ public class MenuTransaksiJualBck extends javax.swing.JFrame {
      */
     private void showMenuSelected(){
 
-        try (Connection c = (Connection) Koneksi.configDB()) {
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM menu WHERE id_menu = '"+this.idMenuSelected+"'");
+        try {
+            String sql = "SELECT * FROM menu WHERE id_menu = '"+this.idMenuSelected+"'";
+            this.db.res = this.db.stat.executeQuery(sql);
 
-            if(r.next()){
+            if(this.db.res.next()){
                 this.inpIdMenu.setText(idMenuSelected);
                 // mendapatkan data menu
-                this.namaMenu = r.getString("nama_menu");
-                this.jenisMenu = r.getString("jenis");
-                this.hargaMenu = r.getString("harga");
+                this.namaMenu = this.db.res.getString("nama_menu");
+                this.jenisMenu = this.db.res.getString("jenis");
+                this.hargaMenu = this.db.res.getString("harga");
                 // menampilkan data menu ke window
                 this.inpNamaMenu.setText(namaMenu);
                 this.inpHarga.setText(txt.toMoneyCase(hargaMenu));

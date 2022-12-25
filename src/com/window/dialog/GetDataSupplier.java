@@ -1,17 +1,14 @@
 package com.window.dialog;
 
 import com.koneksi.Database;
-import com.koneksi.Koneksi;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Cursor;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumnModel;
 
@@ -25,7 +22,9 @@ public class GetDataSupplier extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    Database barang = new Database();
+    private Database db = new Database();
+    
+    DatabaseOld barang = new DatabaseOld();
     
     Text text = new Text();
     
@@ -96,16 +95,17 @@ public class GetDataSupplier extends javax.swing.JDialog {
     private void showData(){
         this.listbahan.removeAllList();
         try{
+            // membuat query
             String sql = "SELECT detail_supplier.id_bahan, bahan.nama_bahan "
                     + "FROM bahan JOIN detail_supplier "
                     + "ON bahan.id_bahan = detail_supplier.id_bahan "
                     + "WHERE detail_supplier.id_supplier = '"+this.idSelected+"'";
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet r = stat.executeQuery(sql);
             
-            while(r.next()){
-                this.listbahan.addList(r.getString("detail_supplier.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            while(this.db.res.next()){
+                this.listbahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
             }
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
@@ -368,17 +368,17 @@ public class GetDataSupplier extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.isSelected = false;
         this.dispose();
-        this.barang.closeConnection();
+        this.barang.closeConnections();
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.isSelected = false;
-        this.barang.closeConnection();
+        this.barang.closeConnections();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.isSelected = false;
-        this.barang.closeConnection();
+        this.barang.closeConnections();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased

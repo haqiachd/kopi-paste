@@ -1,17 +1,12 @@
 package com.window.dialog;
 
-import com.koneksi.Dbase;
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.User;
 import com.manage.Validation;
 import com.media.Gambar;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -28,7 +23,9 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     
     private String idSelected, oldUsername;
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
+    
+    private final User us = new User();
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -113,20 +110,18 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                     + "WHERE karyawan.id_karyawan = '"+this.idSelected+"'";
             
             // membuat koneksi
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
-            if(r.next()){
+            if(this.db.res.next()){
+                // menampilkan data ke window
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("karyawan.nama_karyawan"));
-                this.inpAlamat.setText(r.getString("karyawan.alamat"));
-                this.inpNoTelp.setText(r.getString("karyawan.no_telp"));
-                this.inpShif.setSelectedItem(r.getString("karyawan.shif"));
-                this.inpUsername.setText(r.getString("user.username"));
-                this.inpPassword.setText(r.getString("user.password"));
+                this.inpNama.setText(this.db.res.getString("karyawan.nama_karyawan"));
+                this.inpAlamat.setText(this.db.res.getString("karyawan.alamat"));
+                this.inpNoTelp.setText(this.db.res.getString("karyawan.no_telp"));
+                this.inpShif.setSelectedItem(this.db.res.getString("karyawan.shif"));
+                this.inpUsername.setText(this.db.res.getString("user.username"));
+                this.inpPassword.setText(this.db.res.getString("user.password"));
             }
-            c.close();
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
@@ -141,16 +136,14 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                alamat = this.inpAlamat.getText(),
                shif = this.inpShif.getSelectedItem().toString();
         
-        Connection c = (Connection) Koneksi.configDB();
-        PreparedStatement p = c.prepareStatement(sql);
-        p.setString(1, idKaryawan);
-        p.setString(2, nama);
-        p.setString(3, noTelp);
-        p.setString(4, alamat);
-        p.setString(5, shif);
+        this.db.pst = this.db.conn.prepareStatement(sql);
+        this.db.pst.setString(1, idKaryawan);
+        this.db.pst.setString(2, nama);
+        this.db.pst.setString(3, noTelp);
+        this.db.pst.setString(4, alamat);
+        this.db.pst.setString(5, shif);
         
-        boolean o = p.executeUpdate() > 0;
-        c.close();
+        boolean o = this.db.pst.executeUpdate() > 0;
         return o;
     }
     
@@ -160,15 +153,13 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                username = this.inpUsername.getText(),
                password = this.inpPassword.getText();
         
-        Connection c = (Connection) Koneksi.configDB();
-        PreparedStatement p = c.prepareStatement(sql);
-        p.setString(1, username);
-        p.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(12)));
-        p.setString(3, "KARYAWAN");
-        p.setString(4, idKaryawan);
+        this.us.pst = this.us.conn.prepareStatement(sql);
+        this.us.pst.setString(1, username);
+        this.us.pst.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(12)));
+        this.us.pst.setString(3, "KARYAWAN");
+        this.us.pst.setString(4, idKaryawan);
         
-        boolean o = p.executeUpdate() > 0;
-        c.close();
+        boolean o = this.us.pst.executeUpdate() > 0;
         return o;
     }
     
@@ -177,7 +168,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         // cek validasi data kosong atau tidak
         if(!Validation.isEmptyTextField(this.inpUsername)){
             return;
-        }else if(User.isExistUsername(this.inpUsername.getText())){
+        }else if(this.us.isExistUsername(this.inpUsername.getText())){
             Message.showWarning(this, "Username tersebut sudah terpakai");
             return;
         }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpAlamat)){
@@ -220,16 +211,12 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                noTelp = this.inpNoTelp.getText(),
                alamat = this.inpAlamat.getText(),
                shif = this.inpShif.getSelectedItem().toString(),
+               // membuat query
                sql = String.format("UPDATE karyawan "
                         + "SET nama_karyawan = '%s', no_telp = '%s', alamat = '%s', shif = '%s' "
                         + "WHERE id_karyawan = '%s'", nama, noTelp, alamat, shif, idKaryawan);
-        // membuat koneksi 
-        Connection c = (Connection) Koneksi.configDB();
-        Statement s = c.createStatement();
         
-        int result = s.executeUpdate(sql);
-        c.close();
-        return result > 0;
+        return  this.db.stat.executeUpdate(sql) > 0;
     }
     
     private boolean editDataUser() throws SQLException{
@@ -237,16 +224,13 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         String idKaryawan = this.inpId.getText(),
                username = this.inpUsername.getText(),
                password = this.inpPassword.getText(),
+               // membuat query
                sql = String.format("UPDATE user "
                         + "SET username = '%s', password = '%s'"
                         + "WHERE id_karyawan = '%s'", username, BCrypt.hashpw(password, BCrypt.gensalt(12)), idKaryawan);
-        // membuat koneksi 
-        Connection c = (Connection) Koneksi.configDB();
-        Statement s = c.createStatement();
         
-        int result = s.executeUpdate(sql);
-        c.close();
-        return result > 0;
+        // mengeksekusi query
+        return this.us.stat.executeUpdate(sql) > 0;
     }
     
     private void editData(){
@@ -254,7 +238,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         if(!Validation.isEmptyTextField(this.inpUsername)){
             return;
         }else if(!this.oldUsername.equalsIgnoreCase(this.inpUsername.getText())){
-            if(User.isExistUsername(this.inpUsername.getText())){
+            if(this.us.isExistUsername(this.inpUsername.getText())){
                 Message.showWarning(this, "Username tersebut sudah terpakai");
                 return;
             }

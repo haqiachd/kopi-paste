@@ -6,7 +6,7 @@
 package test;
 
 
-import com.koneksi.Dbase;
+import com.koneksi.Database;
 import java.sql.SQLException;
 
 /**
@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public class TestConnWindow extends javax.swing.JFrame {
 
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private int jmlConn = 0;
     
@@ -28,9 +28,9 @@ public class TestConnWindow extends javax.swing.JFrame {
 
     
     private void showKoneksi(){
-        this.lblDibuka.setText("   Koneksi Dibuka :  " + Dbase.CONN_COUNT);
-        this.lblDitutp.setText("   Koneksi Ditutup :  " + Dbase.CONN_COUNT);
-        this.lblJml.setText("    Total Koneksi : " + Dbase.CONN_COUNT);
+        this.lblDibuka.setText("   Koneksi Dibuka :  " + Database.CONN_COUNT);
+        this.lblDitutp.setText("   Koneksi Ditutup :  " + Database.CONN_COUNT);
+        this.lblJml.setText("    Total Koneksi : " + Database.CONN_COUNT);
     }
     
     private void showMenu(){
@@ -47,9 +47,9 @@ public class TestConnWindow extends javax.swing.JFrame {
     private void testInsert(){
         try{
             db.pst = db.conn.prepareStatement("INSERT INTO test_table VALUES (?, ?, ?)");
-            db.pst.setString(1, "Values " + Dbase.CONN_COUNT);
-            db.pst.setString(2, "Values " + Dbase.CONN_COUNT);
-            db.pst.setString(3, "Values " + Dbase.CONN_COUNT);
+            db.pst.setString(1, "Values " + Database.CONN_COUNT);
+            db.pst.setString(2, "Values " + Database.CONN_COUNT);
+            db.pst.setString(3, "Values " + Database.CONN_COUNT);
             System.out.println("IS INSERT : " + db.pst.executeUpdate());
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -58,7 +58,7 @@ public class TestConnWindow extends javax.swing.JFrame {
     
     private void testDelete(){
         try{
-            int res = db.stat.executeUpdate("DELETE FROM test_table WHERE col1 = 'Values " + Dbase.CONN_COUNT +"'");
+            int res = db.stat.executeUpdate("DELETE FROM test_table WHERE col1 = 'Values " + Database.CONN_COUNT +"'");
             System.out.println("IS DELETE : " + (res > 0));
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -67,7 +67,7 @@ public class TestConnWindow extends javax.swing.JFrame {
     
     private void testUpdate(){
         try{
-            int res = db.stat.executeUpdate("UPDATE test_table SET col2 = '', col3 = 'Val "+jmlConn+"' WHERE col1 = 'Values " + Dbase.CONN_COUNT +"'");
+            int res = db.stat.executeUpdate("UPDATE test_table SET col2 = '', col3 = 'Val "+jmlConn+"' WHERE col1 = 'Values " + Database.CONN_COUNT +"'");
             System.out.println("IS UPDATE : " + (res > 0));
         }catch(SQLException ex){
             ex.printStackTrace();

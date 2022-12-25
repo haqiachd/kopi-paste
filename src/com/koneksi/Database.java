@@ -14,7 +14,7 @@ import java.sql.Statement;
  * @author Achmad Baihaqi
  * @since 2020-11-14
  */
-public class Dbase {
+public class Database {
     
     /**
      * Object ini digunakan untuk membangun koneksi dengan <B>Database</B>
@@ -50,7 +50,7 @@ public class Dbase {
     /**
      * Saat class pertama kali diinisialisasi maka akan otomatis membuat koneksi baru
      */
-    public Dbase(){
+    public Database(){
         this.startConnection();
     }
     

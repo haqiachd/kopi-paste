@@ -20,10 +20,10 @@ import javax.swing.JOptionPane;
  * @author Achmad Baihaqi
  * @since 2020-11-14
  */
-public class Database {
+public class DatabaseOld {
     
-    public Database(){
-        this.startConnection();
+    public DatabaseOld(){
+        this.startConnections();
     }
     
     /**
@@ -52,7 +52,7 @@ public class Database {
                                 USER = "root",
                                 PASS = "";
     
-    public final void startConnection(){
+    public final void startConnections(){
         try{
             // meregristrasi driver
             Class.forName(DRIVER); 
@@ -79,7 +79,7 @@ public class Database {
         }
     }
     
-    public void closeConnection(){
+    public void closeConnections(){
         try{
             // Mengecek apakah conn kosong atau tidak, jika tidak maka akan diclose
             if(conn != null){
@@ -251,7 +251,7 @@ public class Database {
     
     public static void main(String[] args) {
         
-        Database db = new Database();
+        DatabaseOld db = new DatabaseOld();
         System.out.println("");
         System.out.println(db.sumData("transaksi_jual", "total_harga", ""));
         

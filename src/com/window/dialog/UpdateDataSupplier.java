@@ -1,16 +1,11 @@
 package com.window.dialog;
 
-import com.koneksi.Dbase;
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Validation;
 import com.media.Gambar;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
@@ -28,7 +23,7 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     
     private Object[] list, listName;
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -103,6 +98,7 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     private void showData(){
         this.inpBahan.removeAllList();
         try{
+            // membuat query
             String sql = "SELECT supplier.id_supplier, supplier.nama_supplier, supplier.no_telp, supplier.alamat, detail_supplier.id_bahan, bahan.nama_bahan "
                        + "FROM supplier "
                        + "JOIN detail_supplier "
@@ -112,19 +108,19 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
                        + "HAVING supplier.id_supplier = '"+this.idSelected+"'";
             
             System.out.println(sql);
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
             
-            if(r.next()){
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            if(this.db.res.next()){
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(r.getString("supplier.nama_supplier"));
-                this.inpTelephone.setText(r.getString("supplier.no_telp"));
-                this.inpAlamat.setText(r.getString("supplier.alamat"));
+                this.inpNama.setText(this.db.res.getString("supplier.nama_supplier"));
+                this.inpTelephone.setText(this.db.res.getString("supplier.no_telp"));
+                this.inpAlamat.setText(this.db.res.getString("supplier.alamat"));
                 // mendapatkan id bahan
-                    this.inpBahan.addList(r.getString("detail_supplier.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
-                while(r.next()){
-                    this.inpBahan.addList(r.getString("detail_supplier.id_bahan") + " | " + r.getString("bahan.nama_bahan"));
+                    this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
+                while(this.db.res.next()){
+                    this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
                 }
                 
                 // copy list id bahan dan nama kedalam object
@@ -157,13 +153,10 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     }
     
     private void resetDetailSupplier() throws SQLException{
-        Connection c = (Connection) Koneksi.configDB();
-        Statement s = c.createStatement();
-        int result = s.executeUpdate("DELETE FROM detail_supplier WHERE id_supplier = '"+this.idSelected+"'");
+        int result = this.db.stat.executeUpdate("DELETE FROM detail_supplier WHERE id_supplier = '"+this.idSelected+"'");
         if(result > 0){
             System.out.println("Reset detail supplier");
         }
-        c.close();
     }
     
     private boolean tambahDataSupplier() throws SQLException{
@@ -181,25 +174,21 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
                noTelp = this.inpTelephone.getText(),
                alamat = this.inpAlamat.getText();
         
-        Connection c = (Connection) Koneksi.configDB();
-        PreparedStatement p = c.prepareCall("INSERT INTO supplier VALUES(?, ?, ?, ?)");
-        p.setString(1, id);
-        p.setString(2, nama);
-        p.setString(3, noTelp);
-        p.setString(4, alamat);
+        // menyiapkan query
+        this.db.pst = this.db.conn.prepareStatement("INSERT INTO supplier VALUES(?, ?, ?, ?)");
+        this.db.pst.setString(1, id);
+        this.db.pst.setString(2, nama);
+        this.db.pst.setString(3, noTelp);
+        this.db.pst.setString(4, alamat);
         
-        int result = p.executeUpdate();
-        c.close();
-        return result > 0;
+        // mengeksekusi query
+        return this.db.pst.executeUpdate() > 0;
     }
     
     private void updateDetail() throws SQLException{
         this.resetDetailSupplier();
         for(Object idBahan : this.list){
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            s.executeUpdate(String.format("INSERT INTO detail_supplier VALUES ('%s', '%s')", this.inpId.getText(), idBahan.toString()));
-            c.close();
+            this.db.stat.executeUpdate(String.format("INSERT INTO detail_supplier VALUES ('%s', '%s')", this.inpId.getText(), idBahan.toString()));
         }
     }
     
@@ -235,11 +224,7 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
                        + "SET nama_supplier = '%s', no_telp = '%s', alamat = '%s' "
                        + "WHERE id_supplier = '%s'", nama, noTelp, alamat, id);
         
-        Connection c = (Connection) Koneksi.configDB();
-        Statement s = c.createStatement();
-        int result = s.executeUpdate(sql);
-        c.close();
-        return result > 0;
+        return this.db.stat.executeUpdate(sql) > 0;
     }
     
     private void editData(){

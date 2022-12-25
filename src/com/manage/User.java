@@ -1,29 +1,17 @@
 package com.manage;
 
-
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.window.LoginWindow;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  *
  * @author Achmad Baihaqi
  */
-public class User {
+public class User extends Database{
     
     private static String USERNAME = null, ID_KY, NAMA_USER = null, LEVEL = null;
-    
-   public static String MD5(String s) throws Exception {
-      MessageDigest m = MessageDigest.getInstance("SHA256");
-      m.update(s.getBytes(),0,s.length());     
-      return new BigInteger(1,m.digest()).toString(512); 
-   }
     
     public boolean login(String usernameOrID, String password){
         try{
@@ -34,20 +22,17 @@ public class User {
                             + "WHERE user.username = '%s' OR karyawan.id_karyawan = '%s'", usernameOrID, usernameOrID);
             
             // eksekusi query
-            Connection conn = (Connection) Koneksi.configDB();
-            Statement stat = conn.createStatement();
-            ResultSet res = stat.executeQuery(query);
+            super.res = super.stat.executeQuery(query);
             
             // cek username ada atau tidak
-            if(res.next()){
+            if(super.res.next()){
                 // mengecek password 
-                if(BCrypt.checkpw(password, res.getString("password"))){
+                if(BCrypt.checkpw(password, super.res.getString("password"))){
                     // mendapatkan nama dari user yang sedang login
-                    User.USERNAME = res.getString("user.username");
-                    User.ID_KY = res.getString("karyawan.id_karyawan");
-                    User.NAMA_USER = res.getString("karyawan.nama_karyawan");
-                    User.LEVEL = res.getString("user.level");
-                    conn.close();
+                    User.USERNAME = super.res.getString("user.username");
+                    User.ID_KY = super.res.getString("karyawan.id_karyawan");
+                    User.NAMA_USER = super.res.getString("karyawan.nama_karyawan");
+                    User.LEVEL = super.res.getString("user.level");
                     return true;
                 }else{
                     Message.showWarning(this, "Password Anda tidak cocok!");
@@ -61,14 +46,11 @@ public class User {
         return false;
     }
     
-    public static boolean isExistUsername(String username){
+    public boolean isExistUsername(String username){
         try{
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT username FROM user WHERE username = '"+username+"'");
+            super.res = super.stat.executeQuery("SELECT username FROM user WHERE username = '"+username+"'");
             
-            if(r.next()){
-                c.close(); s.close(); r.close();
+            if(super.res.next()){
                 return true;
             }
         }catch(SQLException ex){

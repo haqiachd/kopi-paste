@@ -1,6 +1,6 @@
 package com.window.dialog;
 
-import com.koneksi.Database;
+import com.koneksi.DatabaseOld;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
@@ -19,7 +19,7 @@ public class GetDataBahanSupplier extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    Database barang = new Database();
+    DatabaseOld barang = new DatabaseOld();
     
     Text text = new Text();
     

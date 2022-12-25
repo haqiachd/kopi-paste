@@ -34,7 +34,7 @@ public class DataBahan extends javax.swing.JFrame {
     
     DatabaseOld barang = new DatabaseOld();
     
-    Text text = new Text();
+    private final Text text = new Text();
    
     public DataBahan() {
         initComponents();
@@ -55,6 +55,7 @@ public class DataBahan extends javax.swing.JFrame {
         // set update data
         JTextField fields[] = {this.inpNama, this.inpJenis, this.inpStok, this.inpHarga};
         
+        // set editable false pada textfield
         this.inpId.setEditable(false);
         this.inpNama.setEditable(false);
         this.inpJenis.setEditable(false);
@@ -64,6 +65,7 @@ public class DataBahan extends javax.swing.JFrame {
         this.win.hoverButton();
         this.win.updateData(fields);
         this.updateTabel();
+        
         // set desain tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(110);
@@ -167,8 +169,8 @@ public class DataBahan extends javax.swing.JFrame {
     private String idSelected;
     
     private void showData(){
-//        this.idSelected = this.jTabel1.getValueAt(this.jTabel1.getSelectedRow(), 0).toString();
         try {
+            // membuat dan mengeksekusi query
             String sql = "SELECT * FROM bahan WHERE id_bahan = '" + this.idSelected + "'";
             this.db.res = this.db.stat.executeQuery(sql);
             
@@ -196,6 +198,7 @@ public class DataBahan extends javax.swing.JFrame {
     }
     
     private void resetData(){
+        // reset data textfield
         this.inpId.setText("");
         this.inpNama.setText("");
         this.inpStok.setText("");

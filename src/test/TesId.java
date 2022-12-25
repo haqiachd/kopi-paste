@@ -5,7 +5,7 @@
  */
 package test;
 
-import com.koneksi.Dbase;
+import com.koneksi.Database;
 import com.koneksi.Koneksi;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,7 +18,7 @@ import java.sql.Statement;
  */
 public class TesId {
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private String createID(){
         try{

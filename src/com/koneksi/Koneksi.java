@@ -15,7 +15,7 @@ public class Koneksi {
     
     private static Connection mysqlconfig;
     
-    public static Connection configDB() throws SQLException{
+    public static Connection configDBs() throws SQLException{
         try{
             String url = "jdbc:mysql://localhost:3306/kopi_paste";
             

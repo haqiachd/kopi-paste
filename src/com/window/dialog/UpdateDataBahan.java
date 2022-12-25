@@ -1,17 +1,12 @@
 package com.window.dialog;
 
-import com.koneksi.Dbase;
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Validation;
 import com.media.Audio;
 import com.media.Gambar;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
@@ -27,7 +22,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
     
     private String idSelected;
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -96,18 +91,19 @@ public class UpdateDataBahan extends javax.swing.JDialog {
     private void showData(){
 //        this.idSelected = this.jTabel1.getValueAt(this.jTabel1.getSelectedRow(), 0).toString();
         try {
+            // membuat query
             String sql = "SELECT * FROM bahan WHERE id_bahan = '" + this.idSelected + "'";
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
             
             // mendapatkan data
-            if(r.next()){
-                String namaBahan = r.getString("nama_bahan"),
-                       jenisBahan = r.getString("jenis"),
-                       stok = r.getString("stok"),
-                       harga = r.getString("harga"),
-                       satuan = r.getString("satuan");
+            if(this.db.res.next()){
+                String namaBahan = this.db.res.getString("nama_bahan"),
+                       jenisBahan = this.db.res.getString("jenis"),
+                       stok = this.db.res.getString("stok"),
+                       harga = this.db.res.getString("harga"),
+                       satuan = this.db.res.getString("satuan");
                 
                 // menampilkan data
                 this.inpId.setText(this.idSelected);
@@ -125,7 +121,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                     this.lblHargaPerSatuan.setText("/ Liter");            
                 }
             }
-            c.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
@@ -177,27 +172,26 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         harga = this.inpHarga.getText();
 
         try{
+            // membuat query
             String sql = "INSERT INTO bahan VALUES (?, ?, ?, ?, ?, ?)";
-            // membuat koneksi ke database
-            Connection conn = (Connection) Koneksi.configDB();
+            
             // menyiapkan query
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, idBahan);
-            pst.setString(2, namaBahan);
-            pst.setString(3, jenisBahan);
-            pst.setInt(4, Integer.parseInt(stok));
-            pst.setString(5, this.getkodeSatuan(satuan));
-            pst.setInt(6, Integer.parseInt(harga));
+            this.db.pst = this.db.conn.prepareStatement(sql);
+            // menambahkan data bahan ke query
+            this.db.pst.setString(1, idBahan);
+            this.db.pst.setString(2, namaBahan);
+            this.db.pst.setString(3, jenisBahan);
+            this.db.pst.setInt(4, Integer.parseInt(stok));
+            this.db.pst.setString(5, this.getkodeSatuan(satuan));
+            this.db.pst.setInt(6, Integer.parseInt(harga));
 
             // eksekusi query
-            int result = pst.executeUpdate();
+            int result = this.db.pst.executeUpdate();
             if(result > 0){
                 Audio.play(Audio.SOUND_INFO);
                 JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!");
-                conn.close();
                 dispose();
             }
-            conn.close();
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
@@ -234,11 +228,8 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             
             System.out.println(sql);
             
-                // membuat koneksi ke database
-                Connection koneksi = (Connection) Koneksi.configDB();
-                Statement stat = koneksi.createStatement();
                 // eksekusi query
-                int result = stat.executeUpdate(sql);
+                int result = this.db.stat.executeUpdate(sql);
                 
                 // jika query berhasil dieksekusi
                 if(result > 0){
@@ -246,14 +237,11 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Data berhasil diupdate!");
                     // refresh data
                     this.showData();
-                    stat.close();
-                    koneksi.close();
                     this.dispose();
                 }else{
                     Audio.play(Audio.SOUND_WARNING);
                     JOptionPane.showMessageDialog(this, "Data gagal diupdate!");
                 }
-                koneksi.close();
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
             ex.printStackTrace();

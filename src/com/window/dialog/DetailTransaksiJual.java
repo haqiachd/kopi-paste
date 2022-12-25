@@ -1,18 +1,12 @@
 package com.window.dialog;
 
 
-import com.koneksi.Koneksi;
+import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
-import java.awt.print.PrinterException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.MessageFormat;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -22,6 +16,8 @@ import javax.swing.table.TableColumnModel;
  */
 public class DetailTransaksiJual extends javax.swing.JDialog {
 
+    private final Database db = new Database();
+    
     private final PopUpBackground pop = new PopUpBackground();
     
     private final Text txt = new Text();
@@ -97,21 +93,21 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tabelDetail.getModel();
         
         try{
+            // membuat query
             String sql = "SELECT id_tr_jual, nama_menu, harga_menu, jumlah, total_harga "
                        + "FROM detail_tr_jual  "
                        + "WHERE id_tr_jual = '"+this.id+"'";
+            
             // eksekusi query
-            Connection c = (Connection) Koneksi.configDB();
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
             int row = 0;
-            while(r.next()){
+            while(this.db.res.next()){
                 String idTr; 
                 
                 // id transaksi hanya ditampilkan pada baris ke satu saja
                 if(row == 0){
-                    idTr = r.getString("id_tr_jual");
+                    idTr = this.db.res.getString("id_tr_jual");
                 }else{
                     idTr = "";
                 }
@@ -119,18 +115,14 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                 // menambahkan data detail ke tabel
                 model.addRow(new Object[]{
                         idTr,
-                        r.getString("nama_menu"),
-                        txt.toMoneyCase(r.getString("harga_menu")),
-                        r.getString("jumlah"),
-                        txt.toMoneyCase(r.getString("total_harga"))
+                        this.db.res.getString("nama_menu"),
+                        txt.toMoneyCase(this.db.res.getString("harga_menu")),
+                        this.db.res.getString("jumlah"),
+                        txt.toMoneyCase(this.db.res.getString("total_harga"))
                     }
                 );
                 row++;
             }
-            
-            c.close();
-            r.close();
-            s.close();
             
             int jumlah = 0, harga = 0;
             // menghitung total menu dan harga
@@ -296,7 +288,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DetailTransaksiJual dialog = new DetailTransaksiJual(new javax.swing.JFrame(), true, "");
+                DetailTransaksiJual dialog = new DetailTransaksiJual(new javax.swing.JFrame(), true, "TRJ0141");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

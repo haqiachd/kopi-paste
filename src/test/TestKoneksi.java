@@ -5,7 +5,7 @@
  */
 package test;
 
-import com.koneksi.Dbase;
+import com.koneksi.Database;
 import java.sql.SQLException;
 
 /**
@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class TestKoneksi {
     
-    private final Dbase db = new Dbase();
+    private final Database db = new Database();
     
     public void showMenu(){
         try{

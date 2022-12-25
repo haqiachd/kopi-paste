@@ -15,12 +15,12 @@ public class Message {
 
     public static void showException(Component parent, String msg, Throwable ex){
         Audio.play(Audio.SOUND_ERROR);
-        JOptionPane.showMessageDialog(parent, msg, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parent, "Exception : " + msg, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
     public static void showException(Object obj, Throwable ex){
         Audio.play(Audio.SOUND_ERROR);
-        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Exception : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     
  
@@ -53,6 +53,10 @@ public class Message {
     }
     
     public static void main(String[] args) {
-        Message.showWarning(null, "");
+        try{
+            System.out.println(Integer.parseInt("s"));
+        }catch(NumberFormatException ex){
+            Message.showException(null, ex);
+        }
     }
 }
