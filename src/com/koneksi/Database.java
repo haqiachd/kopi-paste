@@ -17,7 +17,7 @@ import java.sql.Statement;
 public class Database {
     
     /**
-     * Object ini digunakan untuk membangun koneksi dengan <B>Database</B>
+     * Object ini digunakan untuk membangun koneksi dengan Database
      */
     public Connection conn;
     /**
@@ -66,6 +66,7 @@ public class Database {
             // membuat object statement
             stat = conn.createStatement();
 
+            // jumlah koneksi bertambah
             CONN_COUNT++;
             System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
         } catch (ClassNotFoundException | SQLException ex) {
@@ -74,8 +75,6 @@ public class Database {
                 Message.showException(null, "MySQL Connector tidak dapat ditemukan", ex);
             } else if (ex.getMessage().contains("Communications link failure")) {
                 Message.showException(null, "Sepertinya MySQL Anda belum diaktifkan!! \nSilahkan aktifkan MySQL Anda dan buka kembali Aplikasi!!", ex);
-            } else if (ex.getMessage().contains("Access denied for user")) {
-                Message.showException(null, "Maaf untuk membuka aplikasi ini \nUsername dan password dari MySQL anda harus diatur ke default!\nMohon maaf atas ketidaknyamanan ini!", ex);
             } else if (ex.getMessage().contains("Unknown database")) {
                 Message.showException(null, "Tidak dapat menemukan database '" + DB_NAME + "'\nSilahkan melakukan import Database secara manual dan buka kembali Aplikasi!", ex);
             } else {
@@ -104,8 +103,9 @@ public class Database {
                 res.close();
             }
             
+            // jumlah koneksi berkurang
             CONN_COUNT--;
-            System.out.printf("Berhasil koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
+            System.out.printf("Berhasil menutup koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
