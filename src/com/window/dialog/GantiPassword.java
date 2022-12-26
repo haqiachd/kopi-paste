@@ -1,8 +1,8 @@
 package com.window.dialog;
 
-import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
+import com.manage.User;
 import com.manage.Validation;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
@@ -16,11 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
  */
 public class GantiPassword extends javax.swing.JDialog {
     
-    private final Database db = new Database();
+    private final User us = new User();
     
     private final Text txt = new Text();
     
-    private final String username;
+    private final String usernameOrId;
     
     private boolean isSuccess = false;
 
@@ -34,9 +34,14 @@ public class GantiPassword extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        this.username = username;
         
+        // mendapatkan dan menampilkan username 
+        this.usernameOrId = username;
         this.inpUsername.setText(username);
+        
+        // set ui button
+        this.btnGanti.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnBatal.setUI(new javax.swing.plaf.basic.BasicButtonUI());
     }
 
     private boolean isValidTelephone(){
@@ -46,14 +51,14 @@ public class GantiPassword extends javax.swing.JDialog {
                     + "FROM karyawan AS k "
                     + "JOIN user AS u "
                     + "ON k.id_karyawan = u.id_karyawan "
-                    + "WHERE username = '"+this.username+"'";
+                    + "WHERE u.username = '"+this.usernameOrId+"' OR u.id_karyawan = '"+this.usernameOrId+"'";
             
             // eksekusi query sql
-            this.db.res = this.db.stat.executeQuery(sql);
+            this.us.res = this.us.stat.executeQuery(sql);
             
-            if(this.db.res.next()){
+            if(this.us.res.next()){
                 // mengecek apakah no telepone valid atau tidak
-                return this.inpNoTelp.getText().equals(this.db.res.getString(1));
+                return this.inpNoTelp.getText().equals(this.us.res.getString(1));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -68,10 +73,10 @@ public class GantiPassword extends javax.swing.JDialog {
             String hashPw = BCrypt.hashpw(this.inpPassword.getText(), BCrypt.gensalt(12)),
                     // membuat query untuk ganti password
                     sql = "UPDATE user SET password = '"+hashPw+"' "
-                        + "WHERE username = '"+this.username+"'";
+                        + "WHERE username = '"+this.usernameOrId+"' OR id_karyawan = '"+this.usernameOrId+"'";
             
             // eksekusi query
-            return this.db.stat.executeUpdate(sql) > 0;
+            return this.us.stat.executeUpdate(sql) > 0;
         }catch(SQLException ex){
             Message.showException(this, ex);
         }
@@ -422,6 +427,7 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_lblEyeKonfMouseExited
 
     private void btnGantiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGantiActionPerformed
+        // validasi data ganti password
         if(!Validation.isEmptyTextField(this.inpUsername, this.inpNoTelp, this.inpPassword, this.inpKonfPass)){
             return;
         }else if(!this.isValidTelephone()){
@@ -436,11 +442,12 @@ public class GantiPassword extends javax.swing.JDialog {
         
         // mengubah password
         if(this.gantiPassword()){
+            // jika password berhasil diubah
             isSuccess = true;
             Message.showInformation(this, "Password berhasil diganti!");
             this.setVisible(false);
         }else{
-            Message.showInformation(this, "Password gagal diganti!!");
+            Message.showWarning(this, "Password gagal diganti!!");
         }
     }//GEN-LAST:event_btnGantiActionPerformed
 
@@ -470,18 +477,14 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_inpNoTelpKeyTyped
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        this.db.closeConnection();
+        this.us.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -489,19 +492,16 @@ public class GantiPassword extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GantiPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GantiPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GantiPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GantiPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 GantiPassword dialog = new GantiPassword(new javax.swing.JFrame(), true, "admin");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {

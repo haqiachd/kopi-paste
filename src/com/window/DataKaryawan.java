@@ -37,7 +37,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         initComponents();
         
         this.setTitle("Test Window");
-        this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+//        this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
         
         // set ui button

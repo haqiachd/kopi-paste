@@ -48,7 +48,23 @@ public class User extends Database{
     
     public boolean isExistUsername(String username){
         try{
+            // mengeksekusi query
             super.res = super.stat.executeQuery("SELECT username FROM user WHERE username = '"+username+"'");
+            
+            if(super.res.next()){
+                return true;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(null, ex);
+        }
+        return false;
+    }
+    
+    public boolean isIdKaryawan(String id){
+        try{
+            // megeksekusi query
+            super.res = super.stat.executeQuery("SELECT id_karyawan FROM user WHERE id_karyawan = '"+id+"'");
             
             if(super.res.next()){
                 return true;
@@ -83,6 +99,8 @@ public class User extends Database{
     public void logout(){
         User.NAMA_USER = null;
         User.LEVEL = null;
+        User.USERNAME = null;
+        User.ID_KY = null;
         // membuka login window
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override

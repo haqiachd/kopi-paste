@@ -1,10 +1,13 @@
 package com.window;
 
+import com.manage.Message;
 import com.manage.User;
 import com.media.Gambar;
 import com.sun.glass.events.KeyEvent;
+import com.window.dialog.GantiPassword;
 import java.awt.Color;
 import java.awt.Cursor;
+import javax.swing.JOptionPane;
 
 /**
  * Digunakan untuk login bagi admin, petugas dan siswa.
@@ -15,6 +18,8 @@ import java.awt.Cursor;
 public class LoginWindow extends javax.swing.JFrame {
 
     private final User user = new User();
+    
+    private boolean isLaliPass = false;
     
     private int x, y;
     
@@ -41,6 +46,11 @@ public class LoginWindow extends javax.swing.JFrame {
                 }
             });
             this.setVisible(false);
+        }else{
+            // jika password salah maka label copyright akan berubah menjadi lupa password
+            this.isLaliPass = true;
+            this.lblCopyright.setText("Lupa Password?");
+            this.lblCopyright.setForeground(new Color(255,0,0));
         }
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
@@ -184,6 +194,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
         inpUsername.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         inpUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         inpUsername.setMaximumSize(new java.awt.Dimension(2147483647, 35));
         inpUsername.setMinimumSize(new java.awt.Dimension(6, 35));
         inpUsername.setPreferredSize(new java.awt.Dimension(6, 35));
@@ -261,10 +272,21 @@ public class LoginWindow extends javax.swing.JFrame {
         });
         pnlMain.add(lblClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 0, 31, 28));
 
-        lblCopyright.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
+        lblCopyright.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         lblCopyright.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCopyright.setText("Copyright © 2022. C2 Team. All Rights Reserved");
-        pnlMain.add(lblCopyright, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 370, 20));
+        lblCopyright.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCopyrightMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCopyrightMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCopyrightMouseExited(evt);
+            }
+        });
+        pnlMain.add(lblCopyright, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 330, 370, 30));
 
         lblBgImage.setBackground(new java.awt.Color(255, 255, 255));
         lblBgImage.setForeground(new java.awt.Color(255, 255, 255));
@@ -400,6 +422,44 @@ public class LoginWindow extends javax.swing.JFrame {
             this.inpPassword.requestFocus();
         }
     }//GEN-LAST:event_inpUsernameKeyReleased
+
+    private void lblCopyrightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseClicked
+        if(this.isLaliPass){
+            GantiPassword g = new GantiPassword(this, true, this.inpUsername.getText());
+            
+            // cek apakah username exist
+            if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isIdKaryawan(this.inpUsername.getText())){
+                // membuka window
+                g.setVisible(true);                
+            }else{
+                g.dispose();
+                Message.showWarning(this, "Username/Id Karyawan tersebut tidak ditemukan!");
+            }
+            
+            // jika password berhasil diganti
+            if(g.isSuccess()){
+                Message.showInformation(this, "Silahkan masukan username dan password baru Anda!");
+                // reset textfield
+                this.inpUsername.requestFocus();
+                this.inpPassword.setText("");
+                this.inpUsername.setText("");
+            }
+        }
+    }//GEN-LAST:event_lblCopyrightMouseClicked
+
+    private void lblCopyrightMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseEntered
+        if(isLaliPass){
+            this.lblCopyright.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            this.lblCopyright.setText("<html><p style=\"text-decoration:underline; color:rgb(255,0,0);\">Lupa Password?</p></html>");
+        }
+    }//GEN-LAST:event_lblCopyrightMouseEntered
+
+    private void lblCopyrightMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseExited
+        if(isLaliPass){
+            this.lblCopyright.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+            this.lblCopyright.setText("<html><p style=\"text-decoration:none; color:rgb(255,0,0);\">Lupa Password?</p></html>");
+        }
+    }//GEN-LAST:event_lblCopyrightMouseExited
 
     public static void main(String args[]) {
         
