@@ -204,8 +204,33 @@ public class DataBahan extends javax.swing.JFrame {
                 this.inpHarga.setText(text.toMoneyCase(harga) + " / " + satuanBesaran);
             }
             
+            this.showListBahan();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+    
+    private void showListBahan(){
+        this.inpSupplier.removeAllList();
+        try{
+            // menyiapkan query untuk mendapatkan data
+            String sql = "SELECT sp.id_supplier, sp.nama_supplier, dsp.id_bahan "
+                       + "FROM supplier AS sp "
+                       + "JOIN detail_supplier AS dsp "
+                       + "ON sp.id_supplier = dsp.id_supplier "
+                       +"HAVING dsp.id_bahan = '"+this.idSelected+"'";
+            System.out.println(sql);
+            
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // mendapatkan data bahan
+            while(this.db.res.next()){
+                this.inpSupplier.addList(this.db.res.getString("sp.id_supplier") + " | " + this.db.res.getString("sp.nama_supplier"));
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
         }
     }
     
@@ -271,6 +296,9 @@ public class DataBahan extends javax.swing.JFrame {
         lblHarga = new javax.swing.JLabel();
         inpHarga = new com.ui.RoundedTextField(15);
         inpJenis = new com.ui.RoundedTextField(15);
+        lblSupplier = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        inpSupplier = new haqiachd.list.JListCustom();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -757,6 +785,14 @@ public class DataBahan extends javax.swing.JFrame {
         inpJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpJenis.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
+        lblSupplier.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblSupplier.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-nama.png"))); // NOI18N
+        lblSupplier.setText("Supplier");
+
+        inpSupplier.setBackground(new java.awt.Color(248, 249, 250));
+        inpSupplier.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        jScrollPane3.setViewportView(inpSupplier);
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -770,35 +806,38 @@ public class DataBahan extends javax.swing.JFrame {
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lineHorTop)
                             .addGroup(pnlContentLayout.createSequentialGroup()
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpStok, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpJenis))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpNama))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnHapus))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpHarga)))
-                                    .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(inpStok, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(inpJenis))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(inpNama))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnHapus))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(inpHarga))
+                                    .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane3)))
                                 .addGap(0, 9, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
                 .addGap(18, 18, 18)
@@ -857,7 +896,14 @@ public class DataBahan extends javax.swing.JFrame {
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblHarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblSupplier, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(122, 122, 122))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1263,8 +1309,10 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JTextField inpJenis;
     private javax.swing.JTextField inpNama;
     private javax.swing.JTextField inpStok;
+    private haqiachd.list.JListCustom inpSupplier;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
@@ -1280,6 +1328,7 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
     private javax.swing.JLabel lblProfileSidebar;
+    private javax.swing.JLabel lblSupplier;
     private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;
     private javax.swing.JLabel lblTopProfile;

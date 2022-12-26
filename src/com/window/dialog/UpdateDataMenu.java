@@ -103,11 +103,36 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private void showData(){
         this.inpBahan.removeAllList();
         try{
-            // membuat query untuk menampilkan data menu
-            String sql = "SELECT menu.nama_menu, menu.jenis, menu.harga, "
-                       + "detail_menu.id_bahan, bahan.nama_bahan, detail_menu.quantity, bahan.satuan "
+            // menyiapkan query untuk mendapatkan data dari menu
+            String sql = "SELECT nama_menu, jenis, jenis, harga FROM menu "
+                       + "WHERE id_menu = '"+this.idSelected+"'";
+            System.out.println(sql);
+            
+            // eksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // menampilkan data ke window
+            if(this.db.res.next()){
+                this.inpId.setText(this.idSelected);
+                this.inpNama.setText(this.db.res.getString("nama_menu"));
+                this.inpJenis.setSelectedItem(this.db.res.getString("jenis"));
+                this.inpHarga.setText(this.db.res.getString("harga"));
+            }
+            
+            this.showListBahan();
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
+    }
+    
+    private void showListBahan(){
+        this.inpBahan.removeAllList();
+        try{
+            // menyiapkan query untuk mendapatkan data dari menu
+            String sql = "SELECT detail_menu.id_bahan, detail_menu.quantity, bahan.satuan, bahan.nama_bahan "
                        + "FROM menu "
-                       + "JOIN detail_menu  "
+                       + "JOIN detail_menu AS detail_menu "
                        + "ON menu.id_menu = detail_menu.id_menu "
                        + "JOIN bahan "
                        + "ON bahan.id_bahan = detail_menu.id_bahan "
@@ -117,28 +142,21 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             // eksekusi query
             this.db.res = this.db.stat.executeQuery(sql);
             
-            if (this.db.res.next()) {
-                this.inpId.setText(this.idSelected);
-                this.inpNama.setText(this.db.res.getString("menu.nama_menu"));
-                this.inpJenis.setSelectedItem(this.db.res.getString("menu.jenis"));
-                this.inpHarga.setText(this.db.res.getString("menu.harga"));
-                // BA001 | 10.gr, Nama Bahab
-                this.inpBahan.addList(
-                        String.format(
-                                "%s | %s.%s, %s", this.db.res.getString("detail_menu.id_bahan"), this.db.res.getString("detail_menu.quantity"), this.db.res.getString("bahan.satuan"), this.db.res.getString("bahan.nama_bahan")
-                        ));
-                while (this.db.res.next()) {
+            // menampilkan data ke window
+            while(this.db.res.next()){
+                // menampilkan data list bahan
                     this.inpBahan.addList(
                             String.format(
                                     "%s | %s.%s, %s", this.db.res.getString("detail_menu.id_bahan"), this.db.res.getString("detail_menu.quantity"), this.db.res.getString("bahan.satuan"), this.db.res.getString("bahan.nama_bahan")
                             ));
-                }
             }
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
     }
+    
+
     
     private void updateListData(){
         // copy list id bahan dan nama kedalam object

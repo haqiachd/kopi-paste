@@ -98,39 +98,51 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
     private void showData(){
         this.inpBahan.removeAllList();
         try{
-            // membuat query
-            String sql = "SELECT supplier.id_supplier, supplier.nama_supplier, supplier.no_telp, supplier.alamat, detail_supplier.id_bahan, bahan.nama_bahan "
-                       + "FROM supplier "
-                       + "JOIN detail_supplier "
-                       + "ON supplier.id_supplier = detail_supplier.id_supplier "
-                       + "JOIN bahan "
-                       + "ON bahan.id_bahan = detail_supplier.id_bahan "
-                       + "HAVING supplier.id_supplier = '"+this.idSelected+"'";
-            
+            // menyiapkan query untuk mendapatkan data
+            String sql = "SELECT id_supplier, nama_supplier, no_telp, alamat "
+                    + "FROM supplier WHERE id_supplier = '" + this.idSelected + "'";
             System.out.println(sql);
             
             // mengeksekusi query
             this.db.res = this.db.stat.executeQuery(sql);
             
             if(this.db.res.next()){
+                // menampilkan data ke window
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(this.db.res.getString("supplier.nama_supplier"));
-                this.inpTelephone.setText(this.db.res.getString("supplier.no_telp"));
-                this.inpAlamat.setText(this.db.res.getString("supplier.alamat"));
-                // mendapatkan id bahan
-                    this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
-                while(this.db.res.next()){
-                    this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
-                }
-                
-                // copy list id bahan dan nama kedalam object
-                this.listName = this.inpBahan.getAllList();
-                // copy list id bahan ke dalam array
-                this.updateListId();
+                this.inpNama.setText(this.db.res.getString("nama_supplier"));
+                this.inpTelephone.setText(this.db.res.getString("no_telp"));
+                this.inpAlamat.setText(this.db.res.getString("alamat"));
+            }
+            this.showListBahan();
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
+    }
+    
+    private void showListBahan(){
+        this.inpBahan.removeAllList();
+        try{
+            // menyiapkan query untuk mendapatkan data
+            String sql = "SELECT supplier.id_supplier, detail_supplier.id_bahan, bahan.nama_bahan "
+                       + "FROM supplier "
+                       + "JOIN detail_supplier "
+                       + "ON supplier.id_supplier = detail_supplier.id_supplier "
+                       + "JOIN bahan "
+                       + "ON bahan.id_bahan = detail_supplier.id_bahan "
+                       + "HAVING supplier.id_supplier = '"+this.idSelected+"'";
+            System.out.println(sql);
+            
+            // mengeksekusi query
+            this.db.res = this.db.stat.executeQuery(sql);
+            
+            // mendapatkan data bahan
+            while(this.db.res.next()){
+                this.inpBahan.addList(this.db.res.getString("detail_supplier.id_bahan") + " | " + this.db.res.getString("bahan.nama_bahan"));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+            Message.showException(this, ex);
         }
     }
     

@@ -6,6 +6,7 @@ import com.manage.Text;
 import com.manage.User;
 import com.manage.Validation;
 import com.media.Gambar;
+import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -44,9 +45,12 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
         
         this.inpId.setEditable(false);
+        
+        // set ui button
         this.btnSimpan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
+        // set margin button
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNoTelp.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
@@ -66,6 +70,12 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                 this.lblTitle.setText("Edit Data Karyawan");
                 this.inpId.setText(this.idSelected);
                 this.showData();
+                // menghilangkan username dan password saat mengedit data
+                this.inpPassword.setVisible(false);
+                this.lblEye.setVisible(false);
+                this.lblPassword.setVisible(false);
+                this.inpUsername.setEditable(false);
+                this.inpUsername.setBackground(new Color(231,235,239));
                 break;
         }
         
@@ -219,20 +229,6 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         return  this.db.stat.executeUpdate(sql) > 0;
     }
     
-    private boolean editDataUser() throws SQLException{
-        // mendapatkan data
-        String idKaryawan = this.inpId.getText(),
-               username = this.inpUsername.getText(),
-               password = this.inpPassword.getText(),
-               // membuat query
-               sql = String.format("UPDATE user "
-                        + "SET username = '%s', password = '%s'"
-                        + "WHERE id_karyawan = '%s'", username, BCrypt.hashpw(password, BCrypt.gensalt(12)), idKaryawan);
-        
-        // mengeksekusi query
-        return this.us.stat.executeUpdate(sql) > 0;
-    }
-    
     private void editData(){
         // cek validasi data kosong atau tidak
         if(!Validation.isEmptyTextField(this.inpUsername)){
@@ -253,10 +249,9 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         }
         
         try{
-            boolean karyawan = this.editDataKaryawan(),
-                    user = this.editDataUser();
+            boolean karyawan = this.editDataKaryawan();
             
-            if(karyawan && user){
+            if(karyawan){
                 JOptionPane.showMessageDialog(this, "Data karyawan berhasil diedit!");
                 this.dispose();
             }else{
@@ -406,6 +401,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpUsername.setBackground(new java.awt.Color(248, 249, 250));
         inpUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         inpUsername.setName("Username"); // NOI18N
 
         lblShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N

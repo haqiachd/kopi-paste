@@ -53,10 +53,10 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.win.hoverButton();
         
         // set update data
-        JTextField[] fields = {this.inpNama, this.inpAlamat, this.inpPassword, this.inpShift, this.inpTelephone};
+        JTextField[] fields = {this.inpNama, this.inpAlamat, this.inpShift, this.inpTelephone};
         this.inpNama.setEditable(false);
         this.inpAlamat.setEditable(false);
-        this.inpPassword.setEditable(false);
+//        this.inpPassword.setEditable(false);
         this.inpShift.setEditable(false);
         this.inpTelephone.setEditable(false);
         this.win.updateData(fields);
@@ -69,7 +69,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.inpTelephone.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
         this.inpShift.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+//        this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         // hidden button
         this.btnPembeli.setVisible(false);
@@ -80,7 +80,7 @@ public class DataKaryawan extends javax.swing.JFrame {
             this.btnAdd.setVisible(false);
             this.btnEdit.setVisible(false);
             this.btnHapus.setVisible(false);
-            this.lblEye.setVisible(false);
+//            this.lblEye.setVisible(false);
         }
         
         // menampilkan data tabel
@@ -169,7 +169,7 @@ public class DataKaryawan extends javax.swing.JFrame {
                 this.inpTelephone.setText(this.db.res.getString("karyawan.no_telp"));
                 this.inpShift.setText(this.db.res.getString("karyawan.shif"));
                 this.inpUsername.setText(this.db.res.getString("user.username"));
-                this.inpPassword.setText(this.db.res.getString("user.password"));
+//                this.inpPassword.setText(this.db.res.getString("user.password"));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -184,7 +184,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.inpAlamat.setText("");
         this.inpShift.setText("");
         this.inpUsername.setText("");
-        this.inpPassword.setText("");
+//        this.inpPassword.setText("");
         this.idSelected = "";
     }
     
@@ -239,10 +239,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         lineHorBot = new javax.swing.JSeparator();
         lblGajelas = new javax.swing.JLabel();
         lblShift = new javax.swing.JLabel();
-        lblPassword = new javax.swing.JLabel();
         inpShift = new com.ui.RoundedTextField(15);
-        inpPassword = new com.ui.RoundedPasswordField(15);
-        lblEye = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
         inpUsername = new com.ui.RoundedTextField(50);
         lblBottom = new javax.swing.JLabel();
@@ -716,33 +713,15 @@ public class DataKaryawan extends javax.swing.JFrame {
         lblShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-shift.png"))); // NOI18N
         lblShift.setText("Shift");
 
-        lblPassword.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-password.png"))); // NOI18N
-        lblPassword.setText("Password");
-
         inpShift.setBackground(new java.awt.Color(248, 249, 250));
         inpShift.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpShift.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-
-        inpPassword.setBackground(new java.awt.Color(248, 249, 250));
-        inpPassword.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        lblEye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
-        lblEye.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblEyeMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblEyeMouseExited(evt);
-            }
-        });
 
         lblUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
         lblUsername.setText("Username");
 
-        inpUsername.setBackground(new java.awt.Color(248, 249, 250));
+        inpUsername.setBackground(new java.awt.Color(231, 235, 239));
         inpUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpUsername.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -787,12 +766,6 @@ public class DataKaryawan extends javax.swing.JFrame {
                                             .addComponent(lblShift, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(inpShift))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(lblEye))
                                         .addGroup(pnlContentLayout.createSequentialGroup()
                                             .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -865,11 +838,6 @@ public class DataKaryawan extends javax.swing.JFrame {
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblShift, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(inpShift, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblEye, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1185,22 +1153,6 @@ public class DataKaryawan extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
-    private void lblEyeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseEntered
-        if(User.isAdmin()){
-            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-            this.inpPassword.setEchoChar((char)0);            
-        }else{
-            JOptionPane.showMessageDialog(this, "Hanya admin yang boleh melihat password!");
-        }
-    }//GEN-LAST:event_lblEyeMouseEntered
-
-    private void lblEyeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpPassword.setEchoChar('•');
-    }//GEN-LAST:event_lblEyeMouseExited
-
     private void tabelDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelDataMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.idSelected = this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString();
@@ -1282,7 +1234,6 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JTextField inpCari;
     private javax.swing.JTextField inpId;
     private javax.swing.JTextField inpNama;
-    private javax.swing.JPasswordField inpPassword;
     private javax.swing.JTextField inpShift;
     private javax.swing.JTextField inpTelephone;
     private javax.swing.JTextField inpUsername;
@@ -1292,7 +1243,6 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
-    private javax.swing.JLabel lblEye;
     private javax.swing.JLabel lblGajelas;
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblId;
@@ -1302,7 +1252,6 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
-    private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblProfileSidebar;
     private javax.swing.JLabel lblShift;
     private javax.swing.JLabel lblTelephone;
