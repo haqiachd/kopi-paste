@@ -655,7 +655,7 @@ public class MenuLaporan extends javax.swing.JFrame {
 
     private void btnSupplierMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSupplierMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        MenuTransaksiJual window = new MenuTransaksiJual();
+        DataSupplier window = new DataSupplier();
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
