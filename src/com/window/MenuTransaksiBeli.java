@@ -89,9 +89,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         // set model tabel ke default
         this.resetTabel();
         // setting desain tabel
-        this.tabelData.setRowHeight(29);
-        this.tabelData.getTableHeader().setBackground(new java.awt.Color(248,249,250));
-        this.tabelData.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
+        this.tabelTr.setRowHeight(29);
+        this.tabelTr.getTableHeader().setBackground(new java.awt.Color(248,249,250));
+        this.tabelTr.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
         
         // set margin textfield
         this.inpIdBahan.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -172,16 +172,16 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private void updateTabel(){
         // set model tabel dengan model sebelumnya
-        DefaultTableModel model = (DefaultTableModel) tabelData.getModel();
+        DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
         boolean dataBaru = true;
         
         // membaca baris pada tabel
         for (int i = 0; i < this.tblModel.getRowCount(); i++) {
             // cek apakah data bahan sudah ada didalam tabel atau tidak
-            if (this.inpIdBahan.getText().equals(String.valueOf(this.tabelData.getValueAt(i, 1)))) {
+            if (this.inpIdBahan.getText().equals(String.valueOf(this.tabelTr.getValueAt(i, 1)))) {
                 // jika sudah ada maka data jumlah pada bahan akan diupdate 
                 // dengan cara mendapatkan data jumlah baru dan ditambahkan dengan data jumlah yang lama
-                this.jumlah += Integer.parseInt(String.valueOf(this.tabelData.getValueAt(i, 5)));
+                this.jumlah += Integer.parseInt(String.valueOf(this.tabelTr.getValueAt(i, 5)));
             }
         }
 
@@ -190,7 +190,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
          * Jika sudah ada maka data jumlah pada tabel transaksi akan diupdate dan tidak membuat baris baru pada tabel
          * Jika belum maka data nama bahan akan ditambahkan pada baris baru pada tabel
          */
-        if (tabelData.getRowCount() >= 1) {
+        if (tabelTr.getRowCount() >= 1) {
             // membaca isi tabel transaksi
             for (int i = 0; i < model.getRowCount(); i++) {
                 // mendapatkan data id bahan dari tabel
@@ -224,7 +224,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         }
         
         // merefresh update tabel
-        tabelData.setModel(model);
+        tabelTr.setModel(model);
     }
     
     private void resetTabel(){
@@ -246,10 +246,10 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         };
         
         // set model tabel dengan model yang diatas
-        this.tabelData.setModel(tblModel);
+        this.tabelTr.setModel(tblModel);
         
         // set ukuran kolom
-        TableColumnModel columnModel = tabelData.getColumnModel();
+        TableColumnModel columnModel = tabelTr.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(110);
         columnModel.getColumn(0).setMaxWidth(110);
         columnModel.getColumn(1).setPreferredWidth(110);
@@ -309,19 +309,47 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         this.resetTambah();
     }
     
+    // reset jumlah bahan jika error
+    private void resetJumlahMenu(int row){
+        // hapus menu
+        DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
+        model.removeRow(row);
+        // update total harga
+        this.inpTotalHarga.setText(this.txt.toMoneyCase(""+this.getTotalHarga()).substring(4));
+         // update stok menu
+//        this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), this.oldJumlah, "add");
+    }
+    
     // untuk mengedit data bahan yang ada didalam tabel
     private void editDataBahan(){
         try{
-            int row = this.tabelData.getSelectedRow(), 
+            int row = this.tabelTr.getSelectedRow();
+            
+            // cek jumlah kosong atau tidak
+            if(this.tabelTr.getValueAt(row, 5).toString().equals("")){
+                Message.showInformation(this, "Jumlah tidak boleh kosong");
+                this.resetJumlahMenu(row);
+                return;
+            // cek apakah stok angka atau bukan
+            }else if(!this.txt.isNumber(this.tabelTr.getValueAt(row, 5).toString())){
+                Message.showInformation(this, "Stok harus berupa angka!");
+                this.resetJumlahMenu(row);
+                return;
+            }
+            
                 // mendapatkan jumlah menu yang baru
-                newJml = Integer.parseInt(this.tabelData.getValueAt(row, 5).toString()),
+            int newJml = Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString()),
                 // mendapatkan data harga dari menu    
-                harga = Integer.parseInt(txt.removeMoneyCase(this.tabelData.getValueAt(row, 4).toString())),
+                harga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 4).toString())),
                 // mendapatkan data total harga menu yang lama
-                oldTotalHarga = Integer.parseInt(txt.removeMoneyCase(this.tabelData.getValueAt(row, 6).toString())),
+                oldTotalHarga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 6).toString())),
                 newTotalHarga;
             
-            if(newJml >= 1){
+            if(newJml <= 0){
+                Message.showInformation(this, "Jumlah stok harus minimal 1");
+                this.resetJumlahMenu(row);
+                return;
+            }
                 // menghitung total harga menu yang baru (jumlah menu * harga menu)
                 newTotalHarga = newJml * harga;
                 
@@ -330,9 +358,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
                 this.ttlHargaBayar = this.ttlHargaBayar + newTotalHarga;
 
                 // mengupdate data yang ada di textfield dan di tabel
-                this.tabelData.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
+                this.tabelTr.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
                 this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlHargaBayar).substring(4));
-            }
+            
             
         }catch(NumberFormatException ex){
             ex.printStackTrace();
@@ -342,17 +370,17 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     // untuk menghapus data bahan pada tabel
     private void hapusDataBahan() {
-        if(this.tabelData.getSelectedRow() > -1){
+        if(this.tabelTr.getSelectedRow() > -1){
             // mendapatkan total harga bahan
-            String hrg = this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 6).toString().substring(4).replaceAll(",", "").replaceAll("\\.", "");
+            String hrg = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 6).toString().substring(4).replaceAll(",", "").replaceAll("\\.", "");
             // mengurangi total harga bayar dengan total harga bahan
             this.ttlHargaBayar = this.ttlHargaBayar - Integer.parseInt(hrg.substring(0, hrg.length()-2));
             // menampilkan ulang total harga bayar pada textfield
             this.inpTotalHarga.setText(txt.toMoneyCase(""+this.ttlHargaBayar).substring(4));
             
             // menghapus baris pada tabel
-            DefaultTableModel model = (DefaultTableModel) tabelData.getModel();
-            int row = tabelData.getSelectedRow();
+            DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
+            int row = tabelTr.getSelectedRow();
             model.removeRow(row);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
@@ -361,13 +389,21 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private int getTotalJumlahBahan(){
         int ttlJumlah = 0;
-        for(int i = 0; i < this.tabelData.getRowCount(); i++){
-            ttlJumlah += Integer.parseInt(this.tabelData.getValueAt(i, 5).toString());
+        for(int i = 0; i < this.tabelTr.getRowCount(); i++){
+            ttlJumlah += Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString());
         }
         
         return ttlJumlah;
     }
     
+    private int getTotalHarga(){
+        int ttlHarga = 0;
+        for(int i = 0; i < this.tabelTr.getRowCount(); i++){
+            ttlHarga += Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
+        }
+        
+        return ttlHarga;
+    }
     private String getSatuanBahan(String idBahan){
         try{
             // membuat query
@@ -426,21 +462,21 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             String sql = "INSERT INTO detail_tr_beli VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
             // membaca semua data yang ada didalam tabel
-            for(int i = 0; i < tabelData.getRowCount(); i++){
+            for(int i = 0; i < tabelTr.getRowCount(); i++){
             // mendapatkan id bahan dan satuan bahan
-            String idBhn = this.tabelData.getValueAt(i, 1).toString(),
+            String idBhn = this.tabelTr.getValueAt(i, 1).toString(),
                    satuan = this.getSatuanBahan(idBhn);
             
                 // menyiapkan query
                 this.db.pst = this.db.conn.prepareCall(sql);
                 this.db.pst.setString(1, this.inpIdTransaksi.getText());
                 this.db.pst.setString(2, idBhn); // get data id bahan
-                this.db.pst.setString(3, this.tabelData.getValueAt(i, 2).toString()); // get data nama bahan
-                this.db.pst.setString(4, this.tabelData.getValueAt(i, 3).toString()); // get data jenis bahan
+                this.db.pst.setString(3, this.tabelTr.getValueAt(i, 2).toString()); // get data nama bahan
+                this.db.pst.setString(4, this.tabelTr.getValueAt(i, 3).toString()); // get data jenis bahan
                 this.db.pst.setString(5, satuan); // get data satuan bahan
-                this.db.pst.setString(6, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 4).toString())); // get data harga bahan
-                this.db.pst.setInt(7, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
-                this.db.pst.setString(8, this.txt.removeMoneyCase(this.tabelData.getValueAt(i, 6).toString())); // get data harga total
+                this.db.pst.setString(6, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 4).toString())); // get data harga bahan
+                this.db.pst.setInt(7, Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString()) * 1000); // get data jumlah
+                this.db.pst.setString(8, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString())); // get data harga total
                 
                 // eksekusi query
                 this.db.pst.executeUpdate();
@@ -459,12 +495,12 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             String sql = "INSERT INTO log_tr_beli VALUES (?, ?, ?)";
             
             // membaca semua data yang ada didalam tabel
-            for(int i = 0; i < tabelData.getRowCount(); i++){
+            for(int i = 0; i < tabelTr.getRowCount(); i++){
                 // menyiapkan query
                 this.db.pst = this.db.conn.prepareCall(sql);
                 this.db.pst.setString(1, this.inpIdTransaksi.getText());
-                this.db.pst.setString(2, this.tabelData.getValueAt(i, 1).toString()); // get data id bahan
-                this.db.pst.setInt(3, Integer.parseInt(this.tabelData.getValueAt(i, 5).toString()) * 1000); // get data jumlah
+                this.db.pst.setString(2, this.tabelTr.getValueAt(i, 1).toString()); // get data id bahan
+                this.db.pst.setInt(3, Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString()) * 1000); // get data jumlah
                 
                 // eksekusi query
                 this.db.pst.executeUpdate();
@@ -506,7 +542,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         lblTopProfile = new javax.swing.JLabel();
         pnlContent = new com.ui.RoundedPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabelData = new javax.swing.JTable();
+        tabelTr = new javax.swing.JTable();
         lineCenter = new javax.swing.JSeparator();
         lblIdBahan = new javax.swing.JLabel();
         inpIdBahan = new com.ui.RoundedTextField(50);
@@ -830,8 +866,8 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         pnlContent.setRoundTopLeft(20);
         pnlContent.setRoundTopRight(20);
 
-        tabelData.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        tabelData.setModel(new javax.swing.table.DefaultTableModel(
+        tabelTr.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
+        tabelTr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"TRJ00001", "MN002", "Original Coffee", "Coffee", "Rp. 5000", "2", "Rp. 10.000"},
                 {"TRJ00001", "MN006", "Orange Juice", "Minuman", "Rp. 7000", "1", "Rp. 7.000"},
@@ -842,24 +878,24 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
                 "ID Transaksi", "ID Bahan", "Nama Bahan", "Jenis Bahan", "Harga Bahan", "Jumlah", "Total Harga"
             }
         ));
-        tabelData.setGridColor(new java.awt.Color(0, 0, 0));
-        tabelData.setSelectionBackground(new java.awt.Color(26, 164, 250));
-        tabelData.setSelectionForeground(new java.awt.Color(250, 246, 246));
-        tabelData.getTableHeader().setReorderingAllowed(false);
-        tabelData.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabelTr.setGridColor(new java.awt.Color(0, 0, 0));
+        tabelTr.setSelectionBackground(new java.awt.Color(26, 164, 250));
+        tabelTr.setSelectionForeground(new java.awt.Color(250, 246, 246));
+        tabelTr.getTableHeader().setReorderingAllowed(false);
+        tabelTr.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelDataMouseClicked(evt);
+                tabelTrMouseClicked(evt);
             }
         });
-        tabelData.addKeyListener(new java.awt.event.KeyAdapter() {
+        tabelTr.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                tabelDataKeyPressed(evt);
+                tabelTrKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tabelDataKeyReleased(evt);
+                tabelTrKeyReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(tabelData);
+        jScrollPane2.setViewportView(tabelTr);
 
         lineCenter.setBackground(new java.awt.Color(0, 0, 0));
         lineCenter.setForeground(new java.awt.Color(0, 0, 0));
@@ -1437,6 +1473,10 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBayarMouseExited
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        if(this.tabelTr.getRowCount() <= 0){
+            Message.showWarning(this, "Tidak ada bahan yang dibeli!");
+            return;
+        }
         if(this.transaksi()){
             TransaksiBeliSuccess dia = new TransaksiBeliSuccess(null, true, this.inpIdTransaksi.getText());
             dia.setVisible(true);
@@ -1475,7 +1515,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusMouseExited
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        String nmBahan = this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 2).toString()+"?";
+        String nmBahan = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 2).toString()+"?";
         int konf = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus "+nmBahan , "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
         // cek konfirmasi hapus
         if(konf == JOptionPane.YES_OPTION){
@@ -1511,13 +1551,13 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         
     }//GEN-LAST:event_inpCariBahanMouseExited
 
-    private void tabelDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelDataMouseClicked
+    private void tabelTrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelTrMouseClicked
 
-    }//GEN-LAST:event_tabelDataMouseClicked
+    }//GEN-LAST:event_tabelTrMouseClicked
 
-    private void tabelDataKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyPressed
+    private void tabelTrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelTrKeyPressed
         
-    }//GEN-LAST:event_tabelDataKeyPressed
+    }//GEN-LAST:event_tabelTrKeyPressed
 
     private void inpNamaBahanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpNamaBahanMouseClicked
         JOptionPane.showMessageDialog(this, "Tekan tombol cari untuk mengedit data menu!!");
@@ -1588,9 +1628,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inpJumlahKeyPressed
 
-    private void tabelDataKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelDataKeyReleased
+    private void tabelTrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelTrKeyReleased
         // untuk editing data
-        if(this.tabelData.getSelectedColumn() == 5){
+        if(this.tabelTr.getSelectedColumn() == 5){
             if(evt.getKeyCode() == KeyEvent.VK_ENTER){
                 this.editDataBahan();
             }            
@@ -1598,14 +1638,14 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         
         // untuk hapus data
         if(evt.getKeyCode() == KeyEvent.VK_DELETE){
-            String nmBahan = this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 2).toString()+"?";
+            String nmBahan = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 2).toString()+"?";
             int konf = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus "+nmBahan , "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
             // cek konfirmasi hapus
             if(konf == JOptionPane.YES_OPTION){
                 this.hapusDataBahan();
             }
         }
-    }//GEN-LAST:event_tabelDataKeyReleased
+    }//GEN-LAST:event_tabelTrKeyReleased
 
     /**
      * @param args the command line arguments
@@ -1683,6 +1723,6 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlSidebar;
     private com.ui.RoundedPanel pnlTop;
-    private javax.swing.JTable tabelData;
+    private javax.swing.JTable tabelTr;
     // End of variables declaration//GEN-END:variables
 }

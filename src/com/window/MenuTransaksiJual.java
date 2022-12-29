@@ -303,7 +303,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.inpIdTransaksi.setText(this.createID());
     }
     
-    private void tambahMenu(){
+    private void eventTambahMenu(){
         // cek apakah data menu sudah dipilih
         if(!this.inpIdMenu.getText().isEmpty()){
             // cek apakah data jumlah sudah dimasukan
@@ -331,44 +331,77 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.resetTambah();
     }
     
+    // reset jumlah menu jika error
+    private void resetJumlahMenu(int row){
+        // hapus menu
+        DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
+        model.removeRow(row);
+        // update total harga
+        this.inpTotalHarga.setText(this.txt.toMoneyCase(""+this.getTotalHarga()).substring(4));
+         // update stok menu
+//        this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), this.oldJumlah, "add");
+    }
+    
     private void editDataMenu(){
         try{
-            int row = this.tabelTr.getSelectedRow(), 
+            int row = this.tabelTr.getSelectedRow();
+            
+            // cek jumlah kosong atau tidak
+            if(this.tabelTr.getValueAt(row, 5).toString().equals("")){
+                Message.showInformation(this, "Jumlah tidak boleh kosong");
+                this.resetJumlahMenu(row);
+                return;
+            // cek apakah stok angka atau bukan
+            }else if(!this.txt.isNumber(this.tabelTr.getValueAt(row, 5).toString())){
+                Message.showInformation(this, "Stok harus berupa angka!");
+                this.resetJumlahMenu(row);
+                return;
+            }
+            
                 // mendapatkan jumlah menu yang baru
-                newJml = Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString()),
+            int newJml = Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString()),
                 // mendapatkan data harga dari menu    
                 harga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 4).toString())),
                 // mendapatkan data total harga menu yang lama
                 oldTotalHarga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 6).toString())),
                 newTotalHarga;
             
-            if(newJml >= 1){
-                // menghitung total harga menu yang baru (jumlah menu * harga menu)
-                newTotalHarga = newJml * harga;
-                
-                // mengupdate total harga bayar
-                this.ttlHargaBayar = this.ttlHargaBayar - oldTotalHarga;
-                this.ttlHargaBayar = this.ttlHargaBayar + newTotalHarga;
+            // menghitung total harga menu yang baru (jumlah menu * harga menu)
+            newTotalHarga = newJml * harga;
 
-                // mengupdate data yang ada di textfield dan di tabel
-                this.tabelTr.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
-                this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlHargaBayar).substring(4));
-                
-                // mengupdate stok menu
-                if(newJml > this.oldJumlah){
-                    newJml = newJml - this.oldJumlah;
-                    System.out.println("TAMBAH PESANAN");
-                    System.out.println("NEW JUMLAH : " + newJml);
-                    System.out.println("OLD JUMLAH : " + oldJumlah);
-                    this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "min");
-                }else if(newJml < this.oldJumlah){
-                    newJml = oldJumlah - newJml;
-                    System.out.println("KURANGI PESANAN");
-                    System.out.println("NEW JUMLAH : " + newJml);
-                    System.out.println("OLD JUMLAH : " + oldJumlah);
-                    this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "add");
-                }
+            if(newJml <= 0){
+                Message.showInformation(this, "Jumlah stok harus minimal 1");
+                this.resetJumlahMenu(row);
+                return;
+            }else if(newJml > tempStokMenu.get(this.tabelTr.getValueAt(row, 1).toString())){
+                Message.showInformation(this, "Stok tidak cukup!!");
+                this.resetJumlahMenu(row);
+                return;
             }
+            
+            // mengupdate total harga bayar
+            this.ttlHargaBayar = this.ttlHargaBayar - oldTotalHarga;
+            this.ttlHargaBayar = this.ttlHargaBayar + newTotalHarga;
+
+            // mengupdate data yang ada di textfield dan di tabel
+            this.tabelTr.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
+            this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlHargaBayar).substring(4));
+
+            // mengupdate stok menu
+            if(newJml > this.oldJumlah){
+                newJml = newJml - this.oldJumlah;
+                System.out.println("TAMBAH PESANAN");
+                System.out.println("NEW JUMLAH : " + newJml);
+                System.out.println("OLD JUMLAH : " + oldJumlah);
+                this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "min");
+            }else if(newJml < this.oldJumlah){
+                newJml = oldJumlah - newJml;
+                System.out.println("KURANGI PESANAN");
+                System.out.println("NEW JUMLAH : " + newJml);
+                System.out.println("OLD JUMLAH : " + oldJumlah);
+                this.updateStokMenu(this.tabelTr.getValueAt(row, 1).toString(), newJml, "add");
+            }
+            
             
         }catch(NumberFormatException ex){
             ex.printStackTrace();
@@ -412,6 +445,15 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }
         
         return ttlJumlah;
+    }
+    
+    private int getTotalHarga(){
+        int ttlHarga = 0;
+        for(int i = 0; i < this.tabelTr.getRowCount(); i++){
+            ttlHarga += Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
+        }
+        
+        return ttlHarga;
     }
     
     /**
@@ -605,7 +647,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.db.pst.setString(3, User.getNamaUser());
             this.db.pst.setString(4, this.inpPembeli.getText()+"");
             this.db.pst.setInt(5, this.getTotalJumlahMenu());
-            this.db.pst.setInt(6, this.ttlHargaBayar);
+            this.db.pst.setInt(6, this.getTotalHarga());
             this.db.pst.setString(7, waktu.getCurrentDateTime());
             
             // eksekusi query
@@ -1638,6 +1680,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBayarMouseExited
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        if(this.tabelTr.getRowCount() <= 0){
+            Message.showWarning(this, "Tidak ada menu yang dipilih!");
+            return;
+        }
 //        Message.showInformation(this, "Transaksi berhasil!");
         if(this.transaksi()){
             TransaksiJualSuccess dia = new TransaksiJualSuccess(null, true, this.inpIdTransaksi.getText());
@@ -1660,7 +1706,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }else if(Integer.parseInt(this.inpJumlah.getText()) == 0){
             Message.showWarning(this, "Jumlah stok tidak boleh 0");
         }else{
-            this.tambahMenu();
+            this.eventTambahMenu();
         }
     }//GEN-LAST:event_btnTambahActionPerformed
 
@@ -1755,7 +1801,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             }else if(Integer.parseInt(this.inpJumlah.getText()) == 0){
                 Message.showWarning(this, "Jumlah stok tidak boleh 0");
             }else{
-                this.tambahMenu();
+                this.eventTambahMenu();
             }
         }
     }//GEN-LAST:event_inpJumlahKeyPressed
