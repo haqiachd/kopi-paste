@@ -30,12 +30,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jScrollPane1" alignment="0" min="-2" pref="1360" max="-2" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" pref="1360" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jScrollPane1" alignment="0" min="-2" pref="730" max="-2" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" pref="730" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -56,18 +56,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="pnlSidebar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lblBottom" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="pnlContent" max="32767" attributes="0"/>
-                                  <Component id="pnlTop" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="pnlTop" max="32767" attributes="0"/>
+                          <Component id="pnlContent" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -77,10 +72,11 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="pnlTop" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="pnlContent" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Component id="pnlContent" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="lblBottom" min="-2" pref="47" max="-2" attributes="0"/>
+                      <EmptySpace min="47" pref="47" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -168,7 +164,7 @@
                           <Component id="btnMenu" min="-2" pref="35" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnBahan" min="-2" pref="35" max="-2" attributes="0"/>
-                          <EmptySpace pref="131" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -518,9 +514,9 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="36" max="32767" attributes="0"/>
-                          <Component id="tabPane" min="-2" pref="556" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="tabPane" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -560,7 +556,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                               <Component id="lblDataPerhari" alignment="0" max="32767" attributes="0"/>
@@ -585,8 +581,8 @@
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="lblCari" max="32767" attributes="0"/>
-                                              <Component id="inpCariHarian" max="32767" attributes="0"/>
+                                              <Component id="lblCari" min="-2" pref="223" max="-2" attributes="0"/>
+                                              <Component id="inpCariHarian" min="-2" pref="223" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
@@ -602,10 +598,10 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="btnDetailHarian" min="-2" pref="108" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jScrollPane2" alignment="0" pref="985" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                                       <Component id="lineBottom" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -638,11 +634,11 @@
                                           <Component id="inpCariHarian" min="-2" pref="32" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" min="-2" pref="329" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" pref="328" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                   <Component id="lineBottom" min="-2" pref="5" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -652,11 +648,11 @@
                                               <Component id="btnSemuaHarian" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Component id="lblTotalPsHarian" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="lblTotalTrHarian" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="lblTotalPdtHarian" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTotalPsHarian" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
+                                      <Component id="lblTotalTrHarian" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
+                                      <Component id="lblTotalPdtHarian" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -985,10 +981,10 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jScrollPane4" max="32767" attributes="0"/>
                                               <Group type="102" attributes="0">
                                                   <Component id="lblTahun" min="-2" pref="104" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
@@ -997,8 +993,8 @@
                                                   <Component id="cariTahun" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="pnlChart" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                          <Component id="pnlChart" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="btnCetakBulanan" min="-2" pref="108" max="-2" attributes="0"/>
@@ -1012,27 +1008,27 @@
                                           <Component id="lblTotalPdBulanan" min="-2" pref="266" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="33" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="lblTahun" pref="41" max="32767" attributes="0"/>
                                               <Component id="inpPilihTahun" max="32767" attributes="0"/>
                                               <Component id="cariTahun" max="32767" attributes="0"/>
                                           </Group>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="jScrollPane4" min="-2" pref="377" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jScrollPane4" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="pnlChart" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="lblTotalPsBulanan" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
@@ -1042,7 +1038,7 @@
                                       <Component id="lblTotalPdBulanan" max="32767" attributes="0"/>
                                       <Component id="lblTotalTrBulanan" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1182,9 +1178,9 @@
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Component id="inpChartBulanan" min="-2" pref="165" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="pnlShowChart" min="-2" pref="512" max="-2" attributes="0"/>
+                                          <Component id="pnlShowChart" pref="512" max="32767" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
@@ -1192,11 +1188,11 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="inpChartBulanan" pref="40" max="32767" attributes="0"/>
-                                          <Component id="lblChartBulanan" max="32767" attributes="0"/>
+                                          <Component id="inpChartBulanan" min="-2" pref="40" max="-2" attributes="0"/>
+                                          <Component id="lblChartBulanan" min="-2" pref="40" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="pnlShowChart" min="-2" pref="376" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                      <Component id="pnlShowChart" pref="376" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
@@ -1411,7 +1407,7 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="inpNamaMenu" min="-2" pref="221" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jScrollPane3" min="-2" pref="986" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane3" pref="986" max="32767" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="lblTotalTrRiwayat" min="-2" pref="157" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -1422,7 +1418,7 @@
                                           <Component id="lblMenuFavRiwayat" min="-2" pref="337" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace pref="21" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1444,16 +1440,16 @@
                                           <Component id="inpJenisMenu" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane3" min="-2" pref="380" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane3" pref="380" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="lblTotalTrRiwayat" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                                       <Component id="lblTotalPsRiwayat" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                                       <Component id="lblTotalPdRiwayat" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                                       <Component id="lblMenuFavRiwayat" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>

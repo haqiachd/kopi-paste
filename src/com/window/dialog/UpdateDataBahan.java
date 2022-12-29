@@ -188,8 +188,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             // eksekusi query
             int result = this.db.pst.executeUpdate();
             if(result > 0){
-                Audio.play(Audio.SOUND_INFO);
-                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!");
+                Message.showInformation(this, "Data berhasil ditambahkan!");
                 dispose();
             }
         }catch(SQLException ex){
