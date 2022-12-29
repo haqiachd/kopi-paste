@@ -4,7 +4,7 @@ import com.manage.Message;
 import com.manage.User;
 import com.media.Gambar;
 import com.sun.glass.events.KeyEvent;
-import com.window.dialog.GantiPassword;
+import com.window.dialog.LupaPassword;
 import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.JOptionPane;
@@ -425,7 +425,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
     private void lblCopyrightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseClicked
         if(this.isLaliPass){
-            GantiPassword g = new GantiPassword(this, true, this.inpUsername.getText());
+            LupaPassword g = new LupaPassword(this, true, this.inpUsername.getText());
             
             // cek apakah username exist
             if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isIdKaryawan(this.inpUsername.getText())){

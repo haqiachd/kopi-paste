@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
  *
  * @author Achmad Baihaqi
  */
-public class GantiPassword extends javax.swing.JDialog {
+public class LupaPassword extends javax.swing.JDialog {
     
     private final User us = new User();
     
@@ -30,7 +30,7 @@ public class GantiPassword extends javax.swing.JDialog {
      * @param modal
      * @param username
      */
-    public GantiPassword(java.awt.Frame parent, boolean modal, String username) {
+    public LupaPassword(java.awt.Frame parent, boolean modal, String username) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -44,20 +44,21 @@ public class GantiPassword extends javax.swing.JDialog {
         this.btnBatal.setUI(new javax.swing.plaf.basic.BasicButtonUI());
     }
 
-    private boolean isValidOldPass(){
+    private boolean isValidTelephone(){
         try{
             // membuat query sql
-            String sql = "SELECT password "
-                    + "FROM user  "
-                    + "WHERE username = '"+this.usernameOrId+"' OR id_karyawan = '"+this.usernameOrId+"'";
+            String sql = "SELECT k.no_telp "
+                    + "FROM karyawan AS k "
+                    + "JOIN user AS u "
+                    + "ON k.id_karyawan = u.id_karyawan "
+                    + "WHERE u.username = '"+this.usernameOrId+"' OR u.id_karyawan = '"+this.usernameOrId+"'";
             
-            System.out.println(sql);
             // eksekusi query sql
             this.us.res = this.us.stat.executeQuery(sql);
             
             if(this.us.res.next()){
                 // mengecek apakah no telepone valid atau tidak
-                return BCrypt.checkpw(this.inpPasswordOld.getText(), this.us.res.getString(1));
+                return this.inpNoTelp.getText().equals(this.us.res.getString(1));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -95,6 +96,8 @@ public class GantiPassword extends javax.swing.JDialog {
         lineTop = new javax.swing.JSeparator();
         inpUsername = new com.ui.RoundedTextField(15);
         lblUsername = new javax.swing.JLabel();
+        inpNoTelp = new com.ui.RoundedTextField(15);
+        lblNoTelp = new javax.swing.JLabel();
         inpPassword = new com.ui.RoundedPasswordField(15);
         lblPassword = new javax.swing.JLabel();
         lblEye = new javax.swing.JLabel();
@@ -104,9 +107,6 @@ public class GantiPassword extends javax.swing.JDialog {
         lineBottom = new javax.swing.JSeparator();
         btnGanti = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
-        lblPassword1 = new javax.swing.JLabel();
-        inpPasswordOld = new com.ui.RoundedPasswordField(15);
-        lblEyeOld = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ganti Password");
@@ -121,7 +121,7 @@ public class GantiPassword extends javax.swing.JDialog {
         lblTop.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         lblTop.setForeground(new java.awt.Color(250, 56, 56));
         lblTop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTop.setText("Ganti Password");
+        lblTop.setText("Lupa Password");
 
         lineTop.setBackground(new java.awt.Color(0, 0, 0));
         lineTop.setForeground(new java.awt.Color(0, 0, 0));
@@ -146,6 +146,27 @@ public class GantiPassword extends javax.swing.JDialog {
         lblUsername.setForeground(new java.awt.Color(44, 119, 238));
         lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblUsername.setText("Username / ID Karyawan");
+
+        inpNoTelp.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpNoTelp.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpNoTelp.setMaximumSize(new java.awt.Dimension(2147483647, 35));
+        inpNoTelp.setMinimumSize(new java.awt.Dimension(6, 35));
+        inpNoTelp.setName("Nomor Telephone"); // NOI18N
+        inpNoTelp.setPreferredSize(new java.awt.Dimension(6, 35));
+        inpNoTelp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpNoTelpKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpNoTelpKeyTyped(evt);
+            }
+        });
+
+        lblNoTelp.setBackground(new java.awt.Color(0, 0, 0));
+        lblNoTelp.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblNoTelp.setForeground(new java.awt.Color(44, 119, 238));
+        lblNoTelp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblNoTelp.setText("Nomor Telephone");
 
         inpPassword.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         inpPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -250,38 +271,6 @@ public class GantiPassword extends javax.swing.JDialog {
             }
         });
 
-        lblPassword1.setBackground(new java.awt.Color(0, 0, 0));
-        lblPassword1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblPassword1.setForeground(new java.awt.Color(44, 119, 238));
-        lblPassword1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPassword1.setText("Password Sekarang");
-
-        inpPasswordOld.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        inpPasswordOld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpPasswordOld.setName("Password Sekarang"); // NOI18N
-        inpPasswordOld.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                inpPasswordOldKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpPasswordOldKeyTyped(evt);
-            }
-        });
-
-        lblEyeOld.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEyeOld.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
-        lblEyeOld.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblEyeOldMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblEyeOldMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblEyeOldMouseExited(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -304,27 +293,22 @@ public class GantiPassword extends javax.swing.JDialog {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGap(50, 50, 50)
                                     .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(50, 50, 50)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(lblEye, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(inpKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(lblEyeKonf, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(inpPasswordOld, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(lblEyeOld, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addGap(10, 10, 10))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(50, 50, 50)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(inpNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(8, 8, 8)
+                                            .addComponent(lblEye, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(inpKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(8, 8, 8)
+                                            .addComponent(lblEyeKonf, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(lblKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(lineBottom))
                 .addContainerGap())
         );
@@ -339,12 +323,10 @@ public class GantiPassword extends javax.swing.JDialog {
                 .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
-                .addComponent(lblPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inpPasswordOld, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEyeOld, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(inpNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
@@ -382,9 +364,15 @@ public class GantiPassword extends javax.swing.JDialog {
 
     private void inpUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUsernameKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.inpPasswordOld.requestFocus();
+            this.inpNoTelp.requestFocus();
         }
     }//GEN-LAST:event_inpUsernameKeyReleased
+
+    private void inpNoTelpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNoTelpKeyReleased
+          if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpPassword.requestFocus();
+        }
+    }//GEN-LAST:event_inpNoTelpKeyReleased
 
     private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
@@ -440,10 +428,10 @@ public class GantiPassword extends javax.swing.JDialog {
 
     private void btnGantiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGantiActionPerformed
         // validasi data ganti password
-        if(!Validation.isEmptyTextField(this.inpUsername, this.inpPasswordOld, this.inpPassword, this.inpKonfPass)){
+        if(!Validation.isEmptyTextField(this.inpUsername, this.inpNoTelp, this.inpPassword, this.inpKonfPass)){
             return;
-        }else if(!this.isValidOldPass()){
-            Message.showWarning(this, "Password sekarang tidak cocok!");
+        }else if(!this.isValidTelephone()){
+            Message.showWarning(this, "Nomor Telephone tidak cocok!");
             return;
         }else if(!Validation.isPassword(this.inpPassword.getText())){
             return;
@@ -483,33 +471,14 @@ public class GantiPassword extends javax.swing.JDialog {
         
     }//GEN-LAST:event_btnBatalMouseExited
 
+    private void inpNoTelpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNoTelpKeyTyped
+        txt.filterAngka(evt);
+        txt.filterChar(evt);
+    }//GEN-LAST:event_inpNoTelpKeyTyped
+
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.us.closeConnection();
     }//GEN-LAST:event_formWindowClosed
-
-    private void inpPasswordOldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordOldKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpPasswordOldKeyPressed
-
-    private void inpPasswordOldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordOldKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpPasswordOldKeyTyped
-
-    private void lblEyeOldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeOldMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblEyeOldMouseClicked
-
-    private void lblEyeOldMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeOldMouseEntered
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblEyeOld.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-        this.inpPasswordOld.setEchoChar((char)0);
-    }//GEN-LAST:event_lblEyeOldMouseEntered
-
-    private void lblEyeOldMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeOldMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEyeOld.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpPasswordOld.setEchoChar('•');
-    }//GEN-LAST:event_lblEyeOldMouseExited
 
     /**
      * @param args the command line arguments
@@ -524,10 +493,8 @@ public class GantiPassword extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GantiPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LupaPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         
@@ -537,7 +504,7 @@ public class GantiPassword extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GantiPassword dialog = new GantiPassword(new javax.swing.JFrame(), true, "admin");
+                LupaPassword dialog = new LupaPassword(new javax.swing.JFrame(), true, "admin");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -553,16 +520,15 @@ public class GantiPassword extends javax.swing.JDialog {
     private javax.swing.JButton btnBatal;
     private javax.swing.JButton btnGanti;
     private javax.swing.JPasswordField inpKonfPass;
+    private javax.swing.JTextField inpNoTelp;
     private javax.swing.JPasswordField inpPassword;
-    private javax.swing.JPasswordField inpPasswordOld;
     private javax.swing.JTextField inpUsername;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblEye;
     private javax.swing.JLabel lblEyeKonf;
-    private javax.swing.JLabel lblEyeOld;
     private javax.swing.JLabel lblKonfPass;
+    private javax.swing.JLabel lblNoTelp;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblPassword1;
     private javax.swing.JLabel lblTop;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JSeparator lineBottom;
