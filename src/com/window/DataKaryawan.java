@@ -39,6 +39,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.setTitle("Test Window");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
+        this.setIconImage(Gambar.getWindowIcon());
         
         // set ui button
         this.btnAdd.setUI(new javax.swing.plaf.basic.BasicButtonUI());

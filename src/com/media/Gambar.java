@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  */
 public class Gambar {
     
-    private static final ImageIcon icWindow = new ImageIcon("src\\resources\\image\\icons\\");
+    private static final ImageIcon icWindow = new ImageIcon("src\\resources\\image\\icons\\app_icon.png");
     
     private static final String DIREKTORY_ICONS = "src\\resources\\image\\icons\\";
     

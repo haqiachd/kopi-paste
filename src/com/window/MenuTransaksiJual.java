@@ -61,6 +61,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Menu Transaksi Penjualan");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setIconImage(Gambar.getWindowIcon());
         
         this.status = true;
         

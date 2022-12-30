@@ -56,6 +56,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         
         this.setTitle("Menu Laporan Pembelian");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setIconImage(Gambar.getWindowIcon());
         this.lblNamaUser.setText(User.getNamaUser());
         this.lblNamaWindow.setText("Laporan Pembelian Harian");
         

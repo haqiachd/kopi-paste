@@ -43,6 +43,7 @@ public class MenuTransaksiJualBck extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Menu Transaksi");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setIconImage(Gambar.getWindowIcon());
         
         this.lblNamaUser.setText(User.getNamaUser());
         

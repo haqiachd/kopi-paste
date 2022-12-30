@@ -38,6 +38,7 @@ public class DataSupplier extends javax.swing.JFrame {
         
         this.setTitle("Test Window");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setIconImage(Gambar.getWindowIcon());
         this.lblNamaUser.setText(User.getNamaUser());
         
         // set ui button

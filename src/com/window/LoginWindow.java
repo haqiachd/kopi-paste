@@ -28,6 +28,7 @@ public class LoginWindow extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.lblKembali.setVisible(false);
         this.btnLogin.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.setIconImage(Gambar.getWindowIcon());
     }
 
     private void login(){

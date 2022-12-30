@@ -21,6 +21,7 @@ public class UserProfileDmode extends javax.swing.JFrame {
         
         this.setTitle("User Profile");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.setIconImage(Gambar.getWindowIcon());
         
         this.btnLogoutAccount.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
