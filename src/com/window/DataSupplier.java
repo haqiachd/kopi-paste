@@ -6,7 +6,7 @@ import com.ui.UIManager;
 import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.dialog.UpdateDataSupplier;

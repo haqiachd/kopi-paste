@@ -328,6 +328,15 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         }
     }
     
+    private boolean isExistBahan(String data){
+        for(Object o : this.inpBahan.getAllList()){
+            if(o.toString().substring(0, 5).equalsIgnoreCase(data.substring(0, 5))){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -650,10 +659,16 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         g.setVisible(true);
         
         if(g.isSelected()){
-            this.inpBahan.addList(g.getSelectedData());
-            this.mainList = this.inpBahan.getAllList();
-            System.out.println(g.getBahanCode());
-            this.updateListData();
+            String data = g.getSelectedData();
+            // cek apakah bahan sudah ada atau belum
+            if(!this.isExistBahan(data)){
+                this.inpBahan.addList(data);
+                this.mainList = this.inpBahan.getAllList();
+                System.out.println(g.getBahanCode());
+                this.updateListData();                
+            }else{
+                Message.showWarning(this, "Bahan tersebut sudah ada!");
+            }
         }
     }//GEN-LAST:event_btnTambahBahanActionPerformed
 

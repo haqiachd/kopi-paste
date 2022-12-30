@@ -17,7 +17,7 @@ import java.sql.Statement;
 public class Database {
     
     /**
-     * Object ini digunakan untuk membangun koneksi dengan Database
+     * Object ini digunakan untuk membangun koneksi dengan Databaseee
      */
     public Connection conn;
     /**

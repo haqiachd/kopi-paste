@@ -2,7 +2,7 @@ package com.window.dialog;
 
 import com.koneksi.Database;
 import com.manage.Text;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 import java.awt.Cursor;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;

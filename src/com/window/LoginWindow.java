@@ -3,11 +3,10 @@ package com.window;
 import com.manage.Message;
 import com.manage.User;
 import com.media.Gambar;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 import com.window.dialog.LupaPassword;
 import java.awt.Color;
 import java.awt.Cursor;
-import javax.swing.JOptionPane;
 
 /**
  * Digunakan untuk login bagi admin, petugas dan siswa.
