@@ -71,6 +71,11 @@ public class Dashboard extends javax.swing.JFrame {
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
         
+        if(!User.isAdmin()){
+            this.btnKaryawan.setVisible(false);
+            this.btnLaporan.setVisible(false);
+        }
+        
         this.getPenjualan();
         this.getPembelian();
     }

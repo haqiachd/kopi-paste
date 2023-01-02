@@ -39,6 +39,11 @@ public class MenuTransaksi extends javax.swing.JFrame {
         // set hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
+        
+         if(!User.isAdmin()){
+            this.btnKaryawan.setVisible(false);
+            this.btnLaporan.setVisible(false);
+        }
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

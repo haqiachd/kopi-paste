@@ -82,6 +82,8 @@ public class DataMenu extends javax.swing.JFrame {
             this.btnAdd.setVisible(false);
             this.btnEdit.setVisible(false);
             this.btnHapus.setVisible(false);
+                        this.btnKaryawan.setVisible(false);
+            this.btnLaporan.setVisible(false);
         }
         
         // menampilkan data tabel
