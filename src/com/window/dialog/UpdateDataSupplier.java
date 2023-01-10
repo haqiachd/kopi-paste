@@ -253,15 +253,6 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
         }
     }
     
-    private boolean isExistBahan(String data){
-        for(Object o : this.inpBahan.getAllList()){
-            if(o.toString().substring(0, 5).equalsIgnoreCase(data.substring(0, 5))){
-                return true;
-            }
-        }
-        return false;
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -542,16 +533,10 @@ public class UpdateDataSupplier extends javax.swing.JDialog {
         GetDataBahanSupplier g = new GetDataBahanSupplier(null, true);
         g.setVisible(true);
         
-        if (g.isSelected()) {
-            String data = g.getSelectedData();
-            // cek apakah data bahan sudah ada atau belum
-            if (!this.isExistBahan(data)) {
-                this.inpBahan.addList(data);
-                this.listName = this.inpBahan.getAllList();
-                this.updateListId();
-            } else {
-                Message.showWarning(this, "Bahan tersebut sudah ada!");
-            }
+        if(g.isSelected()){
+            this.inpBahan.addList(g.getSelectedData());
+            this.listName = this.inpBahan.getAllList();
+            this.updateListId();
         }
     }//GEN-LAST:event_btnTambahBahanActionPerformed
 

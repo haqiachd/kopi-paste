@@ -19,7 +19,8 @@ public class PopUpBackground extends JFrame{
     
     private void initComponents(){
         setUndecorated(true);
-        setBackground(new Color(0,0,20,200));setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
+        setBackground(new Color(0,0,20,200));
+        setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         
         label.addMouseListener(new java.awt.event.MouseListener() {
 
