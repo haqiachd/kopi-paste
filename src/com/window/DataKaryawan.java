@@ -1,5 +1,7 @@
 package com.window;
 
+import com.window.laporan.MenuLaporan;
+import com.window.transaksi.MenuTransaksi;
 import com.koneksi.Database;
 import com.manage.Message;
 import com.ui.UIManager;
@@ -9,7 +11,7 @@ import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.dialog.UpdateDataKaryawan;
+import com.window.update.UpdateDataKaryawan;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -36,7 +38,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     public DataKaryawan() {
         initComponents();
         
-        this.setTitle("Test Window");
+        this.setTitle("Data Karyawan");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
         this.setIconImage(Gambar.getWindowIcon());
@@ -75,6 +77,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         // hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
+        this.btnSupplier.setVisible(false);
         
         // batas akses karyawan
         if(!User.isAdmin()){
@@ -399,10 +402,10 @@ public class DataKaryawan extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNamaUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNamaUser, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblProfileSidebar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
-                        .addGap(0, 29, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDataMaster, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
@@ -1132,6 +1135,13 @@ public class DataKaryawan extends javax.swing.JFrame {
                         String idBahan = this.inpId.getText(),
                          sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idBahan + "'";
 
+                        // mengecek kesamaan id
+                        if(!idBahan.equalsIgnoreCase(this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString())){
+                            Message.showWarning(this, "Data gagal dihapus!");
+                            this.tabelData.removeRowSelectionInterval(this.tabelData.getSelectedRow(), this.tabelData.getSelectedRow());
+                            return;
+                        }
+                        
                         // mengecek apakah data berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");

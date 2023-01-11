@@ -1,5 +1,7 @@
 package com.window;
 
+import com.window.laporan.MenuLaporan;
+import com.window.transaksi.MenuTransaksi;
 import com.ui.UIManager;
 import com.media.Gambar;
 import java.awt.Cursor;

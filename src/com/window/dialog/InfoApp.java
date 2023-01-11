@@ -72,6 +72,7 @@ public class InfoApp extends javax.swing.JDialog {
         lblCol2 = new javax.swing.JLabel();
         lblCol3 = new javax.swing.JLabel();
         lblCol4 = new javax.swing.JLabel();
+        lblCopyright = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -107,21 +108,27 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblNamaApp.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblNamaApp.setForeground(new java.awt.Color(0, 0, 1));
         lblNamaApp.setText("Nama Aplikasi");
 
         valNamaApp.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        valNamaApp.setForeground(new java.awt.Color(0, 0, 1));
         valNamaApp.setText(": Kopi Paste");
 
         lblVersi.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblVersi.setForeground(new java.awt.Color(0, 0, 1));
         lblVersi.setText("Versi");
 
         valVersi.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        valVersi.setText(": 1.0");
+        valVersi.setForeground(new java.awt.Color(0, 0, 1));
+        valVersi.setText(": 1.1");
 
         valDev.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        valDev.setText(": C2 Team");
+        valDev.setForeground(new java.awt.Color(0, 0, 1));
+        valDev.setText(": Cito Team");
 
         lblDev.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblDev.setForeground(new java.awt.Color(0, 0, 1));
         lblDev.setText("Developer");
 
         pnlKontakDev.setBackground(new java.awt.Color(248, 249, 250));
@@ -148,10 +155,12 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblGmail.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblGmail.setForeground(new java.awt.Color(0, 0, 1));
         lblGmail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblGmail.setText("Gmail");
 
         lblWa.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblWa.setForeground(new java.awt.Color(0, 0, 1));
         lblWa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblWa.setText("WhatsApp");
 
@@ -170,6 +179,7 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblTele.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblTele.setForeground(new java.awt.Color(0, 0, 1));
         lblTele.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTele.setText("Telegram");
 
@@ -202,6 +212,7 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblIg.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblIg.setForeground(new java.awt.Color(0, 0, 1));
         lblIg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblIg.setText("Instagram");
 
@@ -220,6 +231,7 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblTwit.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblTwit.setForeground(new java.awt.Color(0, 0, 1));
         lblTwit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTwit.setText("Twitter");
 
@@ -281,9 +293,11 @@ public class InfoApp extends javax.swing.JDialog {
         );
 
         lblColabolator.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblColabolator.setForeground(new java.awt.Color(0, 0, 1));
         lblColabolator.setText("Contributors");
 
         lblCol1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCol1.setForeground(new java.awt.Color(0, 0, 1));
         lblCol1.setText(": Achmad Baihaqi");
         lblCol1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -298,6 +312,7 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblCol2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCol2.setForeground(new java.awt.Color(0, 0, 1));
         lblCol2.setText("  Mohammad Ilham Islamy");
         lblCol2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -312,6 +327,7 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblCol3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCol3.setForeground(new java.awt.Color(0, 0, 1));
         lblCol3.setText("  Septian Yoga Pamungkas");
         lblCol3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -326,6 +342,7 @@ public class InfoApp extends javax.swing.JDialog {
         });
 
         lblCol4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCol4.setForeground(new java.awt.Color(0, 0, 1));
         lblCol4.setText("  Widyasari Raisya Salsabilla");
         lblCol4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -338,6 +355,11 @@ public class InfoApp extends javax.swing.JDialog {
                 lblCol4MouseExited(evt);
             }
         });
+
+        lblCopyright.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblCopyright.setForeground(new java.awt.Color(0, 0, 1));
+        lblCopyright.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCopyright.setText("Copyright © 2022-2023. Cito Team. All Rights Reserved.");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -361,7 +383,6 @@ public class InfoApp extends javax.swing.JDialog {
                                 .addComponent(lblNamaApp, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(valNamaApp, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(lblDev, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -375,7 +396,11 @@ public class InfoApp extends javax.swing.JDialog {
                                 .addComponent(lblCol3, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addGap(182, 182, 182)
-                                .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblCopyright, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -386,31 +411,36 @@ public class InfoApp extends javax.swing.JDialog {
                     .addComponent(lblDialogName, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                     .addComponent(lblClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblNamaApp, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(valNamaApp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblVersi, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(valVersi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDev, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(valDev, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblColabolator, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCol1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCol2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCol3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblNamaApp, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                            .addComponent(valNamaApp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblVersi, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                            .addComponent(valVersi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblDev, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(valDev, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblColabolator, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCol1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCol2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCol3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblCopyright)))
                 .addGap(24, 24, 24))
         );
 
@@ -486,7 +516,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void iconTeleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconTeleMouseClicked
         try {
-            this.inet.openLink("");
+            this.inet.openLink("https://t.me/haqiachd");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -506,7 +536,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void iconIgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconIgMouseClicked
         try {
-            this.inet.openLink("https://www.instagram.com/");
+            this.inet.openLink("https://www.instagram.com/haqiachd");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -526,7 +556,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void iconTwitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconTwitMouseClicked
         try {
-            this.inet.openLink("https://twitter.com/haqiachd");
+            this.inet.openLink("https://twitter.com/");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -669,6 +699,7 @@ public class InfoApp extends javax.swing.JDialog {
     private javax.swing.JLabel lblCol3;
     private javax.swing.JLabel lblCol4;
     private javax.swing.JLabel lblColabolator;
+    private javax.swing.JLabel lblCopyright;
     private javax.swing.JLabel lblDev;
     private javax.swing.JLabel lblDialogName;
     private javax.swing.JLabel lblGmail;

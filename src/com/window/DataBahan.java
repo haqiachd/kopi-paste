@@ -1,16 +1,22 @@
 package com.window;
 
+import com.window.laporan.MenuLaporan;
+import com.window.transaksi.MenuTransaksi;
 import com.koneksi.Database;
+import com.manage.Bahan;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
 import com.manage.User;
+import com.manage.Waktu;
 import com.media.Audio;
 import com.media.Gambar;
+import com.window.dialog.BahanBarChart;
+import com.window.dialog.BahanLineChart;
 import java.awt.event.KeyEvent;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.dialog.UpdateDataBahan;
+import com.window.update.UpdateDataBahan;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -30,16 +36,20 @@ public class DataBahan extends javax.swing.JFrame {
     
     private final Database db = new Database();
     
+    private final Bahan ba = new Bahan();
+    
     private final UIManager win = new UIManager();
     
     private final Text text = new Text();
+    
+    private final Waktu waktu = new Waktu();
     
      private String idSelected, keyword = "";
    
     public DataBahan() {
         initComponents();
         
-        this.setTitle("Test Window");
+        this.setTitle("Data Bahan");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
         this.setIconImage(Gambar.getWindowIcon());
@@ -57,27 +67,30 @@ public class DataBahan extends javax.swing.JFrame {
         this.win.hoverButton();
         
         // set update data
-        JTextField fields[] = {this.inpNama, this.inpJenis, this.inpStok, this.inpHarga};
+        JTextField fields[] = {this.inpNama, this.inpJenis, this.inpHarga};
         this.win.updateData(fields);
         
         // set editable false pada textfield
         this.inpId.setEditable(false);
         this.inpNama.setEditable(false);
         this.inpJenis.setEditable(false);
-        this.inpStok.setEditable(false);
         this.inpHarga.setEditable(false);
+        this.inpPembBulan.setEditable(false);
+        this.inpPengBulan.setEditable(false);
         
         // set margin textfield
         this.inpCari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJenis.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpStok.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpPembBulan.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpPengBulan.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         // visible button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
+        this.btnSupplier.setVisible(false);
         
         // batas akses karyawan
         if(!User.isAdmin()){
@@ -90,26 +103,15 @@ public class DataBahan extends javax.swing.JFrame {
         
         // menampilkan data tabel bahan
         this.showTabel();
+    }
+    
+    private String getSatuanBeli(float jml, String satuan){
         
-    }
-    
-    private String getStatuanName(String satuan){
-       switch(satuan){
-            case "gr" : 
-                return "Gram";
-            case "ml" : 
-                return "MiliLiter";
-            default : return "null satuan";
-        }
-    }
-    
-    private String getStatuanBesaran(String satuan){
-       switch(satuan){
-            case "gr" : 
-                return "Kilogram";
-            case "ml" : 
-                return "Liter";
-            default : return "null satuan";
+        if(jml < 1){
+            return "0";
+        }else{
+            jml = Float.parseFloat(String.format("%.1f", jml));
+            return this.ba.getNilaiSatuan(jml, this.ba.getkodeSatuan(satuan));
         }
     }
     
@@ -123,7 +125,7 @@ public class DataBahan extends javax.swing.JFrame {
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Bahan", "Nama Bahan", "Stok", "Harga"
+                    "ID Bahan", "Nama Bahan", "Jenis", "Satuan"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -138,14 +140,12 @@ public class DataBahan extends javax.swing.JFrame {
         
         // set size kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
-        columnModel.getColumn(1).setPreferredWidth(250);
-        columnModel.getColumn(1).setMaxWidth(250);
-        columnModel.getColumn(2).setPreferredWidth(100);
-        columnModel.getColumn(2).setMaxWidth(100);
-        columnModel.getColumn(3).setPreferredWidth(160);
-        columnModel.getColumn(3).setMaxWidth(160);
+        columnModel.getColumn(0).setPreferredWidth(100);
+        columnModel.getColumn(0).setMaxWidth(100);
+        columnModel.getColumn(1).setPreferredWidth(180);
+        columnModel.getColumn(1).setMaxWidth(180);
+        columnModel.getColumn(2).setPreferredWidth(90);
+        columnModel.getColumn(2).setMaxWidth(90);
     }
     
     private void showTabel(){
@@ -156,7 +156,7 @@ public class DataBahan extends javax.swing.JFrame {
         
         try{
             // query untuk mengambil data bahan pada tabel mysql
-            String sql = "SELECT id_bahan, nama_bahan, stok, satuan, harga FROM bahan " + keyword;
+            String sql = "SELECT id_bahan, nama_bahan, jenis, satuan FROM bahan " + keyword;
             System.out.println(sql);
 
             // eksekusi query
@@ -169,8 +169,8 @@ public class DataBahan extends javax.swing.JFrame {
                     new String[]{
                         this.db.res.getString("id_bahan"),
                         this.db.res.getString("nama_bahan"),
-                        String.format("%,d %s", Integer.parseInt(this.db.res.getString("stok")), this.db.res.getString("satuan")).toLowerCase(),
-                        text.toMoneyCase(this.db.res.getString("harga"))
+                        this.db.res.getString("jenis"),
+                        this.ba.getNamaSatuan(this.db.res.getString("satuan"))
                     }
                 );
             }
@@ -186,50 +186,53 @@ public class DataBahan extends javax.swing.JFrame {
     private void showData(){
         try {
             // membuat dan mengeksekusi query
-            String sql = "SELECT * FROM bahan WHERE id_bahan = '" + this.idSelected + "'";
+            String sql = "SELECT * FROM bahan WHERE id_bahan = '" + this.idSelected + "'", satuan = "";
             this.db.res = this.db.stat.executeQuery(sql);
             
             // mendapatkan data
             if(this.db.res.next()){
+                satuan = this.db.res.getString("satuan");
                 String namaBahan = this.db.res.getString("nama_bahan"),
                        jenisBahan = this.db.res.getString("jenis"),
-                       stok = this.db.res.getString("stok"),
-                       satuan = this.db.res.getString("satuan"),
-                       harga = this.db.res.getString("harga"),
-                       satuanName = this.getStatuanName(satuan),
-                       satuanBesaran = this.getStatuanBesaran(satuan);
+                       satuanName = this.ba.getNamaSatuan(satuan);
                 
                 // menampilkan data
                 this.inpId.setText(this.idSelected);
                 this.inpNama.setText(namaBahan);
                 this.inpJenis.setText(jenisBahan);
-                this.inpStok.setText(String.format("%,d %s", Integer.parseInt(stok), satuanName));
-                this.inpHarga.setText(text.toMoneyCase(harga) + " / " + satuanBesaran);
+                this.inpHarga.setText(satuanName);
             }
             
-            this.showListBahan();
+            // menampilkan data pembelian
+            this.showDataBulanan(this.idSelected, satuan);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
     }
     
-    private void showListBahan(){
-        this.inpSupplier.removeAllList();
+    private void showDataBulanan(String idBahan, String satuan){
         try{
-            // menyiapkan query untuk mendapatkan data
-            String sql = "SELECT sp.id_supplier, sp.nama_supplier, dsp.id_bahan "
-                       + "FROM supplier AS sp "
-                       + "JOIN detail_supplier AS dsp "
-                       + "ON sp.id_supplier = dsp.id_supplier "
-                       +"HAVING dsp.id_bahan = '"+this.idSelected+"'";
+            System.out.println("ID BAHAN : " + idBahan);
+            // menyiapkan query
+            String sql = String.format("SELECT SUM(d.jumlah) AS bbeli, SUM(d.total_harga) AS bpgl " +
+                        "FROM transaksi_beli AS t " +
+                        "JOIN detail_tr_beli AS d " +
+                        "ON t.id_tr_beli = d.id_tr_beli " +
+                        "WHERE d.id_bahan = '%s' AND MONTH(t.tanggal) = '%d' AND YEAR(t.tanggal) = '%d'" , 
+                    idBahan, waktu.getBulan(), waktu.getTahun()
+            );
+            
             System.out.println(sql);
             
-            // mengeksekusi query
+            // eksekusi query
             this.db.res = this.db.stat.executeQuery(sql);
             
-            // mendapatkan data bahan
-            while(this.db.res.next()){
-                this.inpSupplier.addList(this.db.res.getString("sp.id_supplier") + " | " + this.db.res.getString("sp.nama_supplier"));
+            if(this.db.res.next()){
+                float jml = this.db.res.getFloat("bbeli");
+                satuan = this.ba.getNamaSatuan(satuan);
+                // menampilkan data
+                this.inpPembBulan.setText(this.getSatuanBeli(jml, satuan) +" Dibeli");
+                this.inpPengBulan.setText(this.text.toMoneyCase(this.db.res.getInt("bpgl")));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -241,9 +244,10 @@ public class DataBahan extends javax.swing.JFrame {
         // reset data textfield
         this.inpId.setText("");
         this.inpNama.setText("");
-        this.inpStok.setText("");
         this.inpHarga.setText("");
         this.inpJenis.setText("");
+        this.inpPembBulan.setText("");
+        this.inpPengBulan.setText("");
         this.idSelected = "";
     }
     
@@ -288,8 +292,6 @@ public class DataBahan extends javax.swing.JFrame {
         lblNama = new javax.swing.JLabel();
         inpNama = new com.ui.RoundedTextField(15);
         lblTelephone = new javax.swing.JLabel();
-        inpStok = new com.ui.RoundedTextField(15);
-        lblAlamat = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnEdit = new javax.swing.JToggleButton();
         btnHapus = new javax.swing.JToggleButton();
@@ -299,9 +301,12 @@ public class DataBahan extends javax.swing.JFrame {
         lblHarga = new javax.swing.JLabel();
         inpHarga = new com.ui.RoundedTextField(15);
         inpJenis = new com.ui.RoundedTextField(15);
-        lblSupplier = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        inpSupplier = new haqiachd.list.JListCustom();
+        lblPengBulan = new javax.swing.JLabel();
+        lblPembBulan = new javax.swing.JLabel();
+        inpPembBulan = new com.ui.RoundedTextField(15);
+        inpPengBulan = new com.ui.RoundedTextField(15);
+        btnLineChart = new javax.swing.JButton();
+        btnBarChart = new javax.swing.JButton();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -458,10 +463,10 @@ public class DataBahan extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNamaUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNamaUser, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblProfileSidebar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
-                        .addGap(0, 29, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDataMaster, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
@@ -697,19 +702,6 @@ public class DataBahan extends javax.swing.JFrame {
         lblTelephone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
         lblTelephone.setText("Jenis");
 
-        inpStok.setBackground(new java.awt.Color(248, 249, 250));
-        inpStok.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpStok.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpStok.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpStokKeyTyped(evt);
-            }
-        });
-
-        lblAlamat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblAlamat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-stock.png"))); // NOI18N
-        lblAlamat.setText("Stok");
-
         btnAdd.setBackground(new java.awt.Color(41, 180, 50));
         btnAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-tambah.png"))); // NOI18N
@@ -777,8 +769,8 @@ public class DataBahan extends javax.swing.JFrame {
         lblGajelas.setText("Kopi Paste version 1.0");
 
         lblHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblHarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-harga.png"))); // NOI18N
-        lblHarga.setText("Harga Beli");
+        lblHarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
+        lblHarga.setText("Satuan ");
 
         inpHarga.setBackground(new java.awt.Color(248, 249, 250));
         inpHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -788,13 +780,39 @@ public class DataBahan extends javax.swing.JFrame {
         inpJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpJenis.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        lblSupplier.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblSupplier.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-nama.png"))); // NOI18N
-        lblSupplier.setText("Supplier");
+        lblPengBulan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblPengBulan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-harga-bulan.png"))); // NOI18N
+        lblPengBulan.setText("Peng. Bulan Ini");
 
-        inpSupplier.setBackground(new java.awt.Color(248, 249, 250));
-        inpSupplier.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        jScrollPane3.setViewportView(inpSupplier);
+        lblPembBulan.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
+        lblPembBulan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-bulan.png"))); // NOI18N
+        lblPembBulan.setText("Pemb. Bulan Ini");
+
+        inpPembBulan.setBackground(new java.awt.Color(248, 249, 250));
+        inpPembBulan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpPembBulan.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        inpPengBulan.setBackground(new java.awt.Color(248, 249, 250));
+        inpPengBulan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpPengBulan.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        btnLineChart.setBackground(new java.awt.Color(154, 156, 172));
+        btnLineChart.setForeground(new java.awt.Color(255, 255, 255));
+        btnLineChart.setText("Line Chart");
+        btnLineChart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLineChartActionPerformed(evt);
+            }
+        });
+
+        btnBarChart.setBackground(new java.awt.Color(154, 156, 172));
+        btnBarChart.setForeground(new java.awt.Color(255, 255, 255));
+        btnBarChart.setText("Bar Chart");
+        btnBarChart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBarChartActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -811,13 +829,9 @@ public class DataBahan extends javax.swing.JFrame {
                             .addGroup(pnlContentLayout.createSequentialGroup()
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inpStok, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
-                                    .addGroup(pnlContentLayout.createSequentialGroup()
                                         .addComponent(lblTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inpJenis))
+                                        .addComponent(inpJenis, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
                                     .addGroup(pnlContentLayout.createSequentialGroup()
                                         .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -838,9 +852,19 @@ public class DataBahan extends javax.swing.JFrame {
                                         .addComponent(inpHarga))
                                     .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblPembBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane3)))
+                                        .addComponent(inpPembBulan))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblPengBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(pnlContentLayout.createSequentialGroup()
+                                                .addComponent(btnLineChart)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnBarChart)
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                            .addComponent(inpPengBulan))))
                                 .addGap(0, 9, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
                 .addGap(18, 18, 18)
@@ -893,20 +917,21 @@ public class DataBahan extends javax.swing.JFrame {
                                     .addComponent(inpJenis, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpStok, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblHarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblSupplier, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(122, 122, 122))
-                                    .addGroup(pnlContentLayout.createSequentialGroup()
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblPembBulan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(inpPembBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblPengBulan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(inpPengBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnLineChart)
+                                    .addComponent(btnBarChart))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1199,6 +1224,13 @@ public class DataBahan extends javax.swing.JFrame {
                         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
                         String idBahan = this.inpId.getText(),
                                sql = "DELETE FROM bahan WHERE id_bahan = '" + idBahan + "'";
+                        
+                        // mengecek kesamaan id
+                        if(!idBahan.equalsIgnoreCase(this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString())){
+                            Message.showWarning(this, "Data gagal dihapus!");
+                            this.tabelData.removeRowSelectionInterval(this.tabelData.getSelectedRow(), this.tabelData.getSelectedRow());
+                            return;
+                        }
 
                         // mengecek apakah data pembeli berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
@@ -1217,6 +1249,7 @@ public class DataBahan extends javax.swing.JFrame {
                 Message.showWarning(this, "Tidak ada data yang dipilih!");
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Message.showException(this, ex);
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -1262,10 +1295,23 @@ public class DataBahan extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "ID Bahan tidak bisa diedit!");
     }//GEN-LAST:event_inpIdMouseClicked
 
-    private void inpStokKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStokKeyTyped
-        this.text.filterAngka(evt);
-        this.text.filterChar(evt);
-    }//GEN-LAST:event_inpStokKeyTyped
+    private void btnLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLineChartActionPerformed
+         if(this.tabelData.getSelectedRow() > -1){
+            BahanLineChart ml = new BahanLineChart(null, true, this.idSelected);
+            ml.setVisible(true);            
+        }else{
+            Message.showWarning(this, "Tidak ada data yang dipilih!");
+        }
+    }//GEN-LAST:event_btnLineChartActionPerformed
+
+    private void btnBarChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBarChartActionPerformed
+         if(this.tabelData.getSelectedRow() > -1){
+            BahanBarChart ml = new BahanBarChart(null, true, this.idSelected);
+            ml.setVisible(true);            
+        }else{
+            Message.showWarning(this, "Tidak ada data yang dipilih!");
+        }
+    }//GEN-LAST:event_btnBarChartActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1295,12 +1341,14 @@ public class DataBahan extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JLabel btnBahan;
+    private javax.swing.JButton btnBarChart;
     private javax.swing.JLabel btnDashboard;
     private javax.swing.JLabel btnDataMaster;
     private javax.swing.JToggleButton btnEdit;
     private javax.swing.JToggleButton btnHapus;
     private javax.swing.JLabel btnKaryawan;
     private javax.swing.JLabel btnLaporan;
+    private javax.swing.JButton btnLineChart;
     private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel btnMenu;
     private javax.swing.JLabel btnPembeli;
@@ -1311,12 +1359,10 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JTextField inpId;
     private javax.swing.JTextField inpJenis;
     private javax.swing.JTextField inpNama;
-    private javax.swing.JTextField inpStok;
-    private haqiachd.list.JListCustom inpSupplier;
+    private javax.swing.JTextField inpPembBulan;
+    private javax.swing.JTextField inpPengBulan;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
@@ -1330,8 +1376,9 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
+    private javax.swing.JLabel lblPembBulan;
+    private javax.swing.JLabel lblPengBulan;
     private javax.swing.JLabel lblProfileSidebar;
-    private javax.swing.JLabel lblSupplier;
     private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;
     private javax.swing.JLabel lblTopProfile;

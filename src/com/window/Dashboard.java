@@ -1,5 +1,7 @@
 package com.window;
 
+import com.window.laporan.MenuLaporan;
+import com.window.transaksi.MenuTransaksi;
 import com.koneksi.Database;
 import com.manage.ChartManager;
 import com.manage.Message;
@@ -41,8 +43,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.setTitle("Menu Dashboard");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.setIconImage(Gambar.getWindowIcon());
+        this.chart.showLineChart(this.pnlLineChart, ChartManager.PENDAPATAN, "Grafik Pendapatan Bulan Ini", waktu.getBulan(), waktu.getTahun());
         this.chart.showPieChart(this.pnlPieChart, ChartManager.PENDAPATAN, "Presentase Penjualan Bulan Ini", waktu.getBulan(), waktu.getTahun());
-        this.chart.showLineChart(this.pnlLineChart, ChartManager.PENDAPATAN, "Penjualan Produk Bulan Ini", waktu.getBulan(), waktu.getTahun());
         this.lblNamaUser.setText(User.getNamaUser());
         
         this.win.btns = new JLabel[]{
@@ -68,8 +70,10 @@ public class Dashboard extends javax.swing.JFrame {
             }
         }).start();
         
+        // hiden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
+        this.btnSupplier.setVisible(false);
         
         if(!User.isAdmin()){
             this.btnKaryawan.setVisible(false);
@@ -92,8 +96,8 @@ public class Dashboard extends javax.swing.JFrame {
             
             if(this.db.res.next()){
                 // mendapatkan data
-                pendapatan = txt.toMoneyCase(this.db.res.getString("pendapatan"));
-                pembeli = this.db.res.getString("pembeli") + " Pembeli";
+                pendapatan = txt.toMoneyCase(this.db.res.getInt("pendapatan"));
+                pembeli = this.db.res.getInt("pembeli") + " Pembeli";
                 // menampilkan data
                 this.valPendapatan.setText(" "+pendapatan.substring(0, pendapatan.lastIndexOf(".")).replaceAll(",", "."));
                 this.valPembeli.setText(pembeli);
@@ -116,7 +120,7 @@ public class Dashboard extends javax.swing.JFrame {
             
             if(this.db.res.next()){
                 // mendapatkan dan menampilkan data
-                pendapatan = txt.toMoneyCase(this.db.res.getString("pengeluaran"));
+                pendapatan = txt.toMoneyCase(this.db.res.getInt("pengeluaran"));
                 this.valPengeluaran.setText(pendapatan.substring(0, pendapatan.lastIndexOf(".")).replaceAll(",", "."));
             }
             
@@ -175,6 +179,7 @@ public class Dashboard extends javax.swing.JFrame {
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Menu Dashboard");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -328,10 +333,10 @@ public class Dashboard extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNamaUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNamaUser, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblProfileSidebar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
-                        .addGap(0, 29, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDataMaster, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
@@ -339,7 +344,7 @@ public class Dashboard extends javax.swing.JFrame {
                         .addGap(10, 10, 10)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSidebarLayout.createSequentialGroup()
-                .addGap(0, 33, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnBahan, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -525,7 +530,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblNamaChart.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblNamaChart.setForeground(new java.awt.Color(255, 255, 255));
-        lblNamaChart.setText(" Penjualan Dalam Sebulan Terakhir");
+        lblNamaChart.setText("Data Penjualan Bulan Ini");
 
         lblServerTime.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblServerTime.setForeground(new java.awt.Color(255, 255, 255));
@@ -632,7 +637,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPembeli.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPembeli.setForeground(new java.awt.Color(255, 255, 255));
-        lblPembeli.setText("Pembelian Bulan Ini");
+        lblPembeli.setText("Total Pembeli Bulan Ini");
         lblPembeli.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPembeli.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N

@@ -78,6 +78,7 @@ public class LoginWindow extends javax.swing.JFrame {
         lblBgImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login Window");
         setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -274,7 +275,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
         lblCopyright.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         lblCopyright.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblCopyright.setText("Copyright © 2022. C2 Team. All Rights Reserved");
+        lblCopyright.setText("Copyright © 2022-2023. Cito Team. All Rights Reserved");
         lblCopyright.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCopyrightMouseClicked(evt);

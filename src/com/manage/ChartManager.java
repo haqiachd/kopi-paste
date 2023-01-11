@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.SQLException;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -27,13 +28,16 @@ import org.jfree.data.statistics.HistogramDataset;
  */
 public class ChartManager extends Database{
     
+    private final Waktu waktu = new Waktu();
+    
     private final Color C_MAKANAN = new Color(250,138,16), C_MINUMAN = new Color(64,123,250), 
-                        C_ORIGINAL = new Color(32,245,15), C_FLAVOURED = new Color(204,34,245), C_SNACK = new Color(245,38,41),
+                        C_ORIGINAL = new Color(32,245,15), C_FLAVOURED = new Color(204,34,245), 
+                        C_SNACK = new Color(245,38,41), C_BAHAN_JADI = new Color(1, 143, 104),
                         BG_CHART = Color.WHITE;
     
     private final Font F_MENU = new Font("Ebrima", 1, 20);
     
-    public static final int PENDAPATAN = 0, PENGELUARAN = 1;
+    public static final int PENDAPATAN = 0, PENGELUARAN = 1, PENJUALAN = 2, PEMBELIAN = 3,MENU = 2, BAHAN = 3;
     
     public void showPieChart(JPanel panel, int type, String title, int bulan, int tahun){
         // menambahkan value ke dalam chart
@@ -110,30 +114,34 @@ public class ChartManager extends Database{
     
     private void showPieChartPembelian(JPanel panel, String title, int bulan, int tahun){
         // mendapatkan data dari database
-        double makanan = this.getPieDataPembelian("Hewani", bulan, tahun)
-              ,minuman = this.getPieDataPembelian("Nabati", bulan, tahun)
-              ,original = this.getPieDataPembelian("Coffee", bulan, tahun)
-              ,flavoured = this.getPieDataPembelian("Perasa", bulan, tahun)
-              ,snack = this.getPieDataPembelian("Cairan", bulan, tahun);
+        double hewani = this.getPieDataPembelian("Hewani", bulan, tahun)
+              ,nabati = this.getPieDataPembelian("Nabati", bulan, tahun)
+              ,coffee = this.getPieDataPembelian("Coffee", bulan, tahun)
+              ,perasa = this.getPieDataPembelian("Perasa", bulan, tahun)
+              ,cairan = this.getPieDataPembelian("Cairan", bulan, tahun),
+               bahanjadi = this.getPieDataPembelian("Bahan Jadi", bulan, tahun);
         
         // membuat data set untuk menampung data      
         DefaultPieDataset barDataset = new DefaultPieDataset();
         
         // jika datanya kosong maka data tidak akan ditampilkan didalam chart
-        if(makanan > 0){
-            barDataset.setValue( "Hewani", new Double(makanan));
+        if(hewani > 0){
+            barDataset.setValue("Hewani", new Double(hewani));
         }
-        if(minuman > 0){
-            barDataset.setValue( "Nabati", new Double(minuman));
+        if(nabati > 0){
+            barDataset.setValue("Nabati", new Double(nabati));
         }
-        if(original > 0){
-            barDataset.setValue("Coffee", new Double(original));
+        if(coffee > 0){
+            barDataset.setValue("Coffee", new Double(coffee));
         }
-        if(flavoured > 0){
-            barDataset.setValue("Perasa", new Double(flavoured));
+        if(perasa > 0){
+            barDataset.setValue("Perasa", new Double(perasa));
         }
-        if(snack > 0){
-            barDataset.setValue("Cairan", new Double(snack));
+        if(cairan > 0){
+            barDataset.setValue("Cairan", new Double(cairan));
+        }
+        if(bahanjadi > 0){
+            barDataset.setValue("Bahan Jadi", new Double(bahanjadi));
         }
 
         // membuat chart
@@ -142,20 +150,23 @@ public class ChartManager extends Database{
 
         // merubah warna dari setiap data pada chart
         PiePlot piePlot =(PiePlot) piechart.getPlot();
-        if(makanan > 0){
+        if(hewani > 0){
             piePlot.setSectionPaint("Hewani", this.C_MAKANAN);
         }
-        if(minuman > 0){
+        if(nabati > 0){
             piePlot.setSectionPaint("Nabati", this.C_MINUMAN);
         }
-        if(original > 0){
+        if(coffee > 0){
             piePlot.setSectionPaint("Coffee", this.C_ORIGINAL);
         }
-        if(flavoured > 0){
+        if(perasa > 0){
             piePlot.setSectionPaint("Perasa", this.C_FLAVOURED);
         }
-        if(snack > 0){
+        if(cairan > 0){
             piePlot.setSectionPaint("Cairan", this.C_SNACK);
+        }
+        if(bahanjadi > 0){
+            piePlot.setSectionPaint("Bahan Jadi", this.C_BAHAN_JADI);
         }
         piePlot.setBackgroundPaint(this.BG_CHART);
         
@@ -215,7 +226,7 @@ public class ChartManager extends Database{
         return 0;
     }
     
-    public void showLineChart(JPanel panel, int type, String title, int bulan, int tahun){
+    public void showLineChart(JPanel panel, int type, int type2, String id, String title, int bulan, int tahun){
         String valTitle = "";
         // mendapatkan data chart
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -225,15 +236,27 @@ public class ChartManager extends Database{
             // mendapatkan data pendapatan
             case PENDAPATAN :
                 valTitle = "Jumlah Pendapatan";
-                for(int i = 1; i <= 31; i+=2){
+                for(int i = 1; i <= waktu.getTotalHari(bulan); i+=2){
                     dataset.setValue(this.getLineDataPenjualan(bulan, tahun, i, (i+1)), "Amount", Integer.toString(i));
                 }                                
                 break;
             // mendapatkan data pengeluaran
             case PENGELUARAN :
                 valTitle = "Jumlah Pengeluaran";
-                for(int i = 1; i <= 31; i+=2){
+                for(int i = 1; i <= waktu.getTotalHari(bulan); i+=2){
                     dataset.setValue(this.getLineDataPembelian(bulan, tahun, i, (i+1)), "Amount", Integer.toString(i));
+                }                
+                break;
+            case MENU : 
+                valTitle = "Penjualan Menu";
+                for(int i = 1; i <= waktu.getTotalHari(bulan); i++){
+                    dataset.setValue(this.getLinePenjualanMenu(id, type2, bulan, tahun, i), "Amount", Integer.toString(i));
+                }                
+                break;
+            case BAHAN : 
+                valTitle = "Pembelian Bahan";
+                for(int i = 1; i <= waktu.getTotalHari(bulan); i++){
+                    dataset.setValue(this.getLinePembelianBahan(id, type2, bulan, tahun, i), "Amount", Integer.toString(i));
                 }                
                 break;
         }
@@ -258,6 +281,10 @@ public class ChartManager extends Database{
         panel.removeAll();
         panel.add(lineChartPanel, BorderLayout.CENTER);
         panel.validate();
+    }
+    
+    public void showLineChart(JPanel panel, int type, String title, int bulan, int tahun){
+        this.showLineChart(panel, type, 0, "kosoning aja wkwkwk", title, bulan, tahun);
     }
     
     private int getLineDataPenjualan(int bulan, int tahun, int hari1, int hari2){
@@ -312,7 +339,65 @@ public class ChartManager extends Database{
         return 0;
     }
     
-    public void showBarChart(JPanel panel, int type, String title, int bulan, int tahun){
+    private int getLinePenjualanMenu(String idMenu, int by, int bulan, int tahun, int hari){
+        try{
+            // query untuk mendapatkan total pendapatan dari menu
+            String sql = String.format("SELECT SUM(d.jumlah) AS penjualan, SUM(d.total_harga) AS pendapatan " +
+                    "FROM transaksi_jual AS t " +
+                    "JOIN detail_tr_jual AS d " +
+                    "ON t.id_tr_jual = d.id_tr_jual " +
+                    "WHERE d.id_menu = '%s' AND MONTH(tanggal) = %d AND YEAR(tanggal) = %d AND "+ 
+                    "DAY(tanggal) = '%d';", idMenu, bulan, tahun, hari
+            );
+            System.out.println(sql);
+            
+            // eksekusi query
+            super.res = super.stat.executeQuery(sql);
+            
+            // mendapatkan data total pendapatan
+            if(super.res.next()){
+                switch(by){
+                    case PENJUALAN : return super.res.getInt("penjualan");
+                    case PENDAPATAN : return super.res.getInt("pendapatan");
+                }
+            }
+            
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+    
+    private float getLinePembelianBahan(String idBahan, int by, int bulan, int tahun, int hari){
+        try{
+            // query untuk mendapatkan total pendapatan dari menu
+            String sql = String.format("SELECT SUM(d.jumlah) AS pembelian, SUM(d.total_harga) AS pengeluaran " +
+                    "FROM transaksi_beli AS t " +
+                    "JOIN detail_tr_beli AS d " +
+                    "ON t.id_tr_beli = d.id_tr_beli " +
+                    "WHERE d.id_bahan = '%s' AND MONTH(tanggal) = %d AND YEAR(tanggal) = %d AND "+ 
+                    "DAY(tanggal) = '%d';", idBahan, bulan, tahun, hari
+            );
+            System.out.println(sql);
+            
+            // eksekusi query
+            super.res = super.stat.executeQuery(sql);
+            
+            // mendapatkan data total pendapatan
+            if(super.res.next()){
+                switch(by){
+                    case PEMBELIAN : return super.res.getFloat("pembelian");
+                    case PENGELUARAN : return super.res.getInt("pengeluaran");
+                }
+            }
+            
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+    
+    public void showBarChart(JPanel panel, int type, int type2, String id, String title, int bulan, int tahun){
         String valTitle = "";
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
@@ -348,6 +433,34 @@ public class ChartManager extends Database{
                     weekBeli++;
                 }      
                 break;
+            case MENU :
+                valTitle = "Jumlah Penjualan";
+                // mendapatkan data mingguan
+                Object[] mingguMenu = new Waktu().getMinggu(bulan, tahun);
+                String minggu1Menu, minggu2Menu;
+                int weekMenu = 1;
+                // menambahkan data pendapatan ke dataset
+                for(Object m : mingguMenu){
+                    minggu1Menu = m.toString().substring(0, m.toString().indexOf("="));
+                    minggu2Menu = m.toString().substring(m.toString().indexOf("=")+1);
+                    dataset.setValue(this.getBarPenjualanMenu(id, type2, minggu1Menu, minggu2Menu), "Amount", "Minggu " + weekMenu);
+                    weekMenu++;
+                } 
+                break;
+            case BAHAN :
+                valTitle = "Jumlah Pembelian";
+                // mendapatkan data mingguan
+                Object[] mingguBahan = new Waktu().getMinggu(bulan, tahun);
+                String minggu1Bahan, minggu2Bahan;
+                int weekBahan = 1;
+                // menambahkan data pendapatan ke dataset
+                for(Object m : mingguBahan){
+                    minggu1Bahan = m.toString().substring(0, m.toString().indexOf("="));
+                    minggu2Bahan = m.toString().substring(m.toString().indexOf("=")+1);
+                    dataset.setValue(this.getBarPembelianBahan(id, type2, minggu1Bahan, minggu2Bahan), "Amount", "Minggu " + weekBahan);
+                    weekBahan++;
+                } 
+                break;
         }
         
         // membuat bar 
@@ -368,6 +481,10 @@ public class ChartManager extends Database{
         panel.removeAll();
         panel.add(barpChartPanel, BorderLayout.CENTER);
         panel.validate();
+    }
+    
+    public void showBarChart(JPanel panel, int type, String title, int bulan, int tahun){
+        this.showBarChart(panel, type, 0, "kosogin aja wkwkwk", title, bulan, tahun);
     }
 
     private int getBarDataPenjualan(String minggu1, String minggu2){
@@ -414,6 +531,58 @@ public class ChartManager extends Database{
         return 0;
     }
     
+    private int getBarPenjualanMenu(String idMenu, int by, String minggu1, String minggu2){
+        try{
+            // mendapatkan query untuk mendapatkan total pendapatan mingguan
+            String sql = String.format("SELECT SUM(d.jumlah) AS penjualan, SUM(d.total_harga) AS pendapatan " +
+                         "FROM transaksi_jual AS t " +
+                         "JOIN detail_tr_jual AS d " +
+                         "ON t.id_tr_jual = d.id_tr_jual " +
+                         "WHERE d.id_menu = '%s' AND  DATE(tanggal) BETWEEN '%s'  AND '%s';", idMenu, minggu1, minggu2);
+            System.out.println(sql);
+            
+            // eksekusi query
+            super.res = super.stat.executeQuery(sql);
+            
+            // mendapatkan data total pendapatan mingguan
+            if(super.res.next()){
+                switch(by){
+                    case PENJUALAN : return super.res.getInt("penjualan");
+                    case PENDAPATAN : return super.res.getInt("pendapatan");
+                }
+            }
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+    
+    private float getBarPembelianBahan(String idBahan, int by, String minggu1, String minggu2){
+        try{
+            // mendapatkan query untuk mendapatkan total pendapatan mingguan
+            String sql = String.format("SELECT SUM(d.jumlah) AS pembelian, SUM(d.total_harga) AS pengeluaran " +
+                         "FROM transaksi_beli AS t " +
+                         "JOIN detail_tr_beli AS d " +
+                         "ON t.id_tr_beli = d.id_tr_beli " +
+                         "WHERE d.id_bahan = '%s' AND  DATE(tanggal) BETWEEN '%s'  AND '%s';", idBahan, minggu1, minggu2);
+            System.out.println(sql);
+            
+            // eksekusi query
+            super.res = super.stat.executeQuery(sql);
+            
+            // mendapatkan data total pendapatan mingguan
+            if(super.res.next()){
+                switch(by){
+                    case PEMBELIAN : return super.res.getFloat("pembelian");
+                    case PENGELUARAN : return super.res.getInt("pengeluaran");
+                }
+            }
+        }catch(SQLException ex){
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+    
     @Deprecated
     public void showHistogram(JPanel panel, int type, String title){
         
@@ -438,6 +607,18 @@ public class ChartManager extends Database{
         panel.removeAll();
         panel.add(barpChartPanel2, BorderLayout.CENTER);
         panel.validate();
+    }
+    
+    public void setEmptyChart(String text, JPanel pnlChart, JLabel label){
+        label.setText(text);
+        
+        pnlChart.removeAll();
+        pnlChart.repaint();
+        pnlChart.revalidate();
+        
+        pnlChart.add(new JPanel().add(label), BorderLayout.CENTER);
+        pnlChart.repaint();
+        pnlChart.revalidate();
     }
     
 }

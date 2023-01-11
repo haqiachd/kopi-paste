@@ -37,7 +37,7 @@ public class Database {
      * Attribute yang digunakan untuk menhubungkan Aplikasi ke <B>Database MySQL</B>
      */
     private static final String DRIVER = "com.mysql.jdbc.Driver",
-                                DB_NAME = "kopi_paste",
+                                DB_NAME = "kopi_paste_business",
                                 URL = "jdbc:mysql://localhost/" + DB_NAME,
                                 USER = "root",
                                 PASS = "";
@@ -109,6 +109,10 @@ public class Database {
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
+    }
+    
+    private void startMysql(){
+        
     }
     
 }

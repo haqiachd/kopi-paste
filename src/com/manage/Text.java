@@ -371,6 +371,10 @@ public class Text {
         return "Rp. -1.00";
     }
     
+    public String toMoneyCase(int money){
+        return this.toMoneyCase(Integer.toString(money));
+    }
+    
     public String removeMoneyCase(String money){
         String buff = money.substring(4).replaceAll("\\.", "").replaceAll(",", "");
         return buff.substring(0, buff.length()-2);
@@ -434,31 +438,27 @@ public class Text {
         return String.format("%02d %s %02d", hari, new Waktu().getNamaBulan(bulan), tahun);   
     }
     
-    public void filterAngka(KeyEvent a){
+    private void filterHuruf(KeyEvent a){
         if(Character.isAlphabetic(a.getKeyChar())){
             a.consume();
-           
-        } else{
-        
         }
     }
     
-    public void filterChar(KeyEvent a){
+    private void filterKarakter(KeyEvent a){
         if(!Character.isLetterOrDigit(a.getKeyChar())){
             a.consume();
-           
-        } else{
-        
         }
     }
     
-    public static void main(String[] args) {
-        
-        Text t = new Text();
-        String mon = "2000";
-        System.out.println(t.toMoneyCase(mon));
-        System.out.println(t.removeMoneyCase(t.toMoneyCase(mon)));
-        
+    public void decimalOnly(KeyEvent evt){
+        this.filterHuruf(evt);
+        this.filterKarakter(evt);
     }
     
+    public void rillOnly(KeyEvent evt){
+        if(evt.getKeyChar() != '.'){
+            this.filterHuruf(evt);
+            this.filterKarakter(evt);
+        }
+    }
 }

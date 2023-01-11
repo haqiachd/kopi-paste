@@ -472,8 +472,7 @@ public class LupaPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBatalMouseExited
 
     private void inpNoTelpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNoTelpKeyTyped
-        txt.filterAngka(evt);
-        txt.filterChar(evt);
+        this.txt.decimalOnly(evt);
     }//GEN-LAST:event_inpNoTelpKeyTyped
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed

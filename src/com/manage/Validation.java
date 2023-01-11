@@ -121,6 +121,11 @@ public class Validation {
     }
     
     public static boolean isNoHp(String noHp){
+        if(!Validation.isNumber(noHp)){
+            JOptionPane.showMessageDialog(null, "Nomor HP harus berupa angka");
+            return false;
+        }
+        
         if(noHp.length() >= 10 && noHp.length() <= 15){
             if(noHp.startsWith("08")){
                 return true;

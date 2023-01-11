@@ -59,7 +59,7 @@ public class Pengaturan extends javax.swing.JDialog {
             System.out.println("Save Path : " + dir);
             
             // membuat command untuk membackup database dengan mysqldump
-            String cmdCommand = "C:\\xampp\\mysql\\bin\\mysqldump -u root kopi_paste -r \"" + dir + "\"";
+            String cmdCommand = "C:\\xampp\\mysql\\bin\\mysqldump -u root kopi_paste_business -r \"" + dir + "\"";
             System.out.println(cmdCommand);
             
             // eksekusi command untuk backup database
