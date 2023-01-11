@@ -438,27 +438,31 @@ public class Text {
         return String.format("%02d %s %02d", hari, new Waktu().getNamaBulan(bulan), tahun);   
     }
     
-    private void filterHuruf(KeyEvent a){
+    public void filterAngka(KeyEvent a){
         if(Character.isAlphabetic(a.getKeyChar())){
             a.consume();
         }
     }
     
-    private void filterKarakter(KeyEvent a){
+    public void filterChar(KeyEvent a){
         if(!Character.isLetterOrDigit(a.getKeyChar())){
             a.consume();
         }
     }
     
     public void decimalOnly(KeyEvent evt){
-        this.filterHuruf(evt);
-        this.filterKarakter(evt);
+        this.filterAngka(evt);
+        this.filterChar(evt);
     }
+//    public void decimalOnly(KeyEvent evt){
+//        this.filterHuruf(evt);
+//        this.filterKarakter(evt);
+//    }
     
     public void rillOnly(KeyEvent evt){
         if(evt.getKeyChar() != '.'){
-            this.filterHuruf(evt);
-            this.filterKarakter(evt);
+            this.filterAngka(evt);
+            this.filterChar(evt);
         }
     }
 }
