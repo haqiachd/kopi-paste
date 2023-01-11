@@ -1480,8 +1480,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1493,8 +1494,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1506,8 +1508,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1519,8 +1522,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1537,8 +1541,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1550,8 +1555,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1563,8 +1569,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
@@ -1576,8 +1583,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                window.setLocation(getX(), getY());
                 window.setVisible(true);
+                window.setLocation(getX(), getY());
+                window.setSize(getWidth(), getHeight());
             }
         });
         this.dispose();
