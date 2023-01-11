@@ -454,10 +454,6 @@ public class Text {
         this.filterAngka(evt);
         this.filterChar(evt);
     }
-//    public void decimalOnly(KeyEvent evt){
-//        this.filterHuruf(evt);
-//        this.filterKarakter(evt);
-//    }
     
     public void rillOnly(KeyEvent evt){
         if(evt.getKeyChar() != '.'){
