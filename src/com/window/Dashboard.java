@@ -43,8 +43,8 @@ public class Dashboard extends javax.swing.JFrame {
         this.setTitle("Menu Dashboard");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.setIconImage(Gambar.getWindowIcon());
-        this.chart.showLineChart(this.pnlLineChart, ChartManager.PENDAPATAN, "Grafik Pendapatan Bulan Ini", waktu.getBulan(), waktu.getTahun());
-        this.chart.showPieChart(this.pnlPieChart, ChartManager.PENDAPATAN, "Presentase Penjualan Bulan Ini", waktu.getBulan(), waktu.getTahun());
+        this.chart.showLineChart(this.pnlLineChart, ChartManager.LAST_MONTH, "Pendapatan Sebulan Terakhir", waktu.getBulan(), waktu.getTahun());
+        this.chart.showPieChart(this.pnlPieChart, ChartManager.LAST_MONTH, "Presentase Penjualan Menu", waktu.getBulan(), waktu.getTahun());
         this.lblNamaUser.setText(User.getNamaUser());
         
         this.win.btns = new JLabel[]{
@@ -88,7 +88,7 @@ public class Dashboard extends javax.swing.JFrame {
         try{
             String sql = "SELECT SUM(tj.total_harga) AS pendapatan, COUNT(tj.id_tr_jual) AS pembeli " +
                          "FROM transaksi_jual AS tj " +
-                         "WHERE MONTH(tj.tanggal) = "+waktu.getBulan()+" AND YEAR(tj.tanggal) = " + waktu.getTahun();
+                         "WHERE DATE(tj.tanggal) BETWEEN '" + this.waktu.getLastMonthDate() + "' AND '" + this.waktu.getCurrentDate() + "'";
             String pendapatan, pembeli;
             
             // mengeksekusi query
@@ -112,7 +112,7 @@ public class Dashboard extends javax.swing.JFrame {
         try{
             String sql = "SELECT SUM(tb.total_harga) AS pengeluaran " +
                          "FROM transaksi_beli AS tb " +
-                         "WHERE MONTH(tb.tanggal) = "+waktu.getBulan()+" AND YEAR(tb.tanggal) = " + waktu.getTahun();
+                         "WHERE DATE(tb.tanggal) BETWEEN '" + this.waktu.getLastMonthDate() + "' AND '" + this.waktu.getCurrentDate() + "'";
             String pendapatan;
             
             // mengeksekusi query
@@ -485,7 +485,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPendapatan.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPendapatan.setForeground(new java.awt.Color(255, 255, 255));
-        lblPendapatan.setText(" Pendapatan Bulan Ini");
+        lblPendapatan.setText(" Pendapatan Sebulan");
         lblPendapatan.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPendapatan.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
@@ -530,7 +530,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblNamaChart.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblNamaChart.setForeground(new java.awt.Color(255, 255, 255));
-        lblNamaChart.setText("Data Penjualan Bulan Ini");
+        lblNamaChart.setText("Data Penjualan Sebulan Terakhir");
 
         lblServerTime.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblServerTime.setForeground(new java.awt.Color(255, 255, 255));
@@ -591,7 +591,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPengeluaran.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPengeluaran.setForeground(new java.awt.Color(255, 255, 255));
-        lblPengeluaran.setText("Pengeluaran Bulan Ini");
+        lblPengeluaran.setText("Pengeluaran Sebulan");
         lblPengeluaran.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPengeluaran.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
@@ -637,7 +637,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         lblPembeli.setFont(new java.awt.Font("Ebrima", 1, 22)); // NOI18N
         lblPembeli.setForeground(new java.awt.Color(255, 255, 255));
-        lblPembeli.setText("Total Pembeli Bulan Ini");
+        lblPembeli.setText("Total Pembeli Sebulan");
         lblPembeli.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         valPembeli.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
