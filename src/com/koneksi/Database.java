@@ -34,14 +34,21 @@ public class Database {
     public PreparedStatement pst;
     
     /**
-     * Attribute yang digunakan untuk menhubungkan Aplikasi ke <B>Database MySQL</B>
+     * Attribute yang digunakan untuk menhubungkan ke local server
      */
     private static final String DRIVER = "com.mysql.jdbc.Driver",
                                 DB_NAME = "kopi_paste_business",
                                 URL = "jdbc:mysql://localhost/" + DB_NAME,
                                 USER = "root",
                                 PASS = "";
-    
+    /**
+     * Attribute yang digunakan untuk menghubungkan aplikasi server
+     */
+//    private static final String DRIVER = "com.mysql.jdbc.Driver",
+//                                DB_NAME = "sql6590038",
+//                                URL = "jdbc:mysql://sql6.freemysqlhosting.net/" + DB_NAME,
+//                                USER = "sql6590038",
+//                                PASS = "bjxsxD2B5d";    
     /**
      * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
      */
@@ -109,10 +116,6 @@ public class Database {
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
-    }
-    
-    private void startMysql(){
-        
     }
     
 }
