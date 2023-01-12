@@ -36,7 +36,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class MenuTransaksiJual extends javax.swing.JFrame {
     
-    private String idMenu = "", namaMenu, jenisMenu, idKaryawan, namaKaryawan;
+    private String idTransaksi, idMenu = "", namaMenu, jenisMenu, idKaryawan, namaKaryawan;
     
     private int hargaMenu // harga dari menu
                ,jumlah // jumlah menu yg dipilih
@@ -510,12 +510,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         try{
             // membuat query
             String sql = "INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            this.idTransaksi = this.createID();
             
             // membuat preparedstatement
             this.db.pst = this.db.conn.prepareStatement(sql);
             
             // menambahkan data transaksi ke query
-            this.db.pst.setString(1, this.inpIdTransaksi.getText());
+            this.db.pst.setString(1, this.idTransaksi);
             this.db.pst.setString(2, this.idKaryawan);
             this.db.pst.setString(3, this.namaKaryawan);
             this.db.pst.setInt(4, this.getTotalJumlahMenu());
@@ -530,7 +531,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             // cek apakah transaksi berhasil atau tidak
             if(isSuccess){
                 // jika transaksi berhasil maka akan memanggil method detail transaksi
-                return this.detailTransaksi();
+                return this.detailTransaksi(this.idTransaksi);
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -539,7 +540,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         return false;
     }
     
-    private boolean detailTransaksi(){
+    private boolean detailTransaksi(String idTransaksi){
         try{
             // membuat query
             String sql = "INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -549,7 +550,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 // menyiapkan query
                 this.db.pst = this.db.conn.prepareStatement(sql);
                 // menambahkan data transaksi ke query
-                this.db.pst.setString(1, this.inpIdTransaksi.getText());
+                this.db.pst.setString(1, idTransaksi);
                 this.db.pst.setString(2, this.tabelTr.getValueAt(i, 1).toString());
                 this.db.pst.setString(3, this.tabelTr.getValueAt(i, 2).toString());
                 this.db.pst.setString(4, this.tabelTr.getValueAt(i, 3).toString());
@@ -651,7 +652,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
                 if(isSukses){
                     // mengudate data detail transaksi
-                    return this.detailTransaksi();
+                    return this.detailTransaksi(this.inpIdTransaksi.getText());
                 }else{
                     Message.showWarning(this, "Terjadi kegagalan saat mengupdate transaksi");
                 }
@@ -1747,7 +1748,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         if(this.isUpdateTr){
             // melakukan update transaksi
             if(this.updateTransaksi()){
-                dia = new TransaksiJualSuccess(null, true, this.inpIdTransaksi.getText());
+                dia = new TransaksiJualSuccess(null, true, this.idTransaksi);
                 dia.setVisible(true);
                 this.isUpdateTr = false;
                 this.isEdit = false;
@@ -1759,7 +1760,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         else{
             // melakukan transaksi baru
             if(this.transaksi()){
-                dia = new TransaksiJualSuccess(null, true, this.inpIdTransaksi.getText());
+                dia = new TransaksiJualSuccess(null, true, this.idTransaksi);
                 dia.setVisible(true);
                 this.isEdit = false;
                 this.changeButton();
@@ -1930,7 +1931,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.resetTransaksi();
             
             // mengupdate id transaksi
-            this.inpIdTransaksi.setText(his.getIdSelected());
+            this.idTransaksi = his.getIdSelected();
+            this.inpIdTransaksi.setText(this.idTransaksi);
 
             // panggil method showUPdateTarnsaksi
             this.showUpdateTransaksi();
@@ -2000,6 +2002,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         if(!this.inpTotalHarga.getText().isEmpty()){
             this.txt.decimalOnly(evt);
             this.hitungKembalian();
+        }else{
+            this.txt.decimalOnly(evt);
         }
     }//GEN-LAST:event_inpTotalBayarKeyTyped
 

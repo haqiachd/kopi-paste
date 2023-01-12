@@ -49,7 +49,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private final Waktu waktu = new Waktu();
 
-    private String idBahan, namaBahan, jenisBahan, satuanBahan, idKaryawan, namaKaryawan;
+    private String idTransaksi, idBahan, namaBahan, jenisBahan, satuanBahan, idKaryawan, namaKaryawan;
     
     private int hargaBahan, ttlHargaBayar;
     
@@ -508,12 +508,13 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         try{
             // menyiapkan query
             String sql = "INSERT INTO transaksi_beli VALUES(?, ?, ?, ?, ?, ?)";
+            this.idTransaksi = this.createID();
             
             // membuat preparestatemnt
             this.db.pst = this.db.conn.prepareCall(sql);
             
             // menambahkan data transaksi ke query
-            this.db.pst.setString(1, this.inpIdTransaksi.getText());
+            this.db.pst.setString(1, this.idTransaksi);
             this.db.pst.setString(2, this.idKaryawan);
             this.db.pst.setString(3, this.namaKaryawan);
             this.db.pst.setInt(4, this.getTotalJumlahBahan());
@@ -526,7 +527,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             // cek apakah transaksi berhasil atau tidak
             if(isSuccess){
                 // jika transaksi berhasil maka akan memanggil method detail transaksi dan triger transaksi
-                return this.detailTransaksi();
+                return this.detailTransaksi(this.idTransaksi);
             }
             
         }catch(SQLException ex){
@@ -536,7 +537,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         return false;
     }
     
-    private boolean detailTransaksi(){
+    private boolean detailTransaksi(String idTransaksi){
         try{
             // membuat query
             String sql = "INSERT INTO detail_tr_beli VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -549,7 +550,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             
                 // menyiapkan query
                 this.db.pst = this.db.conn.prepareCall(sql);
-                this.db.pst.setString(1, this.inpIdTransaksi.getText());
+                this.db.pst.setString(1, idTransaksi);
                 this.db.pst.setString(2, idBhn); // get data id bahan
                 this.db.pst.setString(3, this.tabelTr.getValueAt(i, 2).toString()); // get data nama bahan
                 this.db.pst.setString(4, this.tabelTr.getValueAt(i, 3).toString()); // get data jenis bahan
@@ -674,7 +675,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
 
                 if(isSukses){
                     // mengudate data detail transaksi
-                    return this.detailTransaksi();
+                    return this.detailTransaksi(this.inpIdTransaksi.getText());
                 }else{
                     Message.showWarning(this, "Terjadi kegagalan saat mengupdate transaksi");
                 }
@@ -1684,7 +1685,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         if(this.isUpdateTr){
             // melakukan update transaksi
             if(this.updateTransaksi()){
-                dia = new TransaksiBeliSuccess(null, true, this.inpIdTransaksi.getText());
+                dia = new TransaksiBeliSuccess(null, true, this.idTransaksi);
                 dia.setVisible(true);
                 this.isUpdateTr = false;
                 this.isEdit = false;
@@ -1696,7 +1697,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         else{
             // melakukan transaksi baru
             if(this.transaksi()){
-                dia = new TransaksiBeliSuccess(null, true, this.inpIdTransaksi.getText());
+                dia = new TransaksiBeliSuccess(null, true, this.idTransaksi);
                 dia.setVisible(true);
                 this.isEdit = false;
                 this.changeButton();
@@ -1875,7 +1876,8 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             this.resetTransaksi();
             
             // mengupdate id transaksi
-            this.inpIdTransaksi.setText(his.getIdSelected());
+            this.idTransaksi = his.getIdSelected();
+            this.inpIdTransaksi.setText(this.idTransaksi);
 
             // panggil method showUPdateTarnsaksi
             this.showUpdateTransaksi();
