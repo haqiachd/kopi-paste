@@ -381,7 +381,7 @@ public class Waktu {
         return tanggal;
     }
      
-     public Object[] getMinggu(int bulan, int tahun){
+    public Object[] getMinggu(int bulan, int tahun){
          // menampung data minggu
          SortedMap<String, String> data = new TreeMap<>();
          
@@ -454,24 +454,10 @@ public class Waktu {
          return data.entrySet().toArray();
      }
      
-    public static void main(String[] args) {
-        
-        Waktu w = new Waktu();
-        
-        int week = 1;
-        Object[] minggu = w.getMinggu(12, 2022);
-        System.out.println(minggu[0]);
-        System.out.println("\n\n\n");
-        for(Object m : minggu){
-//            System.out.println(String.format("Minggu %d : %s ", week, m.toString().replace("=",  " --> ")));
-            System.out.println(String.format("Minggu %d : %s ", week, m));
-            week++;
-        }
-        
-
-    }
-    
-
-     
-     
+    public String getLastMonthDate(){
+        Date d = new Date(this.getTahun(), this.getBulan()-1, this.getTanggal()-30);
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        return String.format("%d-%02d-%02d", c.get(Calendar.YEAR)-1900, c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
+    } 
 }

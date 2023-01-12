@@ -5,8 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -37,14 +39,18 @@ public class ChartManager extends Database{
     
     private final Font F_MENU = new Font("Ebrima", 1, 20);
     
-    public static final int PENDAPATAN = 0, PENGELUARAN = 1, PENJUALAN = 2, PEMBELIAN = 3,MENU = 2, BAHAN = 3;
+    public static final int PENDAPATAN = 0, PENGELUARAN = 1, PENJUALAN = 2, PEMBELIAN = 3,MENU = 2, BAHAN = 3,
+                            LAST_MONTH = 4;
     
     public void showPieChart(JPanel panel, int type, String title, int bulan, int tahun){
         // menambahkan value ke dalam chart
         switch(type){
             // mendapatkan data pendapatan
             case PENDAPATAN : 
-                this.showPieChartPenjualan(panel, title, bulan, tahun);
+                this.showPieChartPenjualan(panel, PENDAPATAN, title, bulan, tahun);
+                break;
+            case LAST_MONTH : 
+                this.showPieChartPenjualan(panel, LAST_MONTH, title, bulan, tahun);
                 break;
             // mendapatkan data pengeluaran
             case PENGELUARAN :
@@ -53,13 +59,13 @@ public class ChartManager extends Database{
         }
     }
     
-    private void showPieChartPenjualan(JPanel panel, String title, int bulan, int tahun){
+    private void showPieChartPenjualan(JPanel panel, int type, String title, int bulan, int tahun){
         // mendapatkan data dari database
-        double makanan = this.getPieDataPenjualan("Makanan", bulan, tahun)
-              ,minuman = this.getPieDataPenjualan("Minuman", bulan, tahun)
-              ,original = this.getPieDataPenjualan("Original Coffee", bulan, tahun)
-              ,flavoured = this.getPieDataPenjualan("Falvoured Coffee", bulan, tahun)
-              ,snack = this.getPieDataPenjualan("Snack", bulan, tahun);
+        double makanan = type == PENDAPATAN ? this.getPieDataPenjualan("Makanan", bulan, tahun) : this.getPieDataPenjualanLastMonth("Makanan");
+        double minuman = type == PENDAPATAN ? this.getPieDataPenjualan("Minuman", bulan, tahun) : this.getPieDataPenjualanLastMonth("Minuman");
+        double original = type == PENDAPATAN ? this.getPieDataPenjualan("Original Coffee", bulan, tahun) : this.getPieDataPenjualanLastMonth("Original Coffee");
+        double flavoured = type == PENDAPATAN ? this.getPieDataPenjualan("Falvoured Coffee", bulan, tahun) : this.getPieDataPenjualanLastMonth("Falvoured Coffee");
+        double snack = type == PENDAPATAN ? this.getPieDataPenjualan("Snack", bulan, tahun) : this.getPieDataPenjualanLastMonth("Snack");
         
         // membuat data set untuk menampung data        
         DefaultPieDataset barDataset = new DefaultPieDataset();
@@ -202,6 +208,31 @@ public class ChartManager extends Database{
         return 0;
     }
     
+    private int getPieDataPenjualanLastMonth(String jenis){
+        // membuat query
+        String sql = "SELECT SUM(dtrj.jumlah) AS pesanan " +
+                     "FROM detail_tr_jual AS dtrj " +
+                     "JOIN transaksi_jual AS trj " +
+                     "ON trj.id_tr_jual = dtrj.id_tr_jual " +
+                     "WHERE dtrj.jenis_menu = '"+jenis+"' AND DATE(trj.tanggal) BETWEEN '" + this.waktu.getLastMonthDate() + "' AND '" + this.waktu.getCurrentDate() + "'";
+        System.out.println(sql);
+        
+        try{            
+            super.res = super.stat.executeQuery(sql);
+            
+            // mengembalikan data total pesanan berdasarkan jenis menu
+            if(super.res.next()){
+                int total = super.res.getInt("pesanan");
+                System.out.println("TOTAL " + jenis.toUpperCase() + " : " + total);
+                return total;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(null, ex);
+        }
+        return 0;
+    }
+    
     private int getPieDataPembelian(String jenis, int bulan, int tahun){
         // membuat query
         String sql = "SELECT SUM(dtrb.jumlah) AS dipesan " +
@@ -258,6 +289,28 @@ public class ChartManager extends Database{
                 for(int i = 1; i <= waktu.getTotalHari(bulan); i++){
                     dataset.setValue(this.getLinePembelianBahan(id, type2, bulan, tahun, i), "Amount", Integer.toString(i));
                 }                
+                break;
+            case LAST_MONTH : 
+                valTitle = "Jumlah Pendapatan";
+                // mendapatkan tanggal sebulan yang lalu
+                StringTokenizer token = new StringTokenizer(waktu.getLastMonthDate(), "-");
+                int thn = Integer.parseInt(token.nextToken()),
+                    bln = Integer.parseInt(token.nextToken()),
+                    tgl = Integer.parseInt(token.nextToken()),
+                    ttl = waktu.getTotalHari(bulan);
+
+                // forloop dari tanggal kemarin ke tanggal 1 bulan ini
+                System.out.println("hitung hari");
+                for (int i = tgl; i <= ttl; i += 2) {
+                    dataset.setValue(this.getLineDataPenjualan(bln, thn, i, (i+1)), "Amount", Integer.toString(i-1));
+                }
+                
+                // forloop dari tanggal 1 sampai tanggal saat ini
+                if (tgl != ttl) {
+                    for (int i = 1; i < tgl; i += 2) {
+                        dataset.setValue(this.getLineDataPenjualan(bulan, tahun, i, (i+1)), "Amount", Integer.toString(i));
+                    }
+                }
                 break;
         }
         
@@ -620,5 +673,5 @@ public class ChartManager extends Database{
         pnlChart.repaint();
         pnlChart.revalidate();
     }
-    
+  
 }
