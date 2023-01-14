@@ -1,43 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65e8a3fa-22d2-4bd0-9d47-3d60f72168c3">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="31"/>
 	<property name="ireport.y" value="0"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
-     transaksi_jual.`id_tr_jual` AS transaksi_jual_id_tr_jual,
-     transaksi_jual.`id_karyawan` AS transaksi_jual_id_karyawan,
-     transaksi_jual.`nama_karyawan` AS transaksi_jual_nama_karyawan,
-     transaksi_jual.`total_menu` AS transaksi_jual_total_menu,
-     transaksi_jual.`total_harga` AS transaksi_jual_total_harga,
-     transaksi_jual.`total_bayar` AS transaksi_jual_total_bayar,
-     transaksi_jual.`total_kembalian` AS transaksi_jual_total_kembalian,
-     transaksi_jual.`tanggal` AS transaksi_jual_tanggal,
-     detail_tr_jual.`id_tr_jual` AS detail_tr_jual_id_tr_jual,
-     detail_tr_jual.`id_menu` AS detail_tr_jual_id_menu,
-     detail_tr_jual.`nama_menu` AS detail_tr_jual_nama_menu,
-     detail_tr_jual.`jenis_menu` AS detail_tr_jual_jenis_menu,
-     detail_tr_jual.`harga_menu` AS detail_tr_jual_harga_menu,
-     detail_tr_jual.`jumlah` AS detail_tr_jual_jumlah,
-     detail_tr_jual.`total_harga` AS detail_tr_jual_total_harga
+     transaksi_beli.`id_tr_beli` AS transaksi_beli_id_tr_beli,
+     transaksi_beli.`id_karyawan` AS transaksi_beli_id_karyawan,
+     transaksi_beli.`nama_karyawan` AS transaksi_beli_nama_karyawan,
+     transaksi_beli.`total_bahan` AS transaksi_beli_total_bahan,
+     transaksi_beli.`total_harga` AS transaksi_beli_total_harga,
+     transaksi_beli.`tanggal` AS transaksi_beli_tanggal,
+     detail_tr_beli.`id_tr_beli` AS detail_tr_beli_id_tr_beli,
+     detail_tr_beli.`id_bahan` AS detail_tr_beli_id_bahan,
+     detail_tr_beli.`nama_bahan` AS detail_tr_beli_nama_bahan,
+     detail_tr_beli.`jenis_bahan` AS detail_tr_beli_jenis_bahan,
+     detail_tr_beli.`jumlah` AS detail_tr_beli_jumlah,
+     detail_tr_beli.`total_harga` AS detail_tr_beli_total_harga
 FROM
-     `transaksi_jual` transaksi_jual INNER JOIN `detail_tr_jual` detail_tr_jual ON transaksi_jual.`id_tr_jual` = detail_tr_jual.`id_tr_jual`]]>
+     `transaksi_beli` transaksi_beli INNER JOIN `detail_tr_beli` detail_tr_beli ON transaksi_beli.`id_tr_beli` = detail_tr_beli.`id_tr_beli`]]>
 	</queryString>
-	<field name="transaksi_jual_id_tr_jual" class="java.lang.String"/>
-	<field name="transaksi_jual_id_karyawan" class="java.lang.String"/>
-	<field name="transaksi_jual_nama_karyawan" class="java.lang.String"/>
-	<field name="transaksi_jual_total_menu" class="java.lang.Integer"/>
-	<field name="transaksi_jual_total_harga" class="java.lang.Integer"/>
-	<field name="transaksi_jual_total_bayar" class="java.lang.Integer"/>
-	<field name="transaksi_jual_total_kembalian" class="java.lang.Integer"/>
-	<field name="transaksi_jual_tanggal" class="java.sql.Timestamp"/>
-	<field name="detail_tr_jual_id_tr_jual" class="java.lang.String"/>
-	<field name="detail_tr_jual_id_menu" class="java.lang.String"/>
-	<field name="detail_tr_jual_nama_menu" class="java.lang.String"/>
-	<field name="detail_tr_jual_jenis_menu" class="java.lang.String"/>
-	<field name="detail_tr_jual_harga_menu" class="java.lang.Integer"/>
-	<field name="detail_tr_jual_jumlah" class="java.lang.Integer"/>
-	<field name="detail_tr_jual_total_harga" class="java.lang.Integer"/>
+	<field name="transaksi_beli_id_tr_beli" class="java.lang.String"/>
+	<field name="transaksi_beli_id_karyawan" class="java.lang.String"/>
+	<field name="transaksi_beli_nama_karyawan" class="java.lang.String"/>
+	<field name="transaksi_beli_total_bahan" class="java.lang.Integer"/>
+	<field name="transaksi_beli_total_harga" class="java.lang.Integer"/>
+	<field name="transaksi_beli_tanggal" class="java.sql.Timestamp"/>
+	<field name="detail_tr_beli_id_tr_beli" class="java.lang.String"/>
+	<field name="detail_tr_beli_id_bahan" class="java.lang.String"/>
+	<field name="detail_tr_beli_nama_bahan" class="java.lang.String"/>
+	<field name="detail_tr_beli_jenis_bahan" class="java.lang.String"/>
+	<field name="detail_tr_beli_jumlah" class="java.lang.Integer"/>
+	<field name="detail_tr_beli_total_harga" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -123,7 +117,7 @@ FROM
 				<textElement textAlignment="Center">
 					<font isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Total Menu]]></text>
+				<text><![CDATA[Total Bahan]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="324" y="36" width="100" height="20" uuid="e179ddaa-9fe4-4972-b520-0103ff4f35b9"/>
@@ -144,7 +138,7 @@ FROM
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Data Transaksi Penjualan]]></text>
+				<text><![CDATA[Data Transaksi Pembelian]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -158,7 +152,7 @@ FROM
 				<textElement>
 					<paragraph firstLineIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_id_tr_jual}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaksi_beli_id_tr_beli}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="75" y="0" width="67" height="20" uuid="6f6ac7f7-0c30-475e-b890-d44590bb9691"/>
@@ -168,7 +162,7 @@ FROM
 				<textElement>
 					<paragraph firstLineIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_id_karyawan}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaksi_beli_id_karyawan}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="142" y="0" width="123" height="20" uuid="c5afed76-7a43-4d86-b41b-862c014f0073"/>
@@ -178,7 +172,7 @@ FROM
 				<textElement>
 					<paragraph firstLineIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_nama_karyawan}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaksi_beli_nama_karyawan}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="265" y="0" width="59" height="20" uuid="dd8e4c9f-b1ab-49a0-ad89-e8559c3c09ab"/>
@@ -188,7 +182,7 @@ FROM
 				<textElement>
 					<paragraph firstLineIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_total_menu}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaksi_beli_total_bahan}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="324" y="0" width="100" height="20" uuid="8f0f2eef-e07c-472d-89e5-aa9e2798f491"/>
@@ -198,7 +192,7 @@ FROM
 				<textElement>
 					<paragraph firstLineIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_total_harga}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaksi_beli_total_harga}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="424" y="0" width="131" height="20" uuid="b5d8de5f-3e9a-4b14-87c7-b36db876a13e"/>
@@ -208,7 +202,7 @@ FROM
 				<textElement>
 					<paragraph firstLineIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_tanggal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaksi_beli_tanggal}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
