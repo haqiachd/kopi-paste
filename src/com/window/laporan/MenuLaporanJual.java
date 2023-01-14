@@ -23,16 +23,28 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -2014,19 +2026,45 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
-        try {
-            // set header dan footer
-            MessageFormat header = new MessageFormat("Laporan Penjualan Harian");
-            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
-            // cek tabel kosong atau tidak
-            if (this.tabelLpHarian.getRowCount() > 0) {
-                // print tabel
-                this.tabelLpHarian.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-            } else {
-                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
-            }
-        } catch (PrinterException ex) {
-            Message.showException(this, "Tabel gagal diprint", ex);
+
+            //        try {
+//            // set header dan footer
+//            MessageFormat header = new MessageFormat("Laporan Penjualan Harian");
+//            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
+//            // cek tabel kosong atau tidak
+//            if (this.tabelLpHarian.getRowCount() > 0) {
+//                // print tabel
+//                this.tabelLpHarian.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+//            } else {
+//                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
+//            }
+//        } catch (PrinterException ex) {
+//            Message.showException(this, "Tabel gagal diprint", ex);
+//        }
+        // TODO add your handling code here:
+//        try {
+//
+//            InputStream file = getClass().getResourceAsStream("src//report//LaporanJualHarian.jrxml");
+//            JasperDesign dsn = JRXmlLoader.load(file);
+//            JasperReport Jupe = JasperCompileManager.compileReport(dsn);
+//            JasperPrint jp = JasperFillManager.fillReport(Jupe, null, this.db.conn);
+//
+//            JasperViewer.viewReport(jp, false);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Data Tidak Dapat Dicetak"
+//                    + "\n" + e.getMessage(), "Cetak Data", javax.swing.JOptionPane.ERROR_MESSAGE);
+//        }
+        try{
+            String path = "src\\report\\LaporanJualHarian.jasper";
+            JasperReport report = (JasperReport) JRLoader.loadObjectFromFile(path);
+            JasperPrint jprint = JasperFillManager.fillReport(path, null, this.db.conn);
+            JasperViewer jview = new JasperViewer(jprint, false);
+            jview.setVisible(true);
+        }catch(Exception ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
         }
     }//GEN-LAST:event_btnCetakHarianActionPerformed
 
