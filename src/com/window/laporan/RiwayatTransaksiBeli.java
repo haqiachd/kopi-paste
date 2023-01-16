@@ -452,20 +452,8 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
-        try {
-            // set header dan footer
-            MessageFormat header = new MessageFormat("Riwayat Pembelian Bulan " + this.waktu.getNamaBulan(this.bulan) + " " + this.tahun);
-            MessageFormat footer = new MessageFormat("Halaman {0,number,integer}");
-            // cek tabel kosong atau tidak
-            if (this.tabelRiwayat.getRowCount() > 0) {
-                // print tabel
-                this.tabelRiwayat.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-            } else {
-                Message.showWarning(this, "Tidak ada data didalam tabel yang akan diprint!");
-            }
-        } catch (PrinterException ex) {
-            Message.showException(this, "Tabel gagal diprint", ex);
-        }   
+        CetakLaporanHarian report = new CetakLaporanHarian(null, true, this.tabelRiwayat, this.db.conn, "unsupported-yet :|", "Riwayat Pembelian Bulan " + this.waktu.getNamaBulan(this.bulan) + " " + this.tahun);
+        report.setVisible(true);     
     }//GEN-LAST:event_btnCetakActionPerformed
 
     private void tabelRiwayatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tabelRiwayatKeyPressed
