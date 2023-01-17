@@ -43,16 +43,31 @@ public class Dashboard extends javax.swing.JFrame {
         this.setTitle("Menu Dashboard");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.setIconImage(Gambar.getWindowIcon());
-        this.chart.showLineChart(this.pnlLineChart, ChartManager.LAST_MONTH, "Pendapatan Sebulan Terakhir", waktu.getBulan(), waktu.getTahun());
-        this.chart.showPieChart(this.pnlPieChart, ChartManager.LAST_MONTH, "Presentase Penjualan Menu", waktu.getBulan(), waktu.getTahun());
+//        this.chart.showLineChart(this.pnlLineChart, ChartManager.LAST_MONTH, "Pendapatan Sebulan Terakhir", waktu.getBulan(), waktu.getTahun());
+//        this.chart.showPieChart(this.pnlPieChart, ChartManager.LAST_MONTH, "Presentase Penjualan Menu", waktu.getBulan(), waktu.getTahun());
         this.lblNamaUser.setText(User.getNamaUser());
         
         this.win.btns = new JLabel[]{
             this.btnKaryawan, this.btnSupplier, this.btnPembeli, 
             this.btnTransaksi, this.btnLaporan, this.btnBahan, this.btnLogout, this.btnMenu
         };
-        
         this.win.hoverButton();
+        
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                chart.showLineChart(pnlLineChart, ChartManager.LAST_MONTH, "Pendapatan Sebulan Terakhir", waktu.getBulan(), waktu.getTahun());
+                chart.showPieChart(pnlPieChart, ChartManager.LAST_MONTH, "Presentase Penjualan Menu", waktu.getBulan(), waktu.getTahun());
+            }
+        }).start();
+        
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                getPenjualan();
+                getPembelian();
+            }
+        }).start();
         
         new Thread(new Runnable(){
             @Override
@@ -79,9 +94,6 @@ public class Dashboard extends javax.swing.JFrame {
             this.btnKaryawan.setVisible(false);
             this.btnLaporan.setVisible(false);
         }
-        
-        this.getPenjualan();
-        this.getPembelian();
     }
     
     private void getPenjualan(){
@@ -491,7 +503,7 @@ public class Dashboard extends javax.swing.JFrame {
         valPendapatan.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
         valPendapatan.setForeground(new java.awt.Color(255, 255, 255));
         valPendapatan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        valPendapatan.setText(" Rp. 1.256.000");
+        valPendapatan.setText(" Rp. 0");
         valPendapatan.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         iconPendapatan.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -597,7 +609,7 @@ public class Dashboard extends javax.swing.JFrame {
         valPengeluaran.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
         valPengeluaran.setForeground(new java.awt.Color(255, 255, 255));
         valPengeluaran.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        valPengeluaran.setText(" Rp. 537.000");
+        valPengeluaran.setText(" Rp. 0");
         valPengeluaran.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         iconPengeluaran.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -643,7 +655,7 @@ public class Dashboard extends javax.swing.JFrame {
         valPembeli.setFont(new java.awt.Font("Tahoma", 1, 17)); // NOI18N
         valPembeli.setForeground(new java.awt.Color(255, 255, 255));
         valPembeli.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        valPembeli.setText("45 Pembeli");
+        valPembeli.setText("0 Pembeli");
         valPembeli.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         iconPembeli.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

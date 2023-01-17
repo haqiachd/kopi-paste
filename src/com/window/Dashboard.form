@@ -612,7 +612,7 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="2"/>
-                        <Property name="text" type="java.lang.String" value=" Rp. 1.256.000"/>
+                        <Property name="text" type="java.lang.String" value=" Rp. 0"/>
                         <Property name="verticalAlignment" type="int" value="1"/>
                       </Properties>
                     </Component>
@@ -804,7 +804,7 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="2"/>
-                        <Property name="text" type="java.lang.String" value=" Rp. 537.000"/>
+                        <Property name="text" type="java.lang.String" value=" Rp. 0"/>
                         <Property name="verticalAlignment" type="int" value="1"/>
                       </Properties>
                     </Component>
@@ -882,7 +882,7 @@
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="2"/>
-                        <Property name="text" type="java.lang.String" value="45 Pembeli"/>
+                        <Property name="text" type="java.lang.String" value="0 Pembeli"/>
                         <Property name="verticalAlignment" type="int" value="1"/>
                       </Properties>
                     </Component>
