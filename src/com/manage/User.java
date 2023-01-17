@@ -93,7 +93,11 @@ public class User extends Database{
     }
     
     public static boolean isAdmin(){
-        return User.getLevel().equalsIgnoreCase("ADMIN");
+        return User.getLevel().equalsIgnoreCase("ADMIN") || User.getLevel().equalsIgnoreCase("DEVELOPER");
+    }
+    
+    public static boolean isDeveloper(){
+        return User.getLevel().equalsIgnoreCase("DEVELOPER");
     }
     
     public void logout(){
