@@ -5,11 +5,13 @@ import com.manage.Message;
 import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
+import com.window.DataKaryawan;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.SQLException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -321,6 +323,7 @@ public class UserProfile extends javax.swing.JDialog {
                 this.frame.dispose();
                 this.pop.dispose();
                 new User().logout();
+                DataKaryawan.DATA_KY = new DefaultTableModel();
                 this.dispose();
             break;
         }

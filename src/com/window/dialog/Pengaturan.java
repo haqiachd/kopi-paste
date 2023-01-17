@@ -205,8 +205,8 @@ public class Pengaturan extends javax.swing.JDialog {
     }//GEN-LAST:event_lblCloseMouseExited
 
     private void btnBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackupActionPerformed
-        if(!User.isAdmin()){
-            Message.showWarning(this, "Karyawan tidak diperbolehkan membackup database!");
+        if(!User.isDeveloper()){
+            Message.showWarning(this, "Hubungi developer jika ingin membackup Database!!");
             return;
         }
         
