@@ -401,7 +401,7 @@ public class LoginWindow extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                user.login("admin", "haqi12345");
+                user.login("dev2003", "haqi12345");
                 new Dashboard().setVisible(true);
             }
         });
