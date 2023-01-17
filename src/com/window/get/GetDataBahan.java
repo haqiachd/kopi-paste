@@ -3,6 +3,7 @@ package com.window.get;
 import com.koneksi.Database;
 import com.manage.Bahan;
 import com.manage.Text;
+import com.window.DataMenu;
 import java.awt.event.KeyEvent;
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -20,16 +21,20 @@ public class GetDataBahan extends javax.swing.JDialog {
     
     private boolean isSelected = false;
     
-    private final Database db = new Database();
+    private static Database db = null;
     
     private final Bahan ba = new Bahan();
     
-    private final Text text = new Text();
+    public static DefaultTableModel DATA_BAHAN = new DefaultTableModel();
     
     public GetDataBahan(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        if(GetDataBahan.db == null){
+            GetDataBahan.db = new Database();
+        }
         
         // menampilkan data tabel
         this.showTabel();
@@ -75,6 +80,23 @@ public class GetDataBahan extends javax.swing.JDialog {
         this.resetTabel();
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
+        if(GetDataBahan.DATA_BAHAN.getRowCount() > 0){
+            System.out.println("EXECUTE");
+            // membaca data yang ada didalam tabel
+            for(int i = 0; i < GetDataBahan.DATA_BAHAN.getRowCount(); i++){
+                // menambahkan data
+                model.addRow(new Object[]{
+                    GetDataBahan.DATA_BAHAN.getValueAt(i, 0),
+                    GetDataBahan.DATA_BAHAN.getValueAt(i, 1),
+                    GetDataBahan.DATA_BAHAN.getValueAt(i, 2),
+                    GetDataBahan.DATA_BAHAN.getValueAt(i, 3),
+                });
+            }
+            // menampilkan data
+            this.tabelData.setModel(model);
+            return;
+        }
+        
         try{
             // query untuk mengambil data bahan menu pada tabel mysql
             // membuat query
@@ -82,27 +104,64 @@ public class GetDataBahan extends javax.swing.JDialog {
             System.out.println(sql);
 
             // eksekusi query
-            this.db.res = this.db.stat.executeQuery(sql);
+            GetDataBahan.db.res = GetDataBahan.db.stat.executeQuery(sql);
             
             // membaca semua data yang ada didalam tabel
-            while(this.db.res.next()){
+            while(GetDataBahan.db.res.next()){
                 // menambahkan data kedalam tabel
                 model.addRow(
                     new Object[]{
-                        this.db.res.getString("id_bahan"),
-                        this.db.res.getString("nama_bahan"),
-                        this.db.res.getString("jenis"),
-                        this.ba.getNamaSatuan(this.db.res.getString("satuan"))
+                        GetDataBahan.db.res.getString("id_bahan"),
+                        GetDataBahan.db.res.getString("nama_bahan"),
+                        GetDataBahan.db.res.getString("jenis"),
+                        this.ba.getNamaSatuan(GetDataBahan.db.res.getString("satuan"))
                     }
                 );
             }
             
             // menampilkan data tabel
             this.tabelData.setModel(model);
+            
+            // menambahkan data ke model cari
+            GetDataBahan.DATA_BAHAN = model;
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
+    }
+    
+    private void cariData(){
+        // reset tabel
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        // mendapatkan key
+        String key = this.inpCari.getText().toLowerCase(), 
+               id, menu, jenis, satuan;
+        
+        // membaca isi data pada model cari
+        for (int i = 0; i < GetDataBahan.DATA_BAHAN.getRowCount(); i++) {
+            // mendapatkan data di tabel
+            id = GetDataBahan.DATA_BAHAN.getValueAt(i, 0).toString().toLowerCase();
+            menu = GetDataBahan.DATA_BAHAN.getValueAt(i, 1).toString().toLowerCase();
+            jenis = GetDataBahan.DATA_BAHAN.getValueAt(i, 2).toString().toLowerCase();
+            satuan = GetDataBahan.DATA_BAHAN.getValueAt(i, 3).toString().toLowerCase();
+            
+            // cek apakah data yang dicari terdapat pada tabel
+            if(id.contains(key) || menu.contains(key) || jenis.contains(key) || satuan.contains(key)){
+                // menambahkan data
+                model.addRow(new Object[]{
+                        GetDataBahan.DATA_BAHAN.getValueAt(i, 0),
+                        GetDataBahan.DATA_BAHAN.getValueAt(i, 1),
+                        GetDataBahan.DATA_BAHAN.getValueAt(i, 2),
+                        GetDataBahan.DATA_BAHAN.getValueAt(i, 3),
+                    }
+                );
+            }
+        }
+        
+        // menampilkan data yang dicari
+        this.tabelData.setModel(model);
     }
     
     public boolean isSelected(){
@@ -337,7 +396,7 @@ public class GetDataBahan extends javax.swing.JDialog {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.isSelected = false;
-        this.db.closeConnection();
+//        GetDataBahan.db.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -345,9 +404,10 @@ public class GetDataBahan extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
-        String key = this.inpCari.getText();
-        this.keyword = " WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = " WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
+//        this.showTabel();
+        this.cariData();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
         
         if(evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN){
@@ -357,9 +417,10 @@ public class GetDataBahan extends javax.swing.JDialog {
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
-        String key = this.inpCari.getText();
-        this.keyword = " WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = " WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
+//        this.showTabel();
+        this.cariData();
 //        this.lblTotalData.setText("Menampilkan data supplier dengan keyword '"+inpCari.getText()+"'");
     }//GEN-LAST:event_inpCariKeyTyped
 
@@ -392,6 +453,7 @@ public class GetDataBahan extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 GetDataBahan dialog = new GetDataBahan(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {

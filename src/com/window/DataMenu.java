@@ -17,6 +17,7 @@ import com.window.dialog.MenuLineChart;
 import com.window.dialog.Pengaturan;
 import com.window.update.UpdateDataMenu;
 import com.window.dialog.UserProfile;
+import com.window.get.GetDataMenu;
 
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -35,13 +36,15 @@ public class DataMenu extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
-    private final Database db = new Database(), db2 = new Database();
+    private final Database db = new Database();
     
     private final UIManager win = new UIManager();
     
     private final Text text = new Text();
     
     private final Waktu waktu = new Waktu();
+    
+    private static DefaultTableModel DATA_MENU = new DefaultTableModel();
     
     public DataMenu() {
         initComponents();
@@ -141,35 +144,89 @@ public class DataMenu extends javax.swing.JFrame {
         this.resetTabel();
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
+        if(DataMenu.DATA_MENU.getRowCount() > 0){
+            System.out.println("EXECUTE");
+            // membaca data yang ada didalam tabel
+            for(int i = 0; i < DataMenu.DATA_MENU.getRowCount(); i++){
+                // menambahkan data
+                model.addRow(new Object[]{
+                    DataMenu.DATA_MENU.getValueAt(i, 0),
+                    DataMenu.DATA_MENU.getValueAt(i, 1),
+                    DataMenu.DATA_MENU.getValueAt(i, 2),
+                    DataMenu.DATA_MENU.getValueAt(i, 3),
+                });
+            }
+            // menampilkan data
+            this.tabelData.setModel(model);
+            return;
+        }
+        
         try{
             // query untuk mengambil data menu pada tabel mysql
             String sql = "SELECT id_menu, nama_menu, jenis, harga FROM menu " + keyword;
             System.out.println(sql);
 
             // eksekusi query
-            this.db2.res = this.db2.stat.executeQuery(sql);
+            this.db.res = this.db.stat.executeQuery(sql);
             
             // membaca semua data yang ada didalam tabel
-            while(this.db2.res.next()){
+            while(this.db.res.next()){
                 // menambahkan data kedalam tabel
-                String id = this.db2.res.getString("id_menu");
+                String id = this.db.res.getString("id_menu");
                 model.addRow(
                     new Object[]{
                         id,
-                        this.db2.res.getString("nama_menu"),
-                        this.db2.res.getString("jenis"),
-                        text.toMoneyCase(this.db2.res.getString("harga")),
+                        this.db.res.getString("nama_menu"),
+                        this.db.res.getString("jenis"),
+                        text.toMoneyCase(this.db.res.getString("harga")),
                     }
                 );
             }
             
             // menampilkan data tabel
             this.tabelData.setModel(model);
+            
+            // add data ke model data menu
+            DataMenu.DATA_MENU = model;
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
     }
+    
+    private void cariData(){
+        // reset tabel
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        // mendapatkan key
+        String key = this.inpCari.getText().toLowerCase(), 
+               id, menu, jenis;
+        
+        // membaca isi data pada model cari
+        for (int i = 0; i < DataMenu.DATA_MENU.getRowCount(); i++) {
+            // mendapatkan data di tabel
+            id = DataMenu.DATA_MENU.getValueAt(i, 0).toString().toLowerCase();
+            menu = DataMenu.DATA_MENU.getValueAt(i, 1).toString().toLowerCase();
+            jenis = DataMenu.DATA_MENU.getValueAt(i, 2).toString().toLowerCase();
+            
+            // cek apakah data yang dicari terdapat pada tabel
+            if(id.contains(key) || menu.contains(key) || jenis.contains(key)){
+                // menambahkan data
+                model.addRow(new Object[]{
+                        DataMenu.DATA_MENU.getValueAt(i, 0),
+                        DataMenu.DATA_MENU.getValueAt(i, 1),
+                        DataMenu.DATA_MENU.getValueAt(i, 2),
+                        DataMenu.DATA_MENU.getValueAt(i, 3),
+                    }
+                );
+            }
+        }
+        
+        // menampilkan data yang dicari
+        this.tabelData.setModel(model);
+    }
+ 
         
     private void showData(){
         try{
@@ -1142,7 +1199,7 @@ public class DataMenu extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
-        this.db2.closeConnection();
+        this.db.closeConnection();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1162,6 +1219,10 @@ public class DataMenu extends javax.swing.JFrame {
         // membuka window upddate menu
         UpdateDataMenu d = new UpdateDataMenu(null, true, 1, "");
         d.setVisible(true);
+        // reset data menu
+        DataMenu.DATA_MENU = new DefaultTableModel();
+        GetDataMenu.DATA_MENU = new DefaultTableModel();
+        
         this.showTabel();
         // referesh data
         this.resetData();
@@ -1183,6 +1244,11 @@ public class DataMenu extends javax.swing.JFrame {
             // membuka window update data menu
             UpdateDataMenu d = new UpdateDataMenu(null, true, 2, this.idSelected);
             d.setVisible(true);
+            
+            // reset data menu
+            DataMenu.DATA_MENU = new DefaultTableModel();
+            GetDataMenu.DATA_MENU = new DefaultTableModel();
+            
             this.showTabel();
             // merefresh data setelah update
             this.showData();
@@ -1223,6 +1289,9 @@ public class DataMenu extends javax.swing.JFrame {
                         // mengecek apakah data supplier berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
+                            // reset data menu
+                            DataMenu.DATA_MENU = new DefaultTableModel();
+                            GetDataMenu.DATA_MENU = new DefaultTableModel();
                             // mengupdate tabel
                             this.showTabel();
                             // referesh data
@@ -1263,17 +1332,19 @@ public class DataMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelDataKeyPressed
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
-        String key = this.inpCari.getText();
-        this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
-        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
+//        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
+//        this.showTabel();
+        this.cariData();
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
-        String key = this.inpCari.getText();
-        this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
-        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
+//        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
+//        this.showTabel();
+        this.cariData();
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void btnLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLineChartActionPerformed

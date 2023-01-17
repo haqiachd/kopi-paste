@@ -18,6 +18,7 @@ import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
 import com.window.update.UpdateDataBahan;
 import com.window.dialog.UserProfile;
+import com.window.get.GetDataBahan;
 
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -45,6 +46,8 @@ public class DataBahan extends javax.swing.JFrame {
     private final Waktu waktu = new Waktu();
     
      private String idSelected, keyword = "";
+     
+     private static DefaultTableModel DATA_BAHAN = new DefaultTableModel();
    
     public DataBahan() {
         initComponents();
@@ -154,6 +157,23 @@ public class DataBahan extends javax.swing.JFrame {
         this.resetTabel();
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
+        if(DataBahan.DATA_BAHAN.getRowCount() > 0){
+            System.out.println("EXECUTE");
+            // membaca data yang ada didalam tabel
+            for(int i = 0; i < DataBahan.DATA_BAHAN.getRowCount(); i++){
+                // menambahkan data
+                model.addRow(new Object[]{
+                    DataBahan.DATA_BAHAN.getValueAt(i, 0),
+                    DataBahan.DATA_BAHAN.getValueAt(i, 1),
+                    DataBahan.DATA_BAHAN.getValueAt(i, 2),
+                    DataBahan.DATA_BAHAN.getValueAt(i, 3),
+                });
+            }
+            // menampilkan data
+            this.tabelData.setModel(model);
+            return;
+        }
+        
         try{
             // query untuk mengambil data bahan pada tabel mysql
             String sql = "SELECT id_bahan, nama_bahan, jenis, satuan FROM bahan " + keyword;
@@ -177,10 +197,47 @@ public class DataBahan extends javax.swing.JFrame {
             
             // menampilkan data tabel
             this.tabelData.setModel(model);
+            
+            // menambahkan data ke model data bahan
+            DataBahan.DATA_BAHAN = model;
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
+    }
+    
+    private void cariData(){
+        // reset tabel
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        // mendapatkan key
+        String key = this.inpCari.getText().toLowerCase(), 
+               id, menu, jenis, satuan;
+        
+        // membaca isi data pada model cari
+        for (int i = 0; i < DataBahan.DATA_BAHAN.getRowCount(); i++) {
+            // mendapatkan data di tabel
+            id = DataBahan.DATA_BAHAN.getValueAt(i, 0).toString().toLowerCase();
+            menu = DataBahan.DATA_BAHAN.getValueAt(i, 1).toString().toLowerCase();
+            jenis = DataBahan.DATA_BAHAN.getValueAt(i, 2).toString().toLowerCase();
+            satuan = DataBahan.DATA_BAHAN.getValueAt(i, 3).toString().toLowerCase();
+            
+            // cek apakah data yang dicari terdapat pada tabel
+            if(id.contains(key) || menu.contains(key) || jenis.contains(key) || satuan.contains(key)){
+                // menambahkan data
+                model.addRow(new Object[]{
+                        DataBahan.DATA_BAHAN.getValueAt(i, 0),
+                        DataBahan.DATA_BAHAN.getValueAt(i, 1),
+                        DataBahan.DATA_BAHAN.getValueAt(i, 2),
+                        DataBahan.DATA_BAHAN.getValueAt(i, 3),
+                    }
+                );
+            }
+        }
+        
+        // menampilkan data yang dicari
+        this.tabelData.setModel(model);
     }
     
     private void showData(){
@@ -1184,6 +1241,11 @@ public class DataBahan extends javax.swing.JFrame {
         // membuka window input data
         UpdateDataBahan d = new UpdateDataBahan(null, true, 1, "");
         d.setVisible(true);
+        
+        //reset data bahan
+        DataBahan.DATA_BAHAN = new DefaultTableModel();
+        GetDataBahan.DATA_BAHAN = new DefaultTableModel();
+        
         this.showTabel();
         // referesh data
         this.resetData();
@@ -1202,6 +1264,10 @@ public class DataBahan extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
         }else{
             UpdateDataBahan d = new UpdateDataBahan(null, true, 2, this.idSelected);
+            //reset data bahan
+            DataBahan.DATA_BAHAN = new DefaultTableModel();
+            GetDataBahan.DATA_BAHAN = new DefaultTableModel();
+            
             d.setVisible(true);
             this.showTabel();
             this.showData();
@@ -1243,6 +1309,9 @@ public class DataBahan extends javax.swing.JFrame {
                         // mengecek apakah data pembeli berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
+                            //reset data bahan
+                            DataBahan.DATA_BAHAN = new DefaultTableModel();
+                            GetDataBahan.DATA_BAHAN = new DefaultTableModel();
                             // mengupdate tabel
                             this.showTabel();
                             // reset textfield
@@ -1281,17 +1350,19 @@ public class DataBahan extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelDataMouseClicked
 
     private void inpCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyPressed
-        String key = this.inpCari.getText();
-        this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
-        this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
+//        this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
+//        this.showTabel();
+        this.cariData();
     }//GEN-LAST:event_inpCariKeyPressed
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
-        String key = this.inpCari.getText();
-        this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
-        this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = "WHERE id_bahan LIKE '%"+key+"%' OR nama_bahan LIKE '%"+key+"%'";
+//        this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
+//        this.showTabel();
+        this.cariData();
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpIdActionPerformed

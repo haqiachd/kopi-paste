@@ -35,6 +35,8 @@ public class DataKaryawan extends javax.swing.JFrame {
     
     private final UIManager win = new UIManager();
     
+    private static DefaultTableModel DATA_KY = new DefaultTableModel();
+    
     public DataKaryawan() {
         initComponents();
         
@@ -128,6 +130,22 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.resetTabel();
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
+        if(DataKaryawan.DATA_KY.getRowCount() > 0){
+            System.out.println("EXECUTE");
+            // membaca data yang ada didalam tabel
+            for(int i = 0; i < DataKaryawan.DATA_KY.getRowCount(); i++){
+                // menambahkan data
+                model.addRow(new Object[]{
+                    DataKaryawan.DATA_KY.getValueAt(i, 0),
+                    DataKaryawan.DATA_KY.getValueAt(i, 1),
+                    DataKaryawan.DATA_KY.getValueAt(i, 2),
+                });
+            }
+            // menampilkan data
+            this.tabelData.setModel(model);
+            return;
+        }
+       
         try{
             // query untuk mengambil data karyawan pada tabel mysql
             String sql = "SELECT * FROM karyawan " + keyword;
@@ -150,12 +168,45 @@ public class DataKaryawan extends javax.swing.JFrame {
             
             // menampilkan data tabel
             this.tabelData.setModel(model);
+            
+            // menambahkan data ke model 
+            DataKaryawan.DATA_KY = model;
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
     }
     
+    private void cariData(){
+        // reset tabel
+        this.resetTabel();
+        DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
+        
+        // mendapatkan key
+        String key = this.inpCari.getText().toLowerCase(), 
+               id, nama;
+        
+        // membaca isi data pada model cari
+        for (int i = 0; i < DataKaryawan.DATA_KY.getRowCount(); i++) {
+            // mendapatkan data di tabel
+            id = DataKaryawan.DATA_KY.getValueAt(i, 0).toString().toLowerCase();
+            nama = DataKaryawan.DATA_KY.getValueAt(i, 1).toString().toLowerCase();
+            
+            // cek apakah data yang dicari terdapat pada tabel
+            if(id.contains(key) || nama.contains(key)){
+                // menambahkan data
+                model.addRow(new Object[]{
+                        DataKaryawan.DATA_KY.getValueAt(i, 0),
+                        DataKaryawan.DATA_KY.getValueAt(i, 1),
+                        DataKaryawan.DATA_KY.getValueAt(i, 2),
+                    }
+                );
+            }
+        }
+        
+        // menampilkan data yang dicari
+        this.tabelData.setModel(model);
+    }
     private void showData(){
         try{
             // menyiapkan query
@@ -1193,10 +1244,11 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelDataKeyPressed
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
-        String key = this.inpCari.getText();
-        this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
-        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
+//        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
+//        this.showTabel();
+        this.cariData();
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyPressed
@@ -1204,10 +1256,11 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariKeyPressed
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
-        String key = this.inpCari.getText();
-        this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
-        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
-        this.showTabel();
+//        String key = this.inpCari.getText();
+//        this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
+//        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
+//        this.showTabel();
+        this.cariData();
     }//GEN-LAST:event_inpCariKeyReleased
 
     /**
