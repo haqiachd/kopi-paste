@@ -1,6 +1,7 @@
 package com.window.transaksi;
 
 import com.koneksi.Database;
+import com.manage.Laporan;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -54,6 +55,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private final Text txt = new Text();
     
     private final Waktu waktu = new Waktu();
+    
+    private final Laporan report = new Laporan();
     
     private boolean status, isEdit = false, isUpdateTr = false, isUangCukup = false;
     
@@ -1716,8 +1719,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         System.out.println(this.getClass().getName() + " closing");
-//        this.db.closeConnection();
-//        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void btnBayarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBayarMouseEntered
@@ -1739,34 +1740,31 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             Message.showWarning(this, "Uang yang anda masukan kurang dari Rp. " + this.inpTotalHarga.getText());
             return;
         }
-        
-        // menyiapkan window transaksi sukses
-        TransaksiJualSuccess dia;
-        
+
+        this.setCursor(new java.awt.Cursor(Cursor.WAIT_CURSOR));
         // pengecekan mode transaksi
         // jika mode update
-        if(this.isUpdateTr){
+        if (this.isUpdateTr) {
             // melakukan update transaksi
-            if(this.updateTransaksi()){
-                dia = new TransaksiJualSuccess(null, true, this.idTransaksi);
-                dia.setVisible(true);
+            if (this.updateTransaksi()) {
+                this.report.cetakStrukPenjualan(this.db.conn, this.idTransaksi);
                 this.isUpdateTr = false;
                 this.isEdit = false;
                 this.changeButton();
                 this.resetTransaksi();
             }
-        }
-        // jika mode tambah
-        else{
+        } // jika mode tambah
+        else {
             // melakukan transaksi baru
-            if(this.transaksi()){
-                dia = new TransaksiJualSuccess(null, true, this.idTransaksi);
-                dia.setVisible(true);
+            if (this.transaksi()) {
+                this.report.cetakStrukPenjualan(this.db.conn, this.idTransaksi);
                 this.isEdit = false;
                 this.changeButton();
-                this.resetTransaksi();           
-            }            
+                this.resetTransaksi();
+            }
         }
+        this.setCursor(new java.awt.Cursor(Cursor.DEFAULT_CURSOR));
+        
     }//GEN-LAST:event_btnBayarActionPerformed
 
     private void btnUpdateMenuMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMenuMouseEntered
@@ -1940,11 +1938,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_lblHistoriMouseClicked
 
     private void lblHistoriMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseEntered
-        
+        this.lblHistori.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }//GEN-LAST:event_lblHistoriMouseEntered
 
     private void lblHistoriMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseExited
-        
+        this.lblHistori.setCursor(new Cursor(Cursor.WAIT_CURSOR));
     }//GEN-LAST:event_lblHistoriMouseExited
 
     private void inpTotalBayarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpTotalBayarMouseClicked

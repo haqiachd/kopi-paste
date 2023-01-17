@@ -1756,7 +1756,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_inpIdBahanMouseClicked
 
     private void inpCariBahanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpCariBahanMouseClicked
-
+        
         GetDataBahan dia = new GetDataBahan(null, true);
         dia.setVisible(true);
 
@@ -1772,11 +1772,11 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariBahanMouseClicked
 
     private void inpCariBahanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpCariBahanMouseEntered
-        
+        this.inpCariBahan.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }//GEN-LAST:event_inpCariBahanMouseEntered
 
     private void inpCariBahanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpCariBahanMouseExited
-        
+        this.inpCariBahan.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_inpCariBahanMouseExited
 
     private void tabelTrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelTrMouseClicked
@@ -1885,11 +1885,11 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_lblHistoriMouseClicked
 
     private void lblHistoriMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseEntered
-        // TODO add your handling code here:
+        this.lblHistori.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }//GEN-LAST:event_lblHistoriMouseEntered
 
     private void lblHistoriMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseExited
-        // TODO add your handling code here:
+        this.lblHistori.setCursor(new Cursor(Cursor.WAIT_CURSOR));
     }//GEN-LAST:event_lblHistoriMouseExited
 
     /**
