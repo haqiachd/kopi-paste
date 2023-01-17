@@ -1375,21 +1375,25 @@ public class DataBahan extends javax.swing.JFrame {
     }//GEN-LAST:event_inpIdMouseClicked
 
     private void btnLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLineChartActionPerformed
-         if(this.tabelData.getSelectedRow() > -1){
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        if(this.tabelData.getSelectedRow() > -1){
             BahanLineChart ml = new BahanLineChart(null, true, this.idSelected);
             ml.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnLineChartActionPerformed
 
     private void btnBarChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBarChartActionPerformed
-         if(this.tabelData.getSelectedRow() > -1){
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        if(this.tabelData.getSelectedRow() > -1){
             BahanBarChart ml = new BahanBarChart(null, true, this.idSelected);
             ml.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnBarChartActionPerformed
 
     /**

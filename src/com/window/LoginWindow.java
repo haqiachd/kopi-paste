@@ -275,7 +275,7 @@ public class LoginWindow extends javax.swing.JFrame {
 
         lblCopyright.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         lblCopyright.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblCopyright.setText("Copyright © 2022-2023. Cito Team. All Rights Reserved");
+        lblCopyright.setText("Copyright © 2023. Cito Team. TIF Kampus 3 Polije ");
         lblCopyright.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCopyrightMouseClicked(evt);

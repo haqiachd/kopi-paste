@@ -571,7 +571,7 @@
               <Color blue="1" green="0" red="0" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2022-2023. Cito Team. All Rights Reserved."/>
+            <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2022-2023. Cito Team. TIF Kampus&#xa0;3&#xa0;Polije. All Rights Reserved."/>
           </Properties>
         </Component>
       </SubComponents>

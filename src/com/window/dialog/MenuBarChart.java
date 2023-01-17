@@ -275,12 +275,14 @@ public class MenuBarChart extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // mendapatkan data bulan dan tahun
         this.bulan = this.inpBulan.getMonth()+1;
         this.tahun = this.inpTahun.getYear();
         
         // menampilkan chart
         this.showChartMenu();
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnShowActionPerformed
 
     private void lblTotalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTotalMouseClicked

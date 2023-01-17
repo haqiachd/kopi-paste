@@ -1348,21 +1348,25 @@ public class DataMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void btnLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLineChartActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         if(this.tabelData.getSelectedRow() > -1){
             MenuLineChart ml = new MenuLineChart(null, true, this.idSelected);
             ml.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnLineChartActionPerformed
 
     private void btnBarChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBarChartActionPerformed
-         if(this.tabelData.getSelectedRow() > -1){
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        if(this.tabelData.getSelectedRow() > -1){
             MenuBarChart ml = new MenuBarChart(null, true, this.idSelected);
             ml.setVisible(true);            
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnBarChartActionPerformed
 
     /**

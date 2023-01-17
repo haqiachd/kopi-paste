@@ -342,7 +342,7 @@
               <Font name="Dialog" size="11" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2022-2023. Cito Team. All Rights Reserved"/>
+            <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2023. Cito Team. TIF Kampus&#xa0;3&#xa0;Polije "/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCopyrightMouseClicked"/>

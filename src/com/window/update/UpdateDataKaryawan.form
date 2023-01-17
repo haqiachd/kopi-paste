@@ -460,8 +460,8 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
                 <StringItem index="0" value="Pilih Shif"/>
-                <StringItem index="1" value="Siang (07:00-17:59)"/>
-                <StringItem index="2" value="Malam (18:00-22:59)"/>
+                <StringItem index="1" value="Siang"/>
+                <StringItem index="2" value="Malam"/>
               </StringArray>
             </Property>
             <Property name="name" type="java.lang.String" value="Shif" noResource="true"/>

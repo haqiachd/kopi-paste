@@ -359,7 +359,7 @@ public class InfoApp extends javax.swing.JDialog {
         lblCopyright.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblCopyright.setForeground(new java.awt.Color(0, 0, 1));
         lblCopyright.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCopyright.setText("Copyright © 2022-2023. Cito Team. All Rights Reserved.");
+        lblCopyright.setText("Copyright © 2022-2023. Cito Team. TIF Kampus 3 Polije. All Rights Reserved.");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);

@@ -435,7 +435,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
 
         inpShif.setBackground(new java.awt.Color(248, 249, 250));
         inpShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang (07:00-17:59)", "Malam (18:00-22:59)" }));
+        inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang", "Malam" }));
         inpShif.setName("Shif"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

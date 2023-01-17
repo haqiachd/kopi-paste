@@ -145,7 +145,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private String createID(){
         try{
             // menyiapkan query untuk mendapatkan id terakhir
-            String query = "SELECT * FROM transaksi_jual ORDER BY id_tr_jual DESC LIMIT 0,1", lastID, nomor = "0000";
+            String query = "SELECT * FROM transaksi_jual ORDER BY id_tr_jual DESC LIMIT 0,1", lastID, nomor = "00000";
             db.res = db.stat.executeQuery(query);
             
             // cek apakah query berhasil dieksekusi
@@ -154,11 +154,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 lastID =  db.res.getString("id_tr_jual");
                 if(lastID != null){
                     // mendapatkan nomor id
-                    nomor = lastID.substring(3);
+                    nomor = lastID.substring(4);
                 }
             }
             // membuat id baru
-            return String.format("TRJ%04d", Integer.parseInt(nomor)+1);
+            return String.format("TRJ%05d", Integer.parseInt(nomor)+1);
         }catch(SQLException ex){
             ex.printStackTrace();
         }

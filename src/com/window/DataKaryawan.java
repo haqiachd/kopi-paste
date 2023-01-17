@@ -256,6 +256,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.inpAlamat.setText("");
         this.inpShift.setText("");
         this.inpUsername.setText("");
+        this.inpLevel.setText("");
 //        this.inpPassword.setText("");
         this.idSelected = "";
     }
@@ -1180,6 +1181,8 @@ public class DataKaryawan extends javax.swing.JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         UpdateDataKaryawan d = new UpdateDataKaryawan(null, true, 1, "");
         d.setVisible(true);
+        
+        DataKaryawan.DATA_KY = new DefaultTableModel();
         this.showTabel();
         // refresh data
         this.resetData();
@@ -1199,6 +1202,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         }else{
             UpdateDataKaryawan d = new UpdateDataKaryawan(null, true, 2, this.idSelected);
             d.setVisible(true);
+            DataKaryawan.DATA_KY = new DefaultTableModel();
             this.showTabel();
             this.showData();
         }
@@ -1239,6 +1243,7 @@ public class DataKaryawan extends javax.swing.JFrame {
                         // mengecek apakah data berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
+                            DataKaryawan.DATA_KY = new DefaultTableModel();
                             // mengupdate tabel
                             this.showTabel();
                             // reset textfield
