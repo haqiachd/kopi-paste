@@ -7,7 +7,6 @@ import com.manage.Text;
 import com.window.dialog.PopUpBackground;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -15,6 +14,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
+@Deprecated
 public class TransaksiJualSuccess extends javax.swing.JDialog {
 
     private final Database db = new Database();
@@ -155,7 +155,7 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
         lblNamaKy = new javax.swing.JLabel();
         lblTotalBayar = new javax.swing.JLabel();
         lblTotalKembalian = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -222,10 +222,13 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
         lblTotalKembalian.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTotalKembalian.setText("Total Kembalian    : ");
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnPrint.setBackground(new java.awt.Color(245, 115, 58));
+        btnPrint.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnPrint.setForeground(new java.awt.Color(255, 255, 255));
+        btnPrint.setText("Print");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnPrintActionPerformed(evt);
             }
         });
 
@@ -245,7 +248,7 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -273,7 +276,7 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12))
         );
 
@@ -305,12 +308,9 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JOptionPane.showMessageDialog(this, this.idTr);
-        this.dispose();
-        this.report.cetakStrukPenjualan(this.db.conn, this.idTr);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
 
+    }//GEN-LAST:event_btnPrintActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -345,8 +345,8 @@ public class TransaksiJualSuccess extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JLabel icTop;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblNamaKy;
