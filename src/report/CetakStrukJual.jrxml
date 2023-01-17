@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="226" pageHeight="250" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a2a6dec3-4ed7-4fd2-b882-c5913dc25b14">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="246"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="id_tr_jual" class="java.lang.String">
 		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
@@ -14,7 +14,7 @@
      transaksi_jual.`total_harga` AS transaksi_jual_total_harga,
      transaksi_jual.`total_bayar` AS transaksi_jual_total_bayar,
      transaksi_jual.`total_kembalian` AS transaksi_jual_total_kembalian,
-     transaksi_jual.`tanggal` AS transaksi_jual_tanggal,
+     DATE(transaksi_jual.`tanggal`) AS transaksi_jual_tanggal,
      detail_tr_jual.`id_tr_jual` AS detail_tr_jual_id_tr_jual,
      detail_tr_jual.`nama_menu` AS detail_tr_jual_nama_menu,
      detail_tr_jual.`harga_menu` AS detail_tr_jual_harga_menu,
@@ -30,7 +30,7 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 	<field name="transaksi_jual_total_harga" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_bayar" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_kembalian" class="java.lang.Integer"/>
-	<field name="transaksi_jual_tanggal" class="java.sql.Timestamp"/>
+	<field name="transaksi_jual_tanggal" class="java.sql.Date"/>
 	<field name="detail_tr_jual_id_tr_jual" class="java.lang.String"/>
 	<field name="detail_tr_jual_nama_menu" class="java.lang.String"/>
 	<field name="detail_tr_jual_harga_menu" class="java.lang.Integer"/>
@@ -234,7 +234,7 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 				<textElement textAlignment="Center">
 					<font size="9" isItalic="true"/>
 				</textElement>
-				<text><![CDATA[Terima Kasih]]></text>
+				<text><![CDATA[----- Terima Kasih -----]]></text>
 			</staticText>
 			<line>
 				<reportElement x="-10" y="60" width="207" height="1" uuid="c55647ac-f4fa-4eb3-bac9-f55b9793e909"/>
