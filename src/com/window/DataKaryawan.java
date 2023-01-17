@@ -4,6 +4,7 @@ import com.window.laporan.MenuLaporan;
 import com.window.transaksi.MenuTransaksi;
 import com.koneksi.Database;
 import com.manage.Message;
+import com.manage.Text;
 import com.ui.UIManager;
 import com.manage.User;
 import com.media.Audio;
@@ -33,9 +34,11 @@ public class DataKaryawan extends javax.swing.JFrame {
     
     private final Database db = new Database();
     
+    private final Text txt = new Text();
+    
     private final UIManager win = new UIManager();
     
-    private static DefaultTableModel DATA_KY = new DefaultTableModel();
+    public static DefaultTableModel DATA_KY = new DefaultTableModel();
     
     public DataKaryawan() {
         initComponents();
@@ -58,7 +61,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.win.hoverButton();
         
         // set update data
-        JTextField[] fields = {this.inpNama, this.inpAlamat, this.inpShift, this.inpTelephone};
+        JTextField[] fields = {this.inpNama, this.inpAlamat, this.inpShift, this.inpTelephone, this.inpLevel};
         this.inpNama.setEditable(false);
         this.inpAlamat.setEditable(false);
 //        this.inpPassword.setEditable(false);
@@ -74,6 +77,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.inpTelephone.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
         this.inpShift.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpLevel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
 //        this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         // hidden button
@@ -148,7 +152,10 @@ public class DataKaryawan extends javax.swing.JFrame {
        
         try{
             // query untuk mengambil data karyawan pada tabel mysql
-            String sql = "SELECT * FROM karyawan " + keyword;
+            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, ky.shif, us.level "
+                       + "FROM karyawan AS ky "
+                       + "JOIN user AS us "
+                       + "ON ky.id_karyawan = us.id_karyawan " + keyword;
             System.out.println(sql);
 
             // eksekusi query
@@ -156,14 +163,24 @@ public class DataKaryawan extends javax.swing.JFrame {
             
             // membaca semua data yang ada didalam tabel
             while(this.db.res.next()){
-                // menambahkan data kedalam tabel
-                model.addRow(
-                    new String[]{
-                        this.db.res.getString("id_karyawan"),
-                        this.db.res.getString("nama_karyawan"),
-                        this.db.res.getString("shif")
+                
+                if(!User.isDeveloper()){
+                    if(this.db.res.getString("us.level").equalsIgnoreCase("developer")){
+                        continue;
                     }
-                );
+                }
+                
+                // menambahkan data kedalam tabel
+                    model.addRow(
+                            new String[]{
+                                this.db.res.getString("id_karyawan"),
+                                this.db.res.getString("nama_karyawan"),
+                                this.db.res.getString("shif")
+                            }
+                    );
+                
+                
+ 
             }
             
             // menampilkan data tabel
@@ -210,7 +227,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private void showData(){
         try{
             // menyiapkan query
-            String sql = "SELECT karyawan.nama_karyawan, karyawan.alamat, karyawan.no_telp, karyawan.shif, user.username, user.password "
+            String sql = "SELECT karyawan.nama_karyawan, karyawan.alamat, karyawan.no_telp, karyawan.shif, user.username, user.level "
                     + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
                     + "WHERE karyawan.id_karyawan = '"+this.idSelected+"'";
             
@@ -224,7 +241,7 @@ public class DataKaryawan extends javax.swing.JFrame {
                 this.inpTelephone.setText(this.db.res.getString("karyawan.no_telp"));
                 this.inpShift.setText(this.db.res.getString("karyawan.shif"));
                 this.inpUsername.setText(this.db.res.getString("user.username"));
-//                this.inpPassword.setText(this.db.res.getString("user.password"));
+                this.inpLevel.setText(this.txt.toCapitalize(this.db.res.getString("user.level")));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -297,6 +314,8 @@ public class DataKaryawan extends javax.swing.JFrame {
         inpShift = new com.ui.RoundedTextField(15);
         lblUsername = new javax.swing.JLabel();
         inpUsername = new com.ui.RoundedTextField(50);
+        lblLevel = new javax.swing.JLabel();
+        inpLevel = new com.ui.RoundedTextField(15);
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -784,6 +803,14 @@ public class DataKaryawan extends javax.swing.JFrame {
         inpUsername.setEnabled(false);
         inpUsername.setSelectionStart(5);
 
+        lblLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblLevel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-password.png"))); // NOI18N
+        lblLevel.setText("Level");
+
+        inpLevel.setBackground(new java.awt.Color(248, 249, 250));
+        inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpLevel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -829,7 +856,11 @@ public class DataKaryawan extends javax.swing.JFrame {
                                             .addGroup(pnlContentLayout.createSequentialGroup()
                                                 .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
+                                                .addComponent(lblLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(inpLevel)))
                                         .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 9, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
@@ -893,6 +924,10 @@ public class DataKaryawan extends javax.swing.JFrame {
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblShift, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(inpShift, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inpLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1305,6 +1340,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JTextField inpAlamat;
     private javax.swing.JTextField inpCari;
     private javax.swing.JTextField inpId;
+    private javax.swing.JTextField inpLevel;
     private javax.swing.JTextField inpNama;
     private javax.swing.JTextField inpShift;
     private javax.swing.JTextField inpTelephone;
@@ -1320,6 +1356,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblInfoData;
     private javax.swing.JLabel lblKeyword;
+    private javax.swing.JLabel lblLevel;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblNamaUser;
