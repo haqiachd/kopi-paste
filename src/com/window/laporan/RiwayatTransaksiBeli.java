@@ -9,10 +9,7 @@ import com.window.dialog.PopUpBackground;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
-import java.awt.print.PrinterException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -432,6 +429,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
     }//GEN-LAST:event_lblCloseMouseExited
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         String id;
         if(this.tabelRiwayat.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
@@ -441,6 +439,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnDetailActionPerformed
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased

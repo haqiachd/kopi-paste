@@ -1186,12 +1186,12 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                         .addComponent(lblTotalPsHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblTotalPdtHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSemuaHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCetakHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSemuaHarian)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDetailHarian, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(26, 26, 26))
@@ -1878,8 +1878,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         
         System.out.println("BULAN DIPILIH : " + bulanDipilih);
         
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
-        
         switch(tipe){
             // jika yang dipilih adalah pie chart
             case 1 : 
@@ -1895,6 +1895,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 break;
             default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_inpChartBulananActionPerformed
     
     private void tabelLpBulananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelLpBulananMouseClicked
@@ -1912,6 +1913,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         
         if(jmlPembeli > 0){
             
+            this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
             switch(tipeChart){
                 // jika yang dipilih adalah pie chart
@@ -1928,6 +1930,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                     break;
                 default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
             }
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }else{
             System.out.println("EXECUTED");
             this.setEmptyChart("Tidak ada pembelian pada bulan " + namaBulan);
@@ -1988,6 +1991,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_tabPaneMouseClicked
 
     private void btnDetailHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailHarianActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         String id;
         // cek apakah ada data transaksi yang dipilih
         if(this.tabelLpHarian.getSelectedRow() >= 0){
@@ -1998,6 +2002,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnDetailHarianActionPerformed
 
     private void cariDataHarianMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseEntered
@@ -2027,17 +2032,21 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariHarianKeyReleased
 
     private void btnSemuaHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemuaHarianActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // menampilkan semua data transaksi
         this.showLaporanHarian("");
         this.showDataLaporanHarian();
         this.inpDataPerhari.setDate(null);
         this.inpDataHarianBetween1.setDate(null);
         this.inpDataHarianBetween2.setDate(null);
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpHarian, this.db.conn, CetakLaporanHarian.STATUS_BELI, "Laporan Pembelian Harian");
         report.setVisible(true);
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnCetakHarianActionPerformed
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
@@ -2060,6 +2069,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_cariTahunMouseExited
 
     private void btnRiwayatBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatBulananActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // mendapatkan baris yang dipilih user
         int row = this.tabelLpBulanan.getSelectedRow(),
             jmlData;
@@ -2083,6 +2093,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         }else{
             Message.showWarning(this, "Tidak ada bulan yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnRiwayatBulananActionPerformed
 
     private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed
@@ -2181,6 +2192,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTglActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         if(this.tabelLpHarian.getSelectedRow() > -1){
             // mendapatkan id
             String id = this.tabelLpHarian.getValueAt(this.tabelLpHarian.getSelectedRow(), 0).toString();
@@ -2200,6 +2212,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     /**

@@ -22,30 +22,14 @@ import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
-import java.awt.print.PrinterException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -101,13 +85,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         this.btnLogout.setVisible(false);
         this.btnSupplier.setVisible(false);
         
-        // menampilkan data 
-        this.showLaporanHarian("");
-        this.showDataLaporanHarian();
-        this.showLaporanBulanan();
-        this.showDataLaporanBulanan();
-        this.showRiwayatTransaksi();
-        this.showDataRiwayat();
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                // menampilkan data 
+                showLaporanHarian("");
+                showDataLaporanHarian();
+                showLaporanBulanan();
+                showDataLaporanBulanan();
+                showRiwayatTransaksi();
+                showDataRiwayat();                
+            }
+        }).start();
     }
         
     private void resetTableLpHarian(){
@@ -1876,8 +1865,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         
         System.out.println("BULAN DIPILIH : " + bulanDipilih);
         
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
-        
         switch(tipe){
             // jika yang dipilih adalah pie chart
             case 1 : 
@@ -1893,6 +1882,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                 break;
             default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_inpChartBulananActionPerformed
     
     private void tabelLpBulananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelLpBulananMouseClicked
@@ -1910,6 +1900,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         
         if(jmlPembeli > 0){
             
+            this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             String title = String.format("Penjualan Pada Bulan %s %d", namaBulan, tahunDipilih);
             switch(tipeChart){
                 // jika yang dipilih adalah pie chart
@@ -1926,6 +1917,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                     break;
                 default : this.setEmptyChart("Silahkan Pilih Tipe Chart");
             }
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }else{
             System.out.println("EXECUTED");
             this.setEmptyChart("Tidak ada penjualan pada bulan " + namaBulan);
@@ -1983,6 +1975,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_tabPaneMouseClicked
 
     private void btnDetailHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailHarianActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         String id;
         if(this.tabelLpHarian.getSelectedRow() >= 0){
             // membuka pop up detail transaksi
@@ -1992,6 +1985,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnDetailHarianActionPerformed
 
     private void cariDataHarianMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariDataHarianMouseEntered
@@ -2019,16 +2013,20 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariHarianKeyReleased
 
     private void btnSemuaHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemuaHarianActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.showLaporanHarian("");
         this.showDataLaporanHarian();
         this.inpDataPerhari.setDate(null);
         this.inpDataHarianBetween1.setDate(null);
         this.inpDataHarianBetween2.setDate(null);
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpHarian, this.db.conn, CetakLaporanHarian.STATUS_JUAL, "Laporan Penjualan Harian");
         report.setVisible(true);
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnCetakHarianActionPerformed
 
     private void cariTahunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cariTahunMouseClicked
@@ -2050,6 +2048,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_cariTahunMouseExited
 
     private void btnRiwayatBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRiwayatBulananActionPerformed
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         int row = this.tabelLpBulanan.getSelectedRow(),
             jmlData;
         if(row >= 0){
@@ -2066,6 +2065,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         }else{
             Message.showWarning(this, "Tidak ada bulan yang dipilih!");
         }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnRiwayatBulananActionPerformed
 
     private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed
