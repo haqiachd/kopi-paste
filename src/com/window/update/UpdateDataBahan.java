@@ -319,7 +319,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
 
         inpSatuan.setBackground(new java.awt.Color(248, 249, 250));
         inpSatuan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpSatuan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Kilogram", "Liter", "Dus", "Renceng", "Lusin", "Botol" }));
+        inpSatuan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Kilogram", "Liter", "Dus", "Renceng", "Lusin", "Botol", "Galon" }));
         inpSatuan.setName("Satuan Bahan"); // NOI18N
         inpSatuan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

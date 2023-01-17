@@ -329,7 +329,7 @@
               <Font name="Dialog" size="16" style="1"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="7">
+              <StringArray count="8">
                 <StringItem index="0" value=" "/>
                 <StringItem index="1" value="Kilogram"/>
                 <StringItem index="2" value="Liter"/>
@@ -337,6 +337,7 @@
                 <StringItem index="4" value="Renceng"/>
                 <StringItem index="5" value="Lusin"/>
                 <StringItem index="6" value="Botol"/>
+                <StringItem index="7" value="Galon"/>
               </StringArray>
             </Property>
             <Property name="name" type="java.lang.String" value="Satuan Bahan" noResource="true"/>

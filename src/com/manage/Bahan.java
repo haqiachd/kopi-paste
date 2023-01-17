@@ -14,6 +14,7 @@ public class Bahan {
             case "Renceng" : return "rc";
             case "Lusin" : return "ls";
             case "Botol" : return "bt";
+            case "Galon" : return "gl";
             default : return "null statuan";
         }
     }
@@ -32,6 +33,8 @@ public class Bahan {
                 return "Lusin";
             case "bt" : 
                 return "Botol";
+            case "gl" : 
+                return "Galon";
             default : return "null satuan";
         }
     }
@@ -44,6 +47,7 @@ public class Bahan {
             case "Renceng" : return "rc";
             case "Lusin" : return "ls";
             case "Botol" : return "bt";
+            case "Galon" : return "gl";
             default : return "null statuan";
         }
     }
@@ -57,11 +61,12 @@ public class Bahan {
             case "rc" : return Float.toString(value) + " Renceng";
             case "ls" : return Float.toString(value) + " Lusin";
             case "bt" : return Float.toString(value) + " Botol";
+            case "gl" : return Float.toString(value) + " Galon";
             default : return Float.toString(value) + " ??";
         }
     }
     
     public String removeSatuan(String text){
-        return text.replace(" Botol", "").replace(" Lusin", "").replace(" Renceng", "").replace(" Dus", "").replace(" Liter", "").replace(" Kilogram", "");
+        return text.replace("Galon", "").replace(" Botol", "").replace(" Lusin", "").replace(" Renceng", "").replace(" Dus", "").replace(" Liter", "").replace(" Kilogram", "");
     }
 }
