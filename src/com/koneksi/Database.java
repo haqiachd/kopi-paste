@@ -36,19 +36,19 @@ public class Database {
     /**
      * Attribute yang digunakan untuk menhubungkan ke local server
      */
-    private static final String DRIVER = "com.mysql.jdbc.Driver",
-                                DB_NAME = "kopi_paste_business",
-                                URL = "jdbc:mysql://localhost/" + DB_NAME,
-                                USER = "root",
-                                PASS = "";
+//    private static final String DRIVER = "com.mysql.jdbc.Driver",
+//                                DB_NAME = "kopi_paste_business",
+//                                URL = "jdbc:mysql://localhost/" + DB_NAME,
+//                                USER = "root",
+//                                PASS = "";
     /**
      * Attribute yang digunakan untuk menghubungkan aplikasi server
      */
-//    private static final String DRIVER = "com.mysql.jdbc.Driver",
-//                                DB_NAME = "sql6590038",
-//                                URL = "jdbc:mysql://sql6.freemysqlhosting.net/" + DB_NAME,
-//                                USER = "sql6590038",
-//                                PASS = "bjxsxD2B5d";    
+    private static final String DRIVER = "com.mysql.jdbc.Driver",
+                                DB_NAME = "sql6590038",
+                                URL = "jdbc:mysql://sql6.freemysqlhosting.net/" + DB_NAME,
+                                USER = "sql6590038",
+                                PASS = "bjxsxD2B5d";    
     /**
      * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
      */
@@ -65,7 +65,7 @@ public class Database {
      * Digunakan untuk membuat koneksi baru ke database
      */
     public final void startConnection() {
-        try {
+        try {            
             // meregristrasi driver
             Class.forName(DRIVER);
             // membuat koneksi
@@ -81,7 +81,7 @@ public class Database {
             if (ex.getMessage().contains("com.mysql.jdbc.Driver")) {
                 Message.showException(null, "MySQL Connector tidak dapat ditemukan", ex);
             } else if (ex.getMessage().contains("Communications link failure")) {
-                Message.showException(null, "Sepertinya MySQL Anda belum diaktifkan!! \nSilahkan aktifkan MySQL Anda dan buka kembali Aplikasi!!", ex);
+                Message.showException(null, "Tidak dapat terhubung dengan server!\nSilahkan cek koneksi Internet Anda!!", ex);
             } else if (ex.getMessage().contains("Unknown database")) {
                 Message.showException(null, "Tidak dapat menemukan database '" + DB_NAME + "'\nSilahkan melakukan import Database secara manual dan buka kembali Aplikasi!", ex);
             } else {
