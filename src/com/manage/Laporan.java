@@ -1,5 +1,6 @@
 package com.manage;
 
+import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,14 +10,12 @@ import java.sql.Connection;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -94,18 +93,13 @@ public class Laporan {
         }
     }
     
-    private void showJasperReport(String jasperFile, String idTransaksi, Connection conn){
+    private void showJasperReport(String jasperFile, Connection conn){
         try{
-            JasperPrint jprint;
-            if(idTransaksi == null){
-                jprint = JasperFillManager.fillReport(jasperFile, null, conn);
-            }else{
-                HashMap map = new HashMap();
-                map.put("id_tr_jual", idTransaksi);
-                jprint = JasperFillManager.fillReport(jasperFile, map, conn);
-            }
-//            JasperReport report = (JasperReport) JRLoader.loadObjectFromFile(path);
+            // menyiapkan jasper report
+            JasperPrint jprint = JasperFillManager.fillReport(jasperFile, null, conn);
             JasperViewer jview = new JasperViewer(jprint, false);
+            
+            // menampilkan jasper report
             jview.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             jview.setVisible(true);
         }catch(Exception ex){
@@ -115,27 +109,62 @@ public class Laporan {
     }
     
     public void cetakLaporanJualHarian(Connection conn){
-        this.showJasperReport("src\\report\\LaporanJualHarian.jasper", null, conn);
+        this.showJasperReport("src\\report\\LaporanJualHarian.jasper", conn);
     }
     
     public void cetakLaporanBeliHarian(Connection conn){
-        this.showJasperReport("src\\report\\LaporanBeliHarian.jasper", null, conn);
+        this.showJasperReport("src\\report\\LaporanBeliHarian.jasper", conn);
     }
     
-    public void cetakStrukPenjualan(Connection conn, String idTransaksi){
-            
+    
+    public void cetakStrukPenjualan(Connection conn, String idTransaksi) {
         try {
+            // menyiapkan id transaksi
             HashMap parameter = new HashMap();
             parameter.put("id_tr_jual", idTransaksi);
 
+            // meyiapkan jasper report
             InputStream file = getClass().getResourceAsStream("/report/CetakStrukJual.jrxml");
-            JasperDesign dsn = JRXmlLoader.load(file);
-            JasperReport Jupe = JasperCompileManager.compileReport(dsn);
-            JasperPrint jp = JasperFillManager.fillReport(Jupe, parameter, conn);
+            JasperDesign desain = JRXmlLoader.load(file);
+            JasperReport report = JasperCompileManager.compileReport(desain);
+            JasperPrint print = JasperFillManager.fillReport(report, parameter, conn);
 
-            JasperViewer.viewReport(jp, false);
-        } catch (JRException ex) {
-            Logger.getLogger(Laporan.class.getName()).log(Level.SEVERE, null, ex);
+            // membuka jasper report
+            JasperViewer jview = new JasperViewer(print, false);
+            jview.setTitle("Cetak Struk " + idTransaksi);
+            jview.setVisible(true);
+            jview.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            jview.setLocationRelativeTo(null);
+            jview.setFitPageZoomRatio();
+
+            // solved bug jasper report tiba-tiba minimaze
+            jview.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                // menutup jasper report saat user menekan tombol close
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    System.out.println("JASPER CLOSING");
+                    jview.dispose();
+                }
+
+                // menutup jasper report saat user menekan tombol close
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    System.out.println("JASPER CLOSED");
+                    jview.dispose();
+                }
+
+                // memaksa jasper report untuk tetap aktif (tidak minimaze)
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                    System.out.println("JASPER ACTIVATED");
+                    jview.setVisible(true);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Message.showException(null, e);
         }
     }
     
