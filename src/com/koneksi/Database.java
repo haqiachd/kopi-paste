@@ -75,7 +75,7 @@ public class Database {
 
             // jumlah koneksi bertambah
             CONN_COUNT++;
-            System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
+            System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", "kopi paste", CONN_COUNT);
         } catch (ClassNotFoundException | SQLException ex) {
             // Menanggani exception yang terjadi dengan cara mendapatkan pesan error dari exception tersebut.
             if (ex.getMessage().contains("com.mysql.jdbc.Driver")) {
@@ -83,7 +83,7 @@ public class Database {
             } else if (ex.getMessage().contains("Communications link failure")) {
                 Message.showException(null, "Tidak dapat terhubung dengan server!\nSilahkan cek koneksi Internet Anda!!", ex);
             } else if (ex.getMessage().contains("Unknown database")) {
-                Message.showException(null, "Tidak dapat menemukan database '" + DB_NAME + "'\nSilahkan melakukan import Database secara manual dan buka kembali Aplikasi!", ex);
+                Message.showException(null, "Tidak dapat menemukan database 'kopi paste'\nSilahkan melakukan import Database secara manual dan buka kembali Aplikasi!", ex);
             } else {
                 Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
             }
@@ -112,7 +112,7 @@ public class Database {
             
             // jumlah koneksi berkurang
             CONN_COUNT--;
-            System.out.printf("Berhasil menutup koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", DB_NAME, CONN_COUNT);
+            System.out.printf("Berhasil menutup koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", "kopi paste", CONN_COUNT);
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
