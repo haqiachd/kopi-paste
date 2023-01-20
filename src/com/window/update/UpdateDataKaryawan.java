@@ -3,6 +3,7 @@ package com.window.update;
 import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
+import com.manage.Triggers;
 import com.manage.User;
 import com.manage.Validation;
 import com.media.Gambar;
@@ -260,6 +261,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
             if(karyawan){
                 JOptionPane.showMessageDialog(this, "Data karyawan berhasil diedit!");
                 this.dispose();
+                new Triggers().updateKaryawan();
             }else{
                 JOptionPane.showMessageDialog(this, "Data karyawan gagal diedit!");
             }

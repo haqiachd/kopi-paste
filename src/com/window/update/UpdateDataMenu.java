@@ -3,6 +3,7 @@ package com.window.update;
 import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
+import com.manage.Triggers;
 import com.manage.Validation;
 import com.media.Gambar;
 import com.window.dialog.PopUpBackground;
@@ -410,6 +411,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                         this.editDataMenu();
                         Message.showInformation(this, "Data berhasil diedit!");
                         this.dispose();
+                        new Triggers().updateMenu();
                     break;
             }
         }catch(SQLException ex){

@@ -4,6 +4,7 @@ import com.koneksi.Database;
 import com.manage.Bahan;
 import com.manage.Message;
 import com.manage.Text;
+import com.manage.Triggers;
 import com.manage.Validation;
 import com.media.Audio;
 import com.media.Gambar;
@@ -196,6 +197,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                     // refresh data
                     this.showData();
                     this.dispose();
+                    new Triggers().updateBahan();
                 }else{
                     Audio.play(Audio.SOUND_WARNING);
                     JOptionPane.showMessageDialog(this, "Data gagal diupdate!");
