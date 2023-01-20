@@ -823,7 +823,7 @@ public class DataBahan extends javax.swing.JFrame {
         lineHorBot.setForeground(new java.awt.Color(0, 0, 0));
 
         lblGajelas.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
-        lblGajelas.setText("Kopi Paste version 1.0");
+        lblGajelas.setText("Kopi Paste version 1.1");
 
         lblHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblHarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
