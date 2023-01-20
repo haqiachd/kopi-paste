@@ -307,8 +307,10 @@ public class BahanBarChart extends javax.swing.JDialog {
     }//GEN-LAST:event_btnShowActionPerformed
 
     private void lblTotalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTotalMouseClicked
+        this.lblTotal.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.statusTotal = !this.statusTotal;
         this.showChartBahan();
+        this.lblTotal.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_lblTotalMouseClicked
 
     private void lblTotalMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTotalMouseEntered
