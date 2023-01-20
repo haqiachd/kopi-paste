@@ -167,11 +167,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     
     private void showListKaryawan(){
         try{
-            String sql = "SELECT * FROM karyawan";
+            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, us.level "
+                       + "FROM karyawan AS ky "
+                       + "JOIN user AS us "
+                       + "ON ky.id_karyawan = us.id_karyawan ";
+            
+            if(!User.isDeveloper()){
+                sql += "WHERE us.level != 'DEVELOPER'";
+            }
+            
             this.db.res = this.db.stat.executeQuery(sql);
             
             while(this.db.res.next()){
-                this.inpKaryawan.addItem(this.db.res.getString("id_karyawan") + " | " + this.db.res.getString("nama_karyawan"));
+                this.inpKaryawan.addItem(this.db.res.getString("ky.id_karyawan") + " | " + this.db.res.getString("ky.nama_karyawan"));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
