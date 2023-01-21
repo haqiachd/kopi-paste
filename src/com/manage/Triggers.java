@@ -36,7 +36,7 @@ public class Triggers extends Database{
     
     public void updateMenu(){
         try{
-            // membuat query untuk mengupdate nama bahan, jenis dan satuan
+            // membuat query untuk mengupdate nama menu, jenis menu 
             String sql = "UPDATE "
                     + "detail_tr_jual dtr, "
                     + "menu mn "
@@ -53,26 +53,29 @@ public class Triggers extends Database{
             Message.showException(null, ex);
         }
     }
-    
-    public void updateKaryawan(){
-        try{
-            // membuat query untuk mengupdate nama bahan, jenis dan satuan
+
+    public void updateKaryawan() {
+        try {
+            // membuat query untuk mengupdate nama karyawan pada tabel transaksi beli
             String sql = "UPDATE "
-                        + "transaksi_jual trj, "
-                        + "transaksi_beli trb, "
-                        + "karyawan ky "
-                        + "SET "
-                        + "trb.nama_karyawan = ky.nama_karyawan, "
-                        + "trj.nama_karyawan = ky.nama_karyawan "
-                        + "WHERE "
-                        + "trj.id_karyawan= ky.id_karyawan "
-                        + "OR "
-                        + "trb.id_tr_beli = ky.id_karyawan";
-                                
+                    + "transaksi_beli trb, karyawan ky "
+                    + "SET trb.nama_karyawan = ky.nama_karyawan "
+                    + "WHERE ky.id_karyawan = trb.id_karyawan; ";
+
+            System.out.println(sql);
+            // eksekusi query
+            super.stat.executeUpdate(sql);
+
+            // membuat query untuk mengupdate nama karyawan pada tabel transaksi jual
+            sql = "UPDATE transaksi_jual trj, karyawan ky "
+                    + "SET trj.nama_karyawan = ky.nama_karyawan "
+                    + "WHERE ky.id_karyawan = trj.id_karyawan;";
+            
+            System.out.println(sql);
             // eksekusi query
             super.stat.executeUpdate(sql);
             super.closeConnection();
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
             Message.showException(null, ex);
         }
