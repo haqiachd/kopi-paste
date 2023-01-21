@@ -16,7 +16,7 @@ import java.awt.Cursor;
  */
 public class LoginWindow extends javax.swing.JFrame {
 
-    private final User user = new User();
+    private User user;
     
     private boolean isLaliPass = false;
     
@@ -32,6 +32,9 @@ public class LoginWindow extends javax.swing.JFrame {
     }
 
     private void login(){
+        if(this.user == null){
+            this.user = new User();
+        }
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // mendapatkan data dari textfield
         String username = this.inpUsername.getText(),
