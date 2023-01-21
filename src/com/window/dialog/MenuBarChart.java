@@ -192,6 +192,8 @@ public class MenuBarChart extends javax.swing.JDialog {
 
         inpBulan.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
+        inpTahun.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+
         btnShow.setBackground(new java.awt.Color(255, 102, 0));
         btnShow.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnShow.setForeground(new java.awt.Color(255, 255, 255));

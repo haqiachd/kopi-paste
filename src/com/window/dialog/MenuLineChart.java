@@ -203,6 +203,8 @@ public class MenuLineChart extends javax.swing.JDialog {
             }
         });
 
+        inpTahun.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+
         lblBulan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblBulan.setText("Pilih Bulan");
 
