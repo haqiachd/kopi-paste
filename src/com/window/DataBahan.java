@@ -143,10 +143,10 @@ public class DataBahan extends javax.swing.JFrame {
         
         // set size kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(100);
-        columnModel.getColumn(0).setMaxWidth(100);
+        columnModel.getColumn(0).setPreferredWidth(80);
+        columnModel.getColumn(0).setMaxWidth(80);
         columnModel.getColumn(1).setPreferredWidth(180);
-        columnModel.getColumn(1).setMaxWidth(180);
+//        columnModel.getColumn(1).setMaxWidth(180);
         columnModel.getColumn(2).setPreferredWidth(90);
         columnModel.getColumn(2).setMaxWidth(90);
     }
@@ -1355,6 +1355,7 @@ public class DataBahan extends javax.swing.JFrame {
 //        this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
 //        this.showTabel();
         this.cariData();
+        this.lblKeyword.setText(String.format("Menampilkan %d data bahan dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyPressed
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
@@ -1363,6 +1364,7 @@ public class DataBahan extends javax.swing.JFrame {
 //        this.lblKeyword.setText("Menampilkan data bahan dengan keyword \""+key+"\"");
 //        this.showTabel();
         this.cariData();
+        this.lblKeyword.setText(String.format("Menampilkan %d data bahan dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void inpIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpIdActionPerformed

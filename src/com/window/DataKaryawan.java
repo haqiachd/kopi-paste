@@ -122,10 +122,10 @@ public class DataKaryawan extends javax.swing.JFrame {
         
         // set size kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
+        columnModel.getColumn(0).setPreferredWidth(90);
+        columnModel.getColumn(0).setMaxWidth(90);
         columnModel.getColumn(1).setPreferredWidth(220);
-        columnModel.getColumn(1).setMaxWidth(220);
+//        columnModel.getColumn(1).setMaxWidth(220);
     }
     
     private void showTabel(){
@@ -1295,6 +1295,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 //        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
 //        this.showTabel();
         this.cariData();
+        this.lblKeyword.setText(String.format("Menampilkan %d data karyawan dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyPressed
@@ -1307,6 +1308,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 //        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
 //        this.showTabel();
         this.cariData();
+        this.lblKeyword.setText(String.format("Menampilkan %d data karyawan dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyReleased
 
     /**

@@ -131,10 +131,10 @@ public class DataMenu extends javax.swing.JFrame {
         TableColumnModel columnModel = tabelData.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(80);
         columnModel.getColumn(0).setMaxWidth(80);
-        columnModel.getColumn(1).setPreferredWidth(150);
-        columnModel.getColumn(1).setMaxWidth(150);
-        columnModel.getColumn(2).setPreferredWidth(145);
-        columnModel.getColumn(2).setMaxWidth(145);
+        columnModel.getColumn(1).setPreferredWidth(170);
+//        columnModel.getColumn(1).setMaxWidth(170);
+        columnModel.getColumn(2).setPreferredWidth(135);
+        columnModel.getColumn(2).setMaxWidth(135);
         columnModel.getColumn(3).setPreferredWidth(140);
         columnModel.getColumn(3).setMaxWidth(140);
     }
@@ -1337,6 +1337,7 @@ public class DataMenu extends javax.swing.JFrame {
 //        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
 //        this.showTabel();
         this.cariData();
+        this.lblKeyword.setText(String.format("Menampilkan %d data menu dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
@@ -1345,6 +1346,7 @@ public class DataMenu extends javax.swing.JFrame {
 //        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
 //        this.showTabel();
         this.cariData();
+        this.lblKeyword.setText(String.format("Menampilkan %d data menu dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyReleased
 
     private void btnLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLineChartActionPerformed
