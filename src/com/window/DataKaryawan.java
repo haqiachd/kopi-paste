@@ -1230,14 +1230,20 @@ public class DataKaryawan extends javax.swing.JFrame {
                     case JOptionPane.YES_OPTION:
                         // menghapus data pembeli
                         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        String idBahan = this.inpId.getText(),
-                         sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idBahan + "'";
+                        String idKy = this.inpId.getText(),
+                         sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idKy + "'";
 
                         // mengecek kesamaan id
-                        if(!idBahan.equalsIgnoreCase(this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString())){
+                        if(!idKy.equalsIgnoreCase(this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString())){
                             Message.showWarning(this, "Data gagal dihapus!");
                             this.tabelData.removeRowSelectionInterval(this.tabelData.getSelectedRow(), this.tabelData.getSelectedRow());
                             return;
+                        }else if(User.isAdmin()){
+                            if(this.inpLevel.getText().equalsIgnoreCase("admin")){
+                                Message.showWarning(this, "Admin tidak bisa menghapus admin!\nHubungi Developer untuk menghapus admin!");
+                                this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                                return;
+                            }
                         }
                         
                         // mengecek apakah data berhasil terhapus atau tidak

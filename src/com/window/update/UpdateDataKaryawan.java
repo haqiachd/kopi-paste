@@ -225,7 +225,11 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                nama = this.inpNama.getText(),
                noTelp = this.inpNoTelp.getText(),
                alamat = this.inpAlamat.getText(),
-               shif = this.inpShif.getSelectedItem().toString(),
+               shif = this.inpShif.getSelectedItem().toString(), sql;
+                // set developer shif
+                if(this.inpId.getText().equalsIgnoreCase("KY001") || this.inpId.getText().equalsIgnoreCase("KY002") || this.inpId.getText().equalsIgnoreCase("KY003") || this.inpId.getText().equalsIgnoreCase("KY004")){
+                    shif = "No Shif";
+                }
                // membuat query
                sql = String.format("UPDATE karyawan "
                         + "SET nama_karyawan = '%s', no_telp = '%s', alamat = '%s', shif = '%s' "
