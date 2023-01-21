@@ -104,7 +104,7 @@ public class DetailTransaksiBeli extends javax.swing.JDialog {
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
         columnModel.getColumn(1).setPreferredWidth(220);
-        columnModel.getColumn(1).setMaxWidth(220);
+//        columnModel.getColumn(1).setMaxWidth(220);
         columnModel.getColumn(2).setPreferredWidth(130);
         columnModel.getColumn(2).setMaxWidth(130);
 //        columnModel.getColumn(3).setPreferredWidth(100);

@@ -129,7 +129,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         columnModel.getColumn(1).setPreferredWidth(90);
         columnModel.getColumn(1).setMaxWidth(90);
         columnModel.getColumn(2).setPreferredWidth(235);
-        columnModel.getColumn(2).setMaxWidth(235);
+//        columnModel.getColumn(2).setMaxWidth(235);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(140);
@@ -411,7 +411,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         columnModel.getColumn(1).setPreferredWidth(70);
         columnModel.getColumn(1).setMaxWidth(70);
         columnModel.getColumn(2).setPreferredWidth(170);
-        columnModel.getColumn(2).setMaxWidth(170);
+//        columnModel.getColumn(2).setMaxWidth(170);
         columnModel.getColumn(3).setPreferredWidth(160);
         columnModel.getColumn(3).setMaxWidth(160);
         columnModel.getColumn(4).setPreferredWidth(120);
@@ -1366,6 +1366,8 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        inpPilihTahun.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {

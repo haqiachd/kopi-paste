@@ -331,7 +331,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         columnModel.getColumn(1).setPreferredWidth(110);
         columnModel.getColumn(1).setMaxWidth(110);
         columnModel.getColumn(2).setPreferredWidth(220);
-        columnModel.getColumn(2).setMaxWidth(220);
+        columnModel.getColumn(2).setMaxWidth(300);
         columnModel.getColumn(3).setPreferredWidth(220);
         columnModel.getColumn(3).setMaxWidth(220);
         columnModel.getColumn(4).setPreferredWidth(160);

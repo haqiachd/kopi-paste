@@ -23,21 +23,14 @@ import com.window.dialog.UserProfile;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.KeyEvent;
-import java.awt.print.PrinterException;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -133,7 +126,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         columnModel.getColumn(1).setPreferredWidth(90);
         columnModel.getColumn(1).setMaxWidth(90);
         columnModel.getColumn(2).setPreferredWidth(235);
-        columnModel.getColumn(2).setMaxWidth(235);
+//        columnModel.getColumn(2).setMaxWidth(235);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(150);
@@ -416,7 +409,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         columnModel.getColumn(1).setPreferredWidth(80);
         columnModel.getColumn(1).setMaxWidth(80);
         columnModel.getColumn(2).setPreferredWidth(220);
-        columnModel.getColumn(2).setMaxWidth(220);
+//        columnModel.getColumn(2).setMaxWidth(220);
         columnModel.getColumn(3).setPreferredWidth(160);
         columnModel.getColumn(3).setMaxWidth(160);
         columnModel.getColumn(4).setPreferredWidth(110);
@@ -1374,6 +1367,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalPdBulanan.setText(" Pengeluaran : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+
+        inpPilihTahun.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {
