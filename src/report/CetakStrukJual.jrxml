@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="226" pageHeight="250" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a2a6dec3-4ed7-4fd2-b882-c5913dc25b14">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="70"/>
 	<parameter name="id_tr_jual" class="java.lang.String">
 		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
@@ -14,7 +14,7 @@
      transaksi_jual.`total_harga` AS transaksi_jual_total_harga,
      transaksi_jual.`total_bayar` AS transaksi_jual_total_bayar,
      transaksi_jual.`total_kembalian` AS transaksi_jual_total_kembalian,
-     DATE(transaksi_jual.`tanggal`) AS transaksi_jual_tanggal,
+     transaksi_jual.`tanggal` AS transaksi_jual_tanggal,
      detail_tr_jual.`id_tr_jual` AS detail_tr_jual_id_tr_jual,
      detail_tr_jual.`nama_menu` AS detail_tr_jual_nama_menu,
      detail_tr_jual.`harga_menu` AS detail_tr_jual_harga_menu,
@@ -30,7 +30,7 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 	<field name="transaksi_jual_total_harga" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_bayar" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_kembalian" class="java.lang.Integer"/>
-	<field name="transaksi_jual_tanggal" class="java.sql.Date"/>
+	<field name="transaksi_jual_tanggal" class="java.sql.Timestamp"/>
 	<field name="detail_tr_jual_id_tr_jual" class="java.lang.String"/>
 	<field name="detail_tr_jual_nama_menu" class="java.lang.String"/>
 	<field name="detail_tr_jual_harga_menu" class="java.lang.Integer"/>
@@ -115,7 +115,7 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 	<columnHeader>
 		<band height="19" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="1" width="60" height="14" uuid="430ffd30-7202-409a-bf13-3d2fad83bb09"/>
+				<reportElement x="-5" y="1" width="65" height="14" uuid="430ffd30-7202-409a-bf13-3d2fad83bb09"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -150,7 +150,7 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 	<detail>
 		<band height="10" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="60" height="10" uuid="69f95c53-b7a3-406b-a858-7aac6a7d9590"/>
+				<reportElement x="-5" y="0" width="65" height="10" uuid="69f95c53-b7a3-406b-a858-7aac6a7d9590"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
