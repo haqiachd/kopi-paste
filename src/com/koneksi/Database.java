@@ -42,7 +42,7 @@ public class Database {
 //                                USER = "root",
 //                                PASS = "";
     /**
-     * Attribute yang digunakan untuk menghubungkan aplikasi server
+     * Attribute yang digunakan untuk menghubungkan ke server
      */
     private static final String DRIVER = "com.mysql.jdbc.Driver",
                                 DB_NAME = "sql6590038",
@@ -53,6 +53,11 @@ public class Database {
      * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
      */
     public static int CONN_COUNT = 0;
+    
+    /**
+     * limit saat error, jumlah waktu koneksi ke server, dan jumlah koneksi ke berapa dalam server
+     */
+    public int err_limit = 0, minutes = 0, local_count;
     
     /**
      * Saat class pertama kali diinisialisasi maka akan otomatis membuat koneksi baru
@@ -76,12 +81,69 @@ public class Database {
             // jumlah koneksi bertambah
             CONN_COUNT++;
             System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", "kopi paste", CONN_COUNT);
+
+            // restart limit error, jumlah menit koneksi dan mendapatkan no urut koneksi
+            this.err_limit = 0;
+            this.minutes = 0;
+            this.local_count = CONN_COUNT;
+            
+            // digunakan untuk merefresh koneksi ke server setiap 30 menit sekali
+            new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    try{
+                        // akan merefersh koneksi selama masih ada koneksi ke sever
+                        while (!conn.isClosed()) {
+                            System.out.println(String.format("minutes of conn (%d) : %d", local_count, minutes));
+                            // jika menit koneksi >= 30 maka koneksi akan direfresh
+                            if(minutes >= 10){
+                                // refresh koneksi ke server
+                                closeConnection();
+                                startConnection();
+                            }
+                            // pertambahan menit setiap 60.000 milisecond
+                            Thread.sleep(60_000);
+                            minutes++;
+                        }
+                        System.out.println("minutes of the server connection ("+local_count+") has been ended");
+                    }catch(InterruptedException | SQLException ex){
+                        ex.printStackTrace();
+                        System.out.println("ERROR IN SERVER THREAD");
+                    }
+                }
+            }).start();
         } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
             // Menanggani exception yang terjadi dengan cara mendapatkan pesan error dari exception tersebut.
             if (ex.getMessage().contains("com.mysql.jdbc.Driver")) {
                 Message.showException(null, "MySQL Connector tidak dapat ditemukan", ex);
-            } else if (ex.getMessage().contains("Communications link failure")) {
-                Message.showException(null, "Tidak dapat terhubung dengan server!\nSilahkan cek koneksi Internet Anda!!", ex);
+            } else if (ex.getMessage().contains("Communications link failure")) { // error yg terjadi karena tidak bisa terhubung ke server
+                // membatasi limit koneksi saat terjadi error
+                // jika kegagalan koneksi ke server lebih dari 20 kali maka aplikasi akan force close
+                if ((err_limit++) >= 20) {
+                    Message.showWarning(this, "Terjadi kegagalan pada koneksi ke server!\nCoba tutup dan buka kembali aplikasi!");
+                    System.exit(0);
+                }
+                System.out.println("error limit ("+this.local_count+") : " + (20 - err_limit));
+
+                // mendapatkan pesan error dari exception
+                String dtlMsg = ex.getLocalizedMessage();
+//                contoh output error
+//                System.out.println("The last packet successfully received from the server was 4,239,368 milliseconds ago".indexOf("4"));
+                
+                // jika detail message mengandung kata received maka koneksi yang terputus dari server dan akan diaktifkan kembali
+                if (dtlMsg.contains("successfully received from the server")) {
+                    System.out.println(dtlMsg);
+                    // mengaktifkan kembali koneksi yang terputus
+                    System.out.println("Please wait!\nConnecting back to the database");
+                    this.startConnection();
+                    return;
+                } else {
+                    // mencoba menghubungkan kembali ke server jika tidak ada internet
+                    Message.showException(null, "Tidak dapat terhubung dengan server!\nSilahkan cek koneksi Internet Anda!!", ex);
+                    this.startConnection();
+                    return;
+                }
             } else if (ex.getMessage().contains("Unknown database")) {
                 Message.showException(null, "Tidak dapat menemukan database 'kopi paste'\nSilahkan melakukan import Database secara manual dan buka kembali Aplikasi!", ex);
             } else {
@@ -110,12 +172,39 @@ public class Database {
                 res.close();
             }
             
+            // reset limit error, menit koneksi dan local count
+            this.err_limit = 0;
+            this.minutes = 0;
+            this.local_count = 0;
+            
             // jumlah koneksi berkurang
             CONN_COUNT--;
-            System.out.printf("Berhasil menutup koneksi dari Database '%s'.\nJumlah Koneksi : %d\n", "kopi paste", CONN_COUNT);
+            System.out.printf("Berhasil menutup koneksi dari Database (%d) '%s'.\nJumlah Koneksi : %d\n", this.local_count, "kopi paste", CONN_COUNT);
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
+    }
+    
+    public static void main(String[] args) {
+        Database db = new Database(), db2 = new Database();
+        
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                while(true){
+                    try {
+                        Thread.sleep(5000);
+                        if(!db.conn.isClosed()){
+                            db.closeConnection();
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        
+        System.out.println("oi");
     }
     
 }
