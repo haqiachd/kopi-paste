@@ -134,7 +134,8 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         
         // menampilkan data yang akan diupdate
         this.isUpdateTr = true;
-        this.inpIdTransaksi.setText(idTransaksi);
+        this.idTransaksi = idTransaksi;
+        this.inpIdTransaksi.setText(this.idTransaksi);
         this.showUpdateTransaksi();
     }
     

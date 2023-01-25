@@ -46,7 +46,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                ,ttlBayar = 0 // total uang yang dibayarkan pembeli
                ,ttlKembalian = 0; // total kembalian
     
-    private final Database db = new Database(), db2 = new Database();
+    private final Database db = new Database();
     
     private final UIManager win = new UIManager();
     
@@ -133,7 +133,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this();
         // menampilkan data yang akan diupdate
         this.isUpdateTr = true;
-        this.inpIdTransaksi.setText(idTransaksi);
+        this.idTransaksi = idTransaksi;
+        this.inpIdTransaksi.setText(this.idTransaksi);
         this.showUpdateTransaksi();
     }
     
@@ -1722,7 +1723,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.status = false;
         System.out.println(this.getClass().getName() + " closed");
         this.db.closeConnection();
-        this.db2.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
