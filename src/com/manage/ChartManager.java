@@ -302,7 +302,7 @@ public class ChartManager extends Database{
                 // forloop dari tanggal kemarin ke tanggal 1 bulan ini
                 System.out.println("hitung hari");
                 for (int i = tgl; i <= ttl; i += 2) {
-                    dataset.setValue(this.getLineDataPenjualan(bln, thn, i, (i+1)), "Amount", Integer.toString(i-1));
+                    dataset.setValue(this.getLineDataPenjualan(bln, thn, i, (i+1)), "Amount", Integer.toString(i));
                 }
                 
                 // forloop dari tanggal 1 sampai tanggal saat ini
