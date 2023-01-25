@@ -48,7 +48,8 @@ public class LoginWindow extends javax.swing.JFrame {
                     new Dashboard().setVisible(true);
                 }
             });
-            this.setVisible(false);
+            this.user.closeConnection();
+            this.dispose();
         }else{
             // jika password salah maka label copyright akan berubah menjadi lupa password
             this.isLaliPass = true;
