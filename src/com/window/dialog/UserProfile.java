@@ -21,6 +21,8 @@ public class UserProfile extends javax.swing.JDialog {
 
     private final Database db = new Database();
     
+    private final User us = new User();
+    
     private final PopUpBackground pop = new PopUpBackground();
     
     private final JFrame frame;
@@ -320,9 +322,10 @@ public class UserProfile extends javax.swing.JDialog {
         int result = JOptionPane.showConfirmDialog(this, "Apakah yakin ingin melogout akun?", "confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
         switch (result) {
             case JOptionPane.YES_OPTION:
+                this.db.closeConnection();
                 this.frame.dispose();
                 this.pop.dispose();
-                new User().logout();
+                this.us.logout();
                 DataKaryawan.DATA_KY = new DefaultTableModel();
                 this.dispose();
             break;
@@ -345,10 +348,12 @@ public class UserProfile extends javax.swing.JDialog {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
+        this.us.closeConnection();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.db.closeConnection();
+        this.us.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
     private void btnGantiPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGantiPassActionPerformed
