@@ -1,6 +1,8 @@
 package com.koneksi;
 
 import com.manage.Message;
+import com.manage.User;
+import com.manage.Waktu;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -55,7 +57,7 @@ public class Database {
     public static int CONN_COUNT = 0;
     
     /**
-     * limit saat error, jumlah waktu koneksi ke server, dan jumlah koneksi ke berapa dalam server
+     * limit saat error, jumlah waktu koneksi ke server, dan no urut koneksi dalam server
      */
     public int err_limit = 0, minutes = 0, local_count;
     
@@ -67,7 +69,7 @@ public class Database {
     }
     
     /**
-     * Digunakan untuk membuat koneksi baru ke database
+     * Digunakan untuk membuat koneksi baru ke database server
      */
     public final void startConnection() {
         try {            
@@ -78,40 +80,42 @@ public class Database {
             // membuat object statement
             stat = conn.createStatement();
 
-            // jumlah koneksi bertambah
+            // jumlah koneksi bertambah saat ada koneksi baru
             CONN_COUNT++;
             System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", "kopi paste", CONN_COUNT);
-
+            
             // restart limit error, jumlah menit koneksi dan mendapatkan no urut koneksi
             this.err_limit = 0;
             this.minutes = 0;
             this.local_count = CONN_COUNT;
             
-            // digunakan untuk merefresh koneksi ke server setiap 30 menit sekali
+            // digunakan untuk merefresh koneksi ke server setiap 15 menit sekali
             new Thread(new Runnable(){
                 @Override
                 public void run(){
                     try{
                         // akan merefersh koneksi selama masih ada koneksi ke sever
                         while (!conn.isClosed()) {
-                            System.out.println(String.format("minutes of conn (%d) : %d", local_count, minutes));
-                            // jika menit koneksi >= 30 maka koneksi akan direfresh
-                            if(minutes >= 10){
+                            System.out.println(String.format("jumlah menit dalam koneksi (%d) : %d", local_count, minutes));
+                            // jika menit koneksi >= 15 maka koneksi akan direfresh
+                            if(minutes >= 15){
                                 // refresh koneksi ke server
-                                closeConnection();
-                                startConnection();
+                                System.out.println("SEND TEST");
+                                sendTestConn();
+                                System.out.println("KONEKSI BERHASIL DI REFRESH");
                             }
-                            // pertambahan menit setiap 60.000 milisecond
+                            // pertambahan menit setiap 60.000 milisecond / 1 menit
                             Thread.sleep(60_000);
                             minutes++;
                         }
-                        System.out.println("minutes of the server connection ("+local_count+") has been ended");
+                        System.out.println("Koneksi ke server dari koneksi no ("+local_count+") telah berakhir..");
                     }catch(InterruptedException | SQLException ex){
                         ex.printStackTrace();
                         System.out.println("ERROR IN SERVER THREAD");
                     }
                 }
             }).start();
+            
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
             // Menanggani exception yang terjadi dengan cara mendapatkan pesan error dari exception tersebut.
@@ -161,14 +165,17 @@ public class Database {
         try {
             // Mengecek apakah conn kosong atau tidak, jika tidak maka akan diclose
             if (conn != null) {
+                System.out.println("EXECUTION OFF CONN CLOSE");
                 conn.close();
             }
             // Mengecek apakah stat kosong atau tidak, jika tidak maka akan diclose
             if (stat != null) {
+                System.out.println("EXECUTION OFF STAT CLOSE");
                 stat.close();
             }
             // Mengecek apakah res kosong atau tidak, jika tidak maka akan diclose
             if (res != null) {
+                System.out.println("EXECUTION OFF RESS CLOSE");
                 res.close();
             }
             
@@ -184,27 +191,23 @@ public class Database {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
     }
-    
-    public static void main(String[] args) {
-        Database db = new Database(), db2 = new Database();
-        
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                while(true){
-                    try {
-                        Thread.sleep(5000);
-                        if(!db.conn.isClosed()){
-                            db.closeConnection();
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-        
-        System.out.println("oi");
+  
+    /**
+     * Digunakan untuk merefresh koneksi ke server selama 15 menit sekali agar koneksi ke server tidak otomatis terputus
+     * 
+     * @throws SQLException error pada sql 
+     */
+    private void sendTestConn() throws SQLException{
+        // menyiapkan query
+        this.pst = this.conn.prepareStatement("INSERT INTO test_conn VALUES (?, ?, ?, ?)");
+        // mendapatkan data data test_conn (untuk pencatatan koneksi)
+        this.pst.setString(1, null);
+        this.pst.setString(2, User.getUsername());
+        this.pst.setInt(3, this.local_count);
+        this.pst.setString(4, new Waktu().getCurrentDateTime());
+        // eksekusi query dan refresh menit koneksi
+        this.pst.executeUpdate();
+        this.minutes = 0;
     }
     
 }
