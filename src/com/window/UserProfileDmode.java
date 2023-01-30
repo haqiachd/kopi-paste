@@ -5,10 +5,8 @@ import com.window.transaksi.MenuTransaksi;
 import com.ui.UIManager;
 import com.media.Gambar;
 import java.awt.Cursor;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableColumnModel;
 
 /**
  *

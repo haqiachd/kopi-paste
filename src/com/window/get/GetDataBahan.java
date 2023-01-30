@@ -2,8 +2,6 @@ package com.window.get;
 
 import com.koneksi.Database;
 import com.manage.Bahan;
-import com.manage.Text;
-import com.window.DataMenu;
 import java.awt.event.KeyEvent;
 import java.awt.Cursor;
 import java.sql.SQLException;
