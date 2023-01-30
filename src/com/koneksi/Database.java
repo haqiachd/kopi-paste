@@ -3,6 +3,7 @@ package com.koneksi;
 import com.manage.Message;
 import com.manage.User;
 import com.manage.Waktu;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -38,23 +39,23 @@ public class Database {
     /**
      * Attribute yang digunakan untuk menhubungkan ke local server
      */
-//    private static final String DRIVER = "com.mysql.jdbc.Driver",
-//                                DB_NAME = "kopi_paste_business",
-//                                URL = "jdbc:mysql://localhost/" + DB_NAME,
-//                                USER = "root",
-//                                PASS = "";
+    private static final String DRIVER = "com.mysql.jdbc.Driver",
+                                DB_NAME = "kopi_paste_business",
+                                URL = "jdbc:mysql://localhost/" + DB_NAME,
+                                USER = "root",
+                                PASS = "";
     /**
      * Attribute yang digunakan untuk menghubungkan ke server
      */
-    private static final String DRIVER = "com.mysql.jdbc.Driver",
-                                DB_NAME = "sql6590038",
-                                URL = "jdbc:mysql://sql6.freemysqlhosting.net/" + DB_NAME,
-                                USER = "sql6590038",
-                                PASS = "bjxsxD2B5d";    
+//    private static final String DRIVER = "com.mysql.jdbc.Driver",
+//                                DB_NAME = "sql6590038",
+//                                URL = "jdbc:mysql://sql6.freemysqlhosting.net/" + DB_NAME,
+//                                USER = "sql6590038",
+//                                PASS = "bjxsxD2B5d";    
     /**
      * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
      */
-    public static int CONN_COUNT = 0;
+    public static int CONN_COUNT = 0, CONN_TOTAL;
     
     /**
      * limit saat error, jumlah waktu koneksi ke server, dan no urut koneksi dalam server
@@ -82,12 +83,13 @@ public class Database {
 
             // jumlah koneksi bertambah saat ada koneksi baru
             CONN_COUNT++;
+            CONN_TOTAL++;
             System.out.printf("Berhasil terhubung ke Database '%s'.\nJumlah Koneksi : %d\n", "kopi paste", CONN_COUNT);
             
             // restart limit error, jumlah menit koneksi dan mendapatkan no urut koneksi
             this.err_limit = 0;
             this.minutes = 0;
-            this.local_count = CONN_COUNT;
+            this.local_count = CONN_TOTAL;
             
             // digunakan untuk merefresh koneksi ke server setiap 15 menit sekali
             new Thread(new Runnable(){
@@ -98,7 +100,7 @@ public class Database {
                         while (!conn.isClosed()) {
                             System.out.println(String.format("jumlah menit dalam koneksi (%d) : %d", local_count, minutes));
                             // jika menit koneksi >= 15 maka koneksi akan direfresh
-                            if(minutes >= 15){
+                            if(minutes >= 60){
                                 // refresh koneksi ke server
                                 System.out.println("SEND TEST");
                                 sendTestConn();
@@ -122,6 +124,9 @@ public class Database {
             if (ex.getMessage().contains("com.mysql.jdbc.Driver")) {
                 Message.showException(null, "MySQL Connector tidak dapat ditemukan", ex);
             } else if (ex.getMessage().contains("Communications link failure")) { // error yg terjadi karena tidak bisa terhubung ke server
+                if(this.startXampp()){
+                    return;
+                }
                 // membatasi limit koneksi saat terjadi error
                 // jika kegagalan koneksi ke server lebih dari 20 kali maka aplikasi akan force close
                 if ((err_limit++) >= 20) {
@@ -148,6 +153,7 @@ public class Database {
                     this.startConnection();
                     return;
                 }
+                // auto start xampp
             } else if (ex.getMessage().contains("Unknown database")) {
                 Message.showException(null, "Tidak dapat menemukan database 'kopi paste'\nSilahkan melakukan import Database secara manual dan buka kembali Aplikasi!", ex);
             } else {
@@ -208,6 +214,22 @@ public class Database {
         // eksekusi query dan refresh menit koneksi
         this.pst.executeUpdate();
         this.minutes = 0;
+    }
+    
+    private boolean startXampp() {
+        try {
+            // eksekusqi mysql start
+            Runtime runtime = Runtime.getRuntime();
+            runtime.exec("src\\resources\\file\\mysql_start.bat");
+            
+            Thread.sleep(3000);
+            // restart kembali koneksi mysql
+            this.startConnection();
+            return true;
+        } catch (IOException | InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        return false;
     }
     
 }
