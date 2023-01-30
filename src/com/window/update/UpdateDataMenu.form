@@ -258,6 +258,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Nama Menu" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpNamaKeyReleased"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
@@ -300,6 +303,7 @@
             <Property name="name" type="java.lang.String" value="Harga" noResource="true"/>
           </Properties>
           <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpHargaKeyReleased"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpHargaKeyTyped"/>
           </Events>
           <AuxValues>
@@ -326,6 +330,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Jenis Menu" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpJenisKeyReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

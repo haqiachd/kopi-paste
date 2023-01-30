@@ -6,6 +6,7 @@ import com.manage.Text;
 import com.manage.Triggers;
 import com.manage.Validation;
 import com.media.Gambar;
+import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
@@ -289,6 +290,11 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpNama.setName("Nama Menu"); // NOI18N
+        inpNama.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpNamaKeyReleased(evt);
+            }
+        });
 
         lblData1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblData1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
@@ -303,6 +309,9 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         inpHarga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpHarga.setName("Harga"); // NOI18N
         inpHarga.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpHargaKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpHargaKeyTyped(evt);
             }
@@ -312,6 +321,11 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         inpJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpJenis.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Minuman", "Makanan", "Original Coffee", "Falvoured Coffee", "Snack" }));
         inpJenis.setName("Jenis Menu"); // NOI18N
+        inpJenis.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpJenisKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -445,6 +459,24 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
+
+    private void inpHargaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.btnSimpanActionPerformed(null);
+        }
+    }//GEN-LAST:event_inpHargaKeyReleased
+
+    private void inpNamaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNamaKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpJenis.requestFocus();
+        }
+    }//GEN-LAST:event_inpNamaKeyReleased
+
+    private void inpJenisKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpJenisKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpHarga.requestFocus();
+        }
+    }//GEN-LAST:event_inpJenisKeyReleased
 
     /**
      * @param args the command line arguments
