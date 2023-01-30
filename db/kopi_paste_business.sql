@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: sql6.freemysqlhosting.net
--- Generation Time: 20 Jan 2023 pada 17.49
--- Versi Server: 5.5.62-0ubuntu0.14.04.1
--- PHP Version: 7.0.33-0ubuntu0.16.04.16
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 30 Jan 2023 pada 17.20
+-- Versi server: 10.4.27-MariaDB
+-- Versi PHP: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sql6590038`
+-- Database: `kopi_paste_business`
 --
 
 -- --------------------------------------------------------
@@ -33,7 +32,7 @@ CREATE TABLE `bahan` (
   `nama_bahan` varchar(50) NOT NULL,
   `jenis` enum('Hewani','Nabati','Coffee','Perasa','Cairan','Bahan Jadi') NOT NULL,
   `satuan` enum('kg','lt','ds','rc','ls','bt','gl') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `bahan`
@@ -52,7 +51,7 @@ INSERT INTO `bahan` (`id_bahan`, `nama_bahan`, `jenis`, `satuan`) VALUES
 ('BA020', 'Bawang Merah', 'Nabati', 'kg'),
 ('BA021', 'Bawang Putih', 'Nabati', 'kg'),
 ('BA022', 'Daging Ayam', 'Hewani', 'kg'),
-('BA025', 'Air Mineral', 'Cairan', 'lt'),
+('BA025', 'Air Mineral', 'Cairan', 'gl'),
 ('BA026', 'Gula Pasir', 'Perasa', 'kg'),
 ('BA027', 'Anggur', 'Nabati', 'kg'),
 ('BA028', 'Nasi', 'Nabati', 'kg'),
@@ -63,7 +62,21 @@ INSERT INTO `bahan` (`id_bahan`, `nama_bahan`, `jenis`, `satuan`) VALUES
 ('BA033', 'Telur Ayam', 'Nabati', 'ls'),
 ('BA034', 'kg', 'Hewani', 'kg'),
 ('BA037', 'renceng', 'Coffee', 'rc'),
-('BA038', 'fffffff', 'Perasa', 'ls');
+('BA038', 'lusin', 'Perasa', 'ls');
+
+--
+-- Trigger `bahan`
+--
+DELIMITER $$
+CREATE TRIGGER `update_bahan` AFTER UPDATE ON `bahan` FOR EACH ROW BEGIN 
+	UPDATE detail_tr_beli 
+    SET nama_bahan = NEW.nama_bahan, 
+    jenis_bahan = NEW.jenis, 
+    satuan_bahan = NEW.satuan 
+    WHERE id_bahan = NEW.id_bahan;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -79,7 +92,7 @@ CREATE TABLE `detail_tr_beli` (
   `jumlah` float NOT NULL,
   `satuan_bahan` enum('kg','lt','ds','rc','ls','bt','gl') NOT NULL,
   `total_harga` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `detail_tr_beli`
@@ -89,10 +102,10 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00001', 'BA003', 'Jeruk', 'Nabati', 1, 'kg', 25000),
 ('TRB00002', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 50000),
 ('TRB00003', 'BA003', 'Jeruk', 'Nabati', 2, 'kg', 50000),
-('TRB00004', 'BA025', 'Air Mineral', 'Cairan', 5, 'lt', 15000),
+('TRB00004', 'BA025', 'Air Mineral', 'Cairan', 5, 'gl', 15000),
 ('TRB00005', 'BA011', 'Kacang', 'Nabati', 2, 'kg', 10000),
 ('TRB00006', 'BA029', 'Jamur', 'Nabati', 1, 'kg', 15000),
-('TRB00007', 'BA025', 'Air Mineral', 'Cairan', 5, 'lt', 15000),
+('TRB00007', 'BA025', 'Air Mineral', 'Cairan', 5, 'gl', 15000),
 ('TRB00007', 'BA022', 'Daging Ayam', 'Hewani', 2, 'kg', 40000),
 ('TRB00007', 'BA027', 'Anggur', 'Nabati', 2, 'kg', 40000),
 ('TRB00008', 'BA026', 'Gula Pasir', 'Perasa', 4, 'kg', 56000),
@@ -110,43 +123,43 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00018', 'BA022', 'Daging Ayam', 'Hewani', 2, 'kg', 40000),
 ('TRB00019', 'BA003', 'Jeruk', 'Nabati', 5, 'kg', 125000),
 ('TRB00020', 'BA026', 'Gula Pasir', 'Perasa', 5, 'kg', 70000),
-('TRB00021', 'BA025', 'Air Mineral', 'Cairan', 12, 'lt', 36000),
+('TRB00021', 'BA025', 'Air Mineral', 'Cairan', 12, 'gl', 36000),
 ('TRB00022', 'BA028', 'Nasi', 'Nabati', 8, 'kg', 64000),
 ('TRB00023', 'BA029', 'Jamur', 'Nabati', 2, 'kg', 30000),
 ('TRB00024', 'BA021', 'Bawang Putih', 'Nabati', 5, 'kg', 50000),
 ('TRB00025', 'BA020', 'Bawang Merah', 'Nabati', 4, 'kg', 100000),
 ('TRB00025', 'BA022', 'Daging Ayam', 'Hewani', 5, 'kg', 100000),
 ('TRB00026', 'BA019', 'Cabe Rawit', 'Nabati', 2, 'kg', 10000),
-('TRB00026', 'BA025', 'Air Mineral', 'Cairan', 10, 'lt', 30000),
-('TRB00026', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 1500),
+('TRB00026', 'BA025', 'Air Mineral', 'Cairan', 10, 'gl', 30000),
+('TRB00026', 'BA018', 'Kecap', 'Perasa', 1, 'lt', 1500),
 ('TRB00027', 'BA011', 'Kacang', 'Nabati', 5, 'kg', 25000),
 ('TRB00028', 'BA005', 'Biji Kopi', 'Coffee', 2, 'kg', 140000),
-('TRB00028', 'BA025', 'Air Mineral', 'Cairan', 4, 'lt', 12000),
+('TRB00028', 'BA025', 'Air Mineral', 'Cairan', 4, 'gl', 12000),
 ('TRB00028', 'BA001', 'Susu Coklat', 'Cairan', 2, 'lt', 50000),
 ('TRB00029', 'BA002', 'Kentang', 'Nabati', 5, 'kg', 250000),
-('TRB00030', 'BA018', 'Kecap', 'Perasa', 3, 'bt', 4500),
+('TRB00030', 'BA018', 'Kecap', 'Perasa', 3, 'lt', 4500),
 ('TRB00031', 'BA005', 'Biji Kopi', 'Coffee', 2, 'kg', 140000),
 ('TRB00032', 'BA002', 'Kentang', 'Nabati', 3, 'kg', 150000),
-('TRB00033', 'BA025', 'Air Mineral', 'Cairan', 10, 'lt', 30000),
+('TRB00033', 'BA025', 'Air Mineral', 'Cairan', 10, 'gl', 30000),
 ('TRB00034', 'BA002', 'Kentang', 'Nabati', 5, 'kg', 250000),
 ('TRB00035', 'BA005', 'Biji Kopi', 'Coffee', 2, 'kg', 140000),
-('TRB00036', 'BA018', 'Kecap', 'Perasa', 5, 'bt', 7500),
+('TRB00036', 'BA018', 'Kecap', 'Perasa', 5, 'lt', 7500),
 ('TRB00037', 'BA005', 'Biji Kopi', 'Coffee', 3, 'kg', 210000),
 ('TRB00038', 'BA026', 'Gula Pasir', 'Perasa', 4, 'kg', 56000),
-('TRB00039', 'BA025', 'Air Mineral', 'Cairan', 5, 'lt', 15000),
+('TRB00039', 'BA025', 'Air Mineral', 'Cairan', 5, 'gl', 15000),
 ('TRB00040', 'BA001', 'Susu Coklat', 'Cairan', 3, 'lt', 75000),
 ('TRB00041', 'BA002', 'Kentang', 'Nabati', 3, 'kg', 150000),
 ('TRB00042', 'BA015', 'Apel', 'Nabati', 8, 'kg', 40000),
 ('TRB00042', 'BA011', 'Kacang', 'Nabati', 2, 'kg', 10000),
 ('TRB00043', 'BA005', 'Biji Kopi', 'Coffee', 1, 'kg', 70000),
-('TRB00044', 'BA025', 'Air Mineral', 'Cairan', 5, 'lt', 15000),
+('TRB00044', 'BA025', 'Air Mineral', 'Cairan', 5, 'gl', 15000),
 ('TRB00045', 'BA022', 'Daging Ayam', 'Hewani', 1, 'kg', 20000),
 ('TRB00046', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 10000),
 ('TRB00046', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 8000),
 ('TRB00047', 'BA011', 'Kacang', 'Nabati', 1, 'kg', 12000),
 ('TRB00048', 'BA003', 'Jeruk', 'Nabati', 2, 'kg', 20000),
 ('TRB00049', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 10000),
-('TRB00050', 'BA018', 'Kecap', 'Perasa', 2, 'bt', 30000),
+('TRB00050', 'BA018', 'Kecap', 'Perasa', 2, 'lt', 30000),
 ('TRB00051', 'BA031', 'Indomie Goreng', 'Bahan Jadi', 1, 'ds', 50000),
 ('TRB00052', 'BA008', 'Kopi Hitam', 'Coffee', 1, 'kg', 10000),
 ('TRB00053', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 10000),
@@ -182,7 +195,7 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00078', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 12000),
 ('TRB00079', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 8000),
 ('TRB00080', 'BA011', 'Kacang', 'Nabati', 1, 'kg', 15000),
-('TRB00080', 'BA033', 'Telur Ayam', 'Nabati', 0.5, 'ls', 20000),
+('TRB00080', 'BA033', 'Coklat', 'Nabati', 0.5, 'rc', 20000),
 ('TRB00081', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 10000),
 ('TRB00082', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 5000),
 ('TRB00082', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 8000),
@@ -232,8 +245,8 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00108', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 12000),
 ('TRB00109', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 12000),
 ('TRB00110', 'BA001', 'Susu Coklat', 'Cairan', 1.5, 'lt', 15000),
-('TRB00111', 'BA025', 'Air Mineral', 'Cairan', 1, 'lt', 14000),
-('TRB00112', 'BA025', 'Air Mineral', 'Cairan', 1.5, 'lt', 15000),
+('TRB00111', 'BA025', 'Air Mineral', 'Cairan', 1, 'gl', 14000),
+('TRB00112', 'BA025', 'Air Mineral', 'Cairan', 1.5, 'gl', 15000),
 ('TRB00113', 'BA001', 'Susu Coklat', 'Cairan', 1.25, 'lt', 12000),
 ('TRB00113', 'BA002', 'Kentang', 'Nabati', 2.75, 'kg', 20000),
 ('TRB00114', 'BA029', 'Jamur', 'Nabati', 2.75, 'kg', 15000),
@@ -247,7 +260,6 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00122', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 10000),
 ('TRB00123', 'BA031', 'Indomie Goreng', 'Bahan Jadi', 1, 'ds', 30000),
 ('TRB00123', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 12000),
-('TRB00125', 'BA008', 'Kopi Hitam', 'Coffee', 1.5, 'kg', 15000),
 ('TRB00124', 'BA026', 'Gula Pasir', 'Perasa', 1, 'kg', 15000),
 ('TRB00124', 'BA033', 'Telur Ayam', 'Nabati', 1, 'ls', 10000),
 ('TRB00124', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 25000),
@@ -257,14 +269,16 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00126', 'BA026', 'Gula Pasir', 'Perasa', 1, 'kg', 20000),
 ('TRB00126', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 8000),
 ('TRB00127', 'BA030', 'Garam', 'Perasa', 1, 'kg', 10000),
-('TRB00129', 'BA029', 'Jamur', 'Nabati', 1, 'kg', 15000),
-('TRB00129', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 6000),
-('TRB00129', 'BA033', 'Telur Ayam', 'Nabati', 1, 'ls', 12000),
 ('TRB00128', 'BA002', 'Kentang', 'Nabati', 1.3, 'kg', 12000),
 ('TRB00128', 'BA029', 'Jamur', 'Nabati', 1.1, 'kg', 18000),
 ('TRB00128', 'BA027', 'Anggur', 'Nabati', 0.5, 'kg', 10000),
 ('TRB00128', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 10000),
-('TRB00131', 'BA005', 'Biji Kopi', 'Coffee', 1, 'kg', 15000);
+('TRB00131', 'BA005', 'Biji Kopi', 'Coffee', 1, 'kg', 15000),
+('TRB00132', 'BA011', 'Kacang', 'Nabati', 1, 'kg', 12000),
+('TRB00133', 'BA022', 'Daging Ayam', 'Hewani', 2.5, 'kg', 26000),
+('TRB00134', 'BA003', 'Jeruk', 'Nabati', 1.2, 'kg', 15000),
+('TRB00135', 'BA019', 'Cabe Rawit', 'Nabati', 1, 'kg', 50000),
+('TRB00136', 'BA003', 'Jeruk', 'Nabati', 1, 'kg', 10000);
 
 -- --------------------------------------------------------
 
@@ -280,7 +294,7 @@ CREATE TABLE `detail_tr_jual` (
   `harga_menu` int(11) NOT NULL,
   `jumlah` int(5) NOT NULL,
   `total_harga` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `detail_tr_jual`
@@ -291,8 +305,8 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00001', 'MN022', 'Cappucino', 'Original Coffee', 10000, 2, 20000),
 ('TRJ00002', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00003', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
-('TRJ00004', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
-('TRJ00005', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 2, 20000),
+('TRJ00004', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00005', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
 ('TRJ00005', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 4, 60000),
 ('TRJ00005', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 3, 36000),
 ('TRJ00006', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 1, 3000),
@@ -303,7 +317,7 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00010', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
 ('TRJ00010', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 3, 36000),
 ('TRJ00011', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 3, 45000),
-('TRJ00011', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 2, 20000),
+('TRJ00011', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
 ('TRJ00011', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
 ('TRJ00012', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
 ('TRJ00013', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
@@ -315,20 +329,20 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00015', 'MN019', 'Jamur Crispy', 'Snack', 10000, 2, 20000),
 ('TRJ00015', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 1, 13000),
 ('TRJ00016', 'MN018', 'Keripik Kentang', 'Snack', 8000, 2, 16000),
-('TRJ00016', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00016', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00016', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 2, 24000),
 ('TRJ00016', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
 ('TRJ00016', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00016', 'MN020', 'Jus Apel', 'Minuman', 11000, 1, 11000),
 ('TRJ00017', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 4, 60000),
-('TRJ00017', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 3, 30000),
+('TRJ00017', 'MN001', 'Orange Juice', 'Minuman', 10000, 3, 30000),
 ('TRJ00017', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00018', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 4, 60000),
 ('TRJ00018', 'MN018', 'Keripik Kentang', 'Snack', 8000, 3, 24000),
 ('TRJ00018', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00019', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 3, 45000),
 ('TRJ00019', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 2, 6000),
-('TRJ00019', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00019', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00019', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 2, 24000),
 ('TRJ00019', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 5, 50000),
 ('TRJ00020', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 3, 45000),
@@ -338,7 +352,7 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00021', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 1, 12000),
 ('TRJ00022', 'MN022', 'Cappucino', 'Original Coffee', 10000, 2, 20000),
 ('TRJ00022', 'MN013', 'Kentang Goreng', 'Snack', 12000, 3, 36000),
-('TRJ00023', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 2, 20000),
+('TRJ00023', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
 ('TRJ00023', 'MN013', 'Kentang Goreng', 'Snack', 12000, 2, 24000),
 ('TRJ00024', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 3, 36000),
 ('TRJ00024', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 1, 3000),
@@ -348,7 +362,7 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00025', 'MN018', 'Keripik Kentang', 'Snack', 8000, 1, 8000),
 ('TRJ00025', 'MN022', 'Cappucino', 'Original Coffee', 10000, 2, 20000),
 ('TRJ00026', 'MN015', 'Jus Anggur', 'Minuman', 12000, 2, 24000),
-('TRJ00026', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 7, 70000),
+('TRJ00026', 'MN001', 'Orange Juice', 'Minuman', 10000, 7, 70000),
 ('TRJ00026', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 2, 24000),
 ('TRJ00026', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 4, 12000),
 ('TRJ00027', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 9, 90000),
@@ -373,13 +387,13 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00035', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 10, 120000),
 ('TRJ00036', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 2, 20000),
 ('TRJ00036', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
-('TRJ00036', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00036', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00036', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
 ('TRJ00036', 'MN018', 'Keripik Kentang', 'Snack', 8000, 2, 16000),
 ('TRJ00037', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 2, 30000),
 ('TRJ00037', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00037', 'MN019', 'Jamur Crispy', 'Snack', 10000, 2, 20000),
-('TRJ00037', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00037', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00038', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 2, 24000),
 ('TRJ00038', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 2, 30000),
 ('TRJ00038', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
@@ -397,15 +411,15 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00047', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 4, 60000),
 ('TRJ00048', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 2, 24000),
 ('TRJ00048', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 2, 20000),
-('TRJ00048', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 3, 30000),
+('TRJ00048', 'MN001', 'Orange Juice', 'Minuman', 10000, 3, 30000),
 ('TRJ00049', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
 ('TRJ00049', 'MN015', 'Jus Anggur', 'Minuman', 12000, 3, 36000),
 ('TRJ00049', 'MN022', 'Cappucino', 'Original Coffee', 10000, 1, 10000),
-('TRJ00049', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00049', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00049', 'MN013', 'Kentang Goreng', 'Snack', 12000, 2, 24000),
 ('TRJ00050', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
 ('TRJ00050', 'MN020', 'Jus Apel', 'Minuman', 11000, 1, 11000),
-('TRJ00051', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00051', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00052', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 4, 60000),
 ('TRJ00052', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
 ('TRJ00052', 'MN018', 'Keripik Kentang', 'Snack', 8000, 3, 24000),
@@ -427,14 +441,14 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00062', 'MN013', 'Kentang Goreng', 'Snack', 12000, 3, 36000),
 ('TRJ00063', 'MN019', 'Jamur Crispy', 'Snack', 10000, 2, 20000),
 ('TRJ00063', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 5, 15000),
-('TRJ00063', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 2, 20000),
+('TRJ00063', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
 ('TRJ00064', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 2, 6000),
 ('TRJ00065', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 4, 48000),
 ('TRJ00065', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 2, 20000),
 ('TRJ00066', 'MN020', 'Jus Apel', 'Minuman', 11000, 3, 33000),
 ('TRJ00067', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 5, 60000),
 ('TRJ00068', 'MN013', 'Kentang Goreng', 'Snack', 12000, 3, 36000),
-('TRJ00068', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00068', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00068', 'MN019', 'Jamur Crispy', 'Snack', 10000, 6, 60000),
 ('TRJ00069', 'MN019', 'Jamur Crispy', 'Snack', 10000, 1, 10000),
 ('TRJ00070', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 5, 60000),
@@ -455,19 +469,19 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00083', 'MN019', 'Jamur Crispy', 'Snack', 10000, 4, 40000),
 ('TRJ00084', 'MN013', 'Kentang Goreng', 'Snack', 12000, 5, 60000),
 ('TRJ00085', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
-('TRJ00086', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00086', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00086', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
 ('TRJ00087', 'MN019', 'Jamur Crispy', 'Snack', 10000, 2, 20000),
 ('TRJ00088', 'MN018', 'Keripik Kentang', 'Snack', 8000, 3, 24000),
 ('TRJ00089', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 4, 48000),
 ('TRJ00090', 'MN022', 'Cappucino', 'Original Coffee', 10000, 4, 40000),
 ('TRJ00091', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 1, 12000),
-('TRJ00091', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00091', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00092', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
 ('TRJ00093', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
 ('TRJ00093', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00094', 'MN022', 'Cappucino', 'Original Coffee', 10000, 1, 10000),
-('TRJ00095', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 2, 20000),
+('TRJ00095', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
 ('TRJ00096', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00097', 'MN015', 'Jus Anggur', 'Minuman', 12000, 2, 24000),
 ('TRJ00098', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
@@ -493,7 +507,7 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00113', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 1, 3000),
 ('TRJ00114', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
 ('TRJ00115', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
-('TRJ00116', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 9, 90000),
+('TRJ00116', 'MN001', 'Orange Juice', 'Minuman', 10000, 9, 90000),
 ('TRJ00117', 'MN015', 'Jus Anggur', 'Minuman', 12000, 1, 12000),
 ('TRJ00118', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00119', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
@@ -516,14 +530,14 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00125', 'MN020', 'Jus Apel', 'Minuman', 11000, 1, 11000),
 ('TRJ00125', 'MN022', 'Cappucino', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00126', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
-('TRJ00127', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 3, 30000),
+('TRJ00127', 'MN001', 'Orange Juice', 'Minuman', 10000, 3, 30000),
 ('TRJ00127', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00131', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 3, 45000),
 ('TRJ00131', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
 ('TRJ00132', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 5, 75000),
 ('TRJ00132', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
 ('TRJ00132', 'MN019', 'Jamur Crispy', 'Snack', 10000, 1, 10000),
-('TRJ00132', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00132', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00132', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 2, 24000),
 ('TRJ00133', 'MN018', 'Keripik Kentang', 'Snack', 8000, 4, 32000),
 ('TRJ00134', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 1, 12000),
@@ -538,7 +552,7 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00143', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 2, 24000),
 ('TRJ00144', 'MN013', 'Kentang Goreng', 'Snack', 12000, 4, 48000),
 ('TRJ00145', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 1, 13000),
-('TRJ00145', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 4, 40000),
+('TRJ00145', 'MN001', 'Orange Juice', 'Minuman', 10000, 4, 40000),
 ('TRJ00145', 'MN013', 'Kentang Goreng', 'Snack', 12000, 2, 24000),
 ('TRJ00146', 'MN023', 'Kopi Susu Dingin', 'Minuman', 3000, 2, 6000),
 ('TRJ00146', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 3, 36000),
@@ -550,7 +564,7 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00149', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
 ('TRJ00151', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00151', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 1, 13000),
-('TRJ00155', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00155', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00150', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 1, 12000),
 ('TRJ00150', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 2, 30000),
 ('TRJ00150', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
@@ -559,25 +573,25 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00150', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 1, 13000),
 ('TRJ00157', 'MN013', 'Kentang Goreng', 'Snack', 12000, 2, 24000),
 ('TRJ00157', 'MN022', 'Cappucino', 'Original Coffee', 10000, 1, 10000),
-('TRJ00156', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00156', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00156', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 2, 24000),
 ('TRJ00159', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
-('TRJ00160', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
-('TRJ00161', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 4, 40000),
-('TRJ00162', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
-('TRJ00163', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
-('TRJ00164', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00160', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00161', 'MN001', 'Orange Juice', 'Minuman', 10000, 4, 40000),
+('TRJ00162', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00163', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00164', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00165', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
 ('TRJ00166', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
 ('TRJ00170', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
 ('TRJ00171', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00169', 'MN019', 'Jamur Crispy', 'Snack', 10000, 1, 10000),
 ('TRJ00172', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
-('TRJ00172', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00172', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00172', 'MN019', 'Jamur Crispy', 'Snack', 10000, 1, 10000),
 ('TRJ00172', 'MN013', 'Kentang Goreng', 'Snack', 12000, 2, 24000),
 ('TRJ00167', 'MN019', 'Jamur Crispy', 'Snack', 10000, 1, 10000),
-('TRJ00167', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 2, 20000),
+('TRJ00167', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
 ('TRJ00167', 'MN013', 'Kentang Goreng', 'Snack', 12000, 2, 24000),
 ('TRJ00154', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
 ('TRJ00154', 'MN019', 'Jamur Crispy', 'Snack', 10000, 5, 50000),
@@ -585,9 +599,82 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00154', 'MN013', 'Kentang Goreng', 'Snack', 12000, 3, 36000),
 ('TRJ00168', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
 ('TRJ00174', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
-('TRJ00175', 'MN001', 'Orange Juice', 'Original Coffee', 10000, 1, 10000),
+('TRJ00175', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
 ('TRJ00175', 'MN018', 'Keripik Kentang', 'Snack', 8000, 2, 16000),
-('TRJ00176', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000);
+('TRJ00176', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00177', 'MN018', 'Keripik Kentang', 'Snack', 8000, 2, 16000),
+('TRJ00177', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 2, 20000),
+('TRJ00178', 'MN019', 'Jamur Crispy', 'Snack', 10000, 2, 20000),
+('TRJ00178', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00178', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 1, 12000),
+('TRJ00186', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00187', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00188', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00188', 'MN015', 'Jus Anggur', 'Minuman', 12000, 1, 12000),
+('TRJ00189', 'MN019', 'Jamur Crispy', 'Snack', 10000, 1, 10000),
+('TRJ00189', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00190', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
+('TRJ00191', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00192', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00193', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00194', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00195', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
+('TRJ00196', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00197', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00198', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
+('TRJ00199', 'MN013', 'Kentang Goreng', 'Snack', 12000, 4, 48000),
+('TRJ00200', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00201', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00202', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00203', 'MN013', 'Kentang Goreng', 'Snack', 12000, 1, 12000),
+('TRJ00203', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00204', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00206', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00207', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00208', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00205', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 3, 45000),
+('TRJ00205', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00210', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
+('TRJ00212', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00209', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00214', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00215', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00216', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 2, 30000),
+('TRJ00217', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00211', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00218', 'MN015', 'Jus Anggur', 'Minuman', 12000, 1, 12000),
+('TRJ00213', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00220', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00219', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00224', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00225', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 1, 13000),
+('TRJ00223', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00221', 'MN015', 'Jus Anggur', 'Minuman', 12000, 1, 12000),
+('TRJ00226', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 2, 26000),
+('TRJ00228', 'MN001', 'Orange Juice', 'Minuman', 10000, 1, 10000),
+('TRJ00229', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00227', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00222', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00232', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00233', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00234', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00237', 'MN001', 'Orange Juice', 'Minuman', 10000, 2, 20000),
+('TRJ00238', 'MN020', 'Jus Apel', 'Minuman', 11000, 1, 11000),
+('TRJ00239', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00236', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00230', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00230', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00235', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 2, 30000),
+('TRJ00241', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
+('TRJ00242', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000),
+('TRJ00240', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000),
+('TRJ00243', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 1, 10000),
+('TRJ00244', 'MN014', 'Black Coffee', 'Original Coffee', 13000, 1, 13000),
+('TRJ00244', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 2, 30000),
+('TRJ00244', 'MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, 1, 12000),
+('TRJ00244', 'MN017', 'Nasi Goreng', 'Makanan', 12000, 3, 36000),
+('TRJ00245', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 2, 30000),
+('TRJ00246', 'MN011', 'Chocholate', 'Falvoured Coffee', 15000, 1, 15000);
 
 -- --------------------------------------------------------
 
@@ -600,21 +687,39 @@ CREATE TABLE `karyawan` (
   `nama_karyawan` varchar(50) NOT NULL,
   `no_telp` varchar(13) NOT NULL,
   `alamat` text NOT NULL,
-  `shif` enum('Siang','Malam','No Shif') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `shif` enum('Siang (07:00-17:59)','Malam (18:00-22:59)') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `karyawan`
 --
 
 INSERT INTO `karyawan` (`id_karyawan`, `nama_karyawan`, `no_telp`, `alamat`, `shif`) VALUES
-('KY001', 'Achmad Baihaqi', '085655864624', 'Jombang, Jawa Timur, Indonesia', 'Siang'),
-('KY002', 'Mohammad Ilham Islamy', '085690123458', 'Nganjuk, Jawa Timur', 'No Shif'),
-('KY003', 'Widyasari Raisya Salsabilla', '085690239023', 'Mojokerto, Jawa Timur', 'No Shif'),
-('KY004', 'Septian Yoga Pamungkas', '084590120912', 'Nganjuk, Jawa Timur', 'No Shif'),
-('KY005', 'Admin', '085655864624', 'Jombang, Jawa Timur', 'No Shif'),
-('KY006', 'Karyawan 1', '085690249029', 'Nganjuk, Jawa Timur', 'Malam'),
-('KY007', 'Akun Tester', '085690129012', 'Berlin, Nazi Germany', 'Siang');
+('KY001', 'Achmad Baihaqi', '085655864624', 'Jombang, Jawa Timur, Indonesia', 'Siang (07:00-17:59)'),
+('KY002', 'Mohammad Ilham Islamy', '085690123458', 'Nganjuk, Jawa Timur', 'Malam (18:00-22:59)'),
+('KY003', 'Widyasari Raisya Salsabilla', '085690239023', 'Mojokerto, Jawa Timur', 'Siang (07:00-17:59)'),
+('KY004', 'Septian Yoga Pamungkas', '084590120912', 'Nganjuk, Jawa Timur', 'Malam (18:00-22:59)'),
+('KY005', 'Akun Tester', '085655864624', 'Jombang, Jawa Timur', 'Siang (07:00-17:59)');
+
+--
+-- Trigger `karyawan`
+--
+DELIMITER $$
+CREATE TRIGGER `update_ky_beli` AFTER UPDATE ON `karyawan` FOR EACH ROW BEGIN 
+	UPDATE transaksi_beli 
+    SET nama_karyawan = NEW.nama_karyawan 
+    WHERE id_karyawan = NEW.id_karyawan;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `update_ky_jual` AFTER UPDATE ON `karyawan` FOR EACH ROW BEGIN 
+	UPDATE transaksi_jual 
+    SET nama_karyawan = NEW.nama_karyawan 
+    WHERE id_karyawan = NEW.id_karyawan;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -627,14 +732,14 @@ CREATE TABLE `menu` (
   `nama_menu` varchar(30) NOT NULL,
   `jenis` enum('Minuman','Makanan','Original Coffee','Falvoured Coffee','Snack') NOT NULL,
   `harga` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `menu`
 --
 
 INSERT INTO `menu` (`id_menu`, `nama_menu`, `jenis`, `harga`) VALUES
-('MN001', 'Orange Juice', 'Original Coffee', 10000),
+('MN001', 'Orange Juice', 'Minuman', 10000),
 ('MN002', 'Coffee Latte', 'Original Coffee', 10000),
 ('MN011', 'Chocholate', 'Falvoured Coffee', 15000),
 ('MN012', 'Ayam Bakar', 'Makanan', 15000),
@@ -648,7 +753,63 @@ INSERT INTO `menu` (`id_menu`, `nama_menu`, `jenis`, `harga`) VALUES
 ('MN020', 'Jus Apel', 'Minuman', 11000),
 ('MN021', 'Moca Latte', 'Falvoured Coffee', 12000),
 ('MN022', 'Cappucino', 'Original Coffee', 10000),
-('MN023', 'Kopi Susu Dingin', 'Minuman', 3000);
+('MN023', 'Kopi Susu Dingin', 'Minuman', 3000),
+('MN024', 'Air Mineral', 'Minuman', 4000),
+('MN025', 'Kopi Hitam', 'Minuman', 3000),
+('MN026', 'Kopi Susu Tubruk', 'Minuman', 5000),
+('MN027', 'Teh Panas / Es', 'Minuman', 3000),
+('MN028', 'Susu Panas / Es', 'Minuman', 5000),
+('MN029', 'Es Lemon Tea Panas / Es', 'Minuman', 5000),
+('MN030', 'Wedhang Uwuh', 'Minuman', 5000),
+('MN031', 'Es Jeruk', 'Minuman', 5000),
+('MN032', 'Teh Tarik', 'Minuman', 7000),
+('MN033', 'Jahe Susu Panas', 'Minuman', 7000),
+('MN034', 'Joss Susu Es', 'Minuman', 6000),
+('MN035', 'KukuBima Susu Es', 'Minuman', 6000),
+('MN036', 'Jahe Panas', 'Minuman', 5000),
+('MN037', 'Vietnam Drip', 'Original Coffee', 10000),
+('MN038', 'Espresso', 'Original Coffee', 8000),
+('MN039', 'Long Black', 'Original Coffee', 10000),
+('MN040', 'Coffee Latte', 'Original Coffee', 10000),
+('MN041', 'Cappucino', 'Original Coffee', 10000),
+('MN042', 'Moca Latte', 'Falvoured Coffee', 12000),
+('MN043', 'Vanilla Latte', 'Falvoured Coffee', 12000),
+('MN044', 'Chocholate', 'Falvoured Coffee', 10000),
+('MN045', 'Salted Caramel', 'Falvoured Coffee', 10000),
+('MN046', 'Taro', 'Falvoured Coffee', 10000),
+('MN047', 'Green Tea Latte', 'Falvoured Coffee', 12000),
+('MN048', 'Kentang Goreng', 'Snack', 8000),
+('MN049', 'Cireng', 'Snack', 8000),
+('MN050', 'Tahu Tuna', 'Snack', 8000),
+('MN051', 'Shio May Ayam', 'Snack', 10000),
+('MN052', 'Pisang Coklat', 'Snack', 10000),
+('MN053', 'Pisang Nugget', 'Snack', 8000),
+('MN054', 'Tempe Medoan', 'Snack', 8000),
+('MN055', 'Jamur Crispy', 'Snack', 10000),
+('MN056', 'Nasi Goreng', 'Makanan', 12000),
+('MN057', 'Nasi Ayam Penyet', 'Makanan', 12000),
+('MN058', 'Nasi Ayam Geprek', 'Makanan', 13000),
+('MN059', 'Ayam Taliwang', 'Makanan', 13000),
+('MN060', 'Nasi Sop', 'Makanan', 8000),
+('MN061', 'Nasi Sayur Asem', 'Makanan', 8000),
+('MN062', 'Nasi Tempe / Tahu Penyet', 'Makanan', 8000),
+('MN063', 'Nasi Telur Penyet', 'Makanan', 10000),
+('MN064', 'Indomie Goreng Telur', 'Makanan', 8000),
+('MN065', 'Indomie Rebus Telur', 'Makanan', 8000),
+('MN066', 'Nasi Putih', 'Makanan', 4000),
+('MN067', 'Telur Ceplok / Dadar', 'Makanan', 4000);
+
+--
+-- Trigger `menu`
+--
+DELIMITER $$
+CREATE TRIGGER `update_menu` AFTER UPDATE ON `menu` FOR EACH ROW BEGIN 
+	UPDATE detail_tr_jual 
+    SET nama_menu = NEW.nama_menu, jenis_menu = NEW.jenis
+    WHERE id_menu = NEW.id_menu;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -662,8 +823,8 @@ CREATE TABLE `transaksi_beli` (
   `nama_karyawan` varchar(50) NOT NULL,
   `total_bahan` int(5) NOT NULL,
   `total_harga` int(11) NOT NULL,
-  `tanggal` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `tanggal` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `transaksi_beli`
@@ -793,13 +954,16 @@ INSERT INTO `transaksi_beli` (`id_tr_beli`, `id_karyawan`, `nama_karyawan`, `tot
 ('TRB00122', 'KY003', 'Achmad Baihaqi', 1, 10000, '2023-01-08 21:10:37'),
 ('TRB00123', 'KY001', 'Achmad Baihaqi', 2, 42000, '2023-01-09 14:44:18'),
 ('TRB00124', 'KY002', 'Achmad Baihaqi', 5, 100000, '2023-01-09 15:17:55'),
-('TRB00125', 'KY004', 'Achmad Baihaqi', 1, 15000, '2023-01-09 15:12:22'),
 ('TRB00126', 'KY001', 'Achmad Baihaqi', 3, 40000, '2023-01-09 15:18:31'),
 ('TRB00127', 'KY003', 'Achmad Baihaqi', 1, 10000, '2023-01-09 15:19:08'),
 ('TRB00128', 'KY002', 'Achmad Baihaqi', 4, 50000, '2023-01-09 15:28:59'),
-('TRB00129', 'KY004', 'Achmad Baihaqi', 3, 33000, '2023-01-09 15:20:46'),
 ('TRB00130', 'KY003', 'Achmad Baihaqi', 1, 16000, '2023-01-09 15:25:57'),
-('TRB00131', 'KY003', 'Achmad Baihaqi', 1, 15000, '2023-01-10 11:42:36');
+('TRB00131', 'KY003', 'Achmad Baihaqi', 1, 15000, '2023-01-10 11:42:36'),
+('TRB00132', 'KY003', 'Achmad Baihaqi', 1, 12000, '2023-01-11 21:46:25'),
+('TRB00133', 'KY001', 'Achmad Baihaqi', 1, 26000, '2023-01-11 21:47:39'),
+('TRB00134', 'KY004', 'Achmad Baihaqi', 1, 15000, '2023-01-12 15:52:07'),
+('TRB00135', 'KY003', 'Achmad Baihaqi', 1, 50000, '2023-01-12 15:52:16'),
+('TRB00136', 'KY002', 'Achmad Baihaqi', 1, 10000, '2023-01-17 16:22:10');
 
 -- --------------------------------------------------------
 
@@ -816,7 +980,7 @@ CREATE TABLE `transaksi_jual` (
   `total_bayar` int(11) NOT NULL,
   `total_kembalian` int(11) NOT NULL,
   `tanggal` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `transaksi_jual`
@@ -997,7 +1161,69 @@ INSERT INTO `transaksi_jual` (`id_tr_jual`, `id_karyawan`, `nama_karyawan`, `tot
 ('TRJ00173', 'KY003', 'Widyasari Raisya Salsabilla', 1, 10000, 20000, 10000, '2023-01-09 22:11:59'),
 ('TRJ00174', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-09 23:57:57'),
 ('TRJ00175', 'KY004', 'Septian Yoga Pamungkas', 3, 26000, 30000, 4000, '2023-01-10 00:02:55'),
-('TRJ00176', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-10 11:53:13');
+('TRJ00176', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-10 16:34:35'),
+('TRJ00177', 'KY001', 'Achmad Baihaqi', 4, 36000, 40000, 4000, '2023-01-11 21:42:02'),
+('TRJ00178', 'KY002', 'Mohammad Ilham Islamy', 4, 42000, 50000, 8000, '2023-01-11 21:45:48'),
+('TRJ00186', 'KY001', 'Achmad Baihaqi', 1, 10000, 10000, 0, '2023-01-12 15:38:06'),
+('TRJ00187', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 15000, 0, '2023-01-12 15:38:24'),
+('TRJ00188', 'KY001', 'Achmad Baihaqi', 2, 27000, 30000, 3000, '2023-01-12 15:38:58'),
+('TRJ00189', 'KY001', 'Achmad Baihaqi', 2, 20000, 20000, 0, '2023-01-12 15:39:09'),
+('TRJ00190', 'KY002', 'Mohammad Ilham Islamy', 1, 12000, 15000, 3000, '2023-01-12 15:39:22'),
+('TRJ00191', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-12 15:40:34'),
+('TRJ00192', 'KY004', 'Septian Yoga Pamungkas', 1, 10000, 10000, 0, '2023-01-12 15:41:36'),
+('TRJ00193', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 15000, 0, '2023-01-12 15:41:42'),
+('TRJ00194', 'KY001', 'Achmad Baihaqi', 1, 15000, 15000, 0, '2023-01-12 15:45:43'),
+('TRJ00195', 'KY001', 'Achmad Baihaqi', 1, 12000, 12000, 0, '2023-01-12 15:46:21'),
+('TRJ00196', 'KY003', 'Widyasari Raisya Salsabilla', 1, 15000, 15000, 0, '2023-01-12 15:46:25'),
+('TRJ00197', 'KY003', 'Widyasari Raisya Salsabilla', 1, 15000, 15000, 0, '2023-01-12 15:46:47'),
+('TRJ00198', 'KY003', 'Widyasari Raisya Salsabilla', 1, 12000, 15000, 3000, '2023-01-12 15:46:59'),
+('TRJ00199', 'KY001', 'Achmad Baihaqi', 4, 48000, 50000, 2000, '2023-01-12 15:47:18'),
+('TRJ00200', 'KY003', 'Widyasari Raisya Salsabilla', 1, 10000, 10000, 0, '2023-01-12 15:47:36'),
+('TRJ00201', 'KY001', 'Achmad Baihaqi', 1, 10000, 10000, 0, '2023-01-15 18:45:12'),
+('TRJ00202', 'KY003', 'Widyasari Raisya Salsabilla', 1, 10000, 10000, 0, '2023-01-15 18:52:55'),
+('TRJ00203', 'KY001', 'Achmad Baihaqi', 2, 22000, 25000, 3000, '2023-01-15 19:03:17'),
+('TRJ00204', 'KY003', 'Widyasari Raisya Salsabilla', 1, 15000, 20000, 5000, '2023-01-15 19:04:01'),
+('TRJ00205', 'KY002', 'Mohammad Ilham Islamy', 4, 55000, 60000, 5000, '2023-01-16 19:43:38'),
+('TRJ00206', 'KY001', 'Achmad Baihaqi', 1, 15000, 100000, 85000, '2023-01-16 19:33:26'),
+('TRJ00207', 'KY003', 'Widyasari Raisya Salsabilla', 1, 10000, 10000, 0, '2023-01-16 19:36:05'),
+('TRJ00208', 'KY003', 'Widyasari Raisya Salsabilla', 1, 15000, 20000, 5000, '2023-01-16 19:38:09'),
+('TRJ00209', 'KY004', 'Septian Yoga Pamungkas', 1, 15000, 20000, 5000, '2023-01-16 19:52:44'),
+('TRJ00210', 'KY002', 'Mohammad Ilham Islamy', 2, 30000, 30000, 0, '2023-01-16 19:44:39'),
+('TRJ00211', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-16 22:36:13'),
+('TRJ00212', 'KY003', 'Widyasari Raisya Salsabilla', 1, 10000, 10000, 0, '2023-01-16 19:48:18'),
+('TRJ00213', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 22:42:39'),
+('TRJ00214', 'KY003', 'Widyasari Raisya Salsabilla', 1, 15000, 20000, 5000, '2023-01-16 19:54:14'),
+('TRJ00215', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 15000, 0, '2023-01-16 19:56:16'),
+('TRJ00216', 'KY001', 'Achmad Baihaqi', 2, 30000, 30000, 0, '2023-01-16 19:59:36'),
+('TRJ00217', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-16 20:00:59'),
+('TRJ00218', 'KY003', 'Widyasari Raisya Salsabilla', 1, 12000, 15000, 3000, '2023-01-16 22:40:11'),
+('TRJ00219', 'KY001', 'Achmad Baihaqi', 1, 15000, 50000, 35000, '2023-01-16 23:04:43'),
+('TRJ00220', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 22:48:54'),
+('TRJ00221', 'KY002', 'Mohammad Ilham Islamy', 1, 12000, 15000, 3000, '2023-01-16 23:20:39'),
+('TRJ00222', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 23:34:34'),
+('TRJ00223', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-16 23:18:52'),
+('TRJ00224', 'KY004', 'Septian Yoga Pamungkas', 1, 15000, 20000, 5000, '2023-01-16 23:06:30'),
+('TRJ00225', 'KY002', 'Mohammad Ilham Islamy', 1, 13000, 15000, 2000, '2023-01-16 23:16:40'),
+('TRJ00226', 'KY002', 'Mohammad Ilham Islamy', 2, 26000, 30000, 4000, '2023-01-16 23:24:44'),
+('TRJ00227', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 23:32:19'),
+('TRJ00228', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 23:31:06'),
+('TRJ00229', 'KY004', 'Septian Yoga Pamungkas', 1, 15000, 20000, 5000, '2023-01-16 23:31:47'),
+('TRJ00230', 'KY002', 'Mohammad Ilham Islamy', 2, 25000, 30000, 5000, '2023-01-16 23:58:54'),
+('TRJ00232', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-16 23:34:57'),
+('TRJ00233', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 23:37:40'),
+('TRJ00234', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-16 23:50:27'),
+('TRJ00235', 'KY002', 'Mohammad Ilham Islamy', 2, 30000, 30000, 0, '2023-01-16 23:59:32'),
+('TRJ00236', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 10000, 0, '2023-01-16 23:56:17'),
+('TRJ00237', 'KY002', 'Mohammad Ilham Islamy', 2, 20000, 20000, 0, '2023-01-16 23:50:47'),
+('TRJ00238', 'KY002', 'Mohammad Ilham Islamy', 1, 11000, 20000, 9000, '2023-01-16 23:51:22'),
+('TRJ00239', 'KY003', 'Widyasari Raisya Salsabilla', 1, 10000, 10000, 0, '2023-01-16 23:54:36'),
+('TRJ00240', 'KY001', 'Achmad Baihaqi', 1, 15000, 30000, 15000, '2023-01-17 00:11:24'),
+('TRJ00241', 'KY001', 'Achmad Baihaqi', 2, 30000, 30000, 0, '2023-01-17 00:08:39'),
+('TRJ00242', 'KY004', 'Septian Yoga Pamungkas', 1, 15000, 15000, 0, '2023-01-17 00:10:25'),
+('TRJ00243', 'KY002', 'Mohammad Ilham Islamy', 1, 10000, 20000, 10000, '2023-01-17 00:15:08'),
+('TRJ00244', 'KY002', 'Mohammad Ilham Islamy', 7, 91000, 100000, 9000, '2023-01-17 00:17:23'),
+('TRJ00245', 'KY003', 'Widyasari Raisya Salsabilla', 2, 30000, 30000, 0, '2023-01-17 14:08:18'),
+('TRJ00246', 'KY002', 'Mohammad Ilham Islamy', 1, 15000, 20000, 5000, '2023-01-17 14:23:40');
 
 -- --------------------------------------------------------
 
@@ -1011,87 +1237,86 @@ CREATE TABLE `user` (
   `password` varchar(70) NOT NULL,
   `level` enum('DEVELOPER','ADMIN','KARYAWAN') NOT NULL,
   `id_karyawan` varchar(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
 INSERT INTO `user` (`id_login`, `username`, `password`, `level`, `id_karyawan`) VALUES
-(1, 'dev2003', '$2a$12$R3PIb2.OWpNX1l4vVHuojuOl8HAfda5LqGYJdup3KrR0x0XfPe41G', 'DEVELOPER', 'KY001'),
+(1, 'dev2003', '$2a$12$ZfnIOGZkXzScrwt05DfXMuWemSONcdYNcjJ2s1A7IAXJyjDXCCl6S', 'DEVELOPER', 'KY001'),
 (2, 'ilham', '$2a$12$G9rldUjX0SjYYn169mMO3uLoRJOnlYKggCG5nojWOeOYSFxRnckNm', 'DEVELOPER', 'KY002'),
 (3, 'widya', '$2a$12$a2hZcCF4Of0r65cL1ef4/.GVnaCWf6/S0Z//MGtJLnSrpZaiJ7saK', 'DEVELOPER', 'KY003'),
 (4, 'yoga', '$2a$12$a.WxR/w.Jd8MZ9KYWbcazuOwx9Y936X/QfhpQJwNT.Qe9ASei3PXu', 'DEVELOPER', 'KY004'),
-(7, 'admin', '$2a$12$vo3Su5mFytzQklgnhtwbJ.sBJoUH3ebH84TugA959Ecwl8Vso5KuW', 'ADMIN', 'KY005'),
-(8, 'test.ky1', '$2a$12$mytpvQLyc9czs9Bs2EL1oOJeClSNUm0moF6oYJ47YxVmr4LbsJ2Z6', 'KARYAWAN', 'KY006'),
-(9, 'tester', '$2a$12$AUrSJh30xKo6AxUmbix/H.dejf5aDvO6Qk4YkxAo7stMwuvDLsAJi', 'ADMIN', 'KY007');
+(7, 'tester', '$2a$12$vo3Su5mFytzQklgnhtwbJ.sBJoUH3ebH84TugA959Ecwl8Vso5KuW', 'ADMIN', 'KY005');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `bahan`
+-- Indeks untuk tabel `bahan`
 --
 ALTER TABLE `bahan`
   ADD PRIMARY KEY (`id_bahan`);
 
 --
--- Indexes for table `detail_tr_beli`
+-- Indeks untuk tabel `detail_tr_beli`
 --
 ALTER TABLE `detail_tr_beli`
   ADD KEY `id_tr_beli` (`id_tr_beli`),
   ADD KEY `id_bahan` (`id_bahan`);
 
 --
--- Indexes for table `detail_tr_jual`
+-- Indeks untuk tabel `detail_tr_jual`
 --
 ALTER TABLE `detail_tr_jual`
   ADD KEY `id_transaksi` (`id_tr_jual`),
   ADD KEY `id_menu` (`id_menu`);
 
 --
--- Indexes for table `karyawan`
+-- Indeks untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`id_karyawan`);
 
 --
--- Indexes for table `menu`
+-- Indeks untuk tabel `menu`
 --
 ALTER TABLE `menu`
   ADD PRIMARY KEY (`id_menu`);
 
 --
--- Indexes for table `transaksi_beli`
+-- Indeks untuk tabel `transaksi_beli`
 --
 ALTER TABLE `transaksi_beli`
   ADD PRIMARY KEY (`id_tr_beli`),
   ADD KEY `id_karyawan` (`id_karyawan`);
 
 --
--- Indexes for table `transaksi_jual`
+-- Indeks untuk tabel `transaksi_jual`
 --
 ALTER TABLE `transaksi_jual`
   ADD PRIMARY KEY (`id_tr_jual`),
   ADD KEY `id_karyawan` (`id_karyawan`);
 
 --
--- Indexes for table `user`
+-- Indeks untuk tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_login`),
   ADD KEY `id_karyawan` (`id_karyawan`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_login` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_login` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
