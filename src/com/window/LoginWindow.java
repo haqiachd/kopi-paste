@@ -405,8 +405,10 @@ public class LoginWindow extends javax.swing.JFrame {
 //        java.awt.EventQueue.invokeLater(new Runnable(){
 //            @Override
 //            public void run(){
-//                user.login("dev2003", "haqi12345");
+//                user = new User();
+//                user.login("dev2003", "lastidea");
 //                new Dashboard().setVisible(true);
+//                user.closeConnection();
 //            }
 //        });
 //        this.setVisible(false);
