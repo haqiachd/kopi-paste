@@ -218,7 +218,8 @@ public class HistoriTransaksi extends javax.swing.JDialog {
                         this.cariData.getValueAt(i, 3),
                         this.cariData.getValueAt(i, 4),
                         this.cariData.getValueAt(i, 5),
-                        this.cariData.getValueAt(i, 6)
+                        this.cariData.getValueAt(i, 6),
+                        this.cariData.getValueAt(i, 7)
                     }
                 );
             }
