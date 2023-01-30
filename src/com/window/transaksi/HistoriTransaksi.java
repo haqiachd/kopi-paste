@@ -314,7 +314,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         // reset tabel riwayat
         this.resetTableBeli();
         DefaultTableModel model = (DefaultTableModel) this.tabelRiwayat.getModel();
-        String key = inpCari.getText().toLowerCase(), id, idKy, nama, tanggal;
+        String key = inpCari.getText().toLowerCase(), id, idKy, nama, tgl;
         
         // membaca semua is tabel riwayat
         for(int i = 0; i < this.cariData.getRowCount(); i++){
@@ -322,10 +322,10 @@ public class HistoriTransaksi extends javax.swing.JDialog {
             id = this.cariData.getValueAt(i, 0).toString().toLowerCase();
             idKy = this.cariData.getValueAt(i, 1).toString().toLowerCase();
             nama = this.cariData.getValueAt(i, 2).toString().toLowerCase();
-            tanggal = this.cariData.getValueAt(i, 5).toString().toLowerCase();
+            tgl = this.cariData.getValueAt(i, 5).toString().toLowerCase();
             
             // pengecekan id, nama dan tanggal
-            if(id.contains(key) || idKy.contains(key) || nama.contains(key) || tanggal.contains(key)){
+            if(id.contains(key) || idKy.contains(key) || nama.contains(key) || tgl.contains(key)){
                 // jika match maka data ditampilkan kedalam tabel
                 model.addRow(
                     new Object[]{
