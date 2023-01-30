@@ -306,10 +306,8 @@ public class ChartManager extends Database{
                 }
                 
                 // forloop dari tanggal 1 sampai tanggal saat ini
-                if (tgl != ttl) {
-                    for (int i = 1; i < tgl; i += 2) {
-                        dataset.setValue(this.getLineDataPenjualan(bulan, tahun, i, (i+1)), "Amount", Integer.toString(i));
-                    }
+                for (int i = 1; i < tgl; i += 2) {
+                    dataset.setValue(this.getLineDataPenjualan(bulan, tahun, i, (i + 1)), "Amount", Integer.toString(i));
                 }
                 break;
         }
