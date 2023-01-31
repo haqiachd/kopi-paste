@@ -51,6 +51,17 @@
 ## Deskripsi Project
 Kopi Paste adalah sebuah aplikasi yang dibuat oleh Cito Team TIF 3 PSDKU Polije. Tujuan aplikasi ini dibuat adalah untuk memudahkan dalam melakukan transaksi penjualan atau pembelian pada UMKM dan menyajikan laporan penjualan atau pembelian dari transaksi sehingga pemilik UMKM dapat memantau perkembangan UMKM mereka.
 
+## Fitur Aplikasi
+
+### Data Master
+Adalah sebuah fitur yang menampilkan data-data dari UMKM seperti data karyawan, data menu dan data bahan. Pengguna dengan level admin dapat menambahkan, mengedit dan menghapus data dari data master yang tersedia pada aplikasi ini.
+### Transaksi
+Terdapat dua pilihan transaksi antara lain transaksi penjualan dan transaksi pembelian. Fitur transaksi pada aplikasi ini dirancang agar mudah dipahami/digunakan bagi pengguna. Pengguna dengan level admin maupun karyawan dapat mengakses fitur transaksi ini.
+### Laporan
+Terdapat dua pilihan laporan antara lain laporan penjualan dan laporan pembelian. Fitur laporan ini menampilkan riwayat dari transaksi penjualan atau pembelian yang telah dilakukan. Fitur laporan terbagi menjadi 3 bagian antara lain laporan harian, laporan bulanan dan riwayat penjualan / pembelian. Pada fitur laporan juga terdapat grafik yang menampilkan data dari penjualan / pembelian sehingga pemilik UMKM dapat memantau perkembangan bisnis mereka. Fitur laporan ini hanya dapat diakses oleh pengguna dengan level Admin saja.
+### Backup Database
+Fitur ini digunakan untuk membackup database dari aplikasi jika suatu waktu aplikasi / database mengalami kerusakan sehingga mencegah pemilik UMKM untuk kehilangan data-data mereka. Fitur ini hanya dapat diakses oleh pengguna dengan level Admin saja. 
+
 ## Contoh Tampilan Aplikasi
 ### Dashboard :
 ![Menu Dashboard](images/v-1.1/menu-dashboard.png)
@@ -59,7 +70,17 @@ Kopi Paste adalah sebuah aplikasi yang dibuat oleh Cito Team TIF 3 PSDKU Polije.
 ### Menu Laporan Jual : 
 ![dashboard 2](images/v-1.1/menu-laporan-jual.png)
 
-### Default Akun :
+## Cara Instalasi Aplikasi : 
+- Pastikan Anda sudah menginstal Java dan MySQL.
+- Download file installer aplikasi disini.
+- Jika sudah didownload double clik pada aplikasi untuk menginstall.
+- Jika sudah terinstall buka MySQL Anda.
+- Kemudian import file database 'kopi_paste_business.sql' yang berada pada folder db.
+- Buka kembali aplikasi 'Kopi Paste'
+- Login dengan default akun.
+- Selesai.
+
+## Default Akun :
 * Akun Admin 
   - username : admin <br>
   - password : 0987654321
@@ -70,7 +91,7 @@ Kopi Paste adalah sebuah aplikasi yang dibuat oleh Cito Team TIF 3 PSDKU Polije.
 ## Persyaratan Sistem Minimal
 - Java 8
 - 2 GB RAM
-- 1440 x 900 screen resolution
+- 1360 x 768 screen resolution
 
 ## Contributor
 - Achmad Baihaqi
@@ -79,6 +100,6 @@ Kopi Paste adalah sebuah aplikasi yang dibuat oleh Cito Team TIF 3 PSDKU Polije.
 - Widyasari Raisya Salsabilla
 
 ## Catatan
-Aplikasi ini merupakan project open source Anda dapat menggunakanya secara gratis. Jika ada hal yang kurang jelas atau ada hal yang ingin ditanyakan silahkan [hubungi saya](https://api.whatsapp.com/send/?phone=6285655864624).
+Aplikasi Kopi Paste dirancang untuk mudah dipahami dan mudah digunakan sehingga bagi yang awam tentang teknologi tidak merasa kesulitan saat menggunakan aplikasi ini. Diharapkan dengan dibuatnya aplikasi ini dapat membantu pemilik UMKM untuk mengelola bisnis mereka sehingga mereka dapat menentukan langkah  bisnis mereka di masa mendatang. Aplikasi ini merupakan project open source Anda dapat menggunakanya secara gratis. Jika ada hal yang kurang jelas atau ada hal yang ingin ditanyakan silahkan [hubungi saya](https://api.whatsapp.com/send/?phone=6285655864624).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
