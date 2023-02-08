@@ -35,13 +35,24 @@
   <ol>
     <li><a href="#deskripsi-project">Deskripsi Project</a></li>
     <li>
-      <a href="#contoh-tampilan-aplikasi">Tampilan Aplikasi</a>
+      <a href="#fitur-aplikasi">Fitur Aplikasi</a>
       <ul>
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#dashboard-petugas-">Dashboard Petugas</a></li>
-        <li><a href=#dashboard-siswa->Dashboard Siswa</a></li>        
+        <li><a href="#data-master">Dashboard</a></li>
+        <li><a href="#transaksi">Transaksi</a></li>
+        <li><a href=#laporan>Laporan</a></li>        
+        <li><a href=#backup-database>Backup Database</a></li>
       </ul>
     </li>
+    <li>
+    <a href="#contoh-tampilan-aplikasi">Contoh Tampilan Aplikasi</a>
+      <ul>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#menu-transaksi-jual">Menu Transaksi Jual</a></li>
+        <li><a href="#menu-laporan-jual">Menu Laporan Jual</a></li>
+      </ul>
+    </li>
+    <li><a href="#cara-instalasi-aplikasi">Cara Instalasi Aplikasi</a>
+    <li><a href="#default-akun">Default Akun</a>
     <li><a href="#persyaratan-sistem-minimal">Persyaratan Sistem Minimal</a></li>
     <li><a href="#contributor">Contributor</a></li>
     <li><a href="#catatan">Catatan</a></li>
@@ -63,24 +74,24 @@ Terdapat dua pilihan laporan antara lain laporan penjualan dan laporan pembelian
 Fitur ini digunakan untuk membackup database dari aplikasi jika suatu waktu aplikasi / database mengalami kerusakan sehingga mencegah pemilik UMKM untuk kehilangan data-data mereka. Fitur ini hanya dapat diakses oleh pengguna dengan level Admin saja. 
 
 ## Contoh Tampilan Aplikasi
-### Dashboard :
+### Dashboard
 ![Menu Dashboard](images/v-1.1/menu-dashboard.png)
-### Menu Transaksi Jual : 
+### Menu Transaksi Jual
 ![Dashboard Petugas](images/v-1.1/menu-transaksi-jual.png)
-### Menu Laporan Jual : 
+### Menu Laporan Jual
 ![dashboard 2](images/v-1.1/menu-laporan-jual.png)
 
-## Cara Instalasi Aplikasi : 
+## Cara Instalasi Aplikasi
 - Pastikan Anda sudah menginstal Java dan MySQL.
-- Download file installer aplikasi disini.
+- Download file installer aplikasi <a href="https://drive.google.com/drive/folders/1B2qoN3xB2I40fEJZWHSsO_hex6QwWbMx">disini</a>.
 - Jika sudah didownload double clik pada aplikasi untuk menginstall.
 - Jika sudah terinstall buka MySQL Anda.
-- Kemudian import file database 'kopi_paste_business.sql' yang berada pada folder db.
+- Kemudian import file database 'kopi_paste_business.sql' yang berada pada folder <a href="https://github.com/haqiachd/kopi-paste/tree/main/db">db</a>.
 - Buka kembali aplikasi 'Kopi Paste'
 - Login dengan default akun.
 - Selesai.
 
-## Default Akun :
+## Default Akun
 * Akun Admin 
   - username : admin <br>
   - password : 0987654321
