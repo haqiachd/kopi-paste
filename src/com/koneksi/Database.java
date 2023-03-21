@@ -48,10 +48,10 @@ public class Database {
      * Attribute yang digunakan untuk menghubungkan ke server
      */
 //    private static final String DRIVER = "com.mysql.jdbc.Driver",
-//                                DB_NAME = "sql6590038",
-//                                URL = "jdbc:mysql://sql6.freemysqlhosting.net/" + DB_NAME,
-//                                USER = "sql6590038",
-//                                PASS = "bjxsxD2B5d";    
+//                                DB_NAME = "sql12594955",
+//                                URL = "jdbc:mysql://sql12.freemysqlhosting.net/" + DB_NAME,
+//                                USER = "sql12594955",
+//                                PASS = "lIYTxWUML3";    
     /**
      * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
      */
