@@ -1,19 +1,99 @@
 package com.window.transaksi;
 
+import com.koneksi.Database;
+import com.manage.Message;
 import com.manage.Text;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import javax.swing.BorderFactory;
 
 /**
  *
  * @author Achmad Baihaqi
  */
-public class UpdateDiskon extends javax.swing.JFrame {
+public class TambahDiskon extends javax.swing.JDialog {
 
-    private final Text txt = new Text();
+    private final Database db = new Database();
+    
+    private final Text text = new Text();
+    
+    public static final int TAMBAH = 1, EDIT = 2;
+    
+    private final int kondisi;
+    
+    private String idSelected;
 
-    public UpdateDiskon() {
+    public TambahDiskon(java.awt.Frame parent, boolean modal, int kondisi, String idSelected) {
+        super(parent, modal);
         initComponents();
+        this.setLocationRelativeTo(null);
+        
+        this.kondisi = kondisi;
+        this.idSelected = idSelected;
+    
+        // set ui button
+        this.btnSimpan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        
+        // set margin text field
+        this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpMinHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpTtlDiskon.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        
+        // pilih kondisi tambah atau edit
+        switch(kondisi){
+            case TAMBAH : 
+                this.lblTitle.setText("Tambah Diskon");
+                this.inpId.setText(this.createID());
+                break;
+            case EDIT : 
+                this.lblTitle.setText("Edit Diskon");
+                this.inpId.setText(this.idSelected);
+                this.showData();
+                break;
+        }
+
+    }
+    
+    
+    
+    private String createID(){
+        try{
+            // menyiapkan query untuk mendapatkan id terakhir
+            String query = "SELECT * FROM diskon ORDER BY id_diskon DESC LIMIT 0,1", lastID, nomor = "000";
+            db.res = db.stat.executeQuery(query);
+            
+            // cek apakah query berhasil dieksekusi
+            if(db.res.next()){
+                // mendapatkan id terakhir
+                lastID =  db.res.getString("id_diskon");
+                if(lastID != null){
+                    // mendapatkan nomor id
+                    nomor = lastID.substring(2);
+                }else{
+                    nomor = "000";
+                }
+            }
+
+            // membuat id baru
+            return String.format("DS%03d", Integer.parseInt(nomor)+1);
+        }catch(SQLException ex){
+            Message.showException(this, ex);
+        }
+        return null;
+    }
+    
+    private void showData(){
+        
+    }
+    
+    private boolean tambahData(){
+        return false;
+    }
+    
+    private boolean editData(){
+        return false;
     }
 
 
@@ -25,20 +105,20 @@ public class UpdateDiskon extends javax.swing.JFrame {
         lblId = new javax.swing.JLabel();
         inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
-        inpNama = new com.ui.RoundedTextField(15);
+        inpMinHarga = new com.ui.RoundedTextField(15);
         lblData1 = new javax.swing.JLabel();
         lblData2 = new javax.swing.JLabel();
-        inpHarga = new com.ui.RoundedTextField(15);
         lblData4 = new javax.swing.JLabel();
-        inpDiskon = new com.ui.RoundedTextField(15);
         lblTitle = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        inpNama1 = new com.ui.RoundedTextField(15);
+        lineTop = new javax.swing.JSeparator();
+        lineBottom = new javax.swing.JSeparator();
+        inpTtlDiskon = new com.ui.RoundedTextField(15);
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JToggleButton();
+        inpTglMulai = new com.toedter.calendar.JDateChooser();
+        inpTglAKhir = new com.toedter.calendar.JDateChooser();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -46,6 +126,7 @@ public class UpdateDiskon extends javax.swing.JFrame {
         lblId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
         lblId.setText("ID Diskon");
 
+        inpId.setEditable(false);
         inpId.setBackground(new java.awt.Color(231, 235, 239));
         inpId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpId.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
@@ -54,13 +135,16 @@ public class UpdateDiskon extends javax.swing.JFrame {
         lblNama.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-harga.png"))); // NOI18N
         lblNama.setText("Minimal Harga");
 
-        inpNama.setBackground(new java.awt.Color(248, 249, 250));
-        inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpNama.setName("Nama Menu"); // NOI18N
-        inpNama.addKeyListener(new java.awt.event.KeyAdapter() {
+        inpMinHarga.setBackground(new java.awt.Color(248, 249, 250));
+        inpMinHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpMinHarga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpMinHarga.setName("Nama Menu"); // NOI18N
+        inpMinHarga.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpNamaKeyReleased(evt);
+                inpMinHargaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpMinHargaKeyTyped(evt);
             }
         });
 
@@ -72,58 +156,35 @@ public class UpdateDiskon extends javax.swing.JFrame {
         lblData2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-bulan.png"))); // NOI18N
         lblData2.setText("Tanggal Mulai");
 
-        inpHarga.setBackground(new java.awt.Color(248, 249, 250));
-        inpHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpHarga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpHarga.setName("Harga"); // NOI18N
-        inpHarga.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpHargaKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpHargaKeyTyped(evt);
-            }
-        });
-
         lblData4.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblData4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-shift.png"))); // NOI18N
         lblData4.setText("Tanggal Akhir");
 
-        inpDiskon.setBackground(new java.awt.Color(248, 249, 250));
-        inpDiskon.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpDiskon.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpDiskon.setName("Harga"); // NOI18N
-        inpDiskon.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpDiskonKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpDiskonKeyTyped(evt);
-            }
-        });
-
         lblTitle.setFont(new java.awt.Font("Dialog", 1, 26)); // NOI18N
         lblTitle.setForeground(new java.awt.Color(250, 22, 22));
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTitle.setText("Data Menu");
+        lblTitle.setText("Update Diskon");
 
-        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
-        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+        lineTop.setBackground(new java.awt.Color(0, 0, 0));
+        lineTop.setForeground(new java.awt.Color(0, 0, 0));
 
-        jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
-        jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
+        lineBottom.setBackground(new java.awt.Color(0, 0, 0));
+        lineBottom.setForeground(new java.awt.Color(0, 0, 0));
 
-        inpNama1.setBackground(new java.awt.Color(248, 249, 250));
-        inpNama1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpNama1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpNama1.setName("Nama Menu"); // NOI18N
-        inpNama1.addKeyListener(new java.awt.event.KeyAdapter() {
+        inpTtlDiskon.setBackground(new java.awt.Color(248, 249, 250));
+        inpTtlDiskon.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpTtlDiskon.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpTtlDiskon.setName("Nama Menu"); // NOI18N
+        inpTtlDiskon.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpNama1KeyReleased(evt);
+                inpTtlDiskonKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpTtlDiskonKeyTyped(evt);
             }
         });
 
-        btnSimpan.setBackground(new java.awt.Color(34, 119, 237));
+        btnSimpan.setBackground(new java.awt.Color(41, 180, 50));
         btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
         btnSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-simpan.png"))); // NOI18N
         btnSimpan.setText("Simpan");
@@ -159,47 +220,51 @@ public class UpdateDiskon extends javax.swing.JFrame {
             }
         });
 
+        inpTglMulai.setBackground(new java.awt.Color(248, 249, 250));
+        inpTglMulai.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        inpTglAKhir.setBackground(new java.awt.Color(248, 249, 250));
+        inpTglAKhir.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnHapus)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(202, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblData4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpDiskon))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblData2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpHarga))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpNama))
-                            .addComponent(jSeparator2)
-                            .addComponent(jSeparator1)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 10, Short.MAX_VALUE))
+                                .addComponent(inpMinHarga))
+                            .addComponent(lineBottom)
+                            .addComponent(lineTop)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblData1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpNama1)))
-                        .addGap(19, 19, 19))))
+                                .addComponent(inpTtlDiskon))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblData2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpTglMulai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblData4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpTglAKhir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(22, 22, 22))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,7 +272,7 @@ public class UpdateDiskon extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -215,26 +280,26 @@ public class UpdateDiskon extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inpNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inpMinHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblData1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inpNama1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inpTtlDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inpTglMulai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblData4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inpDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                    .addComponent(lblData4, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(inpTglAKhir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -245,39 +310,23 @@ public class UpdateDiskon extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inpNamaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNamaKeyReleased
+    private void inpMinHargaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpMinHargaKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.inpJenis.requestFocus();
+            this.inpTtlDiskon.requestFocus();
         }
-    }//GEN-LAST:event_inpNamaKeyReleased
+    }//GEN-LAST:event_inpMinHargaKeyReleased
 
-    private void inpHargaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
- 
-        }
-    }//GEN-LAST:event_inpHargaKeyReleased
-
-    private void inpHargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyTyped
-        this.txt.decimalOnly(evt);
-    }//GEN-LAST:event_inpHargaKeyTyped
-
-    private void inpDiskonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpDiskonKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpDiskonKeyReleased
-
-    private void inpDiskonKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpDiskonKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpDiskonKeyTyped
-
-    private void inpNama1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNama1KeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpNama1KeyReleased
+    private void inpTtlDiskonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpTtlDiskonKeyReleased
+        
+    }//GEN-LAST:event_inpTtlDiskonKeyReleased
 
     private void btnSimpanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSimpanMouseEntered
         this.btnSimpan.setIcon(Gambar.getIcon("ic-data-simpan-entered.png"));
@@ -288,24 +337,7 @@ public class UpdateDiskon extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSimpanMouseExited
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        try{
-            switch(this.kondisi){
-                case TAMBAH :
-                this.tambahDataMenu();
-                Message.showInformation(this, "Data berhasil ditambahkan!");
-                this.dispose();
-                break;
-                case EDIT :
-                this.editDataMenu();
-                Message.showInformation(this, "Data berhasil diedit!");
-                this.dispose();
-                new Triggers().updateMenu();
-                break;
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            Message.showException(this, ex);
-        }
+
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void btnHapusMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseEntered
@@ -317,14 +349,22 @@ public class UpdateDiskon extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusMouseExited
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        this.win.dispose();
         this.dispose();
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void inpMinHargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpMinHargaKeyTyped
+        this.text.decimalOnly(evt);
+    }//GEN-LAST:event_inpMinHargaKeyTyped
+
+    private void inpTtlDiskonKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpTtlDiskonKeyTyped
+        this.text.decimalOnly(evt);
+    }//GEN-LAST:event_inpTtlDiskonKeyTyped
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -333,14 +373,20 @@ public class UpdateDiskon extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateDiskon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TambahDiskon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
-                new UpdateDiskon().setVisible(true);
+                TambahDiskon dialog = new TambahDiskon(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -348,19 +394,19 @@ public class UpdateDiskon extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnHapus;
     private javax.swing.JButton btnSimpan;
-    private javax.swing.JTextField inpDiskon;
-    private javax.swing.JTextField inpHarga;
     private javax.swing.JTextField inpId;
-    private javax.swing.JTextField inpNama;
-    private javax.swing.JTextField inpNama1;
+    private javax.swing.JTextField inpMinHarga;
+    private com.toedter.calendar.JDateChooser inpTglAKhir;
+    private com.toedter.calendar.JDateChooser inpTglMulai;
+    private javax.swing.JTextField inpTtlDiskon;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblData1;
     private javax.swing.JLabel lblData2;
     private javax.swing.JLabel lblData4;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JSeparator lineBottom;
+    private javax.swing.JSeparator lineTop;
     // End of variables declaration//GEN-END:variables
 }

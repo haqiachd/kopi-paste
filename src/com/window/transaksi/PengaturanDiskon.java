@@ -75,12 +75,6 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         columnModel.getColumn(3).setMaxWidth(230);
         columnModel.getColumn(4).setPreferredWidth(230);
         columnModel.getColumn(4).setMaxWidth(230);
-//        columnModel.getColumn(5).setPreferredWidth(140);
-//        columnModel.getColumn(5).setMaxWidth(140);
-//        columnModel.getColumn(6).setPreferredWidth(140);
-//        columnModel.getColumn(6).setMaxWidth(140);
-//        columnModel.getColumn(5).setPreferredWidth(210);
-//        columnModel.getColumn(5).setMaxWidth(210);
     }
     
     private void showDiskon(){
@@ -121,8 +115,8 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         lblClose = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDiskon = new javax.swing.JTable();
-        btnDetail = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnTambah = new javax.swing.JButton();
         lineBottom = new javax.swing.JSeparator();
         btnHapus = new javax.swing.JButton();
 
@@ -136,7 +130,7 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         pnlMain.setRoundTopRight(30);
 
         lblDialogName.setFont(new java.awt.Font("Dialog", 1, 28)); // NOI18N
-        lblDialogName.setForeground(new java.awt.Color(26, 105, 243));
+        lblDialogName.setForeground(new java.awt.Color(250, 22, 22));
         lblDialogName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDialogName.setText("Pengaturan Diskon");
         lblDialogName.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
@@ -185,23 +179,41 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tblDiskon);
 
-        btnDetail.setBackground(new java.awt.Color(0, 153, 255));
-        btnDetail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        btnDetail.setForeground(new java.awt.Color(255, 255, 255));
-        btnDetail.setText("Update");
-        btnDetail.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setBackground(new java.awt.Color(34, 119, 237));
+        btnEdit.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        btnEdit.setForeground(new java.awt.Color(255, 255, 255));
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-edit.png"))); // NOI18N
+        btnEdit.setText("Update");
+        btnEdit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnEditMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnEditMouseExited(evt);
+            }
+        });
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDetailActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
-        btnUpdate.setBackground(new java.awt.Color(255, 102, 0));
-        btnUpdate.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setText("Tambah");
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+        btnTambah.setBackground(new java.awt.Color(41, 180, 50));
+        btnTambah.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        btnTambah.setForeground(new java.awt.Color(255, 255, 255));
+        btnTambah.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-tambah.png"))); // NOI18N
+        btnTambah.setText("Tambah");
+        btnTambah.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnTambahMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnTambahMouseExited(evt);
+            }
+        });
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                btnTambahActionPerformed(evt);
             }
         });
 
@@ -211,7 +223,16 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         btnHapus.setBackground(new java.awt.Color(220, 41, 41));
         btnHapus.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnHapus.setForeground(new java.awt.Color(255, 255, 255));
+        btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-hapus.png"))); // NOI18N
         btnHapus.setText("Hapus");
+        btnHapus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnHapusMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnHapusMouseExited(evt);
+            }
+        });
         btnHapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHapusActionPerformed(evt);
@@ -225,24 +246,23 @@ public class PengaturanDiskon extends javax.swing.JDialog {
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblDialogName, javax.swing.GroupLayout.PREFERRED_SIZE, 763, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addComponent(lblDialogName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblClose, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lineTop, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
-                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(pnlMainLayout.createSequentialGroup()
-                                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
-                                .addComponent(lineBottom)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lineTop)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
+                            .addComponent(lineBottom))
+                        .addGap(0, 28, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlMainLayout.setVerticalGroup(
@@ -260,8 +280,8 @@ public class PengaturanDiskon extends javax.swing.JDialog {
                 .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDetail)
-                    .addComponent(btnUpdate)
+                    .addComponent(btnEdit)
+                    .addComponent(btnTambah)
                     .addComponent(btnHapus))
                 .addGap(16, 16, 16))
         );
@@ -302,17 +322,43 @@ public class PengaturanDiskon extends javax.swing.JDialog {
 
     }//GEN-LAST:event_tblDiskonKeyPressed
 
-    private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
 
-    }//GEN-LAST:event_btnDetailActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-  
-    }//GEN-LAST:event_btnUpdateActionPerformed
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        TambahDiskon pop = new TambahDiskon(null, true, TambahDiskon.TAMBAH, "");
+        pop.setLocation(pop.getX(), this.getY());
+        pop.setVisible(true);
+    }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
 
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnTambahMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTambahMouseEntered
+        this.btnTambah.setIcon(Gambar.getIcon("ic-data-tambah-entered.png"));
+    }//GEN-LAST:event_btnTambahMouseEntered
+
+    private void btnTambahMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTambahMouseExited
+        this.btnTambah.setIcon(Gambar.getIcon("ic-data-tambah.png"));
+    }//GEN-LAST:event_btnTambahMouseExited
+
+    private void btnEditMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseEntered
+        this.btnEdit.setIcon(Gambar.getIcon("ic-data-edit.png"));
+    }//GEN-LAST:event_btnEditMouseEntered
+
+    private void btnEditMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseExited
+        this.btnEdit.setIcon(Gambar.getIcon("ic-data-edit.png"));
+    }//GEN-LAST:event_btnEditMouseExited
+
+    private void btnHapusMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseEntered
+        this.btnHapus.setIcon(Gambar.getIcon("ic-data-hapus-entered.png"));
+    }//GEN-LAST:event_btnHapusMouseEntered
+
+    private void btnHapusMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseExited
+        this.btnHapus.setIcon(Gambar.getIcon("ic-data-hapus.png"));
+    }//GEN-LAST:event_btnHapusMouseExited
 
 
     public static void main(String args[]) {
@@ -344,9 +390,9 @@ public class PengaturanDiskon extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDetail;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnTambah;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblClose;
     private javax.swing.JLabel lblDialogName;
