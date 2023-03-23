@@ -3,11 +3,15 @@ package com.window.transaksi;
 import com.koneksi.Database;
 import com.manage.Message;
 import com.manage.Text;
+import com.media.Audio;
 import com.media.Gambar;
+import com.window.DataMenu;
 import com.window.dialog.PopUpBackground;
+import com.window.get.GetDataMenu;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -323,17 +327,64 @@ public class PengaturanDiskon extends javax.swing.JDialog {
     }//GEN-LAST:event_tblDiskonKeyPressed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-
+        UpdateDiskon pop = new UpdateDiskon(null, true, UpdateDiskon.EDIT, this.tblDiskon.getValueAt(this.tblDiskon.getSelectedRow(), 0).toString());
+        pop.setLocation(pop.getX(), this.getY());
+        pop.setVisible(true);
+        
+        // reset tabel diskon
+        this.showDiskon();
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-        TambahDiskon pop = new TambahDiskon(null, true, TambahDiskon.TAMBAH, "");
+        UpdateDiskon pop = new UpdateDiskon(null, true, UpdateDiskon.TAMBAH, "");
         pop.setLocation(pop.getX(), this.getY());
         pop.setVisible(true);
+        
+        // reset tabel diskon
+        this.showDiskon();
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-
+        int status;
+        try {
+            // mengecek apakah ada data yang dipilih atau tidak
+            if (this.tblDiskon.getSelectedRow() > -1) {
+                // membuka confirm dialog untuk menghapus data
+                Audio.play(Audio.SOUND_INFO);
+                status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus diskon?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+                // mengecek pilihan dari jdialog
+                switch (status) {
+                    // jika yes maka diskon akan dihapus
+                    case JOptionPane.YES_OPTION:
+                        // menghapus diskon
+                        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                        String idDiskon = this.tblDiskon.getValueAt(this.tblDiskon.getSelectedRow(), 0).toString(),
+                         sql = "DELETE FROM diskon WHERE id_diskon = '" + idDiskon + "'";
+                        
+                        // mengecek kesamaan id
+                        if(!idDiskon.equalsIgnoreCase(this.tblDiskon.getValueAt(this.tblDiskon.getSelectedRow(), 0).toString())){
+                            Message.showWarning(this, "Diskon gagal dihapus!");
+                            this.tblDiskon.removeRowSelectionInterval(this.tblDiskon.getSelectedRow(), this.tblDiskon.getSelectedRow());
+                            return;
+                        }
+                        // mengecek apakah data supplier berhasil terhapus atau tidak
+                        if (this.dbase.stat.executeUpdate(sql) > 0) {
+                            Message.showInformation(this, "Diskon berhasil dihapus!");
+                            // reset data menu
+                            this.showDiskon();
+                        } else {
+                            Message.showWarning(this, "Diskon gagal dihapus!");
+                        }
+                        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        break;
+                }
+            } else {
+                Message.showWarning(this, "Tidak ada diskon yang dipilih!");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnTambahMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTambahMouseEntered
