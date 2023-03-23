@@ -737,13 +737,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         lblKaryawan = new javax.swing.JLabel();
         inpKaryawan = new javax.swing.JComboBox();
         lblNamaMenu = new javax.swing.JLabel();
-        lblHistori = new javax.swing.JLabel();
+        btnPengaturan = new javax.swing.JLabel();
         lblTotalBayar = new javax.swing.JLabel();
         lblTotalBayarRp = new javax.swing.JLabel();
         inpTotalBayar = new javax.swing.JTextField();
         lblTotalKembalian = new javax.swing.JLabel();
         lblTotalKembalianRp = new javax.swing.JLabel();
         inpTotalKembalian = new javax.swing.JTextField();
+        btnHistori = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1281,19 +1282,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         lblNamaMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
         lblNamaMenu.setText("Nama Menu");
 
-        lblHistori.setForeground(new java.awt.Color(255, 0, 51));
-        lblHistori.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblHistori.setText("Histori Transaksi Hari Ini");
-        lblHistori.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        lblHistori.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnPengaturan.setForeground(new java.awt.Color(0, 102, 255));
+        btnPengaturan.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnPengaturan.setText("Pengaturan");
+        btnPengaturan.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        btnPengaturan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblHistoriMouseClicked(evt);
+                btnPengaturanMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblHistoriMouseEntered(evt);
+                btnPengaturanMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblHistoriMouseExited(evt);
+                btnPengaturanMouseExited(evt);
             }
         });
 
@@ -1357,6 +1358,22 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             }
         });
 
+        btnHistori.setForeground(new java.awt.Color(255, 0, 0));
+        btnHistori.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btnHistori.setText("Histori Transaksi Hari Ini");
+        btnHistori.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        btnHistori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnHistoriMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnHistoriMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnHistoriMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -1402,38 +1419,40 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lblServerTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                        .addComponent(lblServerTime, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE))))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(lblJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblHistori, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblTotalHargaRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(lblIDTransaksi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(pnlContentLayout.createSequentialGroup()
+                                .addComponent(lblTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(inpTotalHarga)
-                                        .addComponent(inpIdTransaksi)
-                                        .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(12, 12, 12)))))
+                                .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                .addComponent(lblTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                .addComponent(lblTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblTotalHargaRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblIDTransaksi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(inpTotalHarga)
+                                .addComponent(inpIdTransaksi)
+                                .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12))
+                    .addGroup(pnlContentLayout.createSequentialGroup()
+                        .addGap(758, 758, 758)
+                        .addComponent(btnHistori, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPengaturan, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(22, 22, 22))
         );
         pnlContentLayout.setVerticalGroup(
@@ -1466,7 +1485,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                         .addGap(3, 3, 3)
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(butNutupinBugAja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblHistori)))
+                            .addComponent(btnPengaturan)
+                            .addComponent(btnHistori)))
                     .addGroup(pnlContentLayout.createSequentialGroup()
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblIDTransaksi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1925,33 +1945,18 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         System.out.println("Nama : " + namaKaryawan);
     }//GEN-LAST:event_inpKaryawanActionPerformed
 
-    private void lblHistoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseClicked
-        HistoriTransaksi his = new HistoriTransaksi(null, true, HistoriTransaksi.STATUS_JUAL);
-        his.setVisible(true);
-        
-        if(his.isIdSelected()){
-            // update status transaksi menjadi mode update
-            this.isUpdateTr = true;
-            
-            // mengkosongkan data transaksi
-            this.resetTransaksi();
-            
-            // mengupdate id transaksi
-            this.idTransaksi = his.getIdSelected();
-            this.inpIdTransaksi.setText(this.idTransaksi);
+    private void btnPengaturanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengaturanMouseClicked
+        PengaturanDiskon setting = new PengaturanDiskon(null, true);
+        setting.setVisible(true);
+    }//GEN-LAST:event_btnPengaturanMouseClicked
 
-            // panggil method showUPdateTarnsaksi
-            this.showUpdateTransaksi();
-        }
-    }//GEN-LAST:event_lblHistoriMouseClicked
+    private void btnPengaturanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengaturanMouseEntered
+        this.btnPengaturan.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_btnPengaturanMouseEntered
 
-    private void lblHistoriMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseEntered
-        this.lblHistori.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_lblHistoriMouseEntered
-
-    private void lblHistoriMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHistoriMouseExited
-        this.lblHistori.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-    }//GEN-LAST:event_lblHistoriMouseExited
+    private void btnPengaturanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengaturanMouseExited
+        this.btnPengaturan.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+    }//GEN-LAST:event_btnPengaturanMouseExited
 
     private void inpTotalBayarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpTotalBayarMouseClicked
         
@@ -2026,6 +2031,34 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_inpTotalBayarKeyReleased
 
+    private void btnHistoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistoriMouseClicked
+        HistoriTransaksi his = new HistoriTransaksi(null, true, HistoriTransaksi.STATUS_JUAL);
+        his.setVisible(true);
+        
+        if(his.isIdSelected()){
+            // update status transaksi menjadi mode update
+            this.isUpdateTr = true;
+            
+            // mengkosongkan data transaksi
+            this.resetTransaksi();
+            
+            // mengupdate id transaksi
+            this.idTransaksi = his.getIdSelected();
+            this.inpIdTransaksi.setText(this.idTransaksi);
+
+            // panggil method showUPdateTarnsaksi
+            this.showUpdateTransaksi();
+        }
+    }//GEN-LAST:event_btnHistoriMouseClicked
+
+    private void btnHistoriMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistoriMouseEntered
+        this.btnHistori.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_btnHistoriMouseEntered
+
+    private void btnHistoriMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHistoriMouseExited
+        this.btnHistori.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_btnHistoriMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -2057,11 +2090,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private javax.swing.JLabel btnDashboard;
     private javax.swing.JLabel btnDataMaster;
     private javax.swing.JToggleButton btnHapus;
+    private javax.swing.JLabel btnHistori;
     private javax.swing.JLabel btnKaryawan;
     private javax.swing.JLabel btnLaporan;
     private javax.swing.JLabel btnLogout;
     private javax.swing.JLabel btnMenu;
     private javax.swing.JLabel btnPembeli;
+    private javax.swing.JLabel btnPengaturan;
     private javax.swing.JLabel btnSupplier;
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JToggleButton btnUpdateMenu;
@@ -2080,7 +2115,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblHarga;
-    private javax.swing.JLabel lblHistori;
     private javax.swing.JLabel lblIDTransaksi;
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblIdMenu;

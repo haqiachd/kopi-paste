@@ -53,6 +53,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpDiskon.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         this.idSelected = id;
         this.kondisi = kondisi;
@@ -212,6 +213,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         lblData2 = new javax.swing.JLabel();
         inpHarga = new com.ui.RoundedTextField(15);
         inpJenis = new javax.swing.JComboBox();
+        lblData4 = new javax.swing.JLabel();
+        inpDiskon = new com.ui.RoundedTextField(15);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -327,6 +330,23 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             }
         });
 
+        lblData4.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblData4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-stock.png"))); // NOI18N
+        lblData4.setText("Diskon");
+
+        inpDiskon.setBackground(new java.awt.Color(248, 249, 250));
+        inpDiskon.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpDiskon.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpDiskon.setName("Harga"); // NOI18N
+        inpDiskon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpDiskonKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpDiskonKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -356,7 +376,11 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblData2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpHarga)))
+                        .addComponent(inpHarga))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblData4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpDiskon)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -382,7 +406,11 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblData4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inpDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -478,6 +506,14 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_inpJenisKeyReleased
 
+    private void inpDiskonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpDiskonKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpDiskonKeyReleased
+
+    private void inpDiskonKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpDiskonKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpDiskonKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -510,6 +546,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnHapus;
     private javax.swing.JButton btnSimpan;
+    private javax.swing.JTextField inpDiskon;
     private javax.swing.JTextField inpHarga;
     private javax.swing.JTextField inpId;
     private javax.swing.JComboBox inpJenis;
@@ -517,6 +554,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblData1;
     private javax.swing.JLabel lblData2;
+    private javax.swing.JLabel lblData4;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblTitle;

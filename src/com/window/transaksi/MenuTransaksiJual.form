@@ -550,7 +550,7 @@
                                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                                   <Component id="btnHapus" min="-2" pref="101" max="-2" attributes="0"/>
                                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                  <Component id="lblServerTime" max="32767" attributes="0"/>
+                                                  <Component id="lblServerTime" pref="651" max="32767" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -561,40 +561,41 @@
                                   <Component id="lblJumlah" min="-2" pref="147" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="inpJumlah" min="-2" pref="87" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblHistori" alignment="1" min="-2" pref="237" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Group type="102" attributes="0">
-                                                  <Component id="lblTotalKembalian" min="-2" pref="150" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="lblTotalKembalianRp" max="32767" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="lblTotalBayar" min="-2" pref="150" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="lblTotalBayarRp" max="32767" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="lblTotalHarga" min="-2" pref="150" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="lblTotalHargaRp" min="-2" pref="37" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Component id="lblIDTransaksi" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                  <Component id="inpTotalHarga" max="32767" attributes="0"/>
-                                                  <Component id="inpIdTransaksi" max="32767" attributes="0"/>
-                                                  <Component id="inpTotalBayar" min="-2" pref="226" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Component id="inpTotalKembalian" min="-2" pref="226" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <EmptySpace pref="336" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="lblTotalKembalian" min="-2" pref="150" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="lblTotalKembalianRp" max="32767" attributes="0"/>
                                       </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="lblTotalBayar" min="-2" pref="150" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="lblTotalBayarRp" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="lblTotalHarga" min="-2" pref="150" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="lblTotalHargaRp" min="-2" pref="37" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="lblIDTransaksi" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
                                   </Group>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="inpTotalHarga" max="32767" attributes="0"/>
+                                          <Component id="inpIdTransaksi" max="32767" attributes="0"/>
+                                          <Component id="inpTotalBayar" min="-2" pref="226" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="inpTotalKembalian" min="-2" pref="226" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="-2" pref="758" max="-2" attributes="0"/>
+                                  <Component id="btnHistori" min="-2" pref="201" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btnPengaturan" min="-2" pref="70" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
@@ -637,7 +638,8 @@
                                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="butNutupinBugAja" alignment="3" max="32767" attributes="0"/>
-                                      <Component id="lblHistori" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnPengaturan" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnHistori" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -1133,19 +1135,19 @@
                     <Property name="text" type="java.lang.String" value="Nama Menu"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblHistori">
+                <Component class="javax.swing.JLabel" name="btnPengaturan">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="33" green="0" red="ff" type="rgb"/>
+                      <Color blue="ff" green="66" red="0" type="rgb"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Histori Transaksi Hari Ini"/>
+                    <Property name="text" type="java.lang.String" value="Pengaturan"/>
                     <Property name="verticalAlignment" type="int" value="3"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblHistoriMouseClicked"/>
-                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblHistoriMouseEntered"/>
-                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblHistoriMouseExited"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnPengaturanMouseClicked"/>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnPengaturanMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnPengaturanMouseExited"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTotalBayar">
@@ -1240,6 +1242,21 @@
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpTotalKembalianMouseClicked"/>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpTotalKembalianActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="btnHistori">
+                  <Properties>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="0" green="0" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="Histori Transaksi Hari Ini"/>
+                    <Property name="verticalAlignment" type="int" value="3"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHistoriMouseClicked"/>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHistoriMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHistoriMouseExited"/>
                   </Events>
                 </Component>
               </SubComponents>
