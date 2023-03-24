@@ -40,17 +40,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private String idTransaksi, idMenu = "", namaMenu, jenisMenu, idKaryawan, namaKaryawan;
     
     private int hargaMenu // harga dari menu
+               ,diskonMenu // diskon menu
                ,jumlah // jumlah menu yg dipilih
                ,ttlHrgMenu // total harga dari menu (harga menu * jumlah menu)
+               ,ttlDiskonMenu // total dari diskon 
                ,ttlSeluruahHarga = 0 // total keseluruhan harga dari menu
                ,ttlBayar = 0 // total uang yang dibayarkan pembeli
                ,ttlKembalian = 0; // total kembalian
     
+    private DefaultTableModel tblModel;
+    
     private final Database db = new Database();
     
     private final UIManager win = new UIManager();
-    
-    private DefaultTableModel tblModel;
     
     private final Text txt = new Text();
     
@@ -108,6 +110,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.tabelTr.getTableHeader().setForeground(new java.awt.Color(0, 0, 0));
         
         // set margin textfield
+        this.inpIdTransaksi.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpIdMenu.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNamaMenu.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -124,9 +127,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.btnLaporan.setVisible(false);
         }
         
-        this.showListKaryawan();
         this.inpJumlah.requestFocus();
-        
     }
     
     public MenuTransaksiJual(String idTransaksi){
@@ -166,28 +167,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         return null;
     }
     
-    private void showListKaryawan(){
-        try{
-            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, us.level "
-                       + "FROM karyawan AS ky "
-                       + "JOIN user AS us "
-                       + "ON ky.id_karyawan = us.id_karyawan ";
-            
-            if(!User.isDeveloper()){
-                sql += "WHERE us.level != 'DEVELOPER'";
-            }
-            
-            this.db.res = this.db.stat.executeQuery(sql);
-            
-            while(this.db.res.next()){
-                this.inpKaryawan.addItem(this.db.res.getString("ky.id_karyawan") + " | " + this.db.res.getString("ky.nama_karyawan"));
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            Message.showException(this, ex);
-        }
-    }
-    
     private void changeButton(){
         if(this.isEdit){
             this.btnUpdateMenu.setText("Edit");
@@ -213,12 +192,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.db.res = this.db.stat.executeQuery(sql);
 
             if(this.db.res.next()){
-                this.inpIdMenu.setText(idMenu);
                 // mendapatkan data menu
                 this.namaMenu = this.db.res.getString("nama_menu");
                 this.jenisMenu = this.db.res.getString("jenis");
-                this.hargaMenu = Integer.parseInt(this.db.res.getString("harga"));
+                this.hargaMenu = this.db.res.getInt("harga");
+                this.diskonMenu = this.db.res.getInt("diskon");
                 // menampilkan data menu ke window
+                this.inpIdMenu.setText(idMenu);
                 this.inpNamaMenu.setText(namaMenu);
                 this.inpHarga.setText(txt.toMoneyCase(""+hargaMenu));
 //                this.inpJenis.setText(this.jenisMenu);
@@ -238,7 +218,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.idMenu = this.tabelTr.getValueAt(row, 1).toString();
         this.namaMenu = this.tabelTr.getValueAt(row, 2).toString();
         this.hargaMenu = Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(row, 4).toString()));
-        this.jumlah = Integer.parseInt(this.tabelTr.getValueAt(row, 5).toString());
+        this.jumlah = Integer.parseInt(this.tabelTr.getValueAt(row, 6).toString());
         
         // menampilkan data menu
         this.inpIdMenu.setText(this.idMenu);
@@ -260,7 +240,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             if (this.inpIdMenu.getText().equals(String.valueOf(this.tabelTr.getValueAt(i, 1)))) {
                 // jika sudah ada maka data jumlah pada menu akan diupdate 
                 // dengan cara mendapatkan data jumlah baru dan ditambahkan dengan data jumlah yang lama
-                this.jumlah += Integer.parseInt(String.valueOf(this.tabelTr.getValueAt(i, 5)));
+                this.jumlah += Integer.parseInt(String.valueOf(this.tabelTr.getValueAt(i, 6)));
             }
         }
 
@@ -280,9 +260,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                     dataBaru = false;
                     
                     // update data jumlah yang ada didalam tabel
-                    model.setValueAt(Integer.toString(this.jumlah), i, 5);
+                    model.setValueAt(Integer.toString(this.jumlah), i, 6);
                     String total = Integer.toString(this.jumlah * hargaMenu);
-                    model.setValueAt(txt.toMoneyCase(total), i, 6);
+                    model.setValueAt(txt.toMoneyCase(total), i, 7);
                 }
             }
         }
@@ -296,12 +276,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 this.namaMenu,
                 this.jenisMenu,
                 this.txt.toMoneyCase(""+this.hargaMenu),
+                this.txt.toMoneyCase(this.diskonMenu),
                 this.inpJumlah.getText(),
                 this.txt.toMoneyCase(Integer.toString(this.ttlHrgMenu))
             });
         }
         
-        // meyimpan update tabel
+        // menyimpan update tabel
         tabelTr.setModel(model);
     }
     
@@ -310,11 +291,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         tblModel = new DefaultTableModel(
                 new String[][]{}, // default valuenya kosong
                 new String [] {
-                    "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga Menu", "Jumlah", "Total Harga"
+                    "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga Menu", "Diskon Menu", "Jumlah", "Total Harga"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             @Override
@@ -327,20 +308,22 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         
         // setting panjang kolom
         TableColumnModel columnModel = tabelTr.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(110);
-        columnModel.getColumn(0).setMaxWidth(110);
-        columnModel.getColumn(1).setPreferredWidth(110);
-        columnModel.getColumn(1).setMaxWidth(110);
+        columnModel.getColumn(0).setPreferredWidth(85);
+        columnModel.getColumn(0).setMaxWidth(85);
+        columnModel.getColumn(1).setPreferredWidth(65);
+        columnModel.getColumn(1).setMaxWidth(65);
         columnModel.getColumn(2).setPreferredWidth(220);
         columnModel.getColumn(2).setMaxWidth(300);
-        columnModel.getColumn(3).setPreferredWidth(220);
-        columnModel.getColumn(3).setMaxWidth(220);
-        columnModel.getColumn(4).setPreferredWidth(160);
-        columnModel.getColumn(4).setMaxWidth(160);
-        columnModel.getColumn(5).setPreferredWidth(60);
-        columnModel.getColumn(5).setMaxWidth(60);
-//        columnModel.getColumn(6).setPreferredWidth(160);
-//        columnModel.getColumn(6).setMaxWidth(160);
+        columnModel.getColumn(3).setPreferredWidth(150);
+        columnModel.getColumn(3).setMaxWidth(150);
+        columnModel.getColumn(4).setPreferredWidth(150);
+        columnModel.getColumn(4).setMaxWidth(150);
+        columnModel.getColumn(5).setPreferredWidth(150);
+        columnModel.getColumn(5).setMaxWidth(150);
+        columnModel.getColumn(6).setPreferredWidth(60);
+        columnModel.getColumn(6).setMaxWidth(60);
+//        columnModel.getColumn(7).setPreferredWidth(160);
+//        columnModel.getColumn(7).setMaxWidth(160);
     }
     
     // resset saat menamkan tombol tambah menu
@@ -365,6 +348,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.namaMenu = null;
         this.jumlah = 0;
         this.hargaMenu = 0;
+        this.diskonMenu = 0;
         this.ttlSeluruahHarga = 0;
         this.ttlBayar = 0;
         this.ttlKembalian = 0;
@@ -395,7 +379,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             // cek apakah data jumlah sudah dimasukan
             if (this.inpJumlah.getText().isEmpty()) {
                 Message.showWarning(this, "Jumlah menu belum dimasukan!");
-            } else {
+            } else{
                 this.editDataMenu();
             }
         }else{
@@ -423,9 +407,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void tambahDataMenu(){
         // update data total harga
         this.jumlah = Integer.parseInt(this.inpJumlah.getText());
-        this.ttlHrgMenu = hargaMenu * jumlah;
+//        this.ttlDiskonMenu
+        this.ttlHrgMenu = (hargaMenu-diskonMenu) * jumlah;
         this.ttlSeluruahHarga += this.ttlHrgMenu;
         this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlSeluruahHarga).substring(4));
+        this.inpTotalDiskon.setText(this.txt.toMoneyCase(this.getTotalDiskonMenu()*this.jumlah));
         // reset tabel dan textfield
         this.updateTabel();
         this.resetTambah();
@@ -443,11 +429,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 // mendapatkan data harga dari menu    
                 harga = Integer.parseInt(txt.removeMoneyCase(this.inpHarga.getText())),
                 // mendapatkan data total harga menu yang lama
-                oldTotalHarga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 6).toString())),
+                oldTotalHarga = Integer.parseInt(txt.removeMoneyCase(this.tabelTr.getValueAt(row, 7).toString())),
                 newTotalHarga;
             
             // menghitung total harga menu yang baru (jumlah menu * harga menu)
-            newTotalHarga = newJml * harga;
+            newTotalHarga = newJml * (harga-diskonMenu);
 
             if(newJml <= 0){
                 Message.showWarning(this, "Jumlah stok harus minimal 1");
@@ -459,9 +445,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.ttlSeluruahHarga = this.ttlSeluruahHarga + newTotalHarga;
 
             // mengupdate data yang ada di textfield dan di tabel
-            this.tabelTr.setValueAt(Integer.toString(newJml), row, 5);
-            this.tabelTr.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 6);
-            this.inpTotalHarga.setText(this.txt.toMoneyCase(""+ttlSeluruahHarga).substring(4));
+            this.tabelTr.setValueAt(txt.toMoneyCase(this.diskonMenu), row, 5);
+            this.tabelTr.setValueAt(Integer.toString(newJml), row, 6);
+            this.tabelTr.setValueAt(txt.toMoneyCase(""+newTotalHarga), row, 7);
+            this.inpTotalHarga.setText(this.txt.toMoneyCase(ttlSeluruahHarga).substring(4));
+            this.inpTotalDiskon.setText(this.txt.toMoneyCase(this.getTotalDiskonMenu()*newJml).substring(4));
             
             // reset data menu
             this.resetTambah();
@@ -482,7 +470,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void hapusDataMenu() {
         if(this.tabelTr.getSelectedRow() > -1){
             // mendapatkan total harga menu
-            String hrg = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 6).toString().substring(4).replaceAll(",", "").replaceAll("\\.", "");
+            String hrg = this.tabelTr.getValueAt(this.tabelTr.getSelectedRow(), 7).toString().substring(4).replaceAll(",", "").replaceAll("\\.", "");
             // mengurangi total harga bayar dengan total harga menu
             this.ttlSeluruahHarga = this.ttlSeluruahHarga - Integer.parseInt(hrg.substring(0, hrg.length()-2));
             // menampilkan ulang total harga bayar pada textfield
@@ -494,34 +482,52 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) tabelTr.getModel();
             model.removeRow(row);            
             
-            // update stok menu
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
     }
     
+    private int getTotalDiskonMenu(){
+        int ttlDiskon = 0;
+        for(int i = 0; i < this.tabelTr.getRowCount(); i++){
+            ttlDiskon += Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 5).toString()));
+        }
+        return ttlDiskon;
+    }
+    
     private int getTotalJumlahMenu(){
         int ttlJumlah = 0;
         for(int i = 0; i < this.tabelTr.getRowCount(); i++){
-            ttlJumlah += Integer.parseInt(this.tabelTr.getValueAt(i, 5).toString());
+            ttlJumlah += Integer.parseInt(this.tabelTr.getValueAt(i, 6).toString());
         }
-        
         return ttlJumlah;
     }
     
     private int getTotalHarga(){
         int ttlHarga = 0;
         for(int i = 0; i < this.tabelTr.getRowCount(); i++){
-            ttlHarga += Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
+            ttlHarga += Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 7).toString()));
         }
-        
         return ttlHarga;
+    }
+    
+    private int getDiskonToko(){
+        try{
+            String sql = "SELECT ttl_diskon "
+                    + "FROM diskon "
+                    + "WHERE tgl_akhir >= CURRENT_DATE() "
+                    + "AND min_harga <= 170000 "
+                    + "ORDER BY min_harga DESC LIMIT 0,1";
+        }catch(SQLException ex){
+            Message.showException(this, ex);
+        }
+        return 0;
     }
     
     private boolean transaksi(){
         try{
             // membuat query
-            String sql = "INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             this.idTransaksi = this.createID();
             
             // membuat preparedstatement
@@ -529,13 +535,15 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             
             // menambahkan data transaksi ke query
             this.db.pst.setString(1, this.idTransaksi);
-            this.db.pst.setString(2, this.idKaryawan);
-            this.db.pst.setString(3, this.namaKaryawan);
+            this.db.pst.setString(2, User.getIDKaryawan());
+            this.db.pst.setString(3, User.getNamaUser());
             this.db.pst.setInt(4, this.getTotalJumlahMenu());
             this.db.pst.setInt(5, this.getTotalHarga());
-            this.db.pst.setInt(6, this.ttlBayar);
-            this.db.pst.setInt(7, this.ttlKembalian);
-            this.db.pst.setString(8, waktu.getCurrentDateTime());
+            this.db.pst.setString(6, "DS001");
+            this.db.pst.setInt(7, this.getTotalDiskonMenu());
+            this.db.pst.setInt(8, this.ttlBayar);
+            this.db.pst.setInt(9, this.ttlKembalian);
+            this.db.pst.setString(10, waktu.getCurrentDateTime());
             
             // eksekusi query
             boolean isSuccess = this.db.pst.executeUpdate() > 0;
@@ -555,7 +563,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private boolean detailTransaksi(String idTransaksi){
         try{
             // membuat query
-            String sql = "INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO detail_tr_jual VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
             // membaca semua data yang ada didalam tabel
             for(int i = 0; i < this.tabelTr.getRowCount(); i++){
@@ -567,8 +575,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 this.db.pst.setString(3, this.tabelTr.getValueAt(i, 2).toString());
                 this.db.pst.setString(4, this.tabelTr.getValueAt(i, 3).toString());
                 this.db.pst.setString(5, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 4).toString()));
-                this.db.pst.setString(6, this.tabelTr.getValueAt(i, 5).toString());
-                this.db.pst.setString(7, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 6).toString()));
+                this.db.pst.setString(6, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 5).toString()));
+                this.db.pst.setString(7, this.tabelTr.getValueAt(i, 6).toString());
+                this.db.pst.setString(8, this.txt.removeMoneyCase(this.tabelTr.getValueAt(i, 7).toString()));
                 
                 // eksekusi query
                 this.db.pst.executeUpdate();
@@ -613,7 +622,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                     this.ttlBayar = this.db.res.getInt("t.total_bayar");
                     
                     // menampilkan data 
-                    this.inpKaryawan.setSelectedItem(String.format("%s | %s", this.idKaryawan, this.namaKaryawan));
+//                    this.inpKaryawan.setSelectedItem(String.format("%s | %s", this.idKaryawan, this.namaKaryawan));
                     this.inpTotalHarga.setText(txt.toMoneyCase(""+this.ttlSeluruahHarga).substring(4));
                     this.inpTotalBayar.setText(Integer.toString(this.ttlBayar));
                 }
@@ -626,6 +635,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                         this.db.res.getString("d.nama_menu"),
                         this.db.res.getString("d.jenis_menu"),
                         this.txt.toMoneyCase(this.db.res.getString("d.harga_menu")),
+                        this.txt.toMoneyCase(this.db.res.getString("d.diskon")),
                         this.db.res.getInt("d.jumlah"),
                         this.txt.toMoneyCase(this.db.res.getString("d.total_harga"))
                     }
@@ -641,6 +651,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }
     }
     
+    @Deprecated
     private boolean updateTransaksi(){
         try{
             // reset detail transaksi
@@ -726,16 +737,15 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         inpHarga = new com.ui.RoundedTextField(15);
         inpCariMenu = new javax.swing.JLabel();
         lblServerTime = new javax.swing.JLabel();
+        lblTotalDiskon = new javax.swing.JLabel();
+        lblTotalDiskonRp = new javax.swing.JLabel();
+        inpTotalDiskon = new javax.swing.JTextField();
         lblTotalHarga = new javax.swing.JLabel();
-        lblTotalHargaRp = new javax.swing.JLabel();
         inpTotalHarga = new javax.swing.JTextField();
-        lblIDTransaksi = new javax.swing.JLabel();
-        inpIdTransaksi = new javax.swing.JTextField();
         lblJumlah = new javax.swing.JLabel();
         inpJumlah = new com.ui.RoundedTextField(15);
         butNutupinBugAja = new javax.swing.JLabel();
-        lblKaryawan = new javax.swing.JLabel();
-        inpKaryawan = new javax.swing.JComboBox();
+        lblIdTransaksi = new javax.swing.JLabel();
         lblNamaMenu = new javax.swing.JLabel();
         btnPengaturan = new javax.swing.JLabel();
         lblTotalBayar = new javax.swing.JLabel();
@@ -745,6 +755,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         lblTotalKembalianRp = new javax.swing.JLabel();
         inpTotalKembalian = new javax.swing.JTextField();
         btnHistori = new javax.swing.JLabel();
+        inpIdTransaksi = new com.ui.RoundedTextField(15);
+        lblTotalHargaRp1 = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1047,13 +1059,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         tabelTr.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         tabelTr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"TRJ00001", "MN002", "Original Coffee", "Coffee", "Rp. 5000", "2", "Rp. 10.000"},
-                {"TRJ00001", "MN006", "Orange Juice", "Minuman", "Rp. 7000", "1", "Rp. 7.000"},
-                {"TRJ00001", "MN001", "Coklat Dingin", "Coffee", "Rp. 3000", "2", "Rp. 6.000"},
-                {"TRJ00001", "MN009", "Nasi Goreng", "Makanan", "Rp. 11.000", "1", "Rp. 11.000"}
+                {"TRJ00001", "MN002", "Original Coffee", "Coffee", "Rp. 5000", "Rp. 0", "2", "Rp. 10.000"},
+                {"TRJ00001", "MN006", "Orange Juice", "Minuman", "Rp. 7000", "Rp. 0", "1", "Rp. 7.000"},
+                {"TRJ00001", "MN001", "Coklat Dingin", "Coffee", "Rp. 3000", "Rp. 0", "2", "Rp. 6.000"},
+                {"TRJ00001", "MN009", "Nasi Goreng", "Makanan", "Rp. 11.000", "Rp. 1.000", "1", "Rp. 11.000"}
             },
             new String [] {
-                "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga Menu", "Jumlah", "Total Harga"
+                "ID Transaksi", "ID Menu", "Nama Menu", "Jenis Menu", "Harga Menu", "Diskon", "Jumlah", "Total Harga"
             }
         ));
         tabelTr.setGridColor(new java.awt.Color(0, 0, 0));
@@ -1199,13 +1211,34 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         lblServerTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblServerTime.setText("Server Time : Jumat, 18 November 2022 / 09:23:29");
 
-        lblTotalHarga.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        lblTotalHarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-totalharga.png"))); // NOI18N
-        lblTotalHarga.setText("Total Harga");
+        lblTotalDiskon.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblTotalDiskon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-totalharga.png"))); // NOI18N
+        lblTotalDiskon.setText("Total Diskon");
 
-        lblTotalHargaRp.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        lblTotalHargaRp.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblTotalHargaRp.setText("Rp");
+        lblTotalDiskonRp.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lblTotalDiskonRp.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTotalDiskonRp.setText("Rp");
+
+        inpTotalDiskon.setBackground(new java.awt.Color(237, 239, 242));
+        inpTotalDiskon.setFont(new java.awt.Font("Dialog", 1, 22)); // NOI18N
+        inpTotalDiskon.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpTotalDiskon.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 99, 210), 2));
+        inpTotalDiskon.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpTotalDiskon.setEnabled(false);
+        inpTotalDiskon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inpTotalDiskonMouseClicked(evt);
+            }
+        });
+        inpTotalDiskon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpTotalDiskonActionPerformed(evt);
+            }
+        });
+
+        lblTotalHarga.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblTotalHarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-idtransaksii.png"))); // NOI18N
+        lblTotalHarga.setText("Total Harga");
 
         inpTotalHarga.setBackground(new java.awt.Color(237, 239, 242));
         inpTotalHarga.setFont(new java.awt.Font("Dialog", 1, 22)); // NOI18N
@@ -1216,28 +1249,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         inpTotalHarga.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 inpTotalHargaMouseClicked(evt);
-            }
-        });
-        inpTotalHarga.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inpTotalHargaActionPerformed(evt);
-            }
-        });
-
-        lblIDTransaksi.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        lblIDTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-idtransaksii.png"))); // NOI18N
-        lblIDTransaksi.setText("ID Transaksi");
-
-        inpIdTransaksi.setBackground(new java.awt.Color(237, 239, 242));
-        inpIdTransaksi.setFont(new java.awt.Font("Dialog", 1, 22)); // NOI18N
-        inpIdTransaksi.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpIdTransaksi.setText("TRJ00001");
-        inpIdTransaksi.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(35, 99, 210), 2));
-        inpIdTransaksi.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpIdTransaksi.setEnabled(false);
-        inpIdTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                inpIdTransaksiMouseClicked(evt);
             }
         });
 
@@ -1265,18 +1276,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         butNutupinBugAja.setForeground(new java.awt.Color(255, 255, 255));
         butNutupinBugAja.setText("Can You See Me?");
 
-        lblKaryawan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblKaryawan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
-        lblKaryawan.setText("Karyawan");
-
-        inpKaryawan.setBackground(new java.awt.Color(248, 249, 250));
-        inpKaryawan.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpKaryawan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Karyawan" }));
-        inpKaryawan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inpKaryawanActionPerformed(evt);
-            }
-        });
+        lblIdTransaksi.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblIdTransaksi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
+        lblIdTransaksi.setText("ID Transaksi");
 
         lblNamaMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNamaMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
@@ -1374,6 +1376,22 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             }
         });
 
+        inpIdTransaksi.setBackground(new java.awt.Color(248, 249, 250));
+        inpIdTransaksi.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpIdTransaksi.setText(" TRJ00001");
+        inpIdTransaksi.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpIdTransaksi.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpIdTransaksi.setEnabled(false);
+        inpIdTransaksi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inpIdTransaksiMouseClicked(evt);
+            }
+        });
+
+        lblTotalHargaRp1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        lblTotalHargaRp1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTotalHargaRp1.setText("Rp");
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -1387,20 +1405,20 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlContentLayout.createSequentialGroup()
-                        .addComponent(lblKaryawan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpKaryawan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(inpIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlContentLayout.createSequentialGroup()
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblNamaMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
                             .addComponent(lblIdMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inpNamaMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnlContentLayout.createSequentialGroup()
                                 .addComponent(inpIdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpCariMenu))
-                            .addComponent(inpNamaMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(inpCariMenu)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlContentLayout.createSequentialGroup()
                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1430,21 +1448,24 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                             .addGroup(pnlContentLayout.createSequentialGroup()
                                 .addComponent(lblTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
                                 .addComponent(lblTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
-                                .addComponent(lblTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblTotalHarga, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblTotalDiskon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblTotalHargaRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblIDTransaksi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTotalDiskonRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblTotalHargaRp1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(inpTotalDiskon)
                                 .addComponent(inpTotalHarga)
-                                .addComponent(inpIdTransaksi)
                                 .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12))
@@ -1458,13 +1479,37 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         pnlContentLayout.setVerticalGroup(
             pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlContentLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(lblTotalHarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(inpTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblTotalHargaRp1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblKaryawan, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                            .addComponent(inpKaryawan))
-                        .addGap(11, 11, 11)
+                            .addComponent(lblTotalDiskon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblTotalDiskonRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inpTotalDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                            .addComponent(lblTotalBayar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblTotalKembalian, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(pnlContentLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inpIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblIdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1486,28 +1531,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(butNutupinBugAja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnPengaturan)
-                            .addComponent(btnHistori)))
-                    .addGroup(pnlContentLayout.createSequentialGroup()
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblIDTransaksi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(inpIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblTotalHarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblTotalHargaRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(inpTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                            .addComponent(lblTotalBayar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblTotalKembalian, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(btnHistori))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lineCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1758,10 +1782,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBayarMouseExited
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
-        if(this.inpKaryawan.getSelectedIndex() <= 0){
-            Message.showWarning(this, "Tidak ada karyawan yang dipilih!");
-            return;
-        }else if(this.tabelTr.getRowCount() <= 0){
+        if(this.tabelTr.getRowCount() <= 0){
             Message.showWarning(this, "Tidak ada menu yang dipilih!");
             return;
         }else if(!this.isUangCukup){
@@ -1887,13 +1908,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Tekan tombol cari untuk mengedit data menu!!");
     }//GEN-LAST:event_inpHargaMouseClicked
 
-    private void inpIdTransaksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpIdTransaksiMouseClicked
-        JOptionPane.showMessageDialog(this, "ID Transaksi tidak bisa diedit!!");
-    }//GEN-LAST:event_inpIdTransaksiMouseClicked
-
     private void inpTotalHargaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpTotalHargaMouseClicked
         JOptionPane.showMessageDialog(this, "Total harga akan terupdate otomatis saat menambahkan menu!!");
     }//GEN-LAST:event_inpTotalHargaMouseClicked
+
+    private void inpTotalDiskonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpTotalDiskonMouseClicked
+//        JOptionPane.showMessageDialog(this, "Total harga akan terupdate otomatis saat menambahkan menu!!");
+    }//GEN-LAST:event_inpTotalDiskonMouseClicked
 
     private void inpJumlahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpJumlahKeyTyped
         this.txt.decimalOnly(evt);
@@ -1928,22 +1949,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tabelTrKeyReleased
 
-    private void inpTotalHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpTotalHargaActionPerformed
+    private void inpTotalDiskonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpTotalDiskonActionPerformed
         
-    }//GEN-LAST:event_inpTotalHargaActionPerformed
+    }//GEN-LAST:event_inpTotalDiskonActionPerformed
 
     private void inpJumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpJumlahActionPerformed
         
     }//GEN-LAST:event_inpJumlahActionPerformed
-
-    private void inpKaryawanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpKaryawanActionPerformed
-        String data = this.inpKaryawan.getSelectedItem().toString();
-        // mendapatkan data karyawan
-        this.idKaryawan = data.substring(0, data.indexOf("|")-1);
-        this.namaKaryawan = data.substring(data.indexOf("|")+2);
-        System.out.println("ID : " + idKaryawan);
-        System.out.println("Nama : " + namaKaryawan);
-    }//GEN-LAST:event_inpKaryawanActionPerformed
 
     private void btnPengaturanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengaturanMouseClicked
         PengaturanDiskon setting = new PengaturanDiskon(null, true);
@@ -2059,6 +2071,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.btnHistori.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnHistoriMouseExited
 
+    private void inpIdTransaksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpIdTransaksiMouseClicked
+        JOptionPane.showMessageDialog(this, "ID Transaksi tidak bisa diedit!!");
+    }//GEN-LAST:event_inpIdTransaksiMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -2106,20 +2122,19 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private javax.swing.JTextField inpIdMenu;
     private javax.swing.JTextField inpIdTransaksi;
     private javax.swing.JTextField inpJumlah;
-    private javax.swing.JComboBox inpKaryawan;
     private javax.swing.JTextField inpNamaMenu;
     private javax.swing.JTextField inpTotalBayar;
+    private javax.swing.JTextField inpTotalDiskon;
     private javax.swing.JTextField inpTotalHarga;
     private javax.swing.JTextField inpTotalKembalian;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblHarga;
-    private javax.swing.JLabel lblIDTransaksi;
     private javax.swing.JLabel lblIconWindow;
     private javax.swing.JLabel lblIdMenu;
+    private javax.swing.JLabel lblIdTransaksi;
     private javax.swing.JLabel lblJumlah;
-    private javax.swing.JLabel lblKaryawan;
     private javax.swing.JLabel lblMenu;
     private javax.swing.JLabel lblNamaMenu;
     private javax.swing.JLabel lblNamaUser;
@@ -2131,8 +2146,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private javax.swing.JLabel lblTopSetting;
     private javax.swing.JLabel lblTotalBayar;
     private javax.swing.JLabel lblTotalBayarRp;
+    private javax.swing.JLabel lblTotalDiskon;
+    private javax.swing.JLabel lblTotalDiskonRp;
     private javax.swing.JLabel lblTotalHarga;
-    private javax.swing.JLabel lblTotalHargaRp;
+    private javax.swing.JLabel lblTotalHargaRp1;
     private javax.swing.JLabel lblTotalKembalian;
     private javax.swing.JLabel lblTotalKembalianRp;
     private javax.swing.JSeparator lineCenter;

@@ -511,9 +511,9 @@
                                   <Component id="inpHarga" min="-2" pref="267" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="lblKaryawan" min="-2" pref="147" max="-2" attributes="0"/>
+                                  <Component id="lblIdTransaksi" min="-2" pref="147" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="inpKaryawan" max="32767" attributes="0"/>
+                                  <Component id="inpIdTransaksi" min="-2" pref="152" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -522,12 +522,12 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="inpNamaMenu" alignment="1" min="-2" pref="267" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="inpIdMenu" min="-2" pref="107" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="inpCariMenu" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="inpNamaMenu" alignment="1" min="-2" pref="267" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -566,7 +566,7 @@
                                       <Group type="102" attributes="0">
                                           <Component id="lblTotalKembalian" min="-2" pref="150" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="lblTotalKembalianRp" max="32767" attributes="0"/>
+                                          <Component id="lblTotalKembalianRp" pref="37" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="lblTotalBayar" min="-2" pref="150" max="-2" attributes="0"/>
@@ -574,17 +574,22 @@
                                           <Component id="lblTotalBayarRp" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="lblTotalHarga" min="-2" pref="150" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="lblTotalHarga" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="lblTotalDiskon" alignment="0" pref="150" max="32767" attributes="0"/>
+                                          </Group>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="lblTotalHargaRp" min="-2" pref="37" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="lblTotalDiskonRp" min="-2" pref="37" max="-2" attributes="0"/>
+                                              <Component id="lblTotalHargaRp1" min="-2" pref="37" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
-                                      <Component id="lblIDTransaksi" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="inpTotalDiskon" max="32767" attributes="0"/>
                                           <Component id="inpTotalHarga" max="32767" attributes="0"/>
-                                          <Component id="inpIdTransaksi" max="32767" attributes="0"/>
                                           <Component id="inpTotalBayar" min="-2" pref="226" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="inpTotalKembalian" min="-2" pref="226" max="-2" attributes="0"/>
@@ -605,14 +610,45 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lblKaryawan" pref="37" max="32767" attributes="0"/>
-                                      <Component id="inpKaryawan" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="lblTotalHarga" max="32767" attributes="0"/>
+                                          <Component id="inpTotalHarga" min="-2" pref="44" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="lblTotalHargaRp1" min="-2" pref="44" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="lblTotalDiskon" max="32767" attributes="0"/>
+                                      <Component id="lblTotalDiskonRp" max="32767" attributes="0"/>
+                                      <Component id="inpTotalDiskon" min="-2" pref="44" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="inpTotalBayar" min="-2" pref="44" max="-2" attributes="0"/>
+                                      <Component id="lblTotalBayarRp" alignment="0" pref="46" max="32767" attributes="0"/>
+                                      <Component id="lblTotalBayar" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="lblTotalKembalian" pref="46" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lblTotalKembalianRp" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
+                                          <Component id="inpTotalKembalian" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="lblIdTransaksi" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <Component id="inpIdTransaksi" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="lblIdMenu" min="-2" pref="37" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -641,33 +677,6 @@
                                       <Component id="btnPengaturan" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnHistori" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lblIDTransaksi" max="32767" attributes="0"/>
-                                      <Component id="inpIdTransaksi" min="-2" pref="44" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lblTotalHarga" max="32767" attributes="0"/>
-                                      <Component id="lblTotalHargaRp" max="32767" attributes="0"/>
-                                      <Component id="inpTotalHarga" min="-2" pref="44" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="inpTotalBayar" min="-2" pref="44" max="-2" attributes="0"/>
-                                      <Component id="lblTotalBayarRp" alignment="0" pref="46" max="32767" attributes="0"/>
-                                      <Component id="lblTotalBayar" alignment="0" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lblTotalKembalian" pref="46" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="lblTotalKembalianRp" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
-                                          <Component id="inpTotalKembalian" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -702,7 +711,7 @@
                           <Font name="Ebrima" size="14" style="1"/>
                         </Property>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="7" rowCount="4">
+                          <Table columnCount="8" rowCount="4">
                             <Column editable="true" title="ID Transaksi" type="java.lang.Object">
                               <Data value="TRJ00001"/>
                               <Data value="TRJ00001"/>
@@ -732,6 +741,12 @@
                               <Data value="Rp. 7000"/>
                               <Data value="Rp. 3000"/>
                               <Data value="Rp. 11.000"/>
+                            </Column>
+                            <Column editable="true" title="Diskon" type="java.lang.Object">
+                              <Data value="Rp. 0"/>
+                              <Data value="Rp. 0"/>
+                              <Data value="Rp. 0"/>
+                              <Data value="Rp. 1.000"/>
                             </Column>
                             <Column editable="true" title="Jumlah" type="java.lang.Object">
                               <Data value="2"/>
@@ -970,7 +985,7 @@
                     <Property name="text" type="java.lang.String" value="Server Time : Jumat, 18 November 2022 / 09:23:29"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblTotalHarga">
+                <Component class="javax.swing.JLabel" name="lblTotalDiskon">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="18" style="1"/>
@@ -978,16 +993,53 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/resources/image/icons/ic-window-data-totalharga.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Total Harga"/>
+                    <Property name="text" type="java.lang.String" value="Total Diskon"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblTotalHargaRp">
+                <Component class="javax.swing.JLabel" name="lblTotalDiskonRp">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="24" style="1"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" value="Rp"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="inpTotalDiskon">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="f2" green="ef" red="ed" type="rgb"/>
+                    </Property>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="22" style="1"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                        <LineBorder thickness="2">
+                          <Color PropertyName="color" blue="d2" green="63" red="23" type="rgb"/>
+                        </LineBorder>
+                      </Border>
+                    </Property>
+                    <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="0" green="0" red="0" type="rgb"/>
+                    </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpTotalDiskonMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpTotalDiskonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblTotalHarga">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="18" style="1"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/image/icons/ic-window-data-idtransaksii.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Total Harga"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="inpTotalHarga">
@@ -1013,44 +1065,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpTotalHargaMouseClicked"/>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpTotalHargaActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblIDTransaksi">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="18" style="1"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/resources/image/icons/ic-window-data-idtransaksii.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="ID Transaksi"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="inpIdTransaksi">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="f2" green="ef" red="ed" type="rgb"/>
-                    </Property>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="22" style="1"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="TRJ00001"/>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder thickness="2">
-                          <Color PropertyName="color" blue="d2" green="63" red="23" type="rgb"/>
-                        </LineBorder>
-                      </Border>
-                    </Property>
-                    <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
-                    <Property name="enabled" type="boolean" value="false"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpIdTransaksiMouseClicked"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblJumlah">
@@ -1095,7 +1109,7 @@
                     <Property name="text" type="java.lang.String" value="Can You See Me?"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblKaryawan">
+                <Component class="javax.swing.JLabel" name="lblIdTransaksi">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="16" style="1"/>
@@ -1103,26 +1117,8 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/resources/image/icons/ic-window-data-id.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Karyawan"/>
+                    <Property name="text" type="java.lang.String" value="ID Transaksi"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="inpKaryawan">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
-                    </Property>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="16" style="1"/>
-                    </Property>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="1">
-                        <StringItem index="0" value="Pilih Karyawan"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inpKaryawanActionPerformed"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNamaMenu">
                   <Properties>
@@ -1258,6 +1254,41 @@
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHistoriMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHistoriMouseExited"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JTextField" name="inpIdTransaksi">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
+                    </Property>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="16" style="1"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value=" TRJ00001"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                        <LineBorder roundedCorners="true"/>
+                      </Border>
+                    </Property>
+                    <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="0" green="0" red="0" type="rgb"/>
+                    </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="inpIdTransaksiMouseClicked"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblTotalHargaRp1">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Tahoma" size="24" style="1"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="Rp"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

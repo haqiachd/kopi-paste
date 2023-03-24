@@ -5,9 +5,7 @@ import com.manage.Message;
 import com.manage.Text;
 import com.media.Audio;
 import com.media.Gambar;
-import com.window.DataMenu;
 import com.window.dialog.PopUpBackground;
-import com.window.get.GetDataMenu;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -33,6 +31,11 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         initComponents();
         this.setBackground(new Color(0,0,0,0));
         this.setLocationRelativeTo(null);
+        
+        // set ui button
+        this.btnTambah.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnEdit.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
 
         this.showDiskon();
     }
