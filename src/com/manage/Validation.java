@@ -1,6 +1,7 @@
 package com.manage;
 
 import com.media.Audio;
+import com.toedter.calendar.JDateChooser;
 import haqiachd.list.JListCustom;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -188,8 +189,16 @@ public class Validation {
         return true;
     }
     
-    public static void main(String[] args) {
-        
+    public static boolean isEmptyJDate(JDateChooser... dates){
+        // mengecek semua list apakah kosong atau tidak
+        for(JDateChooser date : dates){
+            // jika list kosong
+            if(date.getDate() == null){
+                Message.showWarning(null, "Data " + date.getName() + " tidak boleh kosong!");
+                return false;
+            }
+        }
+        return true;
     }
     
 }
