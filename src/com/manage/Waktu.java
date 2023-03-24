@@ -460,4 +460,8 @@ public class Waktu {
         c.setTime(d);
         return String.format("%d-%02d-%02d", c.get(Calendar.YEAR)-1900, c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
     } 
+    
+    public String dateToString(Date date){
+        return String.format("%d-%02d-%02d", date.getYear()+1900, date.getMonth()+1, date.getDate());
+    }
 }
