@@ -53,7 +53,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jSeparator1" max="32767" attributes="0"/>
-                      <Component id="jScrollPane1" pref="573" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="675" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="jLabel2" min="-2" pref="186" max="-2" attributes="0"/>
@@ -119,11 +119,17 @@
                   <Font name="Dialog" size="14" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="4">
+                  <Table columnCount="5" rowCount="4">
                     <Column editable="true" title="ID Menu" type="java.lang.Object"/>
                     <Column editable="true" title="Nama Menu" type="java.lang.Object"/>
+                    <Column editable="true" title="Jenis Menu" type="java.lang.Object"/>
                     <Column editable="true" title="Harga" type="java.lang.Object"/>
-                    <Column editable="true" title="Status" type="java.lang.Object"/>
+                    <Column editable="true" title="Diskon" type="java.lang.Object">
+                      <Data value=""/>
+                      <Data value="null"/>
+                      <Data value="null"/>
+                      <Data value="null"/>
+                    </Column>
                   </Table>
                 </Property>
                 <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

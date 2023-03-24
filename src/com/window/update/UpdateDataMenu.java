@@ -30,6 +30,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     
     private final PopUpBackground win = new PopUpBackground();
     
+    private final Text txt = new Text();
+    
     /**
      * Creates new form TambahDataBahan
      * @param parent
@@ -45,11 +47,11 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
         
         // set ui button
-        this.inpId.setEditable(false);
         this.btnSimpan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
         // set margin text field
+        this.inpId.setEditable(false);
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -107,7 +109,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private void showData(){
         try{
             // menyiapkan query untuk mendapatkan data dari menu
-            String sql = "SELECT nama_menu, jenis, jenis, harga FROM menu "
+            String sql = "SELECT nama_menu, jenis, diskon, harga FROM menu "
                        + "WHERE id_menu = '"+this.idSelected+"'";
             System.out.println(sql);
             
@@ -120,18 +122,12 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setSelectedItem(this.db.res.getString("jenis"));
                 this.inpHarga.setText(this.db.res.getString("harga"));
+                this.inpDiskon.setText(this.db.res.getString("diskon"));
             }
             
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
-        }
-    }
-    
-    private void resetDetailMenu() throws SQLException{
-        int result = this.db.stat.executeUpdate("DELETE FROM detail_menu WHERE id_menu = '"+this.idSelected+"'");
-        if(result > 0){
-            System.out.println("Reset detail menu");
         }
     }
     
@@ -151,21 +147,27 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         String id = this.inpId.getText(),
                nama = this.inpNama.getText(),
                jenis = this.inpJenis.getSelectedItem().toString(),
-               harga = this.inpHarga.getText();
+               harga = this.inpHarga.getText(),
+               diskon = this.inpDiskon.getText();
+        
+        if(Integer.parseInt(diskon) > Integer.parseInt(harga)){
+            Message.showInformation(this, "Diskon tidak boleh melebihi harga!");
+            return false;
+        }
         
         // menyiapkan query
-        String sql = "INSERT INTO menu VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO menu VALUES(?, ?, ?, ?, ?)";
         this.db.pst = this.db.conn.prepareStatement(sql);
         
         this.db.pst.setString(1, id);
         this.db.pst.setString(2, nama);
         this.db.pst.setString(3, jenis);
         this.db.pst.setString(4, harga);
+        this.db.pst.setString(5, diskon);
         
         // eksekusi query
         return this.db.pst.executeUpdate() > 0;
     }
-    
     
     private boolean editDataMenu() throws SQLException{
         
@@ -186,10 +188,16 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                nama = this.inpNama.getText(),
                jenis = this.inpJenis.getSelectedItem().toString(),
                harga = this.inpHarga.getText(),
+               diskon = this.inpDiskon.getText(),
                sql = String.format(
                        "UPDATE menu "
-                     + "SET nama_menu = '%s', jenis = '%s', harga = '%s' "
-                     + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, id);
+                     + "SET nama_menu = '%s', jenis = '%s', harga = '%s', diskon = '%s' "
+                     + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, diskon, id);
+        
+        if(Integer.parseInt(diskon) > Integer.parseInt(harga)){
+            Message.showInformation(this, "Diskon tidak boleh melebihi harga!");
+            return false;
+        }
         
         int result = this.db.stat.executeUpdate(sql);
         return result > 0;
@@ -475,7 +483,6 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnHapusActionPerformed
     
-    private Text txt = new Text();
     private void inpHargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyTyped
         this.txt.decimalOnly(evt);
     }//GEN-LAST:event_inpHargaKeyTyped

@@ -51,11 +51,11 @@ public class GetDataMenu extends javax.swing.JDialog {
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Menu", "Nama Menu", "Jenis", "Harga"
+                    "ID Menu", "Nama Menu", "Jenis", "Harga", "Diskon"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false
+                false, false, false, false, false
             };
 
             @Override
@@ -99,7 +99,7 @@ public class GetDataMenu extends javax.swing.JDialog {
         System.out.println("CEK");
         try{
             // query untuk mengambil data bahan menu pada tabel mysql
-            String sql = "SELECT id_menu, nama_menu, jenis, harga FROM menu " + keyword;
+            String sql = "SELECT id_menu, nama_menu, jenis, harga, diskon FROM menu " + keyword;
             System.out.println(sql);
 
             // eksekusi query
@@ -115,7 +115,8 @@ public class GetDataMenu extends javax.swing.JDialog {
                         id,
                         GetDataMenu.db.res.getString("nama_menu"),
                         GetDataMenu.db.res.getString("jenis"),
-                        text.toMoneyCase(GetDataMenu.db.res.getString("harga"))
+                        text.toMoneyCase(GetDataMenu.db.res.getString("harga")),
+                        text.toMoneyCase(GetDataMenu.db.res.getString("diskon"))
                     }
                 );
             }
@@ -216,13 +217,13 @@ public class GetDataMenu extends javax.swing.JDialog {
         tabelData.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         tabelData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, ""},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID Menu", "Nama Menu", "Harga", "Status"
+                "ID Menu", "Nama Menu", "Jenis Menu", "Harga", "Diskon"
             }
         ));
         tabelData.setGridColor(new java.awt.Color(0, 0, 0));
@@ -306,7 +307,7 @@ public class GetDataMenu extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)

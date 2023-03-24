@@ -231,7 +231,7 @@ public class DataMenu extends javax.swing.JFrame {
     private void showData(){
         try{
             // menyiapkan query untuk mendapatkan data dari menu
-            String sql = "SELECT nama_menu, jenis, jenis, harga FROM menu "
+            String sql = "SELECT nama_menu, jenis, diskon, harga FROM menu "
                        + "WHERE id_menu = '"+this.idSelected+"'";
             System.out.println(sql);
             
@@ -244,6 +244,7 @@ public class DataMenu extends javax.swing.JFrame {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setText(this.db.res.getString("jenis"));
                 this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("harga")));
+                this.inpDiskon.setText(text.toMoneyCase(this.db.res.getString("diskon")));
             }
             
             // menampilkan data penjualan
