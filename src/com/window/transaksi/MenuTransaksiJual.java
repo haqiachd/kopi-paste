@@ -401,12 +401,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void tambahDataMenu(){
         // reset total harga dan diskon
         this.ttlSeluruahHarga = this.getTotalHarga();
-        this.diskonToko = 0;
+        
         // update data transaksi
         this.jumlah = Integer.parseInt(this.inpJumlah.getText());
         // mendapatkan total harga sebelum diskon
         this.ttlHrgMenu = this.hargaMenu * this.jumlah;
         this.ttlSeluruahHarga += this.ttlHrgMenu;
+        
         // menghitung diskon
         this.diskonToko = this.getDiskonToko(this.ttlSeluruahHarga);
         // mengurangi total harga dengan diskon
@@ -442,9 +443,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             }
             
             // mengupdate total harga bayar
-            this.ttlSeluruahHarga = 0;
-            this.ttlSeluruahHarga -= (this.getTotalHarga() - oldTotalHarga) + this.diskonToko;
-            this.ttlSeluruahHarga =+ newTotalHarga;
+            this.ttlSeluruahHarga = (this.getTotalHarga() - oldTotalHarga);
+            this.ttlSeluruahHarga += newTotalHarga;
             // mendapatkan diskon
             this.diskonToko = this.getDiskonToko(this.ttlSeluruahHarga);
             // mengurangi total harga dengan diskon
