@@ -80,8 +80,8 @@ public class DataMenu extends javax.swing.JFrame {
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpDiskon.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJenis.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+//        this.inpJualHari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJualBulan.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
 //        this.inpPendapatanHari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpPendapatanBulan.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -231,7 +231,7 @@ public class DataMenu extends javax.swing.JFrame {
     private void showData(){
         try{
             // menyiapkan query untuk mendapatkan data dari menu
-            String sql = "SELECT nama_menu, jenis, diskon, harga FROM menu "
+            String sql = "SELECT nama_menu, jenis, jenis, harga FROM menu "
                        + "WHERE id_menu = '"+this.idSelected+"'";
             System.out.println(sql);
             
@@ -244,7 +244,6 @@ public class DataMenu extends javax.swing.JFrame {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setText(this.db.res.getString("jenis"));
                 this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("harga")));
-                this.inpDiskon.setText(text.toMoneyCase(this.db.res.getString("diskon")));
             }
             
             // menampilkan data penjualan
@@ -351,8 +350,6 @@ public class DataMenu extends javax.swing.JFrame {
         inpJualBulan = new com.ui.RoundedTextField(15);
         btnLineChart = new javax.swing.JButton();
         btnBarChart = new javax.swing.JButton();
-        lblDiskon = new javax.swing.JLabel();
-        inpDiskon = new com.ui.RoundedTextField(15);
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -851,14 +848,6 @@ public class DataMenu extends javax.swing.JFrame {
             }
         });
 
-        lblDiskon.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblDiskon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-kembalian.png"))); // NOI18N
-        lblDiskon.setText("Diskon");
-
-        inpDiskon.setBackground(new java.awt.Color(248, 249, 250));
-        inpDiskon.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpDiskon.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -909,11 +898,7 @@ public class DataMenu extends javax.swing.JFrame {
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(btnBarChart)
                                                     .addGap(0, 0, Short.MAX_VALUE))
-                                                .addComponent(inpPendapatanBulan)))
-                                        .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpDiskon)))
+                                                .addComponent(inpPendapatanBulan))))
                                     .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
@@ -969,10 +954,6 @@ public class DataMenu extends javax.swing.JFrame {
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblHarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblDiskon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpDiskon, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblJualBulan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1430,7 +1411,6 @@ public class DataMenu extends javax.swing.JFrame {
     private javax.swing.JLabel btnSupplier;
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JTextField inpCari;
-    private javax.swing.JTextField inpDiskon;
     private javax.swing.JTextField inpHarga;
     private javax.swing.JTextField inpId;
     private javax.swing.JTextField inpJenis;
@@ -1443,7 +1423,6 @@ public class DataMenu extends javax.swing.JFrame {
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
-    private javax.swing.JLabel lblDiskon;
     private javax.swing.JLabel lblGajelas;
     private javax.swing.JLabel lblHarga;
     private javax.swing.JLabel lblIconWindow;
