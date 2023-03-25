@@ -57,11 +57,11 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         this.tblDiskon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
                 new String[]{
-                    "ID Diskon", "Minimal Harga", "Total Diskon", "Tanggal Mulai", "Tanggal Akhir"
+                    "ID Diskon", "Minimal Harga", "Total Diskon", "Presentase", "Tanggal Mulai", "Tanggal Akhir"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             @Override
@@ -78,10 +78,12 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         columnModel.getColumn(1).setMaxWidth(160);
         columnModel.getColumn(2).setPreferredWidth(160);
         columnModel.getColumn(2).setMaxWidth(160);
-        columnModel.getColumn(3).setPreferredWidth(230);
-        columnModel.getColumn(3).setMaxWidth(230);
-        columnModel.getColumn(4).setPreferredWidth(230);
-        columnModel.getColumn(4).setMaxWidth(230);
+        columnModel.getColumn(3).setPreferredWidth(90);
+        columnModel.getColumn(3).setMaxWidth(90);
+        columnModel.getColumn(4).setPreferredWidth(160);
+        columnModel.getColumn(4).setMaxWidth(160);
+        columnModel.getColumn(5).setPreferredWidth(160);
+        columnModel.getColumn(5).setMaxWidth(160);
     }
     
     private void showDiskon(){
@@ -89,15 +91,19 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         DefaultTableModel model = (DefaultTableModel) this.tblDiskon.getModel();
         
         try{
-            String sql = "SELECT * FROM diskon";
+            String sql = "SELECT * FROM diskon WHERE tgl_akhir >= CURRENT_DATE() ORDER BY min_harga ASC";
             this.dbase.res = this.dbase.stat.executeQuery(sql);
             
+            double minHarga, ttlDiskon;
             while(dbase.res.next()){
+                minHarga = this.dbase.res.getDouble("min_harga");
+                ttlDiskon = this.dbase.res.getDouble("ttl_diskon");
                 model.addRow(
                         new String[]{
                             this.dbase.res.getString("id_diskon"),
-                            this.text.toMoneyCase(this.dbase.res.getInt("min_harga")),
-                            this.text.toMoneyCase(this.dbase.res.getInt("ttl_diskon")),
+                            this.text.toMoneyCase((int)minHarga),
+                            this.text.toMoneyCase((int)ttlDiskon),
+                            String.format("%.1f ", (double)(ttlDiskon / minHarga) * 100f)+"%",
                             this.text.toDateCase(this.dbase.res.getString("tgl_mulai")),
                             this.text.toDateCase(this.dbase.res.getString("tgl_akhir")),
 
@@ -266,10 +272,10 @@ public class PengaturanDiskon extends javax.swing.JDialog {
                                 .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
                             .addComponent(lineTop)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
                             .addComponent(lineBottom))
-                        .addGap(0, 28, Short.MAX_VALUE)))
+                        .addGap(0, 29, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlMainLayout.setVerticalGroup(

@@ -66,11 +66,11 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnHapus" min="-2" pref="111" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="lineTop" max="32767" attributes="0"/>
-                              <Component id="jScrollPane1" alignment="0" pref="746" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" pref="819" max="32767" attributes="0"/>
+                              <Component id="lineTop" alignment="0" max="32767" attributes="0"/>
                               <Component id="lineBottom" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="28" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="29" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
