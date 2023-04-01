@@ -60,7 +60,7 @@
 </details>
 
 ## Deskripsi Project
-Kopi Paste adalah sebuah aplikasi yang dibuat oleh Cito Team TIF 3 PSDKU Polije. Tujuan aplikasi ini dibuat adalah untuk memudahkan dalam melakukan transaksi penjualan atau pembelian pada UMKM dan menyajikan laporan penjualan atau pembelian dari transaksi sehingga pemilik UMKM dapat memantau perkembangan UMKM mereka.
+Kopi Paste adalah sebuah aplikasi yang dibuat oleh Cito Team TIF 22 Polije. Tujuan aplikasi ini dibuat adalah untuk memudahkan dalam melakukan transaksi penjualan atau pembelian pada UMKM dan menyajikan laporan penjualan atau pembelian dari transaksi sehingga pemilik UMKM dapat memantau perkembangan UMKM mereka.
 
 ## Fitur Aplikasi
 
@@ -106,8 +106,10 @@ Fitur ini digunakan untuk membackup database dari aplikasi jika suatu waktu apli
 
 ## Contributor
 - Achmad Baihaqi
-- Mohammad Ilham Islamy
-- Septian Yoga Pamungkas
+- Atilah Lazuardi Azra
+- Bagas Halilintar Pindhu Prabowo
+- David Nila Abi Saputra
+- Habib Dwi Febriansyah
 - Widyasari Raisya Salsabilla
 
 ## Catatan
