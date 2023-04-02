@@ -17,7 +17,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class PengaturanDiskon extends javax.swing.JDialog {
+public class DiskonToko extends javax.swing.JDialog {
 
     private final Database dbase = new Database();
     
@@ -25,7 +25,7 @@ public class PengaturanDiskon extends javax.swing.JDialog {
     
     private final Text text = new Text();
 
-    public PengaturanDiskon(java.awt.Frame parent, boolean modal) {
+    public DiskonToko(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         popUp.setVisible(true);
         initComponents();
@@ -145,7 +145,7 @@ public class PengaturanDiskon extends javax.swing.JDialog {
         lblDialogName.setFont(new java.awt.Font("Dialog", 1, 28)); // NOI18N
         lblDialogName.setForeground(new java.awt.Color(250, 22, 22));
         lblDialogName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblDialogName.setText("Pengaturan Diskon");
+        lblDialogName.setText("Diskon Toko");
         lblDialogName.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
         lineTop.setBackground(new java.awt.Color(0, 0, 0));
@@ -336,7 +336,7 @@ public class PengaturanDiskon extends javax.swing.JDialog {
     }//GEN-LAST:event_tblDiskonKeyPressed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        UpdateDiskon pop = new UpdateDiskon(null, true, UpdateDiskon.EDIT, this.tblDiskon.getValueAt(this.tblDiskon.getSelectedRow(), 0).toString());
+        UpdateDiskonToko pop = new UpdateDiskonToko(null, true, UpdateDiskonToko.EDIT, this.tblDiskon.getValueAt(this.tblDiskon.getSelectedRow(), 0).toString());
         pop.setLocation(pop.getX(), this.getY());
         pop.setVisible(true);
         
@@ -345,7 +345,7 @@ public class PengaturanDiskon extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-        UpdateDiskon pop = new UpdateDiskon(null, true, UpdateDiskon.TAMBAH, "");
+        UpdateDiskonToko pop = new UpdateDiskonToko(null, true, UpdateDiskonToko.TAMBAH, "");
         pop.setLocation(pop.getX(), this.getY());
         pop.setVisible(true);
         
@@ -431,13 +431,13 @@ public class PengaturanDiskon extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PengaturanDiskon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiskonToko.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                PengaturanDiskon dialog = new PengaturanDiskon(new javax.swing.JFrame(), true);
+                DiskonToko dialog = new DiskonToko(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

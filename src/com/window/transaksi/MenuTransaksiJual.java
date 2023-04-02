@@ -114,7 +114,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.inpNamaMenu.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJumlah.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0)); 
-//        this.inpJenis.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         // set hidden button
         this.btnPembeli.setVisible(false);
@@ -415,7 +414,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         
         // menampilkan data ke field
         this.inpTotalHarga.setText(this.txt.toMoneyCase(""+this.ttlSeluruahHarga).substring(4));
-        this.inpDiskonToko.setText(this.txt.toMoneyCase(this.diskonToko).substring(4) + this.getPresentaseDiskon());
+//        this.inpDiskonToko.setText(this.txt.toMoneyCase(this.diskonToko).substring(4) + this.getPresentaseDiskon());
+        this.showDiskon();
         
         // reset tabel dan textfield
         this.updateTabel();
@@ -454,7 +454,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.tabelTr.setValueAt(Integer.toString(newJml), row, 5);
             this.tabelTr.setValueAt(txt.toMoneyCase(newTotalHarga), row, 6);
             this.inpTotalHarga.setText(this.txt.toMoneyCase(this.ttlSeluruahHarga).substring(4));
-            this.inpDiskonToko.setText(this.txt.toMoneyCase(this.diskonToko).substring(4) + this.getPresentaseDiskon());
+            this.showDiskon();
             
             // reset data menu
             this.resetTambah();
@@ -486,7 +486,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             
             // menampilkan ulang total harga bayar pada textfield
             this.inpTotalHarga.setText(txt.toMoneyCase(this.ttlSeluruahHarga).substring(4));
-            this.inpDiskonToko.setText(txt.toMoneyCase(this.diskonToko).substring(4) + this.getPresentaseDiskon());
+            this.showDiskon();
         }else{
             Message.showWarning(this, "Tidak ada data yang dipilih!");
         }
@@ -529,9 +529,15 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         return 0;
     }
     
-    private String getPresentaseDiskon(){
+    private void showDiskon(){
         double presentase = ((double)this.diskonToko / (double)(this.ttlSeluruahHarga+this.diskonToko)) * 100f;
-        return String.format(" / %.1f", presentase)+"%";
+        if(presentase == 0){
+            this.lblDiskonTokoRp.setText("");
+            this.inpDiskonToko.setText("Tidak ada diskon");
+        }else{
+            this.lblDiskonTokoRp.setText("Rp");
+            this.inpDiskonToko.setText(String.format("%,d.00 / %.1f", this.diskonToko, presentase)+"%");
+        }
     }
     
     private boolean transaksi(){
@@ -633,8 +639,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                     
                     // menampilkan data 
 //                    this.inpKaryawan.setSelectedItem(String.format("%s | %s", this.idKaryawan, this.namaKaryawan));
+                    this.showDiskon();
                     this.inpTotalHarga.setText(txt.toMoneyCase(this.ttlSeluruahHarga).substring(4));
-                    this.inpDiskonToko.setText(txt.toMoneyCase(this.diskonToko).substring(4) + this.getPresentaseDiskon());
                     this.inpTotalBayar.setText(Integer.toString(this.ttlBayar));
                 }
                 
@@ -1078,7 +1084,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 .addComponent(lblIconWindow)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblNamaWindow, javax.swing.GroupLayout.PREFERRED_SIZE, 668, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTopSetting)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTopInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1331,7 +1337,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
         btnPengaturan.setForeground(new java.awt.Color(0, 102, 255));
         btnPengaturan.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btnPengaturan.setText("Pengaturan");
+        btnPengaturan.setText("Diskon Toko");
         btnPengaturan.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         btnPengaturan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1441,30 +1447,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         pnlContentLayout.setHorizontalGroup(
             pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlContentLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(butNutupinBugAja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnlContentLayout.createSequentialGroup()
-                        .addComponent(lblHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlContentLayout.createSequentialGroup()
-                        .addComponent(lblIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlContentLayout.createSequentialGroup()
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblNamaMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                            .addComponent(lblIdMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(inpNamaMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlContentLayout.createSequentialGroup()
-                                .addComponent(inpIdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpCariMenu)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlContentLayout.createSequentialGroup()
                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnlContentLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
@@ -1482,42 +1464,66 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                                         .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(lblServerTime, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE))))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                    .addGroup(pnlContentLayout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(lblJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 336, Short.MAX_VALUE)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlContentLayout.createSequentialGroup()
-                                .addComponent(lblTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
-                                .addComponent(lblTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                .addComponent(inpJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(butNutupinBugAja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(pnlContentLayout.createSequentialGroup()
+                                    .addComponent(lblHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlContentLayout.createSequentialGroup()
+                                    .addComponent(lblIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(inpIdTransaksi, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlContentLayout.createSequentialGroup()
+                                    .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(lblNamaMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                                        .addComponent(lblIdMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(inpNamaMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(pnlContentLayout.createSequentialGroup()
+                                            .addComponent(inpIdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(inpCariMenu))))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblDiskonToko, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblTotalHarga, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblTotalKembalianRp, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblTotalBayarRp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(lblDiskonToko, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblTotalHarga, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblTotalHargaRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblDiskonTokoRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblTotalHargaRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblDiskonTokoRp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(inpTotalHarga)
-                                .addComponent(inpDiskonToko)
-                                .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12))
-                    .addGroup(pnlContentLayout.createSequentialGroup()
-                        .addGap(758, 758, 758)
-                        .addComponent(btnHistori, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnPengaturan, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(inpTotalHarga)
+                                        .addComponent(inpDiskonToko)
+                                        .addComponent(inpTotalBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(inpTotalKembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
+                                .addComponent(btnHistori, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnPengaturan)))
+                        .addGap(12, 12, 12)))
                 .addGap(22, 22, 22))
         );
         pnlContentLayout.setVerticalGroup(
@@ -1990,7 +1996,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_inpJumlahActionPerformed
 
     private void btnPengaturanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengaturanMouseClicked
-        PengaturanDiskon setting = new PengaturanDiskon(null, true);
+        DiskonToko setting = new DiskonToko(null, true);
         setting.setVisible(true);
     }//GEN-LAST:event_btnPengaturanMouseClicked
 

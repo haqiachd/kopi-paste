@@ -16,7 +16,7 @@ import javax.swing.BorderFactory;
  *
  * @author Achmad Baihaqi
  */
-public class UpdateDiskon extends javax.swing.JDialog {
+public class UpdateDiskonToko extends javax.swing.JDialog {
 
     private final Database db = new Database();
     
@@ -30,7 +30,7 @@ public class UpdateDiskon extends javax.swing.JDialog {
     
     private String idSelected;
 
-    public UpdateDiskon(java.awt.Frame parent, boolean modal, int kondisi, String idSelected) {
+    public UpdateDiskonToko(java.awt.Frame parent, boolean modal, int kondisi, String idSelected) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -429,13 +429,13 @@ public class UpdateDiskon extends javax.swing.JDialog {
 
         try{
             switch(this.kondisi){
-                case UpdateDiskon.TAMBAH : 
+                case UpdateDiskonToko.TAMBAH : 
                     if(this.tambahData()){
                       Message.showInformation(this, "Diskon berhasil ditambahkan!");
                       this.dispose();
                     }
                     break;
-                case UpdateDiskon.EDIT : 
+                case UpdateDiskonToko.EDIT : 
                     if(this.editData()){
                       Message.showInformation(this, "Diskon berhasil diupdate!");
                       this.dispose();
@@ -481,13 +481,13 @@ public class UpdateDiskon extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateDiskon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UpdateDiskonToko.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UpdateDiskon dialog = new UpdateDiskon(new javax.swing.JFrame(), true, 1, "DS001");
+                UpdateDiskonToko dialog = new UpdateDiskonToko(new javax.swing.JFrame(), true, 1, "DS001");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -112,7 +112,7 @@
               <Color blue="16" green="16" red="fa" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Pengaturan Diskon"/>
+            <Property name="text" type="java.lang.String" value="Diskon Toko"/>
             <Property name="verticalAlignment" type="int" value="3"/>
           </Properties>
         </Component>
