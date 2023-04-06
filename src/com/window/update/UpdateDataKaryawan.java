@@ -160,17 +160,16 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     }
     
     private boolean addDataUser() throws SQLException{
-        String sql = "INSERT INTO user VALUES(?, ?, ?, ?, ?)",
+        String sql = "INSERT INTO user VALUES(?, ?, ?, ?)",
                idKaryawan = this.inpId.getText(),
                username = this.inpUsername.getText(),
                password = this.inpPassword.getText();
         
         this.us.pst = this.us.conn.prepareStatement(sql);
-        this.us.pst.setString(1, null);
-        this.us.pst.setString(2, username);
-        this.us.pst.setString(3, BCrypt.hashpw(password, BCrypt.gensalt(12)));
-        this.us.pst.setString(4, "KARYAWAN");
-        this.us.pst.setString(5, idKaryawan);
+        this.us.pst.setString(1, username);
+        this.us.pst.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(12)));
+        this.us.pst.setString(3, "KARYAWAN");
+        this.us.pst.setString(4, idKaryawan);
         
         boolean o = this.us.pst.executeUpdate() > 0;
         return o;
