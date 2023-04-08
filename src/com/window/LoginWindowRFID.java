@@ -4,7 +4,6 @@ import com.manage.Message;
 import com.manage.User;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
-import com.window.dialog.LupaPassword;
 import java.awt.Color;
 import java.awt.Cursor;
 
@@ -12,51 +11,19 @@ import java.awt.Cursor;
  * Digunakan untuk login bagi admin, petugas dan siswa.
  * 
  * @author Achmad Baihaqi
- * @since 2020-11-22
  */
-public class LoginWindow extends javax.swing.JFrame {
+public class LoginWindowRFID extends javax.swing.JFrame {
 
-    private User user;
-    
-    private boolean isLaliPass = false;
+    private final User user = new User();
     
     private int x, y;
     
-    public LoginWindow() {
+    public LoginWindowRFID() {
         initComponents();
         
         this.setLocationRelativeTo(null);
-        this.lblKembali.setVisible(false);
-        this.btnLogin.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.setIconImage(Gambar.getWindowIcon());
-    }
-
-    private void login(){
-        if(this.user == null){
-            this.user = new User();
-        }
-        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        // mendapatkan data dari textfield
-        String username = this.inpUsername.getText(),
-               password = this.inpPassword.getText();
-        // login
-        if(this.user.login(username, password)){
-            // membuka window dashboard jika login berhasil
-            java.awt.EventQueue.invokeLater(new Runnable(){
-                @Override
-                public void run(){
-                    new Dashboard().setVisible(true);
-                }
-            });
-            this.user.closeConnection();
-            this.dispose();
-        }else{
-            // jika password salah maka label copyright akan berubah menjadi lupa password
-            this.isLaliPass = true;
-            this.lblCopyright.setText("Lupa Password?");
-            this.lblCopyright.setForeground(new Color(255,0,0));
-        }
-        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.inpStatus.requestFocus();
     }
     
     @SuppressWarnings("unchecked")
@@ -68,17 +35,16 @@ public class LoginWindow extends javax.swing.JFrame {
         lblLogoApp = new javax.swing.JLabel();
         lblNamaApp = new javax.swing.JLabel();
         lblDesApp = new javax.swing.JLabel();
-        btnLogin = new javax.swing.JButton();
-        lblEye = new javax.swing.JLabel();
-        inpPassword = new com.ui.RoundedPasswordField(15);
-        inpUsername = new com.ui.RoundedTextField(15);
-        lblPassword = new javax.swing.JLabel();
-        lblUsername = new javax.swing.JLabel();
         lblKembali = new javax.swing.JLabel();
         lblMinimaze = new javax.swing.JLabel();
-        lblTop = new javax.swing.JLabel();
         lblClose = new javax.swing.JLabel();
         lblCopyright = new javax.swing.JLabel();
+        inpStatus = new com.ui.RoundedTextField(15);
+        lblIconKartu = new javax.swing.JLabel();
+        lblTop = new javax.swing.JLabel();
+        lblAnimStatus = new javax.swing.JLabel();
+        lblBenar = new javax.swing.JLabel();
+        lblSalah = new javax.swing.JLabel();
         lblBgImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -151,81 +117,8 @@ public class LoginWindow extends javax.swing.JFrame {
 
         pnlMain.add(pnlLeft, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 380));
 
-        btnLogin.setBackground(new java.awt.Color(44, 119, 238));
-        btnLogin.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setText("Login");
-        btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnLoginMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnLoginMouseExited(evt);
-            }
-        });
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
-            }
-        });
-        pnlMain.add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 105, 35));
-
-        lblEye.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
-        lblEye.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblEyeMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblEyeMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblEyeMouseExited(evt);
-            }
-        });
-        pnlMain.add(lblEye, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 220, 36, 39));
-
-        inpPassword.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        inpPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpPassword.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                inpPasswordKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpPasswordKeyTyped(evt);
-            }
-        });
-        pnlMain.add(inpPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 220, 272, 39));
-
-        inpUsername.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        inpUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpUsername.setMaximumSize(new java.awt.Dimension(2147483647, 35));
-        inpUsername.setMinimumSize(new java.awt.Dimension(6, 35));
-        inpUsername.setPreferredSize(new java.awt.Dimension(6, 35));
-        inpUsername.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpUsernameKeyReleased(evt);
-            }
-        });
-        pnlMain.add(inpUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 272, 39));
-
-        lblPassword.setBackground(new java.awt.Color(0, 0, 0));
-        lblPassword.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblPassword.setForeground(new java.awt.Color(44, 119, 238));
-        lblPassword.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPassword.setText("Password");
-        pnlMain.add(lblPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 190, 374, 22));
-
-        lblUsername.setBackground(new java.awt.Color(0, 0, 0));
-        lblUsername.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblUsername.setForeground(new java.awt.Color(44, 119, 238));
-        lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblUsername.setText("Username / ID Karyawan");
-        pnlMain.add(lblUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, 384, 23));
-
         lblKembali.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblKembali.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-kembali.png"))); // NOI18N
+        lblKembali.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-loginwindow-kembali.png"))); // NOI18N
         lblKembali.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblKembaliMouseClicked(evt);
@@ -254,12 +147,6 @@ public class LoginWindow extends javax.swing.JFrame {
             }
         });
         pnlMain.add(lblMinimaze, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 0, -1, 28));
-
-        lblTop.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lblTop.setForeground(new java.awt.Color(250, 56, 56));
-        lblTop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTop.setText("User Login");
-        pnlMain.add(lblTop, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 50, 384, 40));
 
         lblClose.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblClose.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -292,6 +179,56 @@ public class LoginWindow extends javax.swing.JFrame {
             }
         });
         pnlMain.add(lblCopyright, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 330, 370, 30));
+
+        inpStatus.setEditable(false);
+        inpStatus.setBackground(new java.awt.Color(255, 255, 255));
+        inpStatus.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpStatus.setForeground(new java.awt.Color(44, 119, 238));
+        inpStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpStatus.setText("Tempelkan Kartu Anda ke RFID");
+        inpStatus.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpStatus.setMaximumSize(new java.awt.Dimension(2147483647, 35));
+        inpStatus.setMinimumSize(new java.awt.Dimension(6, 35));
+        inpStatus.setPreferredSize(new java.awt.Dimension(6, 35));
+        inpStatus.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpStatusKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpStatusKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpStatusKeyTyped(evt);
+            }
+        });
+        pnlMain.add(inpStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, 272, 39));
+
+        lblIconKartu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblIconKartu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ezgif-1-9b17a45a17.gif"))); // NOI18N
+        pnlMain.add(lblIconKartu, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 80, 390, 190));
+
+        lblTop.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        lblTop.setForeground(new java.awt.Color(250, 56, 56));
+        lblTop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTop.setText("Login RFID");
+        pnlMain.add(lblTop, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 390, 40));
+        pnlMain.add(lblAnimStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, 50, 40));
+
+        lblBenar.setText("b");
+        lblBenar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblBenarMouseClicked(evt);
+            }
+        });
+        pnlMain.add(lblBenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 280, 20, 40));
+
+        lblSalah.setText("s");
+        lblSalah.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblSalahMouseClicked(evt);
+            }
+        });
+        pnlMain.add(lblSalah, new org.netbeans.lib.awtextra.AbsoluteConstraints(274, 280, 20, 40));
 
         lblBgImage.setBackground(new java.awt.Color(255, 255, 255));
         lblBgImage.setForeground(new java.awt.Color(255, 255, 255));
@@ -332,22 +269,6 @@ public class LoginWindow extends javax.swing.JFrame {
         this.user.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
-    private void lblEyeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpPassword.setEchoChar('•');
-    }//GEN-LAST:event_lblEyeMouseExited
-
-    private void lblEyeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseEntered
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-        this.inpPassword.setEchoChar((char)0);
-    }//GEN-LAST:event_lblEyeMouseEntered
-
-    private void lblEyeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseClicked
-
-    }//GEN-LAST:event_lblEyeMouseClicked
-
     private void lblMinimazeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMinimazeMouseExited
         this.lblMinimaze.setIcon(Gambar.getIcon("ic-loginwindow-min.png"));
     }//GEN-LAST:event_lblMinimazeMouseExited
@@ -373,28 +294,23 @@ public class LoginWindow extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_lblCloseMouseClicked
  
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        this.login();
-    }//GEN-LAST:event_btnLoginActionPerformed
-
-    private void btnLoginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseExited
-        this.btnLogin.setBackground(new Color(44,119,238));
-    }//GEN-LAST:event_btnLoginMouseExited
-
-    private void btnLoginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseEntered
-        this.btnLogin.setBackground(new Color(23,24,26));
-    }//GEN-LAST:event_btnLoginMouseEntered
-
     private void lblKembaliMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKembaliMouseExited
-        this.lblKembali.setIcon(Gambar.getIcon("ic-login-kembali.png"));
+        this.lblKembali.setIcon(Gambar.getIcon("ic-loginwindow-kembali.png"));
     }//GEN-LAST:event_lblKembaliMouseExited
 
     private void lblKembaliMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKembaliMouseEntered
-        this.lblKembali.setIcon(Gambar.getIcon("ic-login-kembali-entered.png"));
+        this.lblKembali.setIcon(Gambar.getIcon("ic-loginwindow-kembali-entered.png"));
     }//GEN-LAST:event_lblKembaliMouseEntered
 
     private void lblKembaliMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKembaliMouseClicked
-
+        java.awt.EventQueue.invokeLater(new Runnable(){
+            @Override
+            public void run(){
+                ChooseLoginType tipe = new ChooseLoginType();
+                tipe.setVisible(true);
+            }
+        });
+        this.dispose();
     }//GEN-LAST:event_lblKembaliMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -414,44 +330,28 @@ public class LoginWindow extends javax.swing.JFrame {
 //        this.setVisible(false);
     }//GEN-LAST:event_lblLogoAppMouseClicked
 
-    private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.login();
-        }
-    }//GEN-LAST:event_inpPasswordKeyPressed
-
-    private void inpPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyTyped
-
-    }//GEN-LAST:event_inpPasswordKeyTyped
-
-    private void inpUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUsernameKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.inpPassword.requestFocus();
-        }
-    }//GEN-LAST:event_inpUsernameKeyReleased
-
     private void lblCopyrightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseClicked
-        if(this.isLaliPass){
-            LupaPassword g = new LupaPassword(this, true, this.inpUsername.getText());
-            
-            // cek apakah username exist
-            if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isIdKaryawan(this.inpUsername.getText())){
-                // membuka window
-                g.setVisible(true);                
-            }else{
-                g.dispose();
-                Message.showWarning(this, "Username/Id Karyawan tersebut tidak ditemukan!");
-            }
-            
-            // jika password berhasil diganti
-            if(g.isSuccess()){
-                Message.showInformation(this, "Silahkan masukan username dan password baru Anda!");
-                // reset textfield
-                this.inpUsername.requestFocus();
-                this.inpPassword.setText("");
-                this.inpUsername.setText("");
-            }
-        }
+//        if(this.isLaliPass){
+//            LupaPassword g = new LupaPassword(this, true, this.inpUsername.getText());
+//            
+//            // cek apakah username exist
+//            if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isIdKaryawan(this.inpUsername.getText())){
+//                // membuka window
+//                g.setVisible(true);                
+//            }else{
+//                g.dispose();
+//                Message.showWarning(this, "Username/Id Karyawan tersebut tidak ditemukan!");
+//            }
+//            
+//            // jika password berhasil diganti
+//            if(g.isSuccess()){
+//                Message.showInformation(this, "Silahkan masukan username dan password baru Anda!");
+//                // reset textfield
+//                this.inpUsername.requestFocus();
+//                this.inpPassword.setText("");
+//                this.inpUsername.setText("");
+//            }
+//        }
     }//GEN-LAST:event_lblCopyrightMouseClicked
 
     private void lblCopyrightMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseEntered
@@ -468,6 +368,44 @@ public class LoginWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lblCopyrightMouseExited
 
+    private void inpStatusKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.cekId();
+        }
+    }//GEN-LAST:event_inpStatusKeyReleased
+
+    private void lblSalahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSalahMouseClicked
+        this.inpStatus.setText("KY001\n");
+        
+//        if(this.user.isIdKaryawan(this.inpUsername.getText())){
+//            Message.showInformation(this, "ID exist");
+//        }
+    }//GEN-LAST:event_lblSalahMouseClicked
+
+    private void lblBenarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBenarMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblBenarMouseClicked
+
+    private void inpStatusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.cekId();
+        }
+    }//GEN-LAST:event_inpStatusKeyPressed
+
+    private void inpStatusKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusKeyTyped
+//        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+//            this.cekId();
+//        }
+    }//GEN-LAST:event_inpStatusKeyTyped
+
+    public void cekId(){
+        if(this.user.isIdKaryawan(this.inpStatus.getText())){
+            Message.showInformation(this, "ID is exist");
+        }else{
+            Message.showInformation(this, "ID is not exist");
+        }
+    }
+    
     public static void main(String args[]) {
         
         try {
@@ -478,34 +416,33 @@ public class LoginWindow extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginWindowRFID.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             
             @Override
             public void run() {
-                new LoginWindow().setVisible(true);
+                new LoginWindowRFID().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JPasswordField inpPassword;
-    private javax.swing.JTextField inpUsername;
+    private javax.swing.JTextField inpStatus;
+    private javax.swing.JLabel lblAnimStatus;
+    private javax.swing.JLabel lblBenar;
     private javax.swing.JLabel lblBgImage;
     private javax.swing.JLabel lblClose;
     private javax.swing.JLabel lblCopyright;
     private javax.swing.JLabel lblDesApp;
-    private javax.swing.JLabel lblEye;
+    private javax.swing.JLabel lblIconKartu;
     private javax.swing.JLabel lblKembali;
     private javax.swing.JLabel lblLogoApp;
     private javax.swing.JLabel lblMinimaze;
     private javax.swing.JLabel lblNamaApp;
-    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblSalah;
     private javax.swing.JLabel lblTop;
-    private javax.swing.JLabel lblUsername;
     private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlMain;
     // End of variables declaration//GEN-END:variables
