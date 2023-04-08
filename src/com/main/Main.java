@@ -13,7 +13,10 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                new com.window.LoginWindow().setVisible(true);
+//                new com.koneksi.TugasCrud().setVisible(true);
+                new com.window.ChooseLoginType().setVisible(true);
+//                new com.window.LoginWindow().setVisible(true);
+
             }
         });
         
