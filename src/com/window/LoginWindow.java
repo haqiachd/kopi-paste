@@ -26,7 +26,6 @@ public class LoginWindow extends javax.swing.JFrame {
         initComponents();
         
         this.setLocationRelativeTo(null);
-        this.lblKembali.setVisible(false);
         this.btnLogin.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.setIconImage(Gambar.getWindowIcon());
     }
@@ -225,7 +224,7 @@ public class LoginWindow extends javax.swing.JFrame {
         pnlMain.add(lblUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, 384, 23));
 
         lblKembali.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblKembali.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-kembali.png"))); // NOI18N
+        lblKembali.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-loginwindow-kembali.png"))); // NOI18N
         lblKembali.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblKembaliMouseClicked(evt);
@@ -386,15 +385,22 @@ public class LoginWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginMouseEntered
 
     private void lblKembaliMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKembaliMouseExited
-        this.lblKembali.setIcon(Gambar.getIcon("ic-login-kembali.png"));
+        this.lblKembali.setIcon(Gambar.getIcon("ic-loginwindow-kembali.png"));
     }//GEN-LAST:event_lblKembaliMouseExited
 
     private void lblKembaliMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKembaliMouseEntered
-        this.lblKembali.setIcon(Gambar.getIcon("ic-login-kembali-entered.png"));
+        this.lblKembali.setIcon(Gambar.getIcon("ic-loginwindow-kembali-entered.png"));
     }//GEN-LAST:event_lblKembaliMouseEntered
 
     private void lblKembaliMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblKembaliMouseClicked
-
+        java.awt.EventQueue.invokeLater(new Runnable(){
+            @Override
+            public void run(){
+                ChooseLoginType tipe = new ChooseLoginType();
+                tipe.setVisible(true);
+            }
+        });
+        this.dispose();
     }//GEN-LAST:event_lblKembaliMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
