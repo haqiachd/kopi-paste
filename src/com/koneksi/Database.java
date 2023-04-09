@@ -40,18 +40,10 @@ public class Database {
      * Attribute yang digunakan untuk menhubungkan ke local server
      */
     private static final String DRIVER = "com.mysql.jdbc.Driver",
-                                DB_NAME = "kopi_paste_business",
+                                DB_NAME = "kopi_paste",
                                 URL = "jdbc:mysql://localhost/" + DB_NAME,
                                 USER = "root",
                                 PASS = "";
-    /**
-     * Attribute yang digunakan untuk menghubungkan ke server
-     */
-//    private static final String DRIVER = "com.mysql.jdbc.Driver",
-//                                DB_NAME = "sql12594955",
-//                                URL = "jdbc:mysql://sql12.freemysqlhosting.net/" + DB_NAME,
-//                                USER = "sql12594955",
-//                                PASS = "lIYTxWUML3";    
     /**
      * Digunakan untuk menghitung jumlah koneksi yang aktif pada database
      */
