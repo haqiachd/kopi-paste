@@ -1,7 +1,7 @@
 package com.manage;
 
 import com.koneksi.Database;
-import com.window.LoginWindow;
+import com.window.ChooseLoginType;
 import java.sql.SQLException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -40,6 +40,33 @@ public class User extends Database{
             }else{
                 Message.showWarning(this, String.format("'%s' Username tersebut tidak ditemukan!", usernameOrID));
             }
+        }catch(Exception ex){
+            Message.showException(this, ex);
+        }
+        return false;
+    }
+    
+    public boolean loginRFID(String rfid){
+        try{
+            // membuat query
+            String query = 
+                    String.format("SELECT karyawan.id_karyawan, karyawan.nama_karyawan, user.username, user.password, user.level "
+                            + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
+                            + "WHERE user.rfid = '%s' ", rfid);
+            
+            // eksekusi qeury
+            super.res = super.stat.executeQuery(query);
+            
+            // jika rfid ditemukan
+            if(super.res.next()){
+                // mendapatkan nama dari user yang sedang login
+                User.USERNAME = super.res.getString("user.username");
+                User.ID_KY = super.res.getString("karyawan.id_karyawan");
+                User.NAMA_USER = super.res.getString("karyawan.nama_karyawan");
+                User.LEVEL = super.res.getString("user.level");
+                return true;
+            }
+            
         }catch(Exception ex){
             Message.showException(this, ex);
         }
@@ -109,7 +136,7 @@ public class User extends Database{
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                new LoginWindow().setVisible(true);
+                new ChooseLoginType().setVisible(true);
             }
         });   
     }
