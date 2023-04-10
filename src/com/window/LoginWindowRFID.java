@@ -1,11 +1,12 @@
 package com.window;
 
-import com.manage.Message;
 import com.manage.User;
 import com.media.Gambar;
-import java.awt.event.KeyEvent;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.awt.Cursor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Digunakan untuk login bagi admin, petugas dan siswa.
@@ -23,7 +24,54 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         
         this.setLocationRelativeTo(null);
         this.setIconImage(Gambar.getWindowIcon());
-        this.inpStatus.requestFocus();
+        this.inpCode.requestFocus();
+    }
+    
+    private void login(){
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        
+        // mendapatkan data dari textfield
+        String rfid = this.inpCode.getText();
+        
+        if(rfid.length() >= 10){
+            // mendapatkan 10 digit code rfid
+            rfid = rfid.substring(rfid.length()-10);
+            this.inpCode.setText("");
+        }else{
+            // jika panjang dari rfid < 10 maka kode tidak valid
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            return;
+        }
+        
+        // login
+        if(this.user.loginRFID(rfid)){
+            // set textfield status rfid
+            this.inpStatusRfid.setText(User.getNamaUser());
+            this.inpStatusRfid.setForeground(new Color(0, 153, 0));
+            this.lblIconKartu.setIcon(Gambar.getIcon("gif-login-rfid-success.gif"));
+
+            // membuka window dashboard
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // slepp untuk animasi
+                        Thread.sleep(5100);
+                        // membuka window dashboard
+                        new Dashboard().setVisible(true);
+                        user.closeConnection();
+                        dispose();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(LoginWindowRFID.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }).start();
+        }else{
+            // aksi jika kartu tidak terdaftar
+            this.inpStatusRfid.setForeground(new Color(255,0,0));
+            this.inpStatusRfid.setText("Kartu Anda Tidak Terdaftar!");
+        }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     
     @SuppressWarnings("unchecked")
@@ -39,13 +87,14 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         lblMinimaze = new javax.swing.JLabel();
         lblClose = new javax.swing.JLabel();
         lblCopyright = new javax.swing.JLabel();
-        inpStatus = new com.ui.RoundedTextField(15);
+        inpStatusRfid = new com.ui.RoundedTextField(15);
         lblIconKartu = new javax.swing.JLabel();
         lblTop = new javax.swing.JLabel();
         lblAnimStatus = new javax.swing.JLabel();
         lblBenar = new javax.swing.JLabel();
         lblSalah = new javax.swing.JLabel();
         lblBgImage = new javax.swing.JLabel();
+        inpCode = new com.ui.RoundedTextField(15);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login Window");
@@ -180,31 +229,36 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         });
         pnlMain.add(lblCopyright, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 330, 370, 30));
 
-        inpStatus.setEditable(false);
-        inpStatus.setBackground(new java.awt.Color(255, 255, 255));
-        inpStatus.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        inpStatus.setForeground(new java.awt.Color(44, 119, 238));
-        inpStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpStatus.setText("Tempelkan Kartu Anda ke RFID");
-        inpStatus.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpStatus.setMaximumSize(new java.awt.Dimension(2147483647, 35));
-        inpStatus.setMinimumSize(new java.awt.Dimension(6, 35));
-        inpStatus.setPreferredSize(new java.awt.Dimension(6, 35));
-        inpStatus.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                inpStatusKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpStatusKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpStatusKeyTyped(evt);
+        inpStatusRfid.setEditable(false);
+        inpStatusRfid.setBackground(new java.awt.Color(255, 255, 255));
+        inpStatusRfid.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpStatusRfid.setForeground(new java.awt.Color(44, 119, 238));
+        inpStatusRfid.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpStatusRfid.setText("Tempelkan Kartu Anda ke RFID.");
+        inpStatusRfid.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpStatusRfid.setMaximumSize(new java.awt.Dimension(2147483647, 35));
+        inpStatusRfid.setMinimumSize(new java.awt.Dimension(6, 35));
+        inpStatusRfid.setPreferredSize(new java.awt.Dimension(6, 35));
+        inpStatusRfid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpStatusRfidActionPerformed(evt);
             }
         });
-        pnlMain.add(inpStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, 272, 39));
+        inpStatusRfid.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpStatusRfidKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpStatusRfidKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpStatusRfidKeyTyped(evt);
+            }
+        });
+        pnlMain.add(inpStatusRfid, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, 272, 39));
 
         lblIconKartu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblIconKartu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ezgif-1-9b17a45a17.gif"))); // NOI18N
+        lblIconKartu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/gif-login-rfid.gif"))); // NOI18N
         pnlMain.add(lblIconKartu, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 80, 390, 190));
 
         lblTop.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
@@ -214,6 +268,7 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         pnlMain.add(lblTop, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 390, 40));
         pnlMain.add(lblAnimStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 280, 50, 40));
 
+        lblBenar.setForeground(new java.awt.Color(255, 255, 255));
         lblBenar.setText("b");
         lblBenar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -222,6 +277,7 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         });
         pnlMain.add(lblBenar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 280, 20, 40));
 
+        lblSalah.setForeground(new java.awt.Color(255, 255, 255));
         lblSalah.setText("s");
         lblSalah.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -233,6 +289,28 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         lblBgImage.setBackground(new java.awt.Color(255, 255, 255));
         lblBgImage.setForeground(new java.awt.Color(255, 255, 255));
         pnlMain.add(lblBgImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 0, 386, 380));
+
+        inpCode.setBackground(new java.awt.Color(255, 255, 255));
+        inpCode.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpCode.setForeground(new java.awt.Color(44, 119, 238));
+        inpCode.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpCode.setText("Tempelkan Kartu Anda ke RFID.");
+        inpCode.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpCode.setMaximumSize(new java.awt.Dimension(2147483647, 35));
+        inpCode.setMinimumSize(new java.awt.Dimension(6, 35));
+        inpCode.setPreferredSize(new java.awt.Dimension(6, 35));
+        inpCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpCodeKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpCodeKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpCodeKeyTyped(evt);
+            }
+        });
+        pnlMain.add(inpCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, 272, 39));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -318,94 +396,67 @@ public class LoginWindowRFID extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void lblLogoAppMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoAppMouseClicked
-//        java.awt.EventQueue.invokeLater(new Runnable(){
-//            @Override
-//            public void run(){
-//                user = new User();
-//                user.login("dev2003", "lastidea");
-//                new Dashboard().setVisible(true);
-//                user.closeConnection();
-//            }
-//        });
-//        this.setVisible(false);
+        java.awt.EventQueue.invokeLater(new Runnable(){
+            @Override
+            public void run(){
+                user.login("admin", "lastidea");
+                new Dashboard().setVisible(true);
+                user.closeConnection();
+            }
+        });
+        this.setVisible(false);
     }//GEN-LAST:event_lblLogoAppMouseClicked
 
     private void lblCopyrightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseClicked
-//        if(this.isLaliPass){
-//            LupaPassword g = new LupaPassword(this, true, this.inpUsername.getText());
-//            
-//            // cek apakah username exist
-//            if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isIdKaryawan(this.inpUsername.getText())){
-//                // membuka window
-//                g.setVisible(true);                
-//            }else{
-//                g.dispose();
-//                Message.showWarning(this, "Username/Id Karyawan tersebut tidak ditemukan!");
-//            }
-//            
-//            // jika password berhasil diganti
-//            if(g.isSuccess()){
-//                Message.showInformation(this, "Silahkan masukan username dan password baru Anda!");
-//                // reset textfield
-//                this.inpUsername.requestFocus();
-//                this.inpPassword.setText("");
-//                this.inpUsername.setText("");
-//            }
-//        }
+
     }//GEN-LAST:event_lblCopyrightMouseClicked
 
     private void lblCopyrightMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseEntered
-        if(isLaliPass){
-            this.lblCopyright.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            this.lblCopyright.setText("<html><p style=\"text-decoration:underline; color:rgb(255,0,0);\">Lupa Password?</p></html>");
-        }
+
     }//GEN-LAST:event_lblCopyrightMouseEntered
 
     private void lblCopyrightMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseExited
-        if(isLaliPass){
-            this.lblCopyright.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-            this.lblCopyright.setText("<html><p style=\"text-decoration:none; color:rgb(255,0,0);\">Lupa Password?</p></html>");
-        }
+
     }//GEN-LAST:event_lblCopyrightMouseExited
 
-    private void inpStatusKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.cekId();
-        }
-    }//GEN-LAST:event_inpStatusKeyReleased
+    private void inpStatusRfidKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusRfidKeyReleased
+
+    }//GEN-LAST:event_inpStatusRfidKeyReleased
 
     private void lblSalahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSalahMouseClicked
-        this.inpStatus.setText("KY001\n");
-        
-//        if(this.user.isIdKaryawan(this.inpUsername.getText())){
-//            Message.showInformation(this, "ID exist");
-//        }
+        this.inpCode.setText(this.inpCode.getText()+"0008277089");
     }//GEN-LAST:event_lblSalahMouseClicked
 
     private void lblBenarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBenarMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_lblBenarMouseClicked
 
-    private void inpStatusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusKeyPressed
+    private void inpStatusRfidKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusRfidKeyPressed
+
+    }//GEN-LAST:event_inpStatusRfidKeyPressed
+
+    private void inpStatusRfidKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusRfidKeyTyped
+
+    }//GEN-LAST:event_inpStatusRfidKeyTyped
+
+    private void inpCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCodeKeyPressed
+
+    }//GEN-LAST:event_inpCodeKeyPressed
+
+    private void inpCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCodeKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.cekId();
+            this.login();
         }
-    }//GEN-LAST:event_inpStatusKeyPressed
+    }//GEN-LAST:event_inpCodeKeyReleased
 
-    private void inpStatusKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpStatusKeyTyped
-//        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-//            this.cekId();
-//        }
-    }//GEN-LAST:event_inpStatusKeyTyped
+    private void inpCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCodeKeyTyped
 
-    public void cekId(){
-        if(this.user.isIdKaryawan(this.inpStatus.getText())){
-            Message.showInformation(this, "ID is exist");
-        }else{
-            Message.showInformation(this, "ID is not exist");
-        }
-    }
-    
+    }//GEN-LAST:event_inpCodeKeyTyped
+
+    private void inpStatusRfidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpStatusRfidActionPerformed
+        this.inpCode.requestFocus();
+    }//GEN-LAST:event_inpStatusRfidActionPerformed
+ 
     public static void main(String args[]) {
         
         try {
@@ -429,7 +480,8 @@ public class LoginWindowRFID extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField inpStatus;
+    private javax.swing.JTextField inpCode;
+    private javax.swing.JTextField inpStatusRfid;
     private javax.swing.JLabel lblAnimStatus;
     private javax.swing.JLabel lblBenar;
     private javax.swing.JLabel lblBgImage;
