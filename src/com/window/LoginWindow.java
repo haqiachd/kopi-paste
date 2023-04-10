@@ -12,7 +12,6 @@ import java.awt.Cursor;
  * Digunakan untuk login bagi admin, petugas dan siswa.
  * 
  * @author Achmad Baihaqi
- * @since 2020-11-22
  */
 public class LoginWindow extends javax.swing.JFrame {
 
@@ -47,6 +46,8 @@ public class LoginWindow extends javax.swing.JFrame {
                     new Dashboard().setVisible(true);
                 }
             });
+            
+            // tutup koneksi dan window login
             this.user.closeConnection();
             this.dispose();
         }else{
@@ -324,11 +325,15 @@ public class LoginWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlMainMouseDragged
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        this.user.closeConnection();
+        if(this.user != null){
+            this.user.closeConnection();
+        }
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.user.closeConnection();
+        if(this.user != null){
+            this.user.closeConnection();
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void lblEyeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseExited
@@ -408,16 +413,16 @@ public class LoginWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void lblLogoAppMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoAppMouseClicked
-//        java.awt.EventQueue.invokeLater(new Runnable(){
-//            @Override
-//            public void run(){
-//                user = new User();
-//                user.login("dev2003", "lastidea");
-//                new Dashboard().setVisible(true);
-//                user.closeConnection();
-//            }
-//        });
-//        this.setVisible(false);
+        java.awt.EventQueue.invokeLater(new Runnable(){
+            @Override
+            public void run(){
+                user = new User();
+                user.login("admin", "lastidea");
+                new Dashboard().setVisible(true);
+                user.closeConnection();
+            }
+        });
+        this.setVisible(false);
     }//GEN-LAST:event_lblLogoAppMouseClicked
 
     private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
