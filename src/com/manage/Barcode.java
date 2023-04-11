@@ -1,8 +1,10 @@
 package com.manage;
 
 import com.barcodelib.barcode.Linear;
+import com.koneksi.Database;
 import com.media.Gambar;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -12,6 +14,8 @@ import javax.swing.ImageIcon;
  */
 public class Barcode {
     
+    private final Database db = new Database();
+    
     private static final String DIRECTORY = "src\\resources\\image\\barcode\\";
     
     public void generate(String kode) {
@@ -20,13 +24,23 @@ public class Barcode {
             barcode.setType(Linear.CODE128B);
             barcode.setData(kode);
             barcode.setI(12.0f);
-            barcode.renderBarcode("src\\resources\\image\\barcode\\" + kode + ".png");
+            barcode.renderBarcode(Barcode.DIRECTORY + kode + ".png");
         } catch (Exception e) {
             Message.showException(this, e);
         }
     }
     
     public boolean isExistBarcode(String kode){
+        try{
+            
+            String sql = "SELECT id_barcode FROM menu WHERE id_barcode = " + kode;
+            this.db.res = this.db.stat.executeQuery(sql);
+            if(this.db.res.next()){
+                return true;
+            }
+        }catch(SQLException ex){
+            Message.showException(this, ex);
+        }
         return false;
     }
     
@@ -49,6 +63,10 @@ public class Barcode {
     public ImageIcon getBarcodeImage(String kode, int width, int height){
         File file = new File(Barcode.DIRECTORY + kode + ".png");
         return Gambar.scaleImage(file, width, height);
+    }
+    
+    public void close(){
+        this.db.closeConnection();
     }
     
     
@@ -79,6 +97,9 @@ public class Barcode {
         for(int i = 0; i <= 10; i++){
             System.out.println(barcode.randomBarcode());
         }
+        
+        System.out.println(barcode.isExistBarcode("0123456789012"));
+//        System.out.println(barcode.isExistBarcode(Barcode.DATA_BAHAN, "0123456789012"));
         
     }
     
