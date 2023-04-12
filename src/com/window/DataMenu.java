@@ -3,6 +3,7 @@ package com.window;
 import com.window.laporan.MenuLaporan;
 import com.window.transaksi.MenuTransaksi;
 import com.koneksi.Database;
+import com.manage.Barcode;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -43,6 +44,8 @@ public class DataMenu extends javax.swing.JFrame {
     private final Text text = new Text();
     
     private final Waktu waktu = new Waktu();
+    
+    private final Barcode barcode = new Barcode();
     
     private static DefaultTableModel DATA_MENU = new DefaultTableModel();
     
@@ -244,6 +247,7 @@ public class DataMenu extends javax.swing.JFrame {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setText(this.db.res.getString("jenis"));
                 this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("harga")));
+                this.lblBarcode.setIcon(this.barcode.getBarcodeImage(this.idSelected, 294, 57));
             }
             
             // menampilkan data penjualan
@@ -350,6 +354,8 @@ public class DataMenu extends javax.swing.JFrame {
         inpJualBulan = new com.ui.RoundedTextField(15);
         btnLineChart = new javax.swing.JButton();
         btnBarChart = new javax.swing.JButton();
+        lblPendapatanBulan1 = new javax.swing.JLabel();
+        lblBarcode = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -848,6 +854,12 @@ public class DataMenu extends javax.swing.JFrame {
             }
         });
 
+        lblPendapatanBulan1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblPendapatanBulan1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-barcode.png"))); // NOI18N
+        lblPendapatanBulan1.setText("Barcode");
+
+        lblBarcode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -866,7 +878,7 @@ public class DataMenu extends javax.swing.JFrame {
                                         .addGroup(pnlContentLayout.createSequentialGroup()
                                             .addComponent(lblAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inpJenis, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                                            .addComponent(inpJenis, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
                                         .addGroup(pnlContentLayout.createSequentialGroup()
                                             .addComponent(lblTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -890,15 +902,18 @@ public class DataMenu extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(inpJualBulan))
                                         .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(lblPendapatanBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(lblPendapatanBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(lblPendapatanBulan1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(inpPendapatanBulan)
                                                 .addGroup(pnlContentLayout.createSequentialGroup()
                                                     .addComponent(btnLineChart)
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(btnBarChart)
                                                     .addGap(0, 0, Short.MAX_VALUE))
-                                                .addComponent(inpPendapatanBulan))))
+                                                .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                     .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
@@ -963,10 +978,16 @@ public class DataMenu extends javax.swing.JFrame {
                                     .addComponent(lblPendapatanBulan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inpPendapatanBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblPendapatanBulan1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnLineChart)
                                     .addComponent(btnBarChart))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1420,6 +1441,7 @@ public class DataMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblAlamat;
+    private javax.swing.JLabel lblBarcode;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
@@ -1434,6 +1456,7 @@ public class DataMenu extends javax.swing.JFrame {
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
     private javax.swing.JLabel lblPendapatanBulan;
+    private javax.swing.JLabel lblPendapatanBulan1;
     private javax.swing.JLabel lblProfileSidebar;
     private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;

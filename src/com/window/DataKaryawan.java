@@ -72,6 +72,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         // set margin tabel
         this.inpCari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpRfid.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpUsername.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpTelephone.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -152,7 +153,7 @@ public class DataKaryawan extends javax.swing.JFrame {
        
         try{
             // query untuk mengambil data karyawan pada tabel mysql
-            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, ky.shif, us.level "
+            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, ky.shif, us.level, us.rfid "
                        + "FROM karyawan AS ky "
                        + "JOIN user AS us "
                        + "ON ky.id_karyawan = us.id_karyawan " + keyword;
@@ -227,7 +228,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private void showData(){
         try{
             // menyiapkan query
-            String sql = "SELECT karyawan.nama_karyawan, karyawan.alamat, karyawan.no_telp, karyawan.shif, user.username, user.level "
+            String sql = "SELECT karyawan.nama_karyawan, karyawan.alamat, karyawan.no_telp, karyawan.shif, user.username, user.level, user.rfid  "
                     + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
                     + "WHERE karyawan.id_karyawan = '"+this.idSelected+"'";
             
@@ -236,6 +237,7 @@ public class DataKaryawan extends javax.swing.JFrame {
             
             if(this.db.res.next()){
                 this.inpId.setText(this.idSelected);
+                this.inpRfid.setText(this.db.res.getString("user.rfid"));
                 this.inpNama.setText(this.db.res.getString("karyawan.nama_karyawan"));
                 this.inpAlamat.setText(this.db.res.getString("karyawan.alamat"));
                 this.inpTelephone.setText(this.db.res.getString("karyawan.no_telp"));
@@ -317,6 +319,8 @@ public class DataKaryawan extends javax.swing.JFrame {
         inpUsername = new com.ui.RoundedTextField(50);
         lblLevel = new javax.swing.JLabel();
         inpLevel = new com.ui.RoundedTextField(15);
+        lblRfid = new javax.swing.JLabel();
+        inpRfid = new com.ui.RoundedTextField(50);
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -812,6 +816,18 @@ public class DataKaryawan extends javax.swing.JFrame {
         inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpLevel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
+        lblRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblRfid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
+        lblRfid.setText("Kode RFID");
+
+        inpRfid.setBackground(new java.awt.Color(231, 235, 239));
+        inpRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpRfid.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpRfid.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        inpRfid.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpRfid.setEnabled(false);
+        inpRfid.setSelectionStart(5);
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -862,7 +878,11 @@ public class DataKaryawan extends javax.swing.JFrame {
                                                 .addComponent(lblLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(inpLevel)))
-                                        .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 9, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
                 .addGap(18, 18, 18)
@@ -909,6 +929,10 @@ public class DataKaryawan extends javax.swing.JFrame {
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(inpRfid, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                                    .addComponent(lblRfid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(14, 14, 14)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1355,6 +1379,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JTextField inpId;
     private javax.swing.JTextField inpLevel;
     private javax.swing.JTextField inpNama;
+    private javax.swing.JTextField inpRfid;
     private javax.swing.JTextField inpShift;
     private javax.swing.JTextField inpTelephone;
     private javax.swing.JTextField inpUsername;
@@ -1375,6 +1400,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
     private javax.swing.JLabel lblProfileSidebar;
+    private javax.swing.JLabel lblRfid;
     private javax.swing.JLabel lblShift;
     private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;

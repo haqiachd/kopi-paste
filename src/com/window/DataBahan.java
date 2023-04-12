@@ -21,9 +21,11 @@ import com.window.dialog.UserProfile;
 import com.window.get.GetDataBahan;
 
 import java.awt.Cursor;
+import java.io.File;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -258,6 +260,8 @@ public class DataBahan extends javax.swing.JFrame {
                 this.inpNama.setText(namaBahan);
                 this.inpJenis.setText(jenisBahan);
                 this.inpHarga.setText(satuanName);
+                this.lblBarcode.setIcon(Gambar.scaleImage(new File("src\\resources\\image\\barcode\\" + this.inpId.getText() + ".png"), this.lblBarcode.getWidth(), this.lblBarcode.getHeight()));
+//                this.lblBarcode.setIcon(new ImageIcon(new File("direktori").toString()));
             }
             
             // menampilkan data pembelian
@@ -364,6 +368,8 @@ public class DataBahan extends javax.swing.JFrame {
         inpPengBulan = new com.ui.RoundedTextField(15);
         btnLineChart = new javax.swing.JButton();
         btnBarChart = new javax.swing.JButton();
+        lblPengBulan1 = new javax.swing.JLabel();
+        lblBarcode = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -871,6 +877,16 @@ public class DataBahan extends javax.swing.JFrame {
             }
         });
 
+        lblPengBulan1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblPengBulan1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-harga-bulan.png"))); // NOI18N
+        lblPengBulan1.setText("Barcode");
+
+        lblBarcode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblBarcodeMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
         pnlContentLayout.setHorizontalGroup(
@@ -888,7 +904,7 @@ public class DataBahan extends javax.swing.JFrame {
                                     .addGroup(pnlContentLayout.createSequentialGroup()
                                         .addComponent(lblTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inpJenis, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                                        .addComponent(inpJenis, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
                                     .addGroup(pnlContentLayout.createSequentialGroup()
                                         .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -913,15 +929,18 @@ public class DataBahan extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(inpPembBulan))
                                     .addGroup(pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblPengBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblPengBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblPengBulan1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(inpPengBulan)
                                             .addGroup(pnlContentLayout.createSequentialGroup()
                                                 .addComponent(btnLineChart)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnBarChart)
                                                 .addGap(0, 0, Short.MAX_VALUE))
-                                            .addComponent(inpPengBulan))))
+                                            .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addGap(0, 9, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
                 .addGap(18, 18, 18)
@@ -985,10 +1004,16 @@ public class DataBahan extends javax.swing.JFrame {
                                     .addComponent(lblPengBulan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inpPengBulan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblPengBulan1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnLineChart)
                                     .addComponent(btnBarChart))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1398,6 +1423,10 @@ public class DataBahan extends javax.swing.JFrame {
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnBarChartActionPerformed
 
+    private void lblBarcodeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBarcodeMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblBarcodeMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1448,6 +1477,7 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JTextField inpPengBulan;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblBarcode;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
@@ -1463,6 +1493,7 @@ public class DataBahan extends javax.swing.JFrame {
     private javax.swing.JLabel lblNamaWindow;
     private javax.swing.JLabel lblPembBulan;
     private javax.swing.JLabel lblPengBulan;
+    private javax.swing.JLabel lblPengBulan1;
     private javax.swing.JLabel lblProfileSidebar;
     private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;
