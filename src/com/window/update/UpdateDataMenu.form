@@ -79,19 +79,21 @@
                       <Component id="lineHorBot" alignment="1" pref="459" max="32767" attributes="0"/>
                       <Component id="lineHorTop" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Component id="lblData1" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Component id="lblJenis" min="-2" pref="150" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="inpJenis" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lblData2" pref="150" max="32767" attributes="0"/>
-                              <Component id="lblData3" max="32767" attributes="0"/>
+                              <Component id="lblHarga" pref="150" max="32767" attributes="0"/>
+                              <Component id="lblBarcode" max="32767" attributes="0"/>
+                              <Component id="lblKodeBarcode" pref="150" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblBarcode" max="32767" attributes="0"/>
+                              <Component id="lblShowBarcode" max="32767" attributes="0"/>
                               <Component id="inpHarga" max="32767" attributes="0"/>
+                              <Component id="inpKodeBarcode" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -118,18 +120,23 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lblData1" pref="37" max="32767" attributes="0"/>
+                      <Component id="lblJenis" pref="37" max="32767" attributes="0"/>
                       <Component id="inpJenis" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lblData2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblHarga" alignment="0" max="32767" attributes="0"/>
                       <Component id="inpHarga" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lblBarcode" max="32767" attributes="0"/>
-                      <Component id="lblData3" pref="80" max="32767" attributes="0"/>
+                      <Component id="lblKodeBarcode" alignment="0" max="32767" attributes="0"/>
+                      <Component id="inpKodeBarcode" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblShowBarcode" max="32767" attributes="0"/>
+                      <Component id="lblBarcode" pref="80" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="32767" attributes="0"/>
                   <Component id="lineHorBot" min="-2" pref="10" max="-2" attributes="0"/>
@@ -276,7 +283,7 @@
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblData1">
+        <Component class="javax.swing.JLabel" name="lblJenis">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="16" style="1"/>
@@ -287,7 +294,7 @@
             <Property name="text" type="java.lang.String" value="Jenis Menu"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblData2">
+        <Component class="javax.swing.JLabel" name="lblHarga">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="16" style="1"/>
@@ -345,7 +352,7 @@
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpJenisKeyReleased"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblData3">
+        <Component class="javax.swing.JLabel" name="lblBarcode">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="16" style="1"/>
@@ -357,14 +364,54 @@
             <Property name="verticalAlignment" type="int" value="1"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblBarcode">
+        <Component class="javax.swing.JLabel" name="lblShowBarcode">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Ebrima" size="20" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="Tidak ada barcode"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder/>
               </Border>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblKodeBarcode">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="16" style="1"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/image/icons/ic-window-data-barcode-kode.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Kode Barcode"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="inpKodeBarcode">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="fa" green="f9" red="f8" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="16" style="1"/>
+            </Property>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder roundedCorners="true"/>
+              </Border>
+            </Property>
+            <Property name="name" type="java.lang.String" value="Harga" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpKodeBarcodeKeyPressed"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpKodeBarcodeKeyReleased"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpKodeBarcodeKeyTyped"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

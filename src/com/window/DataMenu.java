@@ -247,7 +247,11 @@ public class DataMenu extends javax.swing.JFrame {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setText(this.db.res.getString("jenis"));
                 this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("harga")));
-                this.lblBarcode.setIcon(this.barcode.getBarcodeImage(this.idSelected, 294, 57));
+                if(this.barcode.isNullBarcode(this.idSelected)){
+                    this.lblBarcode.setText("Tidak ada barcode");
+                }else{
+                    this.lblBarcode.setIcon(this.barcode.getBarcodeImage(this.idSelected, 294, 57));
+                }
             }
             
             // menampilkan data penjualan

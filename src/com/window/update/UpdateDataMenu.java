@@ -2,6 +2,7 @@ package com.window.update;
 
 import com.koneksi.Database;
 import com.manage.Barcode;
+import com.manage.FileManager;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Triggers;
@@ -9,6 +10,7 @@ import com.manage.Validation;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
+import java.sql.Blob;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -23,15 +25,17 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     
     private int kondisi;
     
-    private String idSelected;
+    private String idSelected, kodeBarcode;
     
-    private Object[] mainList, listID, listNama, listQuantity, listSatuan;
+    private boolean isValidBarcode = false;
     
     private final Database db = new Database();
     
     private final PopUpBackground win = new PopUpBackground();
     
     private final Barcode barcode = new Barcode();
+    
+    private final Text txt = new Text();
     
     /**
      * Creates new form TambahDataBahan
@@ -56,6 +60,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpKodeBarcode.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         this.idSelected = id;
         this.kondisi = kondisi;
@@ -73,8 +78,6 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 break;
         }
         
-        this.barcode.generate(this.inpId.getText());
-        this.lblBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblBarcode.getWidth(), this.lblBarcode.getHeight()));
     }
 
     @Override
@@ -159,13 +162,22 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                harga = this.inpHarga.getText();
         
         // menyiapkan query
-        String sql = "INSERT INTO menu VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO menu VALUES(?, ?, ?, ?, ?, ?)";
         this.db.pst = this.db.conn.prepareStatement(sql);
         
         this.db.pst.setString(1, id);
         this.db.pst.setString(2, nama);
         this.db.pst.setString(3, jenis);
         this.db.pst.setString(4, harga);
+        // jika barcode dimasukan / valid
+        if(this.isValidBarcode){
+            this.db.pst.setString(5, this.kodeBarcode);
+            this.db.pst.setBlob(6, this.barcode.barcodeToBlob(id));            
+        }else{
+            // jika barcode tidak dimasukan
+            this.db.pst.setString(5, null);
+            this.db.pst.setString(6, null);
+        }
         
         // eksekusi query
         return this.db.pst.executeUpdate() > 0;
@@ -213,12 +225,14 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
         inpNama = new com.ui.RoundedTextField(15);
-        lblData1 = new javax.swing.JLabel();
-        lblData2 = new javax.swing.JLabel();
+        lblJenis = new javax.swing.JLabel();
+        lblHarga = new javax.swing.JLabel();
         inpHarga = new com.ui.RoundedTextField(15);
         inpJenis = new javax.swing.JComboBox();
-        lblData3 = new javax.swing.JLabel();
         lblBarcode = new javax.swing.JLabel();
+        lblShowBarcode = new javax.swing.JLabel();
+        lblKodeBarcode = new javax.swing.JLabel();
+        inpKodeBarcode = new com.ui.RoundedTextField(15);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -303,13 +317,13 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             }
         });
 
-        lblData1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblData1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
-        lblData1.setText("Jenis Menu");
+        lblJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblJenis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
+        lblJenis.setText("Jenis Menu");
 
-        lblData2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblData2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-harga.png"))); // NOI18N
-        lblData2.setText("Harga");
+        lblHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblHarga.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-harga.png"))); // NOI18N
+        lblHarga.setText("Harga");
 
         inpHarga.setBackground(new java.awt.Color(248, 249, 250));
         inpHarga.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -334,12 +348,35 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             }
         });
 
-        lblData3.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblData3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-barcode.png"))); // NOI18N
-        lblData3.setText("Barcode");
-        lblData3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblBarcode.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblBarcode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-barcode.png"))); // NOI18N
+        lblBarcode.setText("Barcode");
+        lblBarcode.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        lblBarcode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblShowBarcode.setFont(new java.awt.Font("Ebrima", 1, 20)); // NOI18N
+        lblShowBarcode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblShowBarcode.setText("Tidak ada barcode");
+        lblShowBarcode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        lblKodeBarcode.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblKodeBarcode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-barcode-kode.png"))); // NOI18N
+        lblKodeBarcode.setText("Kode Barcode");
+
+        inpKodeBarcode.setBackground(new java.awt.Color(248, 249, 250));
+        inpKodeBarcode.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpKodeBarcode.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpKodeBarcode.setName("Harga"); // NOI18N
+        inpKodeBarcode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpKodeBarcodeKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpKodeBarcodeKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpKodeBarcodeKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -364,17 +401,19 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                     .addComponent(lineHorBot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                     .addComponent(lineHorTop, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblData1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblJenis, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpJenis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                            .addComponent(lblData3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblHarga, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblKodeBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(inpHarga))))
+                            .addComponent(lblShowBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inpHarga)
+                            .addComponent(inpKodeBarcode))))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -394,16 +433,20 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                     .addComponent(inpNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblData1, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(lblJenis, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpJenis))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblHarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblData3, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                    .addComponent(lblKodeBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inpKodeBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblShowBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -439,15 +482,17 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         try{
             switch(this.kondisi){
                 case TAMBAH : 
-                        this.tambahDataMenu();
+                    if(this.tambahDataMenu()){
                         Message.showInformation(this, "Data berhasil ditambahkan!");
-                        this.dispose();
+                        this.dispose();                        
+                    }
                     break;
                 case EDIT : 
-                        this.editDataMenu();
+                    if(this.editDataMenu()){
                         Message.showInformation(this, "Data berhasil diedit!");
                         this.dispose();
-                        new Triggers().updateMenu();
+                        new Triggers().updateMenu();                        
+                    }
                     break;
             }
         }catch(SQLException ex){
@@ -469,7 +514,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnHapusActionPerformed
     
-    private Text txt = new Text();
+    
     private void inpHargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyTyped
         this.txt.decimalOnly(evt);
     }//GEN-LAST:event_inpHargaKeyTyped
@@ -484,7 +529,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
 
     private void inpHargaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.btnSimpanActionPerformed(null);
+            this.inpKodeBarcode.requestFocus();
         }
     }//GEN-LAST:event_inpHargaKeyReleased
 
@@ -499,6 +544,54 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             this.inpHarga.requestFocus();
         }
     }//GEN-LAST:event_inpJenisKeyReleased
+
+    private void inpKodeBarcodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyReleased
+        // cek barcode kosong atau panjangnya kurang dari 5
+        if(this.inpKodeBarcode.getText().equals("")){
+            this.isValidBarcode = false;
+            this.lblShowBarcode.setIcon(null);
+            this.lblShowBarcode.setText("Tidak ada barcode");
+            return;
+        }else if(this.inpKodeBarcode.getText().length() < 5){
+            this.isValidBarcode = false;
+            this.lblShowBarcode.setIcon(null);
+            this.lblShowBarcode.setText("Barcode tidak valid");
+            return;
+        }
+        
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            // cek barcode sudah terpakai atau belum
+            if (!this.barcode.isExistMysql(this.inpKodeBarcode.getText())) {
+                // mengenerate barcode dan menampilkanya
+                this.isValidBarcode = true;
+                this.kodeBarcode = this.inpKodeBarcode.getText();
+                this.barcode.generate(this.inpKodeBarcode.getText(), this.inpId.getText());
+                this.lblShowBarcode.setText("");
+                this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblShowBarcode.getWidth() - 2, this.lblShowBarcode.getHeight() - 2));
+            }else {
+                // jika barcode sudah ada
+                Message.showWarning(this, "Kode barcode tersebut sudah terpakai!");
+                this.isValidBarcode = false;
+                this.lblShowBarcode.setIcon(null);
+                this.lblShowBarcode.setText("Tidak ada barcode");
+                this.inpKodeBarcode.setText("");
+            }
+        }
+    }//GEN-LAST:event_inpKodeBarcodeKeyReleased
+
+    private void inpKodeBarcodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyTyped
+        this.txt.decimalOnly(evt);
+    }//GEN-LAST:event_inpKodeBarcodeKeyTyped
+
+    private void inpKodeBarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyPressed
+        if(this.inpKodeBarcode.getText().length() > 13){
+            // set barcode kosong
+            this.isValidBarcode = false;
+            this.inpKodeBarcode.setText("");
+            this.lblShowBarcode.setIcon(null);
+            this.lblShowBarcode.setText("Tidak ada barcode");
+        }
+    }//GEN-LAST:event_inpKodeBarcodeKeyPressed
 
     /**
      * @param args the command line arguments
@@ -535,14 +628,16 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private javax.swing.JTextField inpHarga;
     private javax.swing.JTextField inpId;
     private javax.swing.JComboBox inpJenis;
+    private javax.swing.JTextField inpKodeBarcode;
     private javax.swing.JTextField inpNama;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBarcode;
-    private javax.swing.JLabel lblData1;
-    private javax.swing.JLabel lblData2;
-    private javax.swing.JLabel lblData3;
+    private javax.swing.JLabel lblHarga;
     private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblJenis;
+    private javax.swing.JLabel lblKodeBarcode;
     private javax.swing.JLabel lblNama;
+    private javax.swing.JLabel lblShowBarcode;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
