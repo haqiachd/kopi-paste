@@ -4,13 +4,16 @@ import com.barcodelib.barcode.Linear;
 import com.koneksi.Database;
 import com.media.Gambar;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Random;
 import javax.swing.ImageIcon;
 
 /**
- *
+ * Manajemen barcode pada data menu
+ * 
  * @author Achmad Baihaqi
  */
 public class Barcode {
@@ -21,89 +24,118 @@ public class Barcode {
     
     private static final String DIRECTORY = "src\\resources\\image\\barcode\\";
     
-    public void generate(String kode) {
+    public void generate(String kodeBarcode, String idMenu) {
         try {
             Linear barcode = new Linear();
             barcode.setType(Linear.CODE128B);
-            barcode.setData(kode);
+            barcode.setData(kodeBarcode);
             barcode.setI(12.0f);
-            barcode.renderBarcode(Barcode.DIRECTORY + kode + ".png");
+            barcode.renderBarcode(Barcode.DIRECTORY + idMenu + ".png");
         } catch (Exception e) {
+            e.printStackTrace();
             Message.showException(this, e);
         }
     }
     
-    public boolean isExistMysql(String kode){
+    public String getKodeBarcode(String idMenu){
         try{
-            String sql = "SELECT id_barcode FROM menu WHERE id_barcode = " + kode;
+            String sql = "SELECT id_barcode FROM menu WHERE id_menu = '"+idMenu+"'";
+            this.db.res = this.db.stat.executeQuery(sql);
+            if(this.db.res.next()){
+                return this.db.res.getString("id_barcode");
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
+        return null;
+    }
+    
+    public boolean isNullBarcode(String idMenu){
+        return this.getKodeBarcode(idMenu) == null;
+    }
+    
+    public boolean isExistMysql(String kodeBarcode){
+        try{
+            String sql = "SELECT id_barcode FROM menu WHERE id_barcode = '" + kodeBarcode + "'";
             this.db.res = this.db.stat.executeQuery(sql);
             if(this.db.res.next()){
                 return true;
             }
         }catch(SQLException ex){
-            Message.showException(this, ex);
-        }
-        return false;
-    }
-    
-    public boolean isExistImage(String kode){
-        return new File(DIRECTORY + kode + ".png").exists();
-    }
-    
-    public boolean isNullBarcode(String idMenu){
-        try{
-            String sql = "SELECT id_barcode FROM menu WHERE id_menu = '" + idMenu + "'";
-            this.db.res = this.db.stat.executeQuery(sql);
-            if(this.db.res.next()){
-                return this.db.res.getString("id_barcode") == null;
-            }
-        }catch(SQLException ex){
-            Message.showException(this, ex);
-        }
-        return false;
-    }
-    
-    public void downloadBarcode(String kode){
-        Blob blob;
-        String dir = DIRECTORY + kode + ".png";
-        try{
-            if(this.isExistMysql(kode)){
-                String sql = "SELECT img_barcode FROM menu WHERE id_barcode = " + kode;
-                this.db.res = this.db.stat.executeQuery(sql);
-                if(this.db.res.next()){
-                    blob = this.db.res.getBlob("img_barcode");
-                    fl.blobToFile(blob, dir);
-                    
-                }
-            }            
-        }catch(Exception ex){
             ex.printStackTrace();
+            Message.showException(this, ex);
         }
+        return false;
     }
     
-    public String randomBarcode(){
-        long random = (long) (new Random().nextDouble() * 9_000_000_000L) + 1_000_000_000_00L;
-        return this.isExistMysql(Long.toString(random)) ? this.randomBarcode() : Long.toString(random);
+    public boolean isExistImage(String filename){
+        if(this.isExistMysql(this.getKodeBarcode(filename))){
+            return new File(DIRECTORY + filename + ".png").exists();
+        }
+        return false;
     }
     
-    public ImageIcon getBarcodeImage(String kode) {
+    public boolean downloadBarcode(String idMenu){
+        Blob blob;
+        // membuat filename dan query download
+        String filename = DIRECTORY + idMenu + ".png",
+               sql = "SELECT img_barcode FROM menu WHERE id_menu = '" + idMenu + "'";
+        try{
+            // cek apakah kode barcode ada atau tidak
+            if(!this.isNullBarcode(idMenu)){
+                // eksekusi query untuk download barcode
+                this.db.res = this.db.stat.executeQuery(sql);
+                
+                if(this.db.res.next()){
+                    // mendapatkan blob dari barcode image
+                    blob = this.db.res.getBlob("img_barcode");
+                    
+                    // konversi blob ke file (png)
+                    fl.blobToFile(blob, filename);
+                    System.out.println("Download barcode success");
+                    return true;
+                }
+            }else{
+                System.out.println("Tidak ada barcode");
+            }       
+        }catch(SQLException | IOException ex){
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
+        return false;
+    }
+    
+    public InputStream barcodeToBlob(String namaFile){
+        try {
+            // konversi file image barcode ke blob mysql
+            return fl.fileToBlob(new File(DIRECTORY + namaFile + ".png"));
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            Message.showException(this, ex);
+        }
+        return null;
+    }
+    
+    public ImageIcon getBarcodeImage(String idMenu) {
         // mengecek apakah file gambar barcode ada atau tidak
-        if (this.isExistImage(kode)) {
+        if (this.isExistImage(idMenu)) {
             // mengembalikan gambar barcode
-            return new ImageIcon(new File(Barcode.DIRECTORY + kode + ".png").toString());
+            return new ImageIcon(new File(Barcode.DIRECTORY + idMenu + ".png").toString());
         } else {
             // download barcode
-            Message.showWarning(this, "Tidak dapat menemukan file '" + kode + "'");
-            return null;
+            return this.downloadBarcode(idMenu) ? this.getBarcodeImage(idMenu) : null;
         }
     }
     
-    public ImageIcon getBarcodeImage(String kode, int width, int height){
-        if(this.isExistImage(kode)){
-            return Gambar.scaleImage(new File(Barcode.DIRECTORY + kode + ".png"), width, height);            
+    public ImageIcon getBarcodeImage(String idMenu, int width, int height){
+        // mengecek apakah file gambar barcode ada atau tidak
+        if(this.isExistImage(idMenu)){
+            // mengembalikan gambar dengan scale
+            return Gambar.scaleImage(new File(Barcode.DIRECTORY + idMenu + ".png"), width, height);            
         } else {
-            Message.showWarning(this, "Tidak dapat menemukan file '" + kode + "'");
-            return null;
+            // download barcode
+            return this.downloadBarcode(idMenu) ? this.getBarcodeImage(idMenu, width, height) : null;
         }
     }
     
@@ -115,36 +147,7 @@ public class Barcode {
     public static void main(String[] args) {
         
         Barcode barcode = new Barcode();
-        barcode.generate("240588155633");
-        System.out.println(barcode.randomBarcode());
-        
-        Random random = new Random();
-        long randomNumber = (long) (random.nextDouble() * 9_000_000_000L) + 1_000_000_000_00L;
-        System.out.println(Long.toString(randomNumber).length());
-        System.out.println(randomNumber);
-        
-//        barcode.generate("0");
-//        barcode.generate("01");
-//        barcode.generate("012");
-//        barcode.generate("0123");
-//        barcode.generate("01234");
-//        barcode.generate("012345");
-//        barcode.generate("0123456");
-//        barcode.generate("01234567");
-//        barcode.generate("012345678");
-//        barcode.generate("01234567890");
-//        barcode.generate("012345678901");
-//        barcode.generate("0123456789012");
-        
-        for(int i = 0; i <= 10; i++){
-            System.out.println(barcode.randomBarcode());
-        }
-        
-        System.out.println(barcode.isExistMysql("0123456789012"));
-//        System.out.println(barcode.isExistBarcode(Barcode.DATA_BAHAN, "0123456789012"));
-        System.out.println(barcode.isExistImage("0123456789012"));
-        System.out.println(barcode.isNullBarcode("MN069"));
-        barcode.downloadBarcode("0123456789012");
+        System.out.println(barcode.isExistImage("MN069"));
         
     }
     
