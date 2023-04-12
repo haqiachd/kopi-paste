@@ -76,7 +76,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnHapus" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="lineHorBot" alignment="1" pref="457" max="32767" attributes="0"/>
+                      <Component id="lineHorBot" alignment="1" pref="459" max="32767" attributes="0"/>
                       <Component id="lineHorTop" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="lblData1" min="-2" pref="150" max="-2" attributes="0"/>
@@ -84,12 +84,18 @@
                           <Component id="inpJenis" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblData2" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lblData2" pref="150" max="32767" attributes="0"/>
+                              <Component id="lblData3" max="32767" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="inpHarga" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblBarcode" max="32767" attributes="0"/>
+                              <Component id="inpHarga" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="21" max="32767" attributes="0"/>
+                  <EmptySpace pref="19" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -120,7 +126,12 @@
                       <Component id="lblData2" alignment="0" max="32767" attributes="0"/>
                       <Component id="inpHarga" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="37" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblBarcode" max="32767" attributes="0"/>
+                      <Component id="lblData3" pref="80" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="32767" attributes="0"/>
                   <Component id="lineHorBot" min="-2" pref="10" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -333,6 +344,27 @@
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpJenisKeyReleased"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblData3">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="16" style="1"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/image/icons/ic-window-data-barcode.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Barcode"/>
+            <Property name="verticalAlignment" type="int" value="1"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBarcode">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder/>
+              </Border>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

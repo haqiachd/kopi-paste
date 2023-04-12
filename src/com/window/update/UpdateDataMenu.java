@@ -1,6 +1,7 @@
 package com.window.update;
 
 import com.koneksi.Database;
+import com.manage.Barcode;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Triggers;
@@ -29,6 +30,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private final Database db = new Database();
     
     private final PopUpBackground win = new PopUpBackground();
+    
+    private final Barcode barcode = new Barcode();
     
     /**
      * Creates new form TambahDataBahan
@@ -69,6 +72,9 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 this.showData();
                 break;
         }
+        
+        this.barcode.generate(this.inpId.getText());
+        this.lblBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblBarcode.getWidth(), this.lblBarcode.getHeight()));
     }
 
     @Override
@@ -165,7 +171,6 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         return this.db.pst.executeUpdate() > 0;
     }
     
-    
     private boolean editDataMenu() throws SQLException{
         
         // validasi data kosong atau tidak
@@ -212,6 +217,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         lblData2 = new javax.swing.JLabel();
         inpHarga = new com.ui.RoundedTextField(15);
         inpJenis = new javax.swing.JComboBox();
+        lblData3 = new javax.swing.JLabel();
+        lblBarcode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -327,6 +334,13 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             }
         });
 
+        lblData3.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblData3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-barcode.png"))); // NOI18N
+        lblData3.setText("Barcode");
+        lblData3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        lblBarcode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -347,17 +361,21 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                         .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnHapus))
-                    .addComponent(lineHorBot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                    .addComponent(lineHorBot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                     .addComponent(lineHorTop, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblData1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpJenis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblData2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(lblData3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpHarga)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inpHarga))))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -382,7 +400,11 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblData2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(inpHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblData3, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -515,8 +537,10 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private javax.swing.JComboBox inpJenis;
     private javax.swing.JTextField inpNama;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblBarcode;
     private javax.swing.JLabel lblData1;
     private javax.swing.JLabel lblData2;
+    private javax.swing.JLabel lblData3;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblTitle;

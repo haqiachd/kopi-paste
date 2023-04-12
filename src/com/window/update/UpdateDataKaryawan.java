@@ -303,6 +303,8 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpPassword = new com.ui.RoundedPasswordField(15);
         lblEye = new javax.swing.JLabel();
         inpShif = new javax.swing.JComboBox();
+        lblUsername1 = new javax.swing.JLabel();
+        inpUsername1 = new com.ui.RoundedTextField(15);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -443,6 +445,16 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang", "Malam" }));
         inpShif.setName("Shif"); // NOI18N
 
+        lblUsername1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblUsername1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
+        lblUsername1.setText("Kode RFID");
+
+        inpUsername1.setBackground(new java.awt.Color(248, 249, 250));
+        inpUsername1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpUsername1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpUsername1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpUsername1.setName("Username"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -489,7 +501,11 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                                 .addComponent(lblNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(inpNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(14, 14, 14)))
+                        .addGap(14, 14, 14))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblUsername1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpUsername1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -507,6 +523,10 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblUsername1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inpUsername1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -528,7 +548,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                     .addComponent(lblEye, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpPassword))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGap(18, 27, Short.MAX_VALUE)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -649,6 +669,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     private javax.swing.JPasswordField inpPassword;
     private javax.swing.JComboBox inpShif;
     private javax.swing.JTextField inpUsername;
+    private javax.swing.JTextField inpUsername1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblEye;
@@ -659,6 +680,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     private javax.swing.JLabel lblShif;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblUsername1;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
     // End of variables declaration//GEN-END:variables

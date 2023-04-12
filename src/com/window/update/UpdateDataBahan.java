@@ -1,5 +1,8 @@
 package com.window.update;
 
+import com.barcodelib.barcode.Linear;
+import com.onbarcode.barcode.EAN13;
+import com.onbarcode.barcode.IBarcode;
 import com.koneksi.Database;
 import com.manage.Bahan;
 import com.manage.Message;
@@ -8,10 +11,39 @@ import com.manage.Triggers;
 import com.manage.Validation;
 import com.media.Audio;
 import com.media.Gambar;
+import com.onbarcode.barcode.EAN13;
+import com.onbarcode.barcode.IBarcode;
 import com.window.dialog.PopUpBackground;
+import java.awt.Font;
+import java.io.File;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.ByteMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import java.awt.event.KeyEvent;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -67,6 +99,8 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 this.showData();
                 break;
         }
+        this.cetak2();
+//        
     }
 
     private String createID(){
@@ -155,10 +189,13 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             // eksekusi query
             int result = this.db.pst.executeUpdate();
             if(result > 0){
+                this.generate(idBahan);
+                //
+//                this.cetak2();
                 Message.showInformation(this, "Data berhasil ditambahkan!");
                 dispose();
             }
-        }catch(SQLException ex){
+        }catch(Exception ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
@@ -207,6 +244,91 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             ex.printStackTrace();
         }
     }
+    
+    public void generate(String kode) throws Exception{
+        EAN13 barcode = new EAN13();
+        barcode.setData(kode);
+        barcode.setUom(IBarcode.UOM_PIXEL);
+        barcode.setX(3f);
+        barcode.setY(75f);
+        
+        barcode.setLeftMargin(0f);
+        barcode.setRightMargin(0f);
+        barcode.setTopMargin(0f);
+        barcode.setBottomMargin(0f);
+        
+        barcode.setResolution(72);
+        
+        barcode.setShowText(true);
+        barcode.setTextFont(new Font("Arial", 0, 12));
+        
+        barcode.setTextMargin(6);
+        barcode.setRotate(IBarcode.ROTATE_0);
+        barcode.drawBarcode("src\\resources\\image\\barcode\\" + kode + ".gif");
+        
+                
+    }
+
+    public void encodeBarcode() {
+
+        EAN13 objEan = new EAN13();
+        objEan.setData(this.lblBarcode.getText().toString());
+        objEan.setUom(IBarcode.UOM_PIXEL);
+        objEan.setX(3f);
+        objEan.setY(175f);
+
+        objEan.setLeftMargin(0f);
+        objEan.setRightMargin(0f);
+        objEan.setTopMargin(0f);
+        objEan.setBottomMargin(0f);
+        objEan.setResolution(72);
+        objEan.setShowText(true);
+        objEan.setTextMargin(6);
+        objEan.setRotate(IBarcode.ROTATE_0);
+        try {
+            objEan.drawBarcode("C://drivers//" + this.inpId.getText().toString() + ".png");
+            JOptionPane.showMessageDialog(this, "BARCODE BERHASIL.....");
+
+        } catch (Exception ex) {
+        }
+    }
+
+    private void setUkuranBarCode(EAN13 mBarcode, float panjangBarcode, float tinggiBarcode) {
+        mBarcode.setX(panjangBarcode);
+        mBarcode.setY(tinggiBarcode);
+
+    }
+
+    private void cetak2() {
+        try {
+            Linear barcode = new Linear();
+            barcode.setType(Linear.CODE128B);
+            barcode.setData(this.inpId.getText());
+            barcode.setI(12.0f);
+            barcode.renderBarcode("src\\resources\\image\\barcode\\" + this.inpId.getText() + ".png");
+            this.lblBarcode.setIcon(Gambar.getBarcode(this.inpId.getText() + ".png"));
+//            this.lblBarcode.setIcon(new ImageIcon(new File("D:").toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getImage() {
+        File fileBarcode = new File("src\\resources\\image\\barcode\\");
+        File[] listFileBarCode = fileBarcode.listFiles();
+        List<File> listBarcode = new ArrayList();
+
+        for (File fileBarc : listFileBarCode) {
+            if (fileBarc.getName().contains(".png")) {
+                listBarcode.add(new File(fileBarc.getAbsolutePath()));
+
+            }
+
+        }
+
+    }
+
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -226,6 +348,8 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         lblSatuan = new javax.swing.JLabel();
         inpJenis = new javax.swing.JComboBox();
         inpSatuan = new javax.swing.JComboBox();
+        lblSatuan1 = new javax.swing.JLabel();
+        lblBarcode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -305,6 +429,11 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         inpNama.setName("Nama Bahan"); // NOI18N
+        inpNama.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpNamaKeyReleased(evt);
+            }
+        });
 
         lblJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblJenis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
@@ -328,6 +457,10 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 inpSatuanActionPerformed(evt);
             }
         });
+
+        lblSatuan1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblSatuan1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
+        lblSatuan1.setText("Barcode");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -365,7 +498,11 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblSatuan, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpSatuan, 0, 293, Short.MAX_VALUE)))))
+                                .addComponent(inpSatuan, 0, 293, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblSatuan1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -391,7 +528,13 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblSatuan, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpSatuan))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblSatuan1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 43, Short.MAX_VALUE))
+                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -459,6 +602,15 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
+    private void inpNamaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNamaKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            //            this.lblBarcode.setIcon((Icon) new File("src\\resources\\image\\barcode\\" + this.inpId + ".png"));
+                //            lblSatuan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
+                lblBarcode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/barcode/" + this.inpId + ".png")));
+                //            this.lblBarcode.setIcon();
+            }
+    }//GEN-LAST:event_inpNamaKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -477,7 +629,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            UpdateDataBahan dialog = new UpdateDataBahan(new javax.swing.JFrame(), true, 2, "BA003");
+            UpdateDataBahan dialog = new UpdateDataBahan(new javax.swing.JFrame(), true, 1, "BA003");
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -496,10 +648,12 @@ public class UpdateDataBahan extends javax.swing.JDialog {
     private javax.swing.JTextField inpNama;
     private javax.swing.JComboBox inpSatuan;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblBarcode;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblJenis;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblSatuan;
+    private javax.swing.JLabel lblSatuan1;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
