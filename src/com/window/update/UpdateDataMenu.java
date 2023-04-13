@@ -7,6 +7,7 @@ import com.manage.Message;
 import com.manage.Text;
 import com.manage.Triggers;
 import com.manage.Validation;
+import com.manage.Waktu;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
@@ -54,7 +55,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         // set ui button
         this.inpId.setEditable(false);
         this.btnSimpan.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnBatal.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
         // set margin text field
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
@@ -115,7 +116,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private void showData(){
         try{
             // menyiapkan query untuk mendapatkan data dari menu
-            String sql = "SELECT nama_menu, jenis, jenis, harga FROM menu "
+            String sql = "SELECT nama_menu, jenis, jenis, harga, id_barcode FROM menu "
                        + "WHERE id_menu = '"+this.idSelected+"'";
             System.out.println(sql);
             
@@ -128,18 +129,21 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setSelectedItem(this.db.res.getString("jenis"));
                 this.inpHarga.setText(this.db.res.getString("harga"));
+                
+                // jika pada menu terdapat barcode
+                if(!this.barcode.isNullBarcode(this.idSelected)){
+                    // medapatkan kode barcode
+                    this.kodeBarcode = this.db.res.getString("id_barcode");
+                    this.inpKodeBarcode.setText(this.kodeBarcode);
+                    // menampilkan barcode image
+                    this.lblShowBarcode.setText("");
+                    this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblShowBarcode.getWidth() - 2, this.lblShowBarcode.getHeight() - 2));
+                }
             }
             
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
-        }
-    }
-    
-    private void resetDetailMenu() throws SQLException{
-        int result = this.db.stat.executeUpdate("DELETE FROM detail_menu WHERE id_menu = '"+this.idSelected+"'");
-        if(result > 0){
-            System.out.println("Reset detail menu");
         }
     }
     
@@ -177,6 +181,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             // jika barcode tidak dimasukan
             this.db.pst.setString(5, null);
             this.db.pst.setString(6, null);
+            this.barcode.deleteBarcode(id);
         }
         
         // eksekusi query
@@ -204,8 +209,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                harga = this.inpHarga.getText(),
                sql = String.format(
                        "UPDATE menu "
-                     + "SET nama_menu = '%s', jenis = '%s', harga = '%s' "
-                     + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, id);
+                     + "SET nama_menu = '%s', jenis = '%s', harga = '%s', id_barcode = %s, img_barcode = '%s'"
+                     + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, this.kodeBarcode, this.barcode.barcodeToBlob(id), id);
         
         int result = this.db.stat.executeUpdate(sql);
         return result > 0;
@@ -220,7 +225,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         lineHorTop = new javax.swing.JSeparator();
         lineHorBot = new javax.swing.JSeparator();
         btnSimpan = new javax.swing.JButton();
-        btnHapus = new javax.swing.JToggleButton();
+        btnBatal = new javax.swing.JToggleButton();
         lblId = new javax.swing.JLabel();
         inpId = new com.ui.RoundedTextField(15);
         lblNama = new javax.swing.JLabel();
@@ -277,21 +282,21 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             }
         });
 
-        btnHapus.setBackground(new java.awt.Color(220, 41, 41));
-        btnHapus.setForeground(new java.awt.Color(255, 255, 255));
-        btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-batal.png"))); // NOI18N
-        btnHapus.setText("Batalkan");
-        btnHapus.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnBatal.setBackground(new java.awt.Color(220, 41, 41));
+        btnBatal.setForeground(new java.awt.Color(255, 255, 255));
+        btnBatal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-data-batal.png"))); // NOI18N
+        btnBatal.setText("Batalkan");
+        btnBatal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnHapusMouseEntered(evt);
+                btnBatalMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnHapusMouseExited(evt);
+                btnBatalMouseExited(evt);
             }
         });
-        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+        btnBatal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHapusActionPerformed(evt);
+                btnBatalActionPerformed(evt);
             }
         });
 
@@ -397,7 +402,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnHapus))
+                        .addComponent(btnBatal))
                     .addComponent(lineHorBot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                     .addComponent(lineHorTop, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -452,7 +457,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19))
         );
 
@@ -501,18 +506,19 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
-    private void btnHapusMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseEntered
-        this.btnHapus.setIcon(Gambar.getIcon("ic-data-batal-entered.png"));
-    }//GEN-LAST:event_btnHapusMouseEntered
+    private void btnBatalMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBatalMouseEntered
+        this.btnBatal.setIcon(Gambar.getIcon("ic-data-batal-entered.png"));
+    }//GEN-LAST:event_btnBatalMouseEntered
 
-    private void btnHapusMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseExited
-        this.btnHapus.setIcon(Gambar.getIcon("ic-data-batal.png"));
-    }//GEN-LAST:event_btnHapusMouseExited
+    private void btnBatalMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBatalMouseExited
+        this.btnBatal.setIcon(Gambar.getIcon("ic-data-batal.png"));
+    }//GEN-LAST:event_btnBatalMouseExited
 
-    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.win.dispose();
         this.dispose();
-    }//GEN-LAST:event_btnHapusActionPerformed
+//        this.barcode.deleteBarcode(this.idSelected);
+    }//GEN-LAST:event_btnBatalActionPerformed
     
     
     private void inpHargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyTyped
@@ -559,7 +565,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             return;
         }
         
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+//        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
             // cek barcode sudah terpakai atau belum
             if (!this.barcode.isExistMysql(this.inpKodeBarcode.getText())) {
                 // mengenerate barcode dan menampilkanya
@@ -568,6 +574,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 this.barcode.generate(this.inpKodeBarcode.getText(), this.inpId.getText());
                 this.lblShowBarcode.setText("");
                 this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblShowBarcode.getWidth() - 2, this.lblShowBarcode.getHeight() - 2));
+                new Waktu().delay(100);
             }else {
                 // jika barcode sudah ada
                 Message.showWarning(this, "Kode barcode tersebut sudah terpakai!");
@@ -576,7 +583,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 this.lblShowBarcode.setText("Tidak ada barcode");
                 this.inpKodeBarcode.setText("");
             }
-        }
+//        }
     }//GEN-LAST:event_inpKodeBarcodeKeyReleased
 
     private void inpKodeBarcodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyTyped
@@ -584,7 +591,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_inpKodeBarcodeKeyTyped
 
     private void inpKodeBarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyPressed
-        if(this.inpKodeBarcode.getText().length() > 13){
+        if(this.inpKodeBarcode.getText().length() > 12){
             // set barcode kosong
             this.isValidBarcode = false;
             this.inpKodeBarcode.setText("");
@@ -623,7 +630,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btnHapus;
+    private javax.swing.JToggleButton btnBatal;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JTextField inpHarga;
     private javax.swing.JTextField inpId;

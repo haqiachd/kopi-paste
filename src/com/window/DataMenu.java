@@ -248,9 +248,11 @@ public class DataMenu extends javax.swing.JFrame {
                 this.inpJenis.setText(this.db.res.getString("jenis"));
                 this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("harga")));
                 if(this.barcode.isNullBarcode(this.idSelected)){
-                    this.lblBarcode.setText("Tidak ada barcode");
+                    this.lblShowBarcode.setIcon(null);
+                    this.lblShowBarcode.setText("Tidak ada barcode");
                 }else{
-                    this.lblBarcode.setIcon(this.barcode.getBarcodeImage(this.idSelected, 294, 57));
+                    this.lblShowBarcode.setText("");
+                    this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.idSelected, 294, 57));
                 }
             }
             
@@ -296,9 +298,8 @@ public class DataMenu extends javax.swing.JFrame {
         this.inpJenis.setText("");
         this.inpHarga.setText("");
         this.inpPendapatanBulan.setText("");
-//        this.inpPendapatanHari.setText("");
         this.inpJualBulan.setText("");
-//        this.inpJualHari.setText("");
+        this.lblShowBarcode.setText("");
         this.idSelected = "";
     }
     
@@ -359,7 +360,7 @@ public class DataMenu extends javax.swing.JFrame {
         btnLineChart = new javax.swing.JButton();
         btnBarChart = new javax.swing.JButton();
         lblPendapatanBulan1 = new javax.swing.JLabel();
-        lblBarcode = new javax.swing.JLabel();
+        lblShowBarcode = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -862,7 +863,9 @@ public class DataMenu extends javax.swing.JFrame {
         lblPendapatanBulan1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-barcode.png"))); // NOI18N
         lblPendapatanBulan1.setText("Barcode");
 
-        lblBarcode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lblShowBarcode.setFont(new java.awt.Font("Ebrima", 1, 18)); // NOI18N
+        lblShowBarcode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblShowBarcode.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -917,7 +920,7 @@ public class DataMenu extends javax.swing.JFrame {
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(btnBarChart)
                                                     .addGap(0, 0, Short.MAX_VALUE))
-                                                .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                                .addComponent(lblShowBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                     .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
@@ -986,7 +989,7 @@ public class DataMenu extends javax.swing.JFrame {
                                     .addGroup(pnlContentLayout.createSequentialGroup()
                                         .addComponent(lblPendapatanBulan1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblShowBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(btnLineChart)
@@ -1445,7 +1448,6 @@ public class DataMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblAlamat;
-    private javax.swing.JLabel lblBarcode;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
@@ -1462,6 +1464,7 @@ public class DataMenu extends javax.swing.JFrame {
     private javax.swing.JLabel lblPendapatanBulan;
     private javax.swing.JLabel lblPendapatanBulan1;
     private javax.swing.JLabel lblProfileSidebar;
+    private javax.swing.JLabel lblShowBarcode;
     private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;
     private javax.swing.JLabel lblTopProfile;
