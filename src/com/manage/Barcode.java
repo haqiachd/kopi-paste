@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
@@ -70,10 +72,7 @@ public class Barcode {
     }
     
     public boolean isExistImage(String filename){
-        if(this.isExistMysql(this.getKodeBarcode(filename))){
-            return new File(DIRECTORY + filename + ".png").exists();
-        }
-        return false;
+        return new File(DIRECTORY + filename + ".png").exists();
     }
     
     public boolean downloadBarcode(String idMenu){
@@ -139,6 +138,10 @@ public class Barcode {
         }
     }
     
+    public boolean deleteBarcode(String filename){
+        return new File(Barcode.DIRECTORY + filename + ".png").delete();
+    }
+    
     public void close(){
         this.db.closeConnection();
     }
@@ -147,7 +150,8 @@ public class Barcode {
     public static void main(String[] args) {
         
         Barcode barcode = new Barcode();
-        System.out.println(barcode.isExistImage("MN069"));
+//        System.out.println(barcode.isExistImage("MN074"));
+        System.out.println(barcode.deleteBarcode("MN076"));
         
     }
     
