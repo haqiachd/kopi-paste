@@ -1,8 +1,5 @@
 package com.window.update;
 
-import com.barcodelib.barcode.Linear;
-import com.onbarcode.barcode.EAN13;
-import com.onbarcode.barcode.IBarcode;
 import com.koneksi.Database;
 import com.manage.Bahan;
 import com.manage.Message;
@@ -11,39 +8,11 @@ import com.manage.Triggers;
 import com.manage.Validation;
 import com.media.Audio;
 import com.media.Gambar;
-import com.onbarcode.barcode.EAN13;
-import com.onbarcode.barcode.IBarcode;
 import com.window.dialog.PopUpBackground;
-import java.awt.Font;
-import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.ByteMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.event.KeyEvent;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -98,9 +67,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 this.inpId.setText(this.idSelected);
                 this.showData();
                 break;
-        }
-        this.cetak2();
-//        
+        } 
     }
 
     private String createID(){
@@ -189,9 +156,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             // eksekusi query
             int result = this.db.pst.executeUpdate();
             if(result > 0){
-                this.generate(idBahan);
-                //
-//                this.cetak2();
                 Message.showInformation(this, "Data berhasil ditambahkan!");
                 dispose();
             }
@@ -244,91 +208,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
             ex.printStackTrace();
         }
     }
-    
-    public void generate(String kode) throws Exception{
-        EAN13 barcode = new EAN13();
-        barcode.setData(kode);
-        barcode.setUom(IBarcode.UOM_PIXEL);
-        barcode.setX(3f);
-        barcode.setY(75f);
-        
-        barcode.setLeftMargin(0f);
-        barcode.setRightMargin(0f);
-        barcode.setTopMargin(0f);
-        barcode.setBottomMargin(0f);
-        
-        barcode.setResolution(72);
-        
-        barcode.setShowText(true);
-        barcode.setTextFont(new Font("Arial", 0, 12));
-        
-        barcode.setTextMargin(6);
-        barcode.setRotate(IBarcode.ROTATE_0);
-        barcode.drawBarcode("src\\resources\\image\\barcode\\" + kode + ".gif");
-        
-                
-    }
-
-    public void encodeBarcode() {
-
-        EAN13 objEan = new EAN13();
-        objEan.setData(this.lblBarcode.getText().toString());
-        objEan.setUom(IBarcode.UOM_PIXEL);
-        objEan.setX(3f);
-        objEan.setY(175f);
-
-        objEan.setLeftMargin(0f);
-        objEan.setRightMargin(0f);
-        objEan.setTopMargin(0f);
-        objEan.setBottomMargin(0f);
-        objEan.setResolution(72);
-        objEan.setShowText(true);
-        objEan.setTextMargin(6);
-        objEan.setRotate(IBarcode.ROTATE_0);
-        try {
-            objEan.drawBarcode("C://drivers//" + this.inpId.getText().toString() + ".png");
-            JOptionPane.showMessageDialog(this, "BARCODE BERHASIL.....");
-
-        } catch (Exception ex) {
-        }
-    }
-
-    private void setUkuranBarCode(EAN13 mBarcode, float panjangBarcode, float tinggiBarcode) {
-        mBarcode.setX(panjangBarcode);
-        mBarcode.setY(tinggiBarcode);
-
-    }
-
-    private void cetak2() {
-        try {
-            Linear barcode = new Linear();
-            barcode.setType(Linear.CODE128B);
-            barcode.setData(this.inpId.getText());
-            barcode.setI(12.0f);
-            barcode.renderBarcode("src\\resources\\image\\barcode\\" + this.inpId.getText() + ".png");
-            this.lblBarcode.setIcon(Gambar.getBarcode(this.inpId.getText() + ".png"));
-//            this.lblBarcode.setIcon(new ImageIcon(new File("D:").toString()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getImage() {
-        File fileBarcode = new File("src\\resources\\image\\barcode\\");
-        File[] listFileBarCode = fileBarcode.listFiles();
-        List<File> listBarcode = new ArrayList();
-
-        for (File fileBarc : listFileBarCode) {
-            if (fileBarc.getName().contains(".png")) {
-                listBarcode.add(new File(fileBarc.getAbsolutePath()));
-
-            }
-
-        }
-
-    }
-
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
