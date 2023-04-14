@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
@@ -79,19 +77,29 @@ public class Barcode {
         Blob blob;
         // membuat filename dan query download
         String filename = DIRECTORY + idMenu + ".png",
-               sql = "SELECT img_barcode FROM menu WHERE id_menu = '" + idMenu + "'";
+               sql = "SELECT id_barcode, img_barcode FROM menu WHERE id_menu = '" + idMenu + "'";
         try{
             // cek apakah kode barcode ada atau tidak
             if(!this.isNullBarcode(idMenu)){
                 // eksekusi query untuk download barcode
                 this.db.res = this.db.stat.executeQuery(sql);
                 
+                // cek barcode pada database ada atau tidak
                 if(this.db.res.next()){
                     // mendapatkan blob dari barcode image
-                    blob = this.db.res.getBlob("img_barcode");
+                    blob = this.db.res.getBlob("img_barcode"); 
                     
-                    // konversi blob ke file (png)
-                    fl.blobToFile(blob, filename);
+                    // cek blob kosong atau tidak
+                    if(blob != null){
+                        System.out.println("KONVERSI");
+                        // konversi blob ke file (png)
+                        fl.blobToFile(blob, filename);
+                    }else{
+                        System.out.println("GENERATE");
+                        // generate barcode
+                        this.generate(this.db.res.getString("id_barcode"), idMenu);
+                    }
+                    
                     System.out.println("Download barcode success");
                     return true;
                 }
@@ -139,6 +147,7 @@ public class Barcode {
     }
     
     public boolean deleteBarcode(String filename){
+        System.out.println("FILE : " + Barcode.DIRECTORY + filename + ".png");
         return new File(Barcode.DIRECTORY + filename + ".png").delete();
     }
     
@@ -147,12 +156,25 @@ public class Barcode {
     }
     
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         
         Barcode barcode = new Barcode();
-//        System.out.println(barcode.isExistImage("MN074"));
-        System.out.println(barcode.deleteBarcode("MN076"));
         
+        System.out.println(barcode.barcodeToBlob("MN073"));
+        
+        InputStream in = barcode.barcodeToBlob("MN073");
+        System.out.println(in.available());
+        String bytes = "";
+//        for(int i = 1; i <= in.available(); i++){
+////            System.out.println(in.read());
+//            bytes += in.read();
+//        }
+//        
+//        System.out.println(bytes);
+        Blob blob;
+         System.out.println(barcode.downloadBarcode("MN001"));
+        
+        System.exit(1);
     }
     
 }
