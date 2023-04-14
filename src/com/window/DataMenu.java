@@ -35,7 +35,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class DataMenu extends javax.swing.JFrame {
     
-    private String keyword = "", idSelected = "";
+    private String idSelected = "";
     
     private final Database db = new Database();
     
@@ -166,7 +166,7 @@ public class DataMenu extends javax.swing.JFrame {
         
         try{
             // query untuk mengambil data menu pada tabel mysql
-            String sql = "SELECT id_menu, nama_menu, jenis, harga FROM menu " + keyword;
+            String sql = "SELECT id_menu, nama_menu, jenis, harga FROM menu";
             System.out.println(sql);
 
             // eksekusi query
@@ -247,10 +247,13 @@ public class DataMenu extends javax.swing.JFrame {
                 this.inpNama.setText(this.db.res.getString("nama_menu"));
                 this.inpJenis.setText(this.db.res.getString("jenis"));
                 this.inpHarga.setText(text.toMoneyCase(this.db.res.getString("harga")));
+                
+                // cek apakah pada menu terdapat barcode atau tidak
                 if(this.barcode.isNullBarcode(this.idSelected)){
                     this.lblShowBarcode.setIcon(null);
                     this.lblShowBarcode.setText("Tidak ada barcode");
                 }else{
+                    // menampilkan barcode
                     this.lblShowBarcode.setText("");
                     this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.idSelected, 294, 57));
                 }
@@ -300,6 +303,7 @@ public class DataMenu extends javax.swing.JFrame {
         this.inpPendapatanBulan.setText("");
         this.inpJualBulan.setText("");
         this.lblShowBarcode.setText("");
+        this.lblShowBarcode.setIcon(null);
         this.idSelected = "";
     }
     
@@ -1227,6 +1231,7 @@ public class DataMenu extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
+        this.barcode.close();
         System.out.println(this.getClass().getName() + " closed");
     }//GEN-LAST:event_formWindowClosed
 
@@ -1315,6 +1320,8 @@ public class DataMenu extends javax.swing.JFrame {
                         }
                         // mengecek apakah data supplier berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
+                            // menghapus barcode
+                            this.barcode.deleteBarcode(this.inpId.getText());
                             Message.showInformation(this, "Data berhasil dihapus!");
                             // reset data menu
                             DataMenu.DATA_MENU = new DefaultTableModel();
@@ -1359,19 +1366,11 @@ public class DataMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelDataKeyPressed
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
-//        String key = this.inpCari.getText();
-//        this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
-//        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
-//        this.showTabel();
         this.cariData();
         this.lblKeyword.setText(String.format("Menampilkan %d data menu dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
-//        String key = this.inpCari.getText();
-//        this.keyword = "WHERE id_menu LIKE '%"+key+"%' OR nama_menu LIKE '%"+key+"%'";
-//        this.lblKeyword.setText("Menampilkan data menu dengan keyword \""+key+"\"");
-//        this.showTabel();
         this.cariData();
         this.lblKeyword.setText(String.format("Menampilkan %d data menu dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyReleased

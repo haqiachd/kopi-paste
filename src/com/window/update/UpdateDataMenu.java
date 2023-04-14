@@ -2,7 +2,6 @@ package com.window.update;
 
 import com.koneksi.Database;
 import com.manage.Barcode;
-import com.manage.FileManager;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Triggers;
@@ -11,6 +10,7 @@ import com.manage.Waktu;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
@@ -26,7 +26,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     
     private int kondisi;
     
-    private String idSelected, kodeBarcode;
+    private String idSelected, idBarcode = "";
     
     private boolean isValidBarcode = false;
     
@@ -37,6 +37,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private final Barcode barcode = new Barcode();
     
     private final Text txt = new Text();
+    
+    private final Waktu waktu = new Waktu();
     
     /**
      * Creates new form TambahDataBahan
@@ -133,8 +135,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                 // jika pada menu terdapat barcode
                 if(!this.barcode.isNullBarcode(this.idSelected)){
                     // medapatkan kode barcode
-                    this.kodeBarcode = this.db.res.getString("id_barcode");
-                    this.inpKodeBarcode.setText(this.kodeBarcode);
+                    this.idBarcode = this.db.res.getString("id_barcode");
+                    this.inpKodeBarcode.setText(this.idBarcode);
                     // menampilkan barcode image
                     this.lblShowBarcode.setText("");
                     this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblShowBarcode.getWidth() - 2, this.lblShowBarcode.getHeight() - 2));
@@ -159,6 +161,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             Message.showWarning(this, "Harga tidak boleh 0");
             return false;
         }
+        
         // mendapatkan data
         String id = this.inpId.getText(),
                nama = this.inpNama.getText(),
@@ -168,14 +171,14 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         // menyiapkan query
         String sql = "INSERT INTO menu VALUES(?, ?, ?, ?, ?, ?)";
         this.db.pst = this.db.conn.prepareStatement(sql);
-        
         this.db.pst.setString(1, id);
         this.db.pst.setString(2, nama);
         this.db.pst.setString(3, jenis);
         this.db.pst.setString(4, harga);
+        
         // jika barcode dimasukan / valid
         if(this.isValidBarcode){
-            this.db.pst.setString(5, this.kodeBarcode);
+            this.db.pst.setString(5, this.inpKodeBarcode.getText());
             this.db.pst.setBlob(6, this.barcode.barcodeToBlob(id));            
         }else{
             // jika barcode tidak dimasukan
@@ -186,6 +189,35 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         
         // eksekusi query
         return this.db.pst.executeUpdate() > 0;
+    }
+    
+    private boolean editDataMenuOld() throws SQLException{
+        
+        // validasi data kosong atau tidak
+        if(!Validation.isEmptyTextField(this.inpNama)){
+            return false;
+        }else if(!Validation.isEmptyComboBox(this.inpJenis)){
+            return false;
+        }else if(!Validation.isEmptyTextField(this.inpHarga)){
+            return false;
+        }else if(Integer.parseInt(this.inpHarga.getText()) <= 0){
+            Message.showWarning(this, "Harga tidak boleh 0");
+            return false;
+        }
+        
+        // mendapatkan data
+        String id = this.inpId.getText(),
+               nama = this.inpNama.getText(),
+               jenis = this.inpJenis.getSelectedItem().toString(),
+               harga = this.inpHarga.getText(),
+               kodeBarcode = this.inpKodeBarcode.getText(),
+               sql = String.format(
+                       "UPDATE menu "
+                     + "SET nama_menu = '%s', jenis = '%s', harga = '%s', id_barcode = '%s', img_barcode = '%s'"
+                     + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, kodeBarcode, this.barcode.barcodeToBlob(id), id);
+        
+        int result = this.db.stat.executeUpdate(sql);
+        return result > 0;
     }
     
     private boolean editDataMenu() throws SQLException{
@@ -207,13 +239,29 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                nama = this.inpNama.getText(),
                jenis = this.inpJenis.getSelectedItem().toString(),
                harga = this.inpHarga.getText(),
-               sql = String.format(
-                       "UPDATE menu "
-                     + "SET nama_menu = '%s', jenis = '%s', harga = '%s', id_barcode = %s, img_barcode = '%s'"
-                     + "WHERE id_menu = '"+this.idSelected+"'", nama, jenis, harga, this.kodeBarcode, this.barcode.barcodeToBlob(id), id);
+               kodeBarcode = this.inpKodeBarcode.getText(),
+               sql = "UPDATE menu "
+                     + "SET nama_menu = ?, jenis = ?, harga = ?, id_barcode = ?, img_barcode = ?"
+                     + "WHERE id_menu = ?";
         
-        int result = this.db.stat.executeUpdate(sql);
-        return result > 0;
+        this.db.pst = this.db.conn.prepareStatement(sql);
+        this.db.pst.setString(1, nama);
+        this.db.pst.setString(2, jenis);
+        this.db.pst.setString(3, harga);
+        
+        // jika barcode dimasukan / valid
+        if(this.isValidBarcode){
+            this.db.pst.setString(4, kodeBarcode);
+            this.db.pst.setBlob(5, this.barcode.barcodeToBlob(id));            
+        }else{
+            // jika barcode tidak dimasukan
+            this.db.pst.setString(4, null);
+            this.db.pst.setString(5, null);
+            this.barcode.deleteBarcode(id);
+        }
+        this.db.pst.setString(6, id);
+        
+        return this.db.pst.executeUpdate() > 0;
     }
     
     @SuppressWarnings("unchecked")
@@ -517,7 +565,19 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.win.dispose();
         this.dispose();
-//        this.barcode.deleteBarcode(this.idSelected);
+        
+        switch(this.kondisi){
+            case UpdateDataMenu.TAMBAH : 
+                System.out.println("HAPUS TAMBAH");
+                this.barcode.deleteBarcode(this.inpId.getText());
+                break;
+            case UpdateDataMenu.EDIT : 
+                if(!this.idBarcode.equals(this.inpKodeBarcode.getText())){
+                    System.out.println("HAPUS EDIT");
+                    this.barcode.deleteBarcode(this.inpId.getText());
+                }
+                break;
+        }
     }//GEN-LAST:event_btnBatalActionPerformed
     
     
@@ -527,10 +587,12 @@ public class UpdateDataMenu extends javax.swing.JDialog {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
+        this.barcode.close();
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.db.closeConnection();
+        this.barcode.close();
     }//GEN-LAST:event_formWindowClosing
 
     private void inpHargaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpHargaKeyReleased
@@ -565,25 +627,22 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             return;
         }
         
-//        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            // cek barcode sudah terpakai atau belum
-            if (!this.barcode.isExistMysql(this.inpKodeBarcode.getText())) {
-                // mengenerate barcode dan menampilkanya
-                this.isValidBarcode = true;
-                this.kodeBarcode = this.inpKodeBarcode.getText();
-                this.barcode.generate(this.inpKodeBarcode.getText(), this.inpId.getText());
-                this.lblShowBarcode.setText("");
-                this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblShowBarcode.getWidth() - 2, this.lblShowBarcode.getHeight() - 2));
-                new Waktu().delay(100);
-            }else {
-                // jika barcode sudah ada
-                Message.showWarning(this, "Kode barcode tersebut sudah terpakai!");
-                this.isValidBarcode = false;
-                this.lblShowBarcode.setIcon(null);
-                this.lblShowBarcode.setText("Tidak ada barcode");
-                this.inpKodeBarcode.setText("");
-            }
-//        }
+        // cek barcode sudah terpakai atau belum
+        if (!this.barcode.isExistMysql(this.inpKodeBarcode.getText())) {
+            // mengenerate barcode dan menampilkanya
+            this.isValidBarcode = true;
+            this.barcode.generate(this.inpKodeBarcode.getText(), this.inpId.getText());
+            this.lblShowBarcode.setText("");
+            this.lblShowBarcode.setIcon(this.barcode.getBarcodeImage(this.inpId.getText(), this.lblShowBarcode.getWidth() - 2, this.lblShowBarcode.getHeight() - 2));
+            new Waktu().delay(100);
+        }else {
+            // jika barcode sudah ada
+            Message.showWarning(this, "Kode barcode tersebut sudah terpakai!");
+            this.isValidBarcode = false;
+            this.lblShowBarcode.setIcon(null);
+            this.lblShowBarcode.setText("Tidak ada barcode");
+            this.inpKodeBarcode.setText("");
+        }
     }//GEN-LAST:event_inpKodeBarcodeKeyReleased
 
     private void inpKodeBarcodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyTyped
