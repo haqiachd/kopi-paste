@@ -148,7 +148,7 @@ public class Barcode {
     
     public boolean deleteBarcode(String filename){
         System.out.println("FILE : " + Barcode.DIRECTORY + filename + ".png");
-        return new File(Barcode.DIRECTORY + filename + ".png").delete();
+        return fl.deleteFile(Barcode.DIRECTORY + filename + ".png");
     }
     
     public void close(){
@@ -159,20 +159,9 @@ public class Barcode {
     public static void main(String[] args) throws Exception{
         
         Barcode barcode = new Barcode();
-        
-        System.out.println(barcode.barcodeToBlob("MN073"));
-        
-        InputStream in = barcode.barcodeToBlob("MN073");
-        System.out.println(in.available());
-        String bytes = "";
-//        for(int i = 1; i <= in.available(); i++){
-////            System.out.println(in.read());
-//            bytes += in.read();
-//        }
-//        
-//        System.out.println(bytes);
-        Blob blob;
-         System.out.println(barcode.downloadBarcode("MN001"));
+        barcode.downloadBarcode("MN070");
+        boolean p = barcode.deleteBarcode("MN070");
+        System.out.println(p);
         
         System.exit(1);
     }
