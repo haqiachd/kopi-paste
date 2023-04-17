@@ -10,8 +10,6 @@ import com.manage.Waktu;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
-import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -240,26 +238,34 @@ public class UpdateDataMenu extends javax.swing.JDialog {
                jenis = this.inpJenis.getSelectedItem().toString(),
                harga = this.inpHarga.getText(),
                kodeBarcode = this.inpKodeBarcode.getText(),
-               sql = "UPDATE menu "
-                     + "SET nama_menu = ?, jenis = ?, harga = ?, id_barcode = ?, img_barcode = ?"
-                     + "WHERE id_menu = ?";
+               sql;
         
-        this.db.pst = this.db.conn.prepareStatement(sql);
-        this.db.pst.setString(1, nama);
-        this.db.pst.setString(2, jenis);
-        this.db.pst.setString(3, harga);
-        
-        // jika barcode dimasukan / valid
-        if(this.isValidBarcode){
+        // jika barcode diinputkan
+        if(this.isValidBarcode) {
+            sql = "UPDATE menu "
+                    + "SET nama_menu = ?, jenis = ?, harga = ?, id_barcode = ?, img_barcode = ?"
+                    + "WHERE id_menu = ?";
+            
+            this.db.pst = this.db.conn.prepareStatement(sql);
+            this.db.pst.setString(1, nama);
+            this.db.pst.setString(2, jenis);
+            this.db.pst.setString(3, harga);
             this.db.pst.setString(4, kodeBarcode);
-            this.db.pst.setBlob(5, this.barcode.barcodeToBlob(id));            
-        }else{
-            // jika barcode tidak dimasukan
-            this.db.pst.setString(4, null);
-            this.db.pst.setString(5, null);
-            this.barcode.deleteBarcode(id);
+            this.db.pst.setBlob(5, this.barcode.barcodeToBlob(id)); 
+            this.db.pst.setString(6, id);
+        } 
+        // jika barcode tidak diinputkan
+        else {
+           sql = "UPDATE menu "
+                 + "SET nama_menu = ?, jenis = ?, harga = ? "
+                 + "WHERE id_menu = ?";
+
+            this.db.pst = this.db.conn.prepareStatement(sql);
+            this.db.pst.setString(1, nama);
+            this.db.pst.setString(2, jenis);
+            this.db.pst.setString(3, harga);
+            this.db.pst.setString(4, id);
         }
-        this.db.pst.setString(6, id);
         
         return this.db.pst.executeUpdate() > 0;
     }
@@ -574,7 +580,8 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             case UpdateDataMenu.EDIT : 
                 if(!this.idBarcode.equals(this.inpKodeBarcode.getText())){
                     System.out.println("HAPUS EDIT");
-                    this.barcode.deleteBarcode(this.inpId.getText());
+                    boolean t = this.barcode.deleteBarcode(this.inpId.getText());
+                    System.out.println("STATUS DELETE : " + t);
                 }
                 break;
         }
