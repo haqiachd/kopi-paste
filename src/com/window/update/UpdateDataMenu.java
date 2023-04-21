@@ -257,7 +257,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
         // jika barcode tidak diinputkan
         else {
            sql = "UPDATE menu "
-                 + "SET nama_menu = ?, jenis = ?, harga = ? "
+                 + "SET nama_menu = ?, jenis = ?, harga = ?, id_barcode = NULL, img_barcode = NULL "
                  + "WHERE id_menu = ?";
 
             this.db.pst = this.db.conn.prepareStatement(sql);
