@@ -155,15 +155,4 @@ public class Barcode {
         this.db.closeConnection();
     }
     
-    
-    public static void main(String[] args) throws Exception{
-        
-        Barcode barcode = new Barcode();
-        barcode.downloadBarcode("MN070");
-        boolean p = barcode.deleteBarcode("MN070");
-        System.out.println(p);
-        
-        System.exit(1);
-    }
-    
 }
