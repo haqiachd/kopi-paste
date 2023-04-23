@@ -100,6 +100,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
+ .idea/
 out/
 
 # mpeltonen/sbt-idea plugin
@@ -223,3 +224,17 @@ local.properties
 .sts4-cache/
 
 
+### Project Folders / Files
+
+# Folders
+src\resources\image\barcode
+.idea/
+
+# Files
+END USER LICENSE AGREEMENT.rtf
+Kopi Paste.iml
+Kopi_Paste.exe
+Kopi_Paste.jar
+app.xml
+applet.policy
+catatan update diskon.txt
