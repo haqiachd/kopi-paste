@@ -171,8 +171,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         this.us.pst.setString(3, "KARYAWAN");
         this.us.pst.setString(4, idKaryawan);
         
-        boolean o = this.us.pst.executeUpdate() > 0;
-        return o;
+        return this.us.pst.executeUpdate() > 0;
     }
     
     

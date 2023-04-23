@@ -12,7 +12,6 @@ import com.window.dialog.PopUpBackground;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
-import java.awt.event.KeyEvent;
 
 /**
  *
@@ -67,7 +66,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 this.inpId.setText(this.idSelected);
                 this.showData();
                 break;
-        } 
+        }
     }
 
     private String createID(){
@@ -159,7 +158,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 Message.showInformation(this, "Data berhasil ditambahkan!");
                 dispose();
             }
-        }catch(Exception ex){
+        }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
@@ -227,8 +226,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         lblSatuan = new javax.swing.JLabel();
         inpJenis = new javax.swing.JComboBox();
         inpSatuan = new javax.swing.JComboBox();
-        lblSatuan1 = new javax.swing.JLabel();
-        lblBarcode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -308,11 +305,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         inpNama.setName("Nama Bahan"); // NOI18N
-        inpNama.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpNamaKeyReleased(evt);
-            }
-        });
 
         lblJenis.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblJenis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-jenismenu.png"))); // NOI18N
@@ -336,10 +328,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 inpSatuanActionPerformed(evt);
             }
         });
-
-        lblSatuan1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblSatuan1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
-        lblSatuan1.setText("Barcode");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -377,11 +365,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblSatuan, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpSatuan, 0, 293, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblSatuan1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(inpSatuan, 0, 293, Short.MAX_VALUE)))))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -407,13 +391,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblSatuan, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpSatuan))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblSatuan1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 43, Short.MAX_VALUE))
-                    .addComponent(lblBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -481,15 +459,6 @@ public class UpdateDataBahan extends javax.swing.JDialog {
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
-    private void inpNamaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNamaKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            //            this.lblBarcode.setIcon((Icon) new File("src\\resources\\image\\barcode\\" + this.inpId + ".png"));
-                //            lblSatuan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-menu.png"))); // NOI18N
-                lblBarcode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/barcode/" + this.inpId + ".png")));
-                //            this.lblBarcode.setIcon();
-            }
-    }//GEN-LAST:event_inpNamaKeyReleased
-
     /**
      * @param args the command line arguments
      */
@@ -508,7 +477,7 @@ public class UpdateDataBahan extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            UpdateDataBahan dialog = new UpdateDataBahan(new javax.swing.JFrame(), true, 1, "BA003");
+            UpdateDataBahan dialog = new UpdateDataBahan(new javax.swing.JFrame(), true, 2, "BA003");
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -527,12 +496,10 @@ public class UpdateDataBahan extends javax.swing.JDialog {
     private javax.swing.JTextField inpNama;
     private javax.swing.JComboBox inpSatuan;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblBarcode;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblJenis;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblSatuan;
-    private javax.swing.JLabel lblSatuan1;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
