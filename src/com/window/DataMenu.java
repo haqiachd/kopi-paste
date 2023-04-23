@@ -1273,6 +1273,7 @@ public class DataMenu extends javax.swing.JFrame {
         if(this.idSelected.equals("") || this.idSelected == null){
             JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
         }else{
+            this.lblShowBarcode.setIcon(null);
             // membuka window update data menu
             UpdateDataMenu d = new UpdateDataMenu(null, true, 2, this.idSelected);
             d.setVisible(true);
@@ -1318,14 +1319,14 @@ public class DataMenu extends javax.swing.JFrame {
                             this.tabelData.removeRowSelectionInterval(this.tabelData.getSelectedRow(), this.tabelData.getSelectedRow());
                             return;
                         }
+                        
                         // mengecek apakah data supplier berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
-                            // menghapus barcode
-                            this.barcode.deleteBarcode(this.inpId.getText());
                             Message.showInformation(this, "Data berhasil dihapus!");
                             // reset data menu
                             DataMenu.DATA_MENU = new DefaultTableModel();
                             GetDataMenu.DATA_MENU = new DefaultTableModel();
+
                             // mengupdate tabel
                             this.showTabel();
                             // referesh data

@@ -626,11 +626,13 @@ public class UpdateDataMenu extends javax.swing.JDialog {
             this.isValidBarcode = false;
             this.lblShowBarcode.setIcon(null);
             this.lblShowBarcode.setText("Tidak ada barcode");
+            this.barcode.deleteBarcode(this.inpId.getText());
             return;
         }else if(this.inpKodeBarcode.getText().length() < 5){
             this.isValidBarcode = false;
             this.lblShowBarcode.setIcon(null);
             this.lblShowBarcode.setText("Barcode tidak valid");
+            this.barcode.deleteBarcode(this.inpId.getText());
             return;
         }
         
