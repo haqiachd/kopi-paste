@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Apr 2023 pada 12.18
+-- Waktu pembuatan: 24 Apr 2023 pada 10.11
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 8.1.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `kopi_paste_business`
+-- Database: `kopi_paste`
 --
 
 -- --------------------------------------------------------
@@ -59,11 +59,7 @@ INSERT INTO `bahan` (`id_bahan`, `nama_bahan`, `jenis`, `satuan`) VALUES
 ('BA030', 'Garam', 'Perasa', 'kg'),
 ('BA031', 'Indomie Goreng', 'Bahan Jadi', 'ds'),
 ('BA032', 'Kapal Api', 'Coffee', 'rc'),
-('BA033', 'Telur Ayam', 'Nabati', 'ls'),
-('BA034', 'kg', 'Hewani', 'kg'),
-('BA037', 'renceng', 'Coffee', 'rc'),
-('BA038', 'lusin afsd', 'Nabati', 'bt'),
-('BA039', 'afdsf', 'Coffee', 'lt');
+('BA033', 'Telur Ayam', 'Nabati', 'ls');
 
 --
 -- Trigger `bahan`
@@ -132,19 +128,19 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00025', 'BA022', 'Daging Ayam', 'Hewani', 5, 'kg', 100000),
 ('TRB00026', 'BA019', 'Cabe Rawit', 'Nabati', 2, 'kg', 10000),
 ('TRB00026', 'BA025', 'Air Mineral', 'Cairan', 10, 'gl', 30000),
-('TRB00026', 'BA018', 'Kecap', 'Perasa', 1, 'lt', 1500),
+('TRB00026', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 1500),
 ('TRB00027', 'BA011', 'Kacang', 'Nabati', 5, 'kg', 25000),
 ('TRB00028', 'BA005', 'Biji Kopi', 'Coffee', 2, 'kg', 140000),
 ('TRB00028', 'BA025', 'Air Mineral', 'Cairan', 4, 'gl', 12000),
 ('TRB00028', 'BA001', 'Susu Coklat', 'Cairan', 2, 'lt', 50000),
 ('TRB00029', 'BA002', 'Kentang', 'Nabati', 5, 'kg', 250000),
-('TRB00030', 'BA018', 'Kecap', 'Perasa', 3, 'lt', 4500),
+('TRB00030', 'BA018', 'Kecap', 'Perasa', 3, 'bt', 4500),
 ('TRB00031', 'BA005', 'Biji Kopi', 'Coffee', 2, 'kg', 140000),
 ('TRB00032', 'BA002', 'Kentang', 'Nabati', 3, 'kg', 150000),
 ('TRB00033', 'BA025', 'Air Mineral', 'Cairan', 10, 'gl', 30000),
 ('TRB00034', 'BA002', 'Kentang', 'Nabati', 5, 'kg', 250000),
 ('TRB00035', 'BA005', 'Biji Kopi', 'Coffee', 2, 'kg', 140000),
-('TRB00036', 'BA018', 'Kecap', 'Perasa', 5, 'lt', 7500),
+('TRB00036', 'BA018', 'Kecap', 'Perasa', 5, 'bt', 7500),
 ('TRB00037', 'BA005', 'Biji Kopi', 'Coffee', 3, 'kg', 210000),
 ('TRB00038', 'BA026', 'Gula Pasir', 'Perasa', 4, 'kg', 56000),
 ('TRB00039', 'BA025', 'Air Mineral', 'Cairan', 5, 'gl', 15000),
@@ -160,7 +156,7 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00047', 'BA011', 'Kacang', 'Nabati', 1, 'kg', 12000),
 ('TRB00048', 'BA003', 'Jeruk', 'Nabati', 2, 'kg', 20000),
 ('TRB00049', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 10000),
-('TRB00050', 'BA018', 'Kecap', 'Perasa', 2, 'lt', 30000),
+('TRB00050', 'BA018', 'Kecap', 'Perasa', 2, 'bt', 30000),
 ('TRB00051', 'BA031', 'Indomie Goreng', 'Bahan Jadi', 1, 'ds', 50000),
 ('TRB00052', 'BA008', 'Kopi Hitam', 'Coffee', 1, 'kg', 10000),
 ('TRB00053', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 10000),
@@ -196,7 +192,7 @@ INSERT INTO `detail_tr_beli` (`id_tr_beli`, `id_bahan`, `nama_bahan`, `jenis_bah
 ('TRB00078', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 12000),
 ('TRB00079', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 8000),
 ('TRB00080', 'BA011', 'Kacang', 'Nabati', 1, 'kg', 15000),
-('TRB00080', 'BA033', 'Coklat', 'Nabati', 0.5, 'rc', 20000),
+('TRB00080', 'BA033', 'Telur Ayam', 'Nabati', 0.5, 'ls', 20000),
 ('TRB00081', 'BA018', 'Kecap', 'Perasa', 1, 'bt', 10000),
 ('TRB00082', 'BA001', 'Susu Coklat', 'Cairan', 1, 'lt', 5000),
 ('TRB00082', 'BA002', 'Kentang', 'Nabati', 1, 'kg', 8000),
@@ -800,7 +796,8 @@ INSERT INTO `detail_tr_jual` (`id_tr_jual`, `id_menu`, `nama_menu`, `jenis_menu`
 ('TRJ00335', 'MN002', 'Coffee Latte', 'Original Coffee', 10000, 2, 20000),
 ('TRJ00335', 'MN020', 'Jus Apel', 'Minuman', 11000, 2, 22000),
 ('TRJ00335', 'MN021', 'Moca Latte', 'Falvoured Coffee', 12000, 4, 48000),
-('TRJ00336', 'MN036', 'Jahe Panas', 'Minuman', 5000, 1, 5000);
+('TRJ00336', 'MN036', 'Jahe Panas', 'Minuman', 5000, 1, 5000),
+('TRJ00337', 'MN012', 'Ayam Bakar', 'Makanan', 15000, 1, 15000);
 
 -- --------------------------------------------------------
 
@@ -853,7 +850,7 @@ INSERT INTO `karyawan` (`id_karyawan`, `nama_karyawan`, `no_telp`, `alamat`, `sh
 ('KY002', 'Mohammad Ilham Islamy', '085690123458', 'Nganjuk, Jawa Timur', 'No Shif'),
 ('KY003', 'Widyasari Raisya Salsabilla', '085690239023', 'Mojokerto, Jawa Timur', 'No Shif'),
 ('KY004', 'Septian Yoga Pamungkas', '084590120912', 'Nganjuk, Jawa Timur', 'No Shif'),
-('KY005', 'Habib Dwi', '085655864624', 'Jombang, Jawa Timur', 'Siang'),
+('KY005', 'Admin', '085655864624', 'Jombang, Jawa Timur', 'Siang'),
 ('KY006', 'Karyawan 1', '085690239023', 'Jombang', 'Malam'),
 ('KY007', 'Karyawan 2', '085690127834', 'Nganjuk, Jawa Timur', 'Siang'),
 ('KY008', 'Karyawan 3', '085690128923', 'Kediri, Jawa Timur', 'Malam'),
@@ -861,7 +858,8 @@ INSERT INTO `karyawan` (`id_karyawan`, `nama_karyawan`, `no_telp`, `alamat`, `sh
 ('KY010', 'Atilah Lazuardi', '085690340934', 'Nganjuk', 'Malam'),
 ('KY011', 'Atilah Lazuardi', '085690230923', 'Nganjuk', 'Malam'),
 ('KY012', 'David Nila', '083490349034', 'Nganjuk', 'Siang'),
-('KY013', 'Atilah Lazuardi', '085655981289', 'Nganjuk', 'Siang');
+('KY013', 'Atilah Lazuardi', '085655981289', 'Nganjuk', 'Siang'),
+('KY014', 'adolf hitler', '0852534023354', 'jfeaksdjlk', 'Siang');
 
 --
 -- Trigger `karyawan`
@@ -893,74 +891,81 @@ CREATE TABLE `menu` (
   `id_menu` varchar(5) NOT NULL,
   `nama_menu` varchar(30) NOT NULL,
   `jenis` enum('Minuman','Makanan','Original Coffee','Falvoured Coffee','Snack') NOT NULL,
-  `harga` int(11) NOT NULL
+  `harga` int(11) NOT NULL,
+  `id_barcode` varchar(13) DEFAULT NULL,
+  `img_barcode` mediumblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `menu`
 --
 
-INSERT INTO `menu` (`id_menu`, `nama_menu`, `jenis`, `harga`) VALUES
-('MN001', 'Orange Juice', 'Minuman', 10000),
-('MN002', 'Coffee Latte', 'Original Coffee', 10000),
-('MN011', 'Chocholate', 'Falvoured Coffee', 15000),
-('MN012', 'Ayam Bakar', 'Makanan', 15000),
-('MN013', 'Kentang Goreng', 'Snack', 12000),
-('MN014', 'Black Coffee', 'Original Coffee', 13000),
-('MN015', 'Jus Anggur', 'Minuman', 12000),
-('MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000),
-('MN017', 'Nasi Goreng', 'Makanan', 12000),
-('MN018', 'Keripik Kentang', 'Snack', 8000),
-('MN019', 'Jamur Crispy', 'Snack', 10000),
-('MN020', 'Jus Apel', 'Minuman', 11000),
-('MN021', 'Moca Latte', 'Falvoured Coffee', 12000),
-('MN022', 'Cappucino', 'Original Coffee', 10000),
-('MN023', 'Kopi Susu Dingin', 'Minuman', 3000),
-('MN024', 'Air Mineral', 'Minuman', 4000),
-('MN025', 'Kopi Hitam', 'Minuman', 3000),
-('MN026', 'Kopi Susu Tubruk', 'Minuman', 5000),
-('MN027', 'Teh Panas / Es', 'Minuman', 3000),
-('MN028', 'Susu Panas / Es', 'Minuman', 5000),
-('MN029', 'Es Lemon Tea Panas / Es', 'Minuman', 5000),
-('MN030', 'Wedhang Uwuh', 'Minuman', 5000),
-('MN031', 'Es Jeruk', 'Minuman', 5000),
-('MN032', 'Teh Tarik', 'Minuman', 7000),
-('MN033', 'Jahe Susu Panas', 'Minuman', 7000),
-('MN034', 'Joss Susu Es', 'Minuman', 6000),
-('MN035', 'KukuBima Susu Es', 'Minuman', 6000),
-('MN036', 'Jahe Panas', 'Minuman', 5000),
-('MN037', 'Vietnam Drip', 'Original Coffee', 10000),
-('MN038', 'Espresso', 'Original Coffee', 8000),
-('MN039', 'Long Black', 'Original Coffee', 10000),
-('MN040', 'Coffee Latte', 'Original Coffee', 10000),
-('MN041', 'Cappucino', 'Original Coffee', 10000),
-('MN042', 'Moca Latte', 'Falvoured Coffee', 12000),
-('MN043', 'Vanilla Latte', 'Falvoured Coffee', 12000),
-('MN044', 'Chocholate', 'Falvoured Coffee', 10000),
-('MN045', 'Salted Caramel', 'Falvoured Coffee', 10000),
-('MN046', 'Taro', 'Falvoured Coffee', 10000),
-('MN047', 'Green Tea Latte', 'Falvoured Coffee', 12000),
-('MN048', 'Kentang Goreng', 'Snack', 8000),
-('MN049', 'Cireng', 'Snack', 8000),
-('MN050', 'Tahu Tuna', 'Snack', 8000),
-('MN051', 'Shio May Ayam', 'Snack', 10000),
-('MN052', 'Pisang Coklat', 'Snack', 10000),
-('MN053', 'Pisang Nugget', 'Snack', 8000),
-('MN054', 'Tempe Medoan', 'Snack', 8000),
-('MN055', 'Jamur Crispy', 'Snack', 10000),
-('MN056', 'Nasi Goreng', 'Makanan', 12000),
-('MN057', 'Nasi Ayam Penyet', 'Makanan', 12000),
-('MN058', 'Nasi Ayam Geprek', 'Makanan', 13000),
-('MN059', 'Ayam Taliwang', 'Makanan', 13000),
-('MN060', 'Nasi Sop', 'Makanan', 8000),
-('MN061', 'Nasi Sayur Asem', 'Makanan', 8000),
-('MN062', 'Nasi Tempe / Tahu Penyet', 'Makanan', 8000),
-('MN063', 'Nasi Telur Penyet', 'Makanan', 10000),
-('MN064', 'Indomie Goreng Telur', 'Makanan', 8000),
-('MN065', 'Indomie Rebus Telur', 'Makanan', 8000),
-('MN066', 'Nasi Putih', 'Makanan', 4000),
-('MN067', 'Telur Ceplok / Dadar', 'Makanan', 4000),
-('MN068', 'testing', 'Minuman', 12000);
+INSERT INTO `menu` (`id_menu`, `nama_menu`, `jenis`, `harga`, `id_barcode`, `img_barcode`) VALUES
+('MN001', 'Orange Juice', 'Minuman', 10000, NULL, NULL),
+('MN002', 'Coffee Latte', 'Original Coffee', 10000, NULL, NULL),
+('MN011', 'Chocholate', 'Falvoured Coffee', 15000, NULL, NULL),
+('MN012', 'Ayam Bakar', 'Makanan', 15000, NULL, NULL),
+('MN013', 'Kentang Goreng', 'Snack', 12000, NULL, NULL),
+('MN014', 'Black Coffee', 'Original Coffee', 13000, NULL, NULL),
+('MN015', 'Jus Anggur', 'Minuman', 12000, NULL, NULL),
+('MN016', 'Vanilla Latte', 'Falvoured Coffee', 12000, NULL, NULL),
+('MN017', 'Nasi Goreng', 'Makanan', 12000, NULL, NULL),
+('MN018', 'Keripik Kentang', 'Snack', 8000, NULL, NULL),
+('MN019', 'Jamur Crispy', 'Snack', 10000, NULL, NULL),
+('MN020', 'Jus Apel', 'Minuman', 11000, NULL, NULL),
+('MN021', 'Moca Latte', 'Falvoured Coffee', 12000, NULL, NULL),
+('MN022', 'Cappucino', 'Original Coffee', 10000, NULL, NULL),
+('MN023', 'Kopi Susu Dingin', 'Minuman', 3000, NULL, NULL),
+('MN024', 'Air Mineral', 'Minuman', 4000, NULL, NULL),
+('MN025', 'Kopi Hitam', 'Minuman', 3000, NULL, NULL),
+('MN026', 'Kopi Susu Tubruk', 'Minuman', 5000, NULL, NULL),
+('MN027', 'Teh Panas / Es', 'Minuman', 3000, NULL, NULL),
+('MN028', 'Susu Panas / Es', 'Minuman', 5000, NULL, NULL),
+('MN029', 'Es Lemon Tea Panas / Es', 'Minuman', 5000, NULL, NULL),
+('MN030', 'Wedhang Uwuh', 'Minuman', 5000, NULL, NULL),
+('MN031', 'Es Jeruk', 'Minuman', 5000, NULL, NULL),
+('MN032', 'Teh Tarik', 'Minuman', 7000, NULL, NULL),
+('MN033', 'Jahe Susu Panas', 'Minuman', 7000, NULL, NULL),
+('MN034', 'Joss Susu Es', 'Minuman', 6000, NULL, NULL),
+('MN035', 'KukuBima Susu Es', 'Minuman', 6000, NULL, NULL),
+('MN036', 'Jahe Panas', 'Minuman', 5000, NULL, NULL),
+('MN037', 'Vietnam Drip', 'Original Coffee', 10000, NULL, NULL),
+('MN038', 'Espresso', 'Original Coffee', 8000, NULL, NULL),
+('MN039', 'Long Black', 'Original Coffee', 10000, NULL, NULL),
+('MN040', 'Coffee Latte', 'Original Coffee', 10000, NULL, NULL),
+('MN041', 'Cappucino', 'Original Coffee', 10000, NULL, NULL),
+('MN042', 'Moca Latte', 'Falvoured Coffee', 12000, NULL, NULL),
+('MN043', 'Vanilla Latte', 'Falvoured Coffee', 12000, NULL, NULL),
+('MN044', 'Chocholate', 'Falvoured Coffee', 10000, NULL, NULL),
+('MN045', 'Salted Caramel', 'Falvoured Coffee', 10000, NULL, NULL),
+('MN046', 'Taro', 'Falvoured Coffee', 10000, NULL, NULL),
+('MN047', 'Green Tea Latte', 'Falvoured Coffee', 12000, NULL, NULL),
+('MN048', 'Kentang Goreng', 'Snack', 8000, NULL, NULL),
+('MN049', 'Cireng', 'Snack', 8000, NULL, NULL),
+('MN050', 'Tahu Tuna', 'Snack', 8000, NULL, NULL),
+('MN051', 'Shio May Ayam', 'Snack', 10000, NULL, NULL),
+('MN052', 'Pisang Coklat', 'Snack', 10000, NULL, NULL),
+('MN053', 'Pisang Nugget', 'Snack', 8000, NULL, NULL),
+('MN054', 'Tempe Medoan', 'Snack', 8000, NULL, NULL),
+('MN055', 'Jamur Crispy', 'Snack', 10000, NULL, NULL),
+('MN056', 'Nasi Goreng', 'Makanan', 12000, NULL, NULL),
+('MN057', 'Nasi Ayam Penyet', 'Makanan', 12000, NULL, NULL),
+('MN058', 'Nasi Ayam Geprek', 'Makanan', 13000, NULL, NULL),
+('MN059', 'Ayam Taliwang', 'Makanan', 13000, NULL, NULL),
+('MN060', 'Nasi Sop', 'Makanan', 8000, NULL, NULL),
+('MN061', 'Nasi Sayur Asem', 'Makanan', 8000, NULL, NULL),
+('MN062', 'Nasi Tempe / Tahu Penyet', 'Makanan', 8000, NULL, NULL),
+('MN063', 'Nasi Telur Penyet', 'Makanan', 10000, NULL, NULL),
+('MN064', 'Indomie Goreng Telur', 'Makanan', 8000, NULL, NULL),
+('MN065', 'Indomie Rebus Telur', 'Makanan', 8000, NULL, NULL),
+('MN066', 'Nasi Putih', 'Makanan', 4000, NULL, NULL),
+('MN067', 'Telur Ceplok / Dadar', 'Makanan', 4000, NULL, NULL),
+('MN068', 'test tambah data 1', 'Original Coffee', 10000, '4131129128934', 0x47494638396152025c00f00000ffffff0000002c0000000052025c000002fe848fa96be17f6092ac3da768bc7787cc6956378a00159a6afa4d9c07a631fabab2ed85718ee1b6feeb9d6a0856ab2834c282471e097904425751d64cb89c128db4a66ff8bc3ebba68af98c464ba96a62d6d91553c9d811bc0e96e3d77b2bd3a9e79557e26647283857084687e8077557d51876c87628b643d93739a835c61559c118ea289a667a8aba98a4d9b699e829290568f9a5f4057969d8f93abbcb9a29d9fb069cab1aabc818f7c754695c9c65db89e91b195da62bcbbc5a8d97eafdcd177c96cd89ab6b2e4dfb487ccb9e5eeede4b1e0ded58efaa39bf856c8f4d9a0f101fb763e28cf16a67709bb56efe36a12bf52d22b87d0547090c342c2141fe610df5113c084f63318f1ed1dd6b66521d497e0395bd4bc96965417aea322ee492f12443911d774afcc920dc348b28ddbd025932de39a5ce96f27c27b319cd982c312e6b4a6ddacd674c2172a47ae3a5d39b5b832adc59162bd0b5668422e41a322dcc7052fbc5b5eb36ebd5a8bf9eeaacd895e2d1be726b061e083759c0a1463fe5ec29e8e1d9c86c2babec4b1473e38f8b0d834daa176a40a42c414ff53a16afe0d184ff6dd436b374ebb05f07b7a468f1ab64c4967b8b06bc00f46eabbfebd24e7d1cabed91b22f1eaecdfab5dae79b13abe62df67373c64f3f81328b9d386adf95f33ecebe1cb94ce8b7819fc60d9bb940d3d7d91397d7dcb879cfeffec3f39f0c924dae15b6ce74a18d47de5afb85641d67df85869f737ea9b71d85f34d761f64fa6936a172f9cdb6205fb15d38e27a0891e55a6e9e0db762823f85e8d37f0e0a981c5d205615df5ed1c9975e81fdd99763713bd692e255736168a4869d15b81b817f65068b6e2e4a042365e80d79578dab9588238497cda823891b4a28dc61e3fd585d921d9ed9657f4575e798534f829717395352091f93747248a09b48fa585f901166e8a1983792d9e591b0f4f8974becd147a256d7bd896258d76867655a76de3951946fa9d923a35f8e49e9a4db106a2398806ae95f96261a88269cd229fae8a1015aa898a7c1fd291eaf9ce2a9eb79401e886584a4f269feea838ab2c92aad32a2ba25b4edd1282aa60d2e8baca571320819942e6dfa2b2a55b652aab6aa1a6b6bb6af569baab4cec25aeca8f162eaa88c90de4aef92d46eb9e09cbb9a2b65b8a78c3b4ea2697a59e8b1ee25bb6fa4f6b61928bce7ca3b71beca3e8ca8c3abbeda70aef56e8c5691060a2c6e9ec23e1b24bbd112d9aca05f4acbecbd104b886dabb1f6f92197b32ab9b3abfc9accf2a59a2a42f2c040737ba5aa2a2f9aeec2ac7eeca7cd11df6cf09a2b239c6bc3ee622ce9d3eafe1c6cd02103dc62d1e49efa69d2bd56dcaed8349b8936d657bf4bf5db5633cd368071d79a31be59838aa577e7217830b866b775f4a5c3b22837de5d977937d40c63feacf0e35f6b2ca2e5614b2c73cf7fab9df2b642fb4a6cab879f7d31d28b1f5cf3b0b1b68eeb9299bb3d267751f35db9855b73def4b5a1e32467b77bea6af8e9ff4a6ee5eab2c24cfae71dcb3e6fdb8dd35df5ed94f7aebbcbd6023e2df76b3b29fcf179166f7c98dcf95e3af35277af67e47bc3bd7ee7b59f3839ef7d279eb3e6e85bdf7ea5fd86bfb680954f3ee7f3deefd4e7ba88c1ce6798cb1fed0e65bbfacd0e649b9ba0bf12e835a7a5ea7fdb131ff18836400fd2087511245be398f5ae052e2d6633eb5c09d7e5400a226f697cd39cdf0227bab1056c680e092101d3a63c9c65108390e3df0a9b37b524dacd88316cd4fbec373fd0b94f8360fbd8fe050f58361f0e0a88284b9ff6a4e7442a36306f8efba2de74f6c20a41117b0cdc1dc77886be26894c7fc3fb1608b5b8c5f6c59175f02362f52418bdb951e76e4104a4a17436c340c68f8d853417f83a18c02ce29160885be21cfbd8c5d7619281a439a40d2148bf215e0f914fb420003359bfe7b5c78aa7f4e2c8f098c793492c92274422fb54f9c35a2ef27ebc4ce31869c8c735a2d18053f4a5c79e78455792cf87948492314b69c8dcf5cf90081ce52787394d510af39a5a33e32eb9494c399a908e1eb4630f6159a8024a91712a6ce11fb579c45d4a3399f1c41d1b6fd832fb81739d9b7924e19627492d367378cf4c1d1379592e1892918508056536fe150a4c8026cd85c4e41f2e81c14a4862f195e81ca80843592588323276d2a9a7351f88cd8b0a898cec3c2905f7974a924222a3ffe4a1e22689bfe475b1a5c544653edbb9505bcacfa12a45174b83694a8dce72932a155cf094cab86586d0a37b942850e72953f37993a15855aa49b789d26e4e8f6b610d673f2ff9d23ac64daa03a4aa59adbac9a18ab193d504ab0c899ad595ba11ad4965e83e1bb9c1a32533aa7784a55bf909d79e2e95905b85263c9b0847b71594478ae4695f853ad2c58a93833515195bcb7758c0e654a4a49c2bf4822acfcca2b0b1a92dad58a9a7b13056d57f826d2561cf69d89c9210a4a355a35c27ab555ddad3b592e5ed2f2bfe8b54c87ad59db1cdab5391d659137ed678a1dd69721fdb50d39654915c55ad2deb7a59f6e193a252b4a873739829d2ddf6a602d56dc12c39ceb83237a1bee52e66b34bcea2526caff1b52b3de7abaff3020fbaea2d5c61715ac11869f6baa4fd6b5e63295f4f9635ad0fadaf84ef6a50e5fa75c2a2c51b670b2cd1e99eaeba0b4eec41bbfad5146bf88cf97df07ebd69d9157f93c3d695953f416c530533d3bd95a46f82b18b62fb6618c8c8656c894f5c642146f48d169bed80d03a5803e316c1c8db6d857fdc601a73f2b4e095316c7ddcc925f3d5cb64c5b0931d0965db4a99bd3bfeb1959b2a643fc257a15dbeb06c8b7be5302779cc766ee56fdf4afedbcd4539c4076eaf9bdf0b66c766d9ccc6a52b6b87ebe0e5a216d2131e2f7361aa4d380f7874a65bb38ea7ca6367365ad1160ef2a45d9cb03de7b388d15475485d1de02603fac9fd1d748e756ae82a23fa72893c2e71f3cce547bbf4ce14d66faa8f6a6232eb53cbac4673add54ce829e7dab16f16709d4d5de76bc3ba97a3de6e9f65dd46189799d81d3e66ea6cedd942b759d73de635a97d1d69159fdabf912d36aac13848256f1bd34c0e157a55c4d15ba393a0c8a9f69687bc6872dfbbb7f016b7919b9df07cf359cccd0577b9cf48531ca75bdaeba6f6aeb56b6c7c5b7ce1582ef5b6a31872413e7ce2fbae684c0f3e5364425be003cfa52c21ce70fe3dff3ae5256ff858573e6793235bdf4357a3c28f4ceb0f773ada6c06f5a1db0d7292afd6c840d576d157fdce8803fdd557c7e702357de3a5d3bce6bf51e7c5112ef478c759eaf7c5768d91dc7586f3d7eb4c1570d877b8f1a6b735d4040736da7d7e74795b7dee97ee3665e3de73c27b8ec5b376b6d2f12e5d753b9ddda2f63bcfa7ae49c5ca9be2e4bd7cdbef19ebbad15db1604f33543d8deb8e0fd9e0fe9ef79f2d1fdcab9e1caf300f13e7e5eef07e331eb181ceb8d8f3fee9bd3fbdf29a1e3cb3d75e7bbde65e8989f6f6ed13bffc8a3befed49afede9991e7cd0f2fda3b04fbe51d5ee7ae487f7cbee76feecffae787e1bddeea68f6e9d242f7ccafef7bdf8c25e6ce60f6afc9f8bbefc87577cafd3ef7299c67ecf767d6347762fc34548d75f70077ed9567fe3277141077811c87500585e2fd77a7757360678802486733da7730df880e2a76cfb1775caa77f2c8778ea277d38b4693ab481c0977a93e77150075cdef7628cd67d10a67925c87cfc677be7f75a14187abb777631776e33278307587609f881bd1682c7177e53f87c28c776adb54f96c66d172880c9f75c9c0679efc77134b87a1f77839be75d53987fe4b7859e878595568458d782b7447d8e677dee373ef0a77dc3377fd63682f86578b1176155487b688878ff177da3675e5ef86fe01186793886f15783c4e787c2e5534f186c96486f2327fe696b4884d0978273f87503f87831187991b887f2c77df4a789afe786af386cf5f65f542884d9138a8a88812ea88101b7844c88807ad4785c17853a088b38786cfe578824f86d9fa38556687fb9a8348df82f8ff841a8485ddb7766c2785a6ed78aca488829758594a683cd988c80c87bd527684a788a7ae78bede88eef088ff1288ff3488ff5688ff7888ff9a88ffbc88ffde88fff089001299003499005699007899009a9900bc9900de9900f099111299113499115699117899119a99153d2041d89055ee091ca1292f7300c33b891278992292990ab10012d390448e0922720930d600131f90151309332899335a9923de9933fe98f374993912194389a4994395994c181944b59044309944f099551f98e4219933c49934d99014c99935829013bf9924e299561299663396257699658b9956989942890954c390954699264299773499769b0054a799669799479e995203901aa509781299883690a1d699355b9958669968ab9984be9956a499891299975c998e5e09784700edcd0102539999de9999f099aa1299aa3499aa5699aa7899aa999910500003b),
+('MN069', 'test tambah data 2', 'Falvoured Coffee', 20000, NULL, NULL),
+('MN070', 'test tambah data 3', 'Falvoured Coffee', 30000, NULL, NULL),
+('MN071', 'test edit data 1', 'Original Coffee', 25000, '2592593542', 0x474946383961ef015c00f00000ffffff0000002c00000000ef015c000002fe848fa96be17f6092ac3da7aeced8dea85160c085e4d40161297a2b7aaa9b3b23ad6c96e3fddaa999dafd803a182f48fb2459b5919341012a7137e134daac68b7dc2e75187b6a7bd663ac272dfa72302b339c34bbe348dc5bbe34d6b1ec359fecf1a656066606681708554894b79096f805e7354939568367394528f9b7a809b9a97638cab836178919dad6782af6e8e799ca0a4a779685ba0756d1d977a88a1859293c2c480bbc7bfbea7a592af6bbfc19ac17cdfb6cac0c494a1d9b7bd57c9ddc8d16de078d6c2b855e550bbd4efcbe35ce59570cbbadce3dafafdd3a8bab7f0adb3176aba4d913f5cda04043ddee787208d058bb52be0802ab082fa323fe66113331bc1730e1474cda46366cb4501cb97e0627dee325ab25b85ee4f849cc960e9fa45fd534faf4a8abe039931de5d9b447b2a64a9028452e4dfaf2e4bf7a29f749e5a994e94053b57a6ea4a9f3a7d8af7c06298aaad5e8ca69503f4244e8addccca325a5568579d51f5196559d15cc19f6ac3c96637f0e162af8a95d8e47ad5dccfaf62fe3b54817a3855b5767ccc61633433db7c96be4c7d10afb3ccc15a8d5b493b53a16add769e0a98869a7ce8c19b245bf32b7bef26c1974d78789e312369d1135ef7aaf89dbe6dd3736dab6f9cc3ec77959b25c85b299cf6d3ddadcd9d0ce47c346ae51f9cd836c2de3edd87c36dfee4db7efd5ee16bfeeebbefe29639d1edc78c3c9d71e3ac7a1478c7a5b79c79f57d15556d47ef185649f621166779b6cef59c7996dc05d28dc3fe7fd772082c228e8ce7c15cef6e084d2dd97615c1d3e889b7e18b6289d79597d26a088e515e892898671641d8334b6b6197dbd7d989b667935f8e392d54de3227ba9fd07a3785f91472084410a991e91b519a9a45aaeed865d7e5eda58659535c6f8268e52ae76de913ba549d12d24fa03e689625e595c78783a091f9aa4a9e926924fda89e8a06aca39639e0082d8236007fe16659f95a0480f9540b26968968392b922859196faa27bfb41ea5f673b06b8e580974a5aa2a65c707aa79589cad82a945d3209aaaf821eba54938f2aa9fea28e93c215a2a57cbadaa5ad93e07aebab176e581ba3c57e0ae794800a9beab5ab229b23b7c0c6d86c4eb38255abb44305f52da974295a28b8738a4a2ca11c9629a1a3dbda9bacb9d6325ba9bacf7a98a9bbd51a37a6a76b76ab6fb6fc62b82bb6df6abb9ab1ffb27a26c2cb6a976e3aeba28691c2ef1ad8b0aea13ac7f1bc14afcc22b9f6bee9d2b1a8aadc1f58f89655b0c807631aadc9aa41d729ce18b709b38a3bb32cf3d10ed7bc71d3bd02bd34cab1fa18b4c7ed0a6d654cf25266669237d39c747da7badc68be369fbda8a4552fe72fafb902bd35d7f515f974d9dcdd5cf1bf7d477cf1c4695b6cead486eb6c21c1573bdbdb9e8ddb4d16bc701bfe2db8b7448fddefccf4ee8bf9cb6a47cd77b90f9faba5c6729fccf3e3903bec75de9acb2d36da7eeb1d76db9d0f6eb9d987c70e1eb7a5db6826eaf096bcfadd292b0df6e612df3efbeb847fc79ae7cfefcd76bd54270e72cfd7cf4debc1c51b1fafeb4e034c7be6e3b79cbcf4b953bfbbedc1fb8e5dc8db0b6f35f1c5531bcfc0c1a21f3deecc037e39d9650c78a0ab1ee7def7b0df410c81caaa9bddf03734f8e50b69ce6bdef9a4f63f52c5677afe53d6dbd6f39e1141cb815c83e0c986e5200c0af06bfd5bdf07efa5aa1ba9d07dbd4b60fcb4e7b6a2d1cd7bdf3361a02498c2d0557080369ca0defea6419871d082d88361f4e49743eeb18b87f7fbd3fee490d74200428f3a4444e211cba73e2db2af63d5abd3c4a0883829924c4fdfa310de2897c12f0e91855ca4e0f802e6ab2576718b51b2131a1928b0acb5d18791a3530ced58b93dce518e7714dd5d5cc84443feea8c384c23fdbed4c6425e6e612fac9df51249c743321294e28324ec68f8494b025172043c5d715267bfd5113294e2126327cd474af22d128e1b34651247a73f74551290c014640fadb81e2cd671947184e30a99f94c5e2ad197a594a43261653a116a8d8ab244e682aa194dfe2dd399e9d3230afb58ce7109b18ce8ecdc1f6bd8406e426e96e04ca72d9b88c96bd61291cdc4e323efa9481891ee868b3398ea76a8ba417a3345e11aa738fe4549ce2cf2339afed41035a559cc5b4a914b23fb532ce7b9d0a2e9b34913b5272d490a4d9356b39700fd2596f049d06c266c9b093d26c3c2175187ce50a2f5e4a92e1b392796963495c4f4e330e11948120a8d9e3985e843f7d9539dae3397155d9139571a488dbed3958584251b33c9d491ee6fa7e3142bc4865a56475ab4a558cd284c49b3556d22f4a30f0c69aecc8ac9a7a2b4a950fd2955d56ad58be2f1a5d6cc5e417d76d0eed5b48a37bd62439d4a5688e2755429f56955e3b4d30322f575719de95cbfaad0c626f3b17dd56bb0266b44bff613b0989d2a19a3784eabc9346b9f2d4d26f7f646d406919d7dd52dd35c4b51d6aad380cb2b2a250ffe3bbf570e0fb4364d9d639d2855deeed5b73103ae4a31facfa16a96abbbea2c6d154bd712da95936fdd6dfb2c4bdabd9af6ac6dcd6e65b76b46771e95bb4995675d45fb4dbeaa37b2bd4def58ad8bdea04e93ad18256c6c271742cf8297b98c75ee68a10b5900a715c2a5e5ef74852b4300c3b79d2ef36e476f1adea58e377f1f63af6a834be1fd4a58b2185edb79373c49f92217b6caad1f83bb895f86a6f8bfd23dad7f4dbcde7cb6b8802f2eee668d3a63557675b9b605eb88235844f3be76b53b06b2857d2ce03c0a5674065ea56c5b29d7053739b40ece2f750b3765140f34b541a62c76d7aa5d23d397b3f30df314178be332eb78cd52e65d80f9fcfedb1e9bf8b2c32d72e094dcdd3a2bf8ce213659587f9cd72b0f1ad26e6e736a099d61e21edab8329eed87bd3ae6e6b2d2cc9466b3a4855ce548afb8bf5976ef895119df0e2bfabb8cbe3148732cd252f719d62c4e75a54fed664cbb38cdbc8eb1ac934c4cc7355a618ff6b5a9577d6167ef9aa8d7153691894ded3923d9d33f13b38ef33cea3d0753d5824635a0ab5bee600f9988fc83f19941980f3baf31d40d0e77aea51de8f34ef8dc68f6f3beed396c3fbb5bd7a386da9c956debfbeaf9defcd61db6ff5d6272ebbbd7020c382a078eef2f2f70b308a737b8352eee88ff1ada586ef818fd4d71805f5be0728e75fa3cdced5a7bfcd60bbf2bc1d13d71fe569bdc931837b7cad99dd99673f8e5b3fe3493bf4d737bdb3ce3fd2e76b477aebc4d577bdd5409bad4b57d5c6e2756e64857b8d2c95b582b937cd24c7738ca75fef3aa6b58e8c6263ab2393e42fb8a17d74b87fa29b30d718d5e35ca43afa5c5b38d71bbc37cebf3eefadc6b0ef6039bdde9251ff7c8d37d69aab3ceea013c72d6c1bce8c2dffbe39b24b1deb7bccb779f9cf164aff8ca2fce76d1bb23c1b4d6fcd2393f93c47bb9e9784fb9c89f0d7997fbfdf4804ffdcd111cefcc7b34e1b72dbef18f8ffce42b7ff9cc6fbef39f0ffde84b7ffad4afbef5af8ffdec6b7ffbdcefbef7bf0ffef08b7ffce42fbff9cf8ffef4ab7ffdec6fbffbdff10782ad2a01d461d0f8fbef8ffffcbbeb0c0db0410454f07f00188000c87f02e803fd8780faa7800bc880e84102705080ff078103d87f9c608014d88019a8811be8050f28011158811f38801d70051798801c8882298882164805fe37012ef082fe770213a8823568830bb81334688227688213780937088441d87ef527810148841558844878822028844de884e037033c13854ce6173338734f888559a8855bc8855de8855f08866128866398490500003b),
+('MN072', 'test edit data 2', 'Minuman', 10000, '111111111', 0x474946383961ce015c00f00000ffffff0000002c00000000ce015c000002fe848fa96be17f6092ac39f5f29d3a6ea465586705636872627986ed4779e89b0271e9aad46da3b5bcfb00492022cff7c3c1963365b2b85a2065c367e58acd6673bd27ef443b1a854e71d4ccad527544358b1d7577c3e46ed0eba3ada169e7be8ac604c8f4e5c730f56657a7c5d8b8358667a542177947a997385829081758e3e9f95756c7054a0a790927aa18673837fad9a67a9897d8e7889bcbc709f5b8d9caba8ab81bfb1b9a098bf94a7cbcaca96cfa2b5c4b3cdd546d4b7d2b97babcad0bce587a2ad9db496e792e8dccda1c0d8d2e1bcc3e2cf73eeb9c8c7f8fedad2dcf4ddd9e6fe10a561817c957377bf180215ce88a1f43630daddd7a28705f43fe771b2b66bb4630e4bf62850c9ad498108bc4881dd7e56be7f1653d96145dae9c2793da4488386f6284497291ab6e774a9e3cfa7315988cfd7ca262ba132a4d9e49f5356d09af6656aa4f8106ec479490d0a348bb2a9d24b52756945ccfacbdaa956ddaaa5ee5328be9d46d50bd254582145b8eac49ba46e9e99c3ad7acd5a8776dbe65fccc6e64b86dd335de6ad56fdf915f0597d5bbf44a5ecb93212f467c59f269b571292706fd9af4ea9fc3348fad0dd8b36ed6a10f3e465d1af86cc5755da7361e9c776c5ec9091f565edc7639dc7b777b761ed8f035d3c5b9cf84de9cf877ec17c53f272f0fbdc3aed437039b5c74ac755dd8152e2f5699f970d8c7febd9f37bf9d70dd09381e80e5f1d7de6d006596db7c9fc9f6526ffb4158207fe15938a17e038297217ef759949e81212238927b26b2b7a083b9d4a7d26f1c6ea81e47adf917e08b1552f81f86308ab81e897fbd371453f165a7a23800dad71f8139e258638c78b9e8a463332ad9248f32c297a27496115464232c8a06a5954f4e69e3921ade78a6991e265966953aa2b96682d365c959905dae78648b644689199b7caab6e39b6a82d82393071a3ae296252a0864740dde09ce97beed29a694f9ad7921a285a6e9a6a6577ea8dda1bcc839e9893e160629988212391aa7a262da21a19ffa59699f99ba9a28ae9bc6b9e89c8d52d759aa5a484a0ba5abbe2afeeb9897266b29a83975aaebacb7f2faa3a9a5a2d8a8b0aa3289e4b4ccda1a6ba8b9c21aa8a7ca3adb2ab9700ed4ebb5bed296a2b6ee5ad36db8cf222beeaedf02ba6ebed2da9beebec6915aaca98a662baf1479aabaacbfe7d27aecb802d388efbd123bdc2cc40723646dc1d8a29a3072ec48586eb40f7b8b31b825ab3b68cafcb66cb1be1f71cca8c1a3c61bf2cbac8619b1cc31ffbbf2c454561cb0cb22073d33241d2bfc63b039ab8c6ad13f9f0c30cfe6668cf2d458576decc64ad70cf6a9f23d4d63bd486b0d35cc52af6db5c95b9fcdf65e43ceebb1d844924d2cd30da3ad33d16db30c2de07e77ed76da81b35b6dd8ee7a7df7d37993dc2fdf4747fe1ef7de95a3fbb7d0d011ccb4cdd482ecf8c2935a9eb9d1145f2cf9e93e5fae71e17671ae4c58d591ad27b77a924eb8e0a8b39e35ef5ce30e3c83bfd2d9b49db4eb6c36e5a5a73ef4eecbfb0ef7f3d2cbfd68ec42567fbce1c9ab3d7df0adebbe7af798e7ae39bc89bf1b36e3d9d3fdecf6879bde7cf8e4c3dfe6e0def72ebea3c3ef6f3ee8393f8e96ef95af567d73defc98573f03deef77c25b9aec9c963d009a4380f4fbd3e4b87740e8292f83f9831d3e1e68bcf5b5c97df61bdf02a3c7c1149e7083def32058ae373b1122ef7626ac2105116841d5018d8536c41ff56268bde3cc4d863364580f1978430d6270854b3c220ab1c4bff4dd0c61b493e0fe007bb6c32626317f3e64e2fb70f8b1afa16f8cea23e20577a64227f2708b6964a3174be8c6062aae6e6534239548a840356ab18b7afca212fdd8c176d56d7153f45fc8ac5841029e118e7c8ca3231b094924bad069c00ae1fa1009462c52ed897d64241223c949474ed29295c4891d31f9474f8612946b64e51e3f294941764e8a9f1b5b154557ac37e6f191b05c652f5bf94b2d8ed2943084e0f150c9c56002b28dae5ca62ee5d7425906118ac6bce5aaf008cd4eeeb299aa04a62fbfb9c6616aa990b6c41b2ef5a6cd6cf2129caf64a733d3392b7112af7fe50cdd3569b84e6feab39dfb7c673ef9294c697eb098968ce0392107507f72739bcaec6642fe1dea4f7946d16e762c1b3e17aa4e8c6651a10d65a83be12851cf21ce90094326333b9a51946e14a22cf5683805fa4221628f88267de64a5dfa509c72f4a33a05294c29592762d2f4a001d4e826fbd9d294f254a948dd65486939d27afe8fa81334eadb9acad49c6675a7588de74f4919542e1d93aa57bc9ae1927ad3ada2f5a85af5eaf9d80742a1cab0a6f0642b57db6ad7b55e15af197b2a19c9d9b8a9ded388ffbcab61f57ad69e2a56ad4efdaa5c85574d730e767475ddeb61179bd6cce615b30ff32b216b19d8439235919ab42c620bc8d8d46ad6b48d7deb20e908d88adef1a22addac6a6dbbdac4de96b5eaf42c6c412bdb11d276a9b9456d7117fec959de1e9731be9d2545654bd7c29e16b9bbd5ed72e377ddcd39769cc085ee68336956e3e276bcca25af75cdfbbaedce338ca12de9775399dcf39677bef2adaf78fbaade89d6f194ef4d2671d14bddece610bb00666e7e459ab4f6ca2bba56b56f800b4c60faded7c10676ad733f1b55056b8bc1b595f0833dac430827b0bae9b5f034215bd0b14e369795a570845d3c62012b32c4f835f140650a443372f8bf207ef1847ffc61180f58bb368e2935536c4ddb11b6c140a6b19067ece320371935cd8dab5893cc296ccab8b44fe6f294632ce221d3932f7374ee7e838be634ab79cd6c6eb39bdf0ce738cb79ce74aeb39def8ce73ceb79cf7ceeb39fff0c9fe8400b7ad0842eb4a10f8de8442b7ad18c0e47121e3d81488340d211a074a32f8de94cb7a8089cf640a72df0e91e845ad3a42e75a34df0091b543ad5ac5eb5ab1ba06a586bd8d4b4aef59d213de95c575ad7b0e675ac6d0dec60ff19d7bb2e76af8dfdeb632b5bd8cc6e369d89bd6c68277bdad276b6b5afad66696bdbd2d4e636b6bf0deeb9727bdbbe2677b8cf8dee74ab7bddec6eb7bbdf0def7803ba00003b),
+('MN073', 'test edit data 3', 'Makanan', 40000, '235235', 0x4749463839616b015c00f10000ffffff000000ff00000000002c000000006b015c000002fe848fa96b210f63504e30f4829e697b4d81cd1772c0e795db81ae9d88a02af99a72cdb6669e8e6d39dbf95c275acc18242a9197a6f3092d6e1e3ea03343e4dd8e36a654ebddea84df5a7618866d79e01e77f9c39961edfa9cdc86dba3fc3ef443f54595116810616128e0964757854606b7f6c808d928757699d6b5e898c9e94969f56629a68919da29e9b7ca9a19b872587170188845aa23aa1a69aa862b375a19c7b5c7f688592a5c0c1c443cc930a6acda3afde7f10a02d1508b9898f809fdabdb9becec797cfbed3b5c1eadbe07bebe7cd70cfaacbe8b47ad6f3f8508cb2d2b41046fe7c895a9170fde3b779de8294ca509953c73e898cd638711989efe8cfb3aceb936a1504000b410d90a266e5341890b0d167c1931233e982a634e6c49f3023c7c1e7b2e00e40f1bc06ddb08a24be9705cca99152f6a6c8ab09d4b230f0f2675b3d492449e3ebba2014972a8496e618da2b489d4d851a536afa68d0a712a5686566552e5958fe2267a5ef701ad22b268a2b1e9e45e6559ae6ace3b2bedd62ccc3498c58959f3ee649bb76fabbf82c40e3e643609d4b78aef1a768af82069bac8debac53c59f45e8e9aa771fec7a2d0c06d90d1fa961b59d4ebc287d59e7ddcf86662bc3aefc1aeed1199707e3493af068e39f970ebbf2ba75e4c993975d37ca1b392feab796fe28ebf9b76edf83a77ecc8a10ebf3f7eee63f31dfed1c7535fdd68dd89a7d774701518ce80ebb977dc64dee5b7d181fcade29f3200aec5de81c139555a838c099861871bfe17df73ca3d359b8413f6516143f9c9968b82e075189b713186c8da7b6d95b81f6a1fa628cd8a7cb458d74f78cd87248134fa8860423262c8608d083d68a4305c09791e79e9bdf8e38d492e68e3961ae6d8a393f445c9646b5042384e79583e41e4296992595c9338ed38e669793238a2853ce257a57f41bee9449c5acda9a77c4ad289a8a29285199e9e805209635c7212da84a199f1f8a5978b4aca29885fcec8e8896a7a18a8962a627a618a7ea67a5ca7099e09e9ab95c96a26954b9aaa23aa95aae605ab99aafaaa94bb3a4afe2aa8793aea299876bab8ac896e5e56a6b070120badb1a522bbe6b345de2a6ab8ceee3a2981bf5e696da1d816a96da24fa24a6ea88fee59eb72caea6a6e97961e9a2e87f6718962b3cd260b5fb4381e8cefbd9f8277aeb4fd02ac1dc068d2ebeda9111b8cab540917bc71b70d57fb30acb6f2bb9db803771b2fc626cfda7186e53afbb19b214ff9afc8fae62a2ec178823b2fb7f096fa32c337a33bb3bff3b6faabc639a30cb4bc02b3bcf0ce51fb3ab4c345b76460bbcc423d6ed32af7fcae835eb72ce556565f4df3d112d70b2cc2535fccf3d33877ad30dd4207bcefa60f6b7aed7a19e7adb3cb4e737df2cf75075e36a444a39d76d68d2a58b8d88763fef877db2dc33d75e24d2e8e36dfeafabdf2dc81630e3ad86edb2d35ea54e36d39c9217b3e6ce9722bad3ae9019a3e2ad3931b7eb7d920330e3bd237d31eb9d11c1f193aeda3d74c3693becbfcfaba97968cfbd2bca77efbec80eb7ebcea9a530bfdded2bbfeb5f6add7ce3cf2d5afbfbcda06031a336d4507bf76c556f7696ff7d913ce75fb06367fa2e7c96f66f4b319eb88d73fee618f72c9dbdef504f7be3fb10948c1ba5a01b506b9043ed0760c5c5ff122a53f05ae4e80ab22e0f8f41637fe894e841c8c5503cfe73f3101705acef95de74ed8b7fdcded837782600a77a841c985f081dfab61f8fa75c1c79d8e87f95ba00b3d1844e33951881eab9afe0d2d88c3cfe910812bdc60fa64a742e5b1f08b88739ee2ce8645fd388e57ee3a5d0c4954be303a908a3ecc9c193787c6f96531765bcc1b13d336c4a4f9318a209ca2144778c62bea518d62c2e01209d9c3160af27c7fb418194558442be5d1848c84a3232b873f401af28083ec221d2579c84c0aaa828b8c50b19408caec8cd17d3fe4a218bd484b3b063091474c5712d9b835531e1295a4a424249b5847efdd117c038c5e275f09cc0c0ab390c9eca331a719c94b127199466ca6f89e992d58be309496cc251881884d6412b387aa54d5a038e9ca7046f391e91465353b683e72f66a9dc86c6727dfe9cc78b24b9c50ac6739ffa7be7cca12970855e62efef1a84878b6a9910455687d182ac384ca1186b36c68191fcacc120674a29eace846f5a99f400eaf94b73ca536e9e8cf0801f49b029ddee0d0d9d261be74a5d7cc2935f969cf989274a648dca3f08ab93894a2f493e35ca84bcdf9511a6a32a22375953ca967513e3935a3e7b4e51c750a554c7273aabdb4d62fb17ad2adfe74a748bd9f5ab319d66d82b49b22a52949a189569c7e75ad719d6452dfaa4eb6b273acabfcc40dc139d079c6f2a24ff5283ed3ca58b03a56ae522dac4ded6ad5c4e6d5ab1cc5281c6bc9d2bdc275b23025ac3b5929d1cc5e16b43d156d60fbcad3bf4696afa44da569ff89daaa8e0c851ad56b671bcb556bca56abb3dd6d54e5fe1752a2fad2a8f53b56d8241bdcc7fa56a980fd962e2b7b5ac3a6b1a6e463ed70d976d0e83e31abe0dda760fb795b99e616b3bbcda174394bdde242cbbb6e95af3d817a2aa15250bbadbceb556f0adfea86f7b3bd0db07d076c5cb1ce95acde2c2a62575be0d0fe16ba04eeaa84e33bb1a05591759cdbae7f350be00b0bd8bcb06debef305cded5e537bd435daf83b9cb5b0bb776c2b415af5feb4bdc0c4b3082b0522f7f1907e4200b79c8442eb2918f8ce4242b79c94c6eb2939f0ce5284b79ca54aeb295af8ce52c6b79cb5ceeb297bfbc99168bc0c77a03b399cfbc37169c40cd6b66f39a6dd00034cb79ce4316c2042cd38136d379cf7c4ef308864045811c00bacf842ef484209167372b5acf866eb4a3fdf29344337ad1657eb4a52f1d834cc719ce8c8633a7310dea50cf212e6820b5a84f8dea54ab7ad5ac6eb5ab5f0deb0200003b);
 
 --
 -- Trigger `menu`
@@ -1405,44 +1410,44 @@ INSERT INTO `transaksi_jual` (`id_tr_jual`, `id_karyawan`, `nama_karyawan`, `tot
 ('TRJ00254', 'KY007', 'Karyawan 2', 4, 40000, NULL, 0, 50000, 10000, '2023-01-19 23:10:53'),
 ('TRJ00255', 'KY006', 'Karyawan 1', 4, 60000, NULL, 0, 100000, 40000, '2023-01-19 23:11:07'),
 ('TRJ00256', 'KY007', 'Karyawan 2', 6, 72000, NULL, 0, 80000, 8000, '2023-01-19 23:11:38'),
-('TRJ00257', 'KY005', 'Habib Dwi', 8, 96000, NULL, 0, 100000, 4000, '2023-01-19 23:12:42'),
+('TRJ00257', 'KY005', 'Admin', 8, 96000, NULL, 0, 100000, 4000, '2023-01-19 23:12:42'),
 ('TRJ00258', 'KY007', 'Karyawan 2', 4, 52000, NULL, 0, 60000, 8000, '2023-01-19 23:13:17'),
 ('TRJ00259', 'KY007', 'Karyawan 2', 4, 48000, NULL, 0, 50000, 2000, '2023-01-20 23:14:05'),
 ('TRJ00260', 'KY007', 'Karyawan 2', 3, 36000, NULL, 0, 40000, 4000, '2023-01-20 23:14:47'),
 ('TRJ00261', 'KY008', 'Karyawan 3', 3, 36000, NULL, 0, 50000, 14000, '2023-01-20 23:15:11'),
 ('TRJ00262', 'KY008', 'Karyawan 3', 7, 91000, NULL, 0, 100000, 9000, '2023-01-21 23:16:14'),
-('TRJ00263', 'KY005', 'Habib Dwi', 11, 143000, NULL, 0, 150000, 7000, '2023-01-21 23:16:42'),
+('TRJ00263', 'KY005', 'Admin', 11, 143000, NULL, 0, 150000, 7000, '2023-01-21 23:16:42'),
 ('TRJ00264', 'KY008', 'Karyawan 3', 8, 96000, NULL, 0, 100000, 4000, '2023-01-21 23:17:38'),
 ('TRJ00265', 'KY008', 'Karyawan 3', 13, 171000, NULL, 0, 200000, 29000, '2023-01-21 23:18:19'),
 ('TRJ00266', 'KY008', 'Karyawan 3', 5, 15000, NULL, 0, 30000, 15000, '2023-01-22 23:19:01'),
-('TRJ00267', 'KY005', 'Habib Dwi', 10, 106000, NULL, 0, 110000, 4000, '2023-01-22 23:19:44'),
-('TRJ00268', 'KY005', 'Habib Dwi', 14, 168000, NULL, 0, 200000, 32000, '2023-01-23 23:21:34'),
+('TRJ00267', 'KY005', 'Admin', 10, 106000, NULL, 0, 110000, 4000, '2023-01-22 23:19:44'),
+('TRJ00268', 'KY005', 'Admin', 14, 168000, NULL, 0, 200000, 32000, '2023-01-23 23:21:34'),
 ('TRJ00269', 'KY006', 'Karyawan 1', 1, 15000, NULL, 0, 100000, 85000, '2023-01-23 23:22:02'),
 ('TRJ00270', 'KY007', 'Karyawan 2', 5, 75000, NULL, 0, 100000, 25000, '2023-01-23 23:22:13'),
 ('TRJ00271', 'KY008', 'Karyawan 3', 4, 48000, NULL, 0, 50000, 2000, '2023-01-23 23:22:40'),
 ('TRJ00272', 'KY007', 'Karyawan 2', 3, 39000, NULL, 0, 50000, 11000, '2023-01-23 23:23:00'),
-('TRJ00273', 'KY005', 'Habib Dwi', 4, 40000, NULL, 0, 50000, 10000, '2023-01-23 23:23:36'),
-('TRJ00274', 'KY005', 'Habib Dwi', 5, 60000, NULL, 0, 60000, 0, '2023-01-23 23:23:59'),
+('TRJ00273', 'KY005', 'Admin', 4, 40000, NULL, 0, 50000, 10000, '2023-01-23 23:23:36'),
+('TRJ00274', 'KY005', 'Admin', 5, 60000, NULL, 0, 60000, 0, '2023-01-23 23:23:59'),
 ('TRJ00275', 'KY007', 'Karyawan 2', 4, 40000, NULL, 0, 50000, 10000, '2023-01-24 23:24:40'),
 ('TRJ00276', 'KY008', 'Karyawan 3', 5, 60000, NULL, 0, 100000, 40000, '2023-01-24 23:24:54'),
-('TRJ00277', 'KY005', 'Habib Dwi', 4, 48000, NULL, 0, 50000, 2000, '2023-01-24 23:25:35'),
+('TRJ00277', 'KY005', 'Admin', 4, 48000, NULL, 0, 50000, 2000, '2023-01-24 23:25:35'),
 ('TRJ00278', 'KY007', 'Karyawan 2', 7, 91000, NULL, 0, 100000, 9000, '2023-01-25 23:27:00'),
 ('TRJ00279', 'KY008', 'Karyawan 3', 6, 78000, NULL, 0, 100000, 22000, '2023-01-25 23:27:18'),
 ('TRJ00280', 'KY008', 'Karyawan 3', 8, 80000, NULL, 0, 100000, 20000, '2023-01-25 23:27:41'),
-('TRJ00281', 'KY005', 'Habib Dwi', 8, 96000, NULL, 0, 100000, 4000, '2023-01-25 23:28:44'),
+('TRJ00281', 'KY005', 'Admin', 8, 96000, NULL, 0, 100000, 4000, '2023-01-25 23:28:44'),
 ('TRJ00282', 'KY008', 'Karyawan 3', 8, 80000, NULL, 0, 100000, 20000, '2023-01-25 23:29:07'),
 ('TRJ00283', 'KY007', 'Karyawan 2', 6, 72000, NULL, 0, 100000, 28000, '2023-01-26 23:29:33'),
 ('TRJ00284', 'KY007', 'Karyawan 2', 6, 60000, NULL, 0, 60000, 0, '2023-01-26 23:29:56'),
 ('TRJ00285', 'KY007', 'Karyawan 2', 8, 40000, NULL, 0, 50000, 10000, '2023-01-27 23:30:30'),
 ('TRJ00286', 'KY008', 'Karyawan 3', 9, 108000, NULL, 0, 120000, 12000, '2023-01-27 23:30:52'),
 ('TRJ00287', 'KY008', 'Karyawan 3', 8, 105000, NULL, 0, 110000, 5000, '2023-01-27 23:31:20'),
-('TRJ00288', 'KY005', 'Habib Dwi', 9, 90000, NULL, 0, 100000, 10000, '2023-01-27 23:31:43'),
-('TRJ00289', 'KY005', 'Habib Dwi', 5, 65000, NULL, 0, 70000, 5000, '2023-01-27 23:32:16'),
+('TRJ00288', 'KY005', 'Admin', 9, 90000, NULL, 0, 100000, 10000, '2023-01-27 23:31:43'),
+('TRJ00289', 'KY005', 'Admin', 5, 65000, NULL, 0, 70000, 5000, '2023-01-27 23:32:16'),
 ('TRJ00290', 'KY008', 'Karyawan 3', 5, 65000, NULL, 0, 70000, 5000, '2023-01-28 23:34:45'),
 ('TRJ00291', 'KY007', 'Karyawan 2', 5, 50000, NULL, 0, 50000, 0, '2023-01-29 23:35:16'),
 ('TRJ00292', 'KY007', 'Karyawan 2', 4, 52000, NULL, 0, 60000, 8000, '2023-01-29 23:35:32'),
 ('TRJ00293', 'KY007', 'Karyawan 2', 6, 30000, NULL, 0, 50000, 20000, '2023-01-29 23:35:56'),
-('TRJ00294', 'KY005', 'Habib Dwi', 4, 52000, NULL, 0, 100000, 48000, '2023-01-29 23:36:10'),
+('TRJ00294', 'KY005', 'Admin', 4, 52000, NULL, 0, 100000, 48000, '2023-01-29 23:36:10'),
 ('TRJ00295', 'KY007', 'Karyawan 2', 6, 78000, NULL, 0, 80000, 2000, '2023-01-29 23:36:59'),
 ('TRJ00296', 'KY007', 'Karyawan 2', 8, 96000, NULL, 0, 100000, 4000, '2023-01-29 23:37:19'),
 ('TRJ00297', 'KY008', 'Karyawan 3', 6, 78000, NULL, 0, 80000, 2000, '2023-01-30 23:38:14'),
@@ -1454,7 +1459,7 @@ INSERT INTO `transaksi_jual` (`id_tr_jual`, `id_karyawan`, `nama_karyawan`, `tot
 ('TRJ00303', 'KY008', 'Karyawan 3', 8, 79000, NULL, 0, 80000, 1000, '2023-02-01 23:41:52'),
 ('TRJ00304', 'KY008', 'Karyawan 3', 10, 96000, NULL, 0, 100000, 4000, '2023-02-01 23:42:32'),
 ('TRJ00305', 'KY006', 'Karyawan 1', 2, 16000, NULL, 0, 29000, 13000, '2023-02-02 09:33:59'),
-('TRJ00306', 'KY005', 'Habib Dwi', 2, 24000, NULL, 0, 25000, 1000, '2023-02-02 09:58:13'),
+('TRJ00306', 'KY005', 'Admin', 2, 24000, NULL, 0, 25000, 1000, '2023-02-02 09:58:13'),
 ('TRJ00307', 'KY006', 'Karyawan 1', 1, 10000, NULL, 0, 100000, 90000, '2023-02-02 10:51:40'),
 ('TRJ00308', 'KY007', 'Karyawan 2', 5, 65000, NULL, 0, 70000, 5000, '2023-02-02 10:52:59'),
 ('TRJ00309', 'KY008', 'Karyawan 3', 1, 12000, NULL, 0, 24999, 12999, '2023-02-02 10:54:17'),
@@ -1464,27 +1469,28 @@ INSERT INTO `transaksi_jual` (`id_tr_jual`, `id_karyawan`, `nama_karyawan`, `tot
 ('TRJ00313', 'KY007', 'Karyawan 2', 1, 10000, NULL, 0, 20000, 10000, '2023-02-02 11:57:30'),
 ('TRJ00314', 'KY006', 'Karyawan 1', 8, 120000, NULL, 0, 130000, 10000, '2023-02-02 12:05:53'),
 ('TRJ00315', 'KY007', 'Karyawan 2', 1, 10000, NULL, 0, 10000, 0, '2023-02-06 15:11:53'),
-('TRJ00316', 'KY005', 'Habib Dwi', 9, 106000, NULL, 0, 110000, 4000, '2023-03-17 13:00:11'),
-('TRJ00317', 'KY005', 'Habib Dwi', 1, 15000, NULL, 0, 20000, 5000, '2023-03-21 14:33:16'),
+('TRJ00316', 'KY005', 'Admin', 9, 106000, NULL, 0, 110000, 4000, '2023-03-17 13:00:11'),
+('TRJ00317', 'KY005', 'Admin', 1, 15000, NULL, 0, 20000, 5000, '2023-03-21 14:33:16'),
 ('TRJ00318', 'KY001', 'Achmad Baihaqi', 1, 12000, NULL, 0, 15000, 3000, '2023-03-21 14:55:56'),
 ('TRJ00319', 'KY001', 'Achmad Baihaqi', 1, 10000, NULL, 0, 10000, 0, '2023-03-21 15:34:32'),
 ('TRJ00320', 'KY001', 'Achmad Baihaqi', 1, 10000, NULL, 0, 10000, 0, '2023-03-21 15:35:25'),
-('TRJ00321', 'KY005', 'Habib Dwi', 1, 10000, NULL, 0, 10000, 0, '2023-03-23 22:05:30'),
-('TRJ00322', 'KY005', 'Habib Dwi', 1, 12000, NULL, 0, 100000, 88000, '2023-03-24 06:14:56'),
-('TRJ00323', 'KY005', 'Habib Dwi', 10, 130000, NULL, 2000, 150000, 20000, '2023-03-24 06:27:49'),
-('TRJ00324', 'KY005', 'Habib Dwi', 5, 65000, 'DS001', 2000, 100000, 35000, '2023-03-24 13:28:53'),
-('TRJ00325', 'KY005', 'Habib Dwi', 3, 39000, 'DS001', 2000, 100000, 61000, '2023-03-24 13:31:52'),
-('TRJ00326', 'KY005', 'Habib Dwi', 1, 12000, 'DS001', 0, 100000, 88000, '2023-03-24 19:55:06'),
-('TRJ00327', 'KY005', 'Habib Dwi', 4, 48000, 'DS001', 0, 50000, 2000, '2023-03-24 19:56:18'),
-('TRJ00328', 'KY005', 'Habib Dwi', 4, 48000, 'DS001', 0, 50000, 2000, '2023-03-24 19:57:26'),
-('TRJ00329', 'KY005', 'Habib Dwi', 10, 120000, 'DS001', 0, 150000, 30000, '2023-03-24 20:06:06'),
-('TRJ00330', 'KY005', 'Habib Dwi', 18, 225000, 'DS001', 20000, 2100000, 1875000, '2023-03-24 21:29:59'),
-('TRJ00331', 'KY005', 'Habib Dwi', 10, 100000, 'DS001', 5000, 100000, 5000, '2023-03-25 14:12:59'),
-('TRJ00332', 'KY005', 'Habib Dwi', 10, 145000, NULL, 5000, 150000, 5000, '2023-03-25 14:24:12'),
-('TRJ00333', 'KY005', 'Habib Dwi', 9, 130000, NULL, 5000, 150000, 20000, '2023-03-25 14:30:38'),
-('TRJ00334', 'KY005', 'Habib Dwi', 11, 98000, 'DS005', 2000, 100000, 2000, '2023-03-25 23:49:58'),
-('TRJ00335', 'KY005', 'Habib Dwi', 9, 98000, 'DS005', 2000, 100000, 2000, '2023-03-26 13:59:00'),
-('TRJ00336', 'KY005', 'Habib Dwi', 1, 5000, NULL, 0, 5000, 0, '2023-03-26 14:04:49');
+('TRJ00321', 'KY005', 'Admin', 1, 10000, NULL, 0, 10000, 0, '2023-03-23 22:05:30'),
+('TRJ00322', 'KY005', 'Admin', 1, 12000, NULL, 0, 100000, 88000, '2023-03-24 06:14:56'),
+('TRJ00323', 'KY005', 'Admin', 10, 130000, NULL, 2000, 150000, 20000, '2023-03-24 06:27:49'),
+('TRJ00324', 'KY005', 'Admin', 5, 65000, 'DS001', 2000, 100000, 35000, '2023-03-24 13:28:53'),
+('TRJ00325', 'KY005', 'Admin', 3, 39000, 'DS001', 2000, 100000, 61000, '2023-03-24 13:31:52'),
+('TRJ00326', 'KY005', 'Admin', 1, 12000, 'DS001', 0, 100000, 88000, '2023-03-24 19:55:06'),
+('TRJ00327', 'KY005', 'Admin', 4, 48000, 'DS001', 0, 50000, 2000, '2023-03-24 19:56:18'),
+('TRJ00328', 'KY005', 'Admin', 4, 48000, 'DS001', 0, 50000, 2000, '2023-03-24 19:57:26'),
+('TRJ00329', 'KY005', 'Admin', 10, 120000, 'DS001', 0, 150000, 30000, '2023-03-24 20:06:06'),
+('TRJ00330', 'KY005', 'Admin', 18, 225000, 'DS001', 20000, 2100000, 1875000, '2023-03-24 21:29:59'),
+('TRJ00331', 'KY005', 'Admin', 10, 100000, 'DS001', 5000, 100000, 5000, '2023-03-25 14:12:59'),
+('TRJ00332', 'KY005', 'Admin', 10, 145000, NULL, 5000, 150000, 5000, '2023-03-25 14:24:12'),
+('TRJ00333', 'KY005', 'Admin', 9, 130000, NULL, 5000, 150000, 20000, '2023-03-25 14:30:38'),
+('TRJ00334', 'KY005', 'Admin', 11, 98000, 'DS005', 2000, 100000, 2000, '2023-03-25 23:49:58'),
+('TRJ00335', 'KY005', 'Admin', 9, 98000, 'DS005', 2000, 100000, 2000, '2023-03-26 13:59:00'),
+('TRJ00336', 'KY005', 'Admin', 1, 5000, NULL, 0, 5000, 0, '2023-03-26 14:04:49'),
+('TRJ00337', 'KY005', 'Admin', 1, 15000, NULL, 0, 20000, 5000, '2023-04-24 00:09:58');
 
 -- --------------------------------------------------------
 
@@ -1494,6 +1500,7 @@ INSERT INTO `transaksi_jual` (`id_tr_jual`, `id_karyawan`, `nama_karyawan`, `tot
 
 CREATE TABLE `user` (
   `username` varchar(20) NOT NULL,
+  `rfid` varchar(15) DEFAULT NULL,
   `password` varchar(70) NOT NULL,
   `level` enum('ADMIN','KARYAWAN') NOT NULL,
   `id_karyawan` varchar(6) NOT NULL
@@ -1503,17 +1510,15 @@ CREATE TABLE `user` (
 -- Dumping data untuk tabel `user`
 --
 
-INSERT INTO `user` (`username`, `password`, `level`, `id_karyawan`) VALUES
-('0008277089', '$2a$12$Ln3UH.1.D0IkZOYgrUF3VeO6g71lHhAgg/dw7YXllSp07jvcKXr1K', 'KARYAWAN', 'KY012'),
-('0008510015', '$2a$12$QbPStVD.ctVUJ2OP/CNgVu/458WfR1W8kJaya3aW6jfE3KAlugm2q', 'KARYAWAN', 'KY013'),
-('admin', '$2a$12$Nbi9AIfHGJOqTooF90gB2.ubkOZkfPHTl3M.Rnz0jN0Fk1SZNNJsa', 'ADMIN', 'KY005'),
-('dev2003', '$2a$12$UiHP40gEGQNzyBORli.1hOiHtJ7Y08chmAbfrHXN1iupE/rTlc6fS', 'ADMIN', 'KY001'),
-('ilham', '$2a$12$G9rldUjX0SjYYn169mMO3uLoRJOnlYKggCG5nojWOeOYSFxRnckNm', 'ADMIN', 'KY002'),
-('ky01', '$2a$12$NFDmYAYqq19qDY/JnKoo3OSZ2PmVyy9BzR1O/rk4xiqJGk9nZw7G.', 'KARYAWAN', 'KY006'),
-('ky02', '$2a$12$.d1sWsBEgV2IdWjgR3VhJeK/j7nlm/C9GbEycCHiybqJ2YzaqTAQi', 'KARYAWAN', 'KY007'),
-('ky03', '$2a$12$mopMfxD2lh28mQJZ/a8vYOnj0vwrLfiqUHjtKIwDbSbO1aV5a77xG', 'KARYAWAN', 'KY008'),
-('widya', '$2a$12$a2hZcCF4Of0r65cL1ef4/.GVnaCWf6/S0Z//MGtJLnSrpZaiJ7saK', 'ADMIN', 'KY003'),
-('yoga', '$2a$12$a.WxR/w.Jd8MZ9KYWbcazuOwx9Y936X/QfhpQJwNT.Qe9ASei3PXu', 'ADMIN', 'KY004');
+INSERT INTO `user` (`username`, `rfid`, `password`, `level`, `id_karyawan`) VALUES
+('admin', '0008510015', '$2a$12$Nbi9AIfHGJOqTooF90gB2.ubkOZkfPHTl3M.Rnz0jN0Fk1SZNNJsa', 'ADMIN', 'KY005'),
+('dev2003', '0008277089', '$2a$12$UiHP40gEGQNzyBORli.1hOiHtJ7Y08chmAbfrHXN1iupE/rTlc6fS', 'ADMIN', 'KY001'),
+('ilham', NULL, '$2a$12$G9rldUjX0SjYYn169mMO3uLoRJOnlYKggCG5nojWOeOYSFxRnckNm', 'ADMIN', 'KY002'),
+('ky01', NULL, '$2a$12$NFDmYAYqq19qDY/JnKoo3OSZ2PmVyy9BzR1O/rk4xiqJGk9nZw7G.', 'KARYAWAN', 'KY006'),
+('ky02', NULL, '$2a$12$.d1sWsBEgV2IdWjgR3VhJeK/j7nlm/C9GbEycCHiybqJ2YzaqTAQi', 'KARYAWAN', 'KY007'),
+('ky03', NULL, '$2a$12$mopMfxD2lh28mQJZ/a8vYOnj0vwrLfiqUHjtKIwDbSbO1aV5a77xG', 'KARYAWAN', 'KY008'),
+('widya', NULL, '$2a$12$a2hZcCF4Of0r65cL1ef4/.GVnaCWf6/S0Z//MGtJLnSrpZaiJ7saK', 'ADMIN', 'KY003'),
+('yoga', NULL, '$2a$12$a.WxR/w.Jd8MZ9KYWbcazuOwx9Y936X/QfhpQJwNT.Qe9ASei3PXu', 'ADMIN', 'KY004');
 
 --
 -- Indexes for dumped tables
