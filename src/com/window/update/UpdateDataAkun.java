@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
  *
  * @author Achmad Baihaqi
  */
-public class UpdateDataKaryawan extends javax.swing.JDialog {
+public class UpdateDataAkun extends javax.swing.JDialog {
 
     public final static int TAMBAH = 1, EDIT = 2;
     
@@ -39,7 +39,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
      * @param kondisi
      * @param id
      */
-    public UpdateDataKaryawan(java.awt.Frame parent, boolean modal, int kondisi, String id) {
+    public UpdateDataAkun(java.awt.Frame parent, boolean modal, int kondisi, String id) {
         super(parent, modal);
         this.setUndecorated(true);
         win.setVisible(true);
@@ -65,11 +65,11 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         
         switch(kondisi){
             case TAMBAH : 
-                this.lblTitle.setText("Tambah Data Karyawan");
+                this.lblTitle.setText("Tambah Data Akun");
                 this.inpId.setText(this.createID());
                 break;
             case EDIT : 
-                this.lblTitle.setText("Edit Data Karyawan");
+                this.lblTitle.setText("Edit Data Akun");
                 this.inpId.setText(this.idSelected);
                 this.showData();
                 // menghilangkan username dan password saat mengedit data
@@ -302,8 +302,10 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpPassword = new com.ui.RoundedPasswordField(15);
         lblEye = new javax.swing.JLabel();
         inpShif = new javax.swing.JComboBox();
-        lblUsername1 = new javax.swing.JLabel();
-        inpUsername1 = new com.ui.RoundedTextField(15);
+        lblRfid = new javax.swing.JLabel();
+        inpRfid = new com.ui.RoundedTextField(15);
+        lblEmail = new javax.swing.JLabel();
+        inpEmail = new com.ui.RoundedTextField(15);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -368,7 +370,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
 
         lblId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
-        lblId.setText("ID ");
+        lblId.setText("ID Karyawan");
 
         inpId.setBackground(new java.awt.Color(231, 235, 239));
         inpId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -407,7 +409,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpAlamat.setName("Alamat"); // NOI18N
 
         lblUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
+        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-username.png"))); // NOI18N
         lblUsername.setText("Username");
 
         inpUsername.setBackground(new java.awt.Color(248, 249, 250));
@@ -444,15 +446,29 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang", "Malam" }));
         inpShif.setName("Shif"); // NOI18N
 
-        lblUsername1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblUsername1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
-        lblUsername1.setText("Kode RFID");
+        lblRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblRfid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-rfid.png"))); // NOI18N
+        lblRfid.setText("Kode RFID");
 
-        inpUsername1.setBackground(new java.awt.Color(248, 249, 250));
-        inpUsername1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpUsername1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpUsername1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpUsername1.setName("Username"); // NOI18N
+        inpRfid.setBackground(new java.awt.Color(248, 249, 250));
+        inpRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpRfid.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpRfid.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpRfid.setName("Username"); // NOI18N
+
+        lblEmail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-email.png"))); // NOI18N
+        lblEmail.setText("Email");
+
+        inpEmail.setBackground(new java.awt.Color(248, 249, 250));
+        inpEmail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpEmail.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpEmail.setName("No Telephone"); // NOI18N
+        inpEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpEmailKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -499,12 +515,16 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(inpNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(inpNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(14, 14, 14))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblUsername1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpUsername1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -524,16 +544,20 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                     .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblUsername1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inpUsername1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblRfid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(inpNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inpNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(inpNoTelp, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(lblNoTelp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(inpEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(lblEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -547,7 +571,7 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                     .addComponent(lblEye, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpPassword))
-                .addGap(18, 27, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -629,6 +653,10 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
+    private void inpEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpEmailKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpEmailKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -642,12 +670,12 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UpdateDataKaryawan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UpdateDataAkun.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            UpdateDataKaryawan dialog = new UpdateDataKaryawan(new javax.swing.JFrame(), true, 1, "BA003");
+            UpdateDataAkun dialog = new UpdateDataAkun(new javax.swing.JFrame(), true, 1, "BA003");
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -662,24 +690,26 @@ public class UpdateDataKaryawan extends javax.swing.JDialog {
     private javax.swing.JToggleButton btnHapus;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JTextField inpAlamat;
+    private javax.swing.JTextField inpEmail;
     private javax.swing.JTextField inpId;
     private javax.swing.JTextField inpNama;
     private javax.swing.JTextField inpNoTelp;
     private javax.swing.JPasswordField inpPassword;
+    private javax.swing.JTextField inpRfid;
     private javax.swing.JComboBox inpShif;
     private javax.swing.JTextField inpUsername;
-    private javax.swing.JTextField inpUsername1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAlamat;
+    private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblEye;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblNoTelp;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblRfid;
     private javax.swing.JLabel lblShif;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
-    private javax.swing.JLabel lblUsername1;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
     // End of variables declaration//GEN-END:variables

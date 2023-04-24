@@ -805,7 +805,7 @@ public class TestWindow extends javax.swing.JFrame {
 
     private void btnKaryawanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKaryawanMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        DataKaryawan window = new DataKaryawan();
+        DataAkun window = new DataAkun();
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){

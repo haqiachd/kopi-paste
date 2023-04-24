@@ -12,7 +12,7 @@ import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.InfoApp;
 import com.window.dialog.Pengaturan;
-import com.window.update.UpdateDataKaryawan;
+import com.window.update.UpdateDataAkun;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
@@ -28,7 +28,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author Achmad Baihaqi
  */
-public class DataKaryawan extends javax.swing.JFrame {
+public class DataAkun extends javax.swing.JFrame {
     
     private String keyword = "", idSelected = "";
     
@@ -40,7 +40,7 @@ public class DataKaryawan extends javax.swing.JFrame {
     
     public static DefaultTableModel DATA_KY = new DefaultTableModel();
     
-    public DataKaryawan() {
+    public DataAkun() {
         initComponents();
         
         this.setTitle("Data Karyawan");
@@ -108,7 +108,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Karyawan", "Nama Karyawan", "Shif"
+                    "ID Karyawan", "Nama Lengkap", "Shif"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -135,15 +135,15 @@ public class DataKaryawan extends javax.swing.JFrame {
         this.resetTabel();
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
-        if(DataKaryawan.DATA_KY.getRowCount() > 0){
+        if(DataAkun.DATA_KY.getRowCount() > 0){
             System.out.println("EXECUTE");
             // membaca data yang ada didalam tabel
-            for(int i = 0; i < DataKaryawan.DATA_KY.getRowCount(); i++){
+            for(int i = 0; i < DataAkun.DATA_KY.getRowCount(); i++){
                 // menambahkan data
                 model.addRow(new Object[]{
-                    DataKaryawan.DATA_KY.getValueAt(i, 0),
-                    DataKaryawan.DATA_KY.getValueAt(i, 1),
-                    DataKaryawan.DATA_KY.getValueAt(i, 2),
+                    DataAkun.DATA_KY.getValueAt(i, 0),
+                    DataAkun.DATA_KY.getValueAt(i, 1),
+                    DataAkun.DATA_KY.getValueAt(i, 2),
                 });
             }
             // menampilkan data
@@ -188,7 +188,7 @@ public class DataKaryawan extends javax.swing.JFrame {
             this.tabelData.setModel(model);
             
             // menambahkan data ke model 
-            DataKaryawan.DATA_KY = model;
+            DataAkun.DATA_KY = model;
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
@@ -205,18 +205,18 @@ public class DataKaryawan extends javax.swing.JFrame {
                id, nama;
         
         // membaca isi data pada model cari
-        for (int i = 0; i < DataKaryawan.DATA_KY.getRowCount(); i++) {
+        for (int i = 0; i < DataAkun.DATA_KY.getRowCount(); i++) {
             // mendapatkan data di tabel
-            id = DataKaryawan.DATA_KY.getValueAt(i, 0).toString().toLowerCase();
-            nama = DataKaryawan.DATA_KY.getValueAt(i, 1).toString().toLowerCase();
+            id = DataAkun.DATA_KY.getValueAt(i, 0).toString().toLowerCase();
+            nama = DataAkun.DATA_KY.getValueAt(i, 1).toString().toLowerCase();
             
             // cek apakah data yang dicari terdapat pada tabel
             if(id.contains(key) || nama.contains(key)){
                 // menambahkan data
                 model.addRow(new Object[]{
-                        DataKaryawan.DATA_KY.getValueAt(i, 0),
-                        DataKaryawan.DATA_KY.getValueAt(i, 1),
-                        DataKaryawan.DATA_KY.getValueAt(i, 2),
+                        DataAkun.DATA_KY.getValueAt(i, 0),
+                        DataAkun.DATA_KY.getValueAt(i, 1),
+                        DataAkun.DATA_KY.getValueAt(i, 2),
                     }
                 );
             }
@@ -237,13 +237,19 @@ public class DataKaryawan extends javax.swing.JFrame {
             
             if(this.db.res.next()){
                 this.inpId.setText(this.idSelected);
-                this.inpRfid.setText(this.db.res.getString("user.rfid"));
                 this.inpNama.setText(this.db.res.getString("karyawan.nama_karyawan"));
                 this.inpAlamat.setText(this.db.res.getString("karyawan.alamat"));
                 this.inpTelephone.setText(this.db.res.getString("karyawan.no_telp"));
                 this.inpShift.setText(this.db.res.getString("karyawan.shif"));
                 this.inpUsername.setText(this.db.res.getString("user.username"));
                 this.inpLevel.setText(this.txt.toCapitalize(this.db.res.getString("user.level")));
+                
+                String rfid = this.db.res.getString("rfid");
+                if(rfid == null || rfid.equals("")){
+                    this.inpRfid.setText("Tidak ada RFID");
+                }else{
+                    this.inpRfid.setText(rfid);
+                }
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -437,7 +443,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         btnKaryawan.setBackground(new java.awt.Color(166, 203, 227));
         btnKaryawan.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         btnKaryawan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-sidemenu-karyawan-dark.png"))); // NOI18N
-        btnKaryawan.setText("Data Karyawan");
+        btnKaryawan.setText("Data Akun");
         btnKaryawan.setIconTextGap(7);
         btnKaryawan.setOpaque(true);
         btnKaryawan.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -545,7 +551,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 
         lblNamaWindow.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         lblNamaWindow.setForeground(new java.awt.Color(0, 21, 39));
-        lblNamaWindow.setText("Data Karyawan");
+        lblNamaWindow.setText("Data Akun");
 
         lblTopSetting.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTopSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-top-setting.png"))); // NOI18N
@@ -623,7 +629,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 
         lblKeyword.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblKeyword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblKeyword.setText("Menampilkan data karyawan dengan keyword = \"\"");
+        lblKeyword.setText("Menampilkan data akun dengan keyword = \"\"");
 
         tabelData.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
         tabelData.setModel(new javax.swing.table.DefaultTableModel(
@@ -634,7 +640,7 @@ public class DataKaryawan extends javax.swing.JFrame {
                 {"KY004", "Widyasari Raisya", null, null}
             },
             new String [] {
-                "ID Karyawan", "Nama Karyawan", "no Telfon", "Shift"
+                "ID Karyawan", "Nama Lengkap", "no Telfon", "Shift"
             }
         ));
         tabelData.setGridColor(new java.awt.Color(0, 0, 0));
@@ -672,12 +678,12 @@ public class DataKaryawan extends javax.swing.JFrame {
         lblCari.setFont(new java.awt.Font("Dialog", 1, 17)); // NOI18N
         lblCari.setForeground(new java.awt.Color(33, 94, 234));
         lblCari.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCari.setText("Cari ID / Nama Karyawan");
+        lblCari.setText("Cari ID / Nama Lengkap ");
 
         lblInfoData.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         lblInfoData.setForeground(new java.awt.Color(250, 22, 22));
         lblInfoData.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblInfoData.setText("Informasi Karyawan");
+        lblInfoData.setText("Informasi Akun");
 
         lineVerCen.setBackground(new java.awt.Color(8, 8, 9));
         lineVerCen.setForeground(new java.awt.Color(8, 8, 9));
@@ -688,7 +694,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 
         lblId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
-        lblId.setText("ID Karyawan");
+        lblId.setText("ID Akun");
 
         inpId.setBackground(new java.awt.Color(231, 235, 239));
         inpId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -700,7 +706,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 
         lblNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNama.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-nama.png"))); // NOI18N
-        lblNama.setText("Nama");
+        lblNama.setText("Nama Lengkap");
 
         inpNama.setBackground(new java.awt.Color(248, 249, 250));
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -712,7 +718,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 
         lblTelephone.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTelephone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
-        lblTelephone.setText("No Telephone");
+        lblTelephone.setText("Nomor HP");
 
         inpAlamat.setBackground(new java.awt.Color(248, 249, 250));
         inpAlamat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -786,7 +792,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         lineHorBot.setForeground(new java.awt.Color(0, 0, 0));
 
         lblGajelas.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
-        lblGajelas.setText("Kopi Paste version 1.1");
+        lblGajelas.setText("Kopi Paste versi 1.1");
 
         lblShift.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-shift.png"))); // NOI18N
@@ -797,7 +803,7 @@ public class DataKaryawan extends javax.swing.JFrame {
         inpShift.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         lblUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
+        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-username.png"))); // NOI18N
         lblUsername.setText("Username");
 
         inpUsername.setBackground(new java.awt.Color(231, 235, 239));
@@ -809,15 +815,15 @@ public class DataKaryawan extends javax.swing.JFrame {
         inpUsername.setSelectionStart(5);
 
         lblLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblLevel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-password.png"))); // NOI18N
-        lblLevel.setText("Level");
+        lblLevel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-levelakun.png"))); // NOI18N
+        lblLevel.setText("Level Akun");
 
         inpLevel.setBackground(new java.awt.Color(248, 249, 250));
         inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpLevel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         lblRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblRfid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
+        lblRfid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-rfid.png"))); // NOI18N
         lblRfid.setText("Kode RFID");
 
         inpRfid.setBackground(new java.awt.Color(231, 235, 239));
@@ -1088,7 +1094,7 @@ public class DataKaryawan extends javax.swing.JFrame {
 
     private void btnKaryawanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKaryawanMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        DataKaryawan window = new DataKaryawan();
+        DataAkun window = new DataAkun();
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
@@ -1203,10 +1209,10 @@ public class DataKaryawan extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddMouseExited
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        UpdateDataKaryawan d = new UpdateDataKaryawan(null, true, 1, "");
+        UpdateDataAkun d = new UpdateDataAkun(null, true, 1, "");
         d.setVisible(true);
         
-        DataKaryawan.DATA_KY = new DefaultTableModel();
+        DataAkun.DATA_KY = new DefaultTableModel();
         this.showTabel();
         // refresh data
         this.resetData();
@@ -1224,9 +1230,9 @@ public class DataKaryawan extends javax.swing.JFrame {
         if(this.idSelected.equals("") || this.idSelected == null){
             JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
         }else{
-            UpdateDataKaryawan d = new UpdateDataKaryawan(null, true, 2, this.idSelected);
+            UpdateDataAkun d = new UpdateDataAkun(null, true, 2, this.idSelected);
             d.setVisible(true);
-            DataKaryawan.DATA_KY = new DefaultTableModel();
+            DataAkun.DATA_KY = new DefaultTableModel();
             this.showTabel();
             this.showData();
         }
@@ -1273,7 +1279,7 @@ public class DataKaryawan extends javax.swing.JFrame {
                         // mengecek apakah data berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
-                            DataKaryawan.DATA_KY = new DefaultTableModel();
+                            DataAkun.DATA_KY = new DefaultTableModel();
                             // mengupdate tabel
                             this.showTabel();
                             // reset textfield
@@ -1348,14 +1354,14 @@ public class DataKaryawan extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DataKaryawan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new DataKaryawan().setVisible(true);
+                new DataAkun().setVisible(true);
             }
         });
     }

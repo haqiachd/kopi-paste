@@ -5,7 +5,7 @@ import com.manage.Message;
 import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
-import com.window.DataKaryawan;
+import com.window.DataAkun;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -326,7 +326,7 @@ public class UserProfile extends javax.swing.JDialog {
                 this.frame.dispose();
                 this.pop.dispose();
                 this.us.logout();
-                DataKaryawan.DATA_KY = new DefaultTableModel();
+                DataAkun.DATA_KY = new DefaultTableModel();
                 this.dispose();
             break;
         }

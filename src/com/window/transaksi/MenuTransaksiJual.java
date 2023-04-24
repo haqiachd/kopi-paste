@@ -10,7 +10,7 @@ import com.manage.Waktu;
 import com.media.Gambar;
 import com.window.Dashboard;
 import com.window.DataBahan;
-import com.window.DataKaryawan;
+import com.window.DataAkun;
 import com.window.DataMenu;
 import com.window.DataPembeli;
 import com.window.DataSupplier;
@@ -1715,7 +1715,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
     private void btnKaryawanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKaryawanMouseClicked
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        DataKaryawan window = new DataKaryawan();
+        DataAkun window = new DataAkun();
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
