@@ -227,7 +227,7 @@ local.properties
 ### Project Folders / Files
 
 # Folders
-src\resources\image\barcode
+src/resources/image/barcode/
 .idea/
 
 # Files
