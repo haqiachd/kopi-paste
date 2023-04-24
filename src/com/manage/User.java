@@ -11,28 +11,32 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
  */
 public class User extends Database{
     
-    private static String USERNAME = null, ID_KY, NAMA_USER = null, LEVEL = null;
+    private static String USERNAME = null, ID_AKUN = null, RFID = null, NAMA_USER = null, LEVEL = null;
     
     public boolean login(String usernameOrID, String password){
         try{
             // membuat query
             String query = 
-                    String.format("SELECT karyawan.id_karyawan, karyawan.nama_karyawan, user.username, user.password, user.level "
-                            + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
-                            + "WHERE user.username = '%s' OR karyawan.id_karyawan = '%s'", usernameOrID, usernameOrID);
+                    String.format("SELECT da.nama_lengkap, a.id_akun, a.username, a.rfid, a.password, a.level "
+                            + "FROM akun AS a "
+                            + "JOIN detail_akun AS da "
+                            + "ON a.id_akun = da.id_akun "
+                            + "WHERE a.username = '%s' OR a.id_akun = '%s'", usernameOrID, usernameOrID);
             
+            System.out.println(query);
             // eksekusi query
             super.res = super.stat.executeQuery(query);
             
             // cek username ada atau tidak
             if(super.res.next()){
                 // mengecek password 
-                if(BCrypt.checkpw(password, super.res.getString("password"))){
+                if(BCrypt.checkpw(password, super.res.getString("a.password"))){
                     // mendapatkan nama dari user yang sedang login
-                    User.USERNAME = super.res.getString("user.username");
-                    User.ID_KY = super.res.getString("karyawan.id_karyawan");
-                    User.NAMA_USER = super.res.getString("karyawan.nama_karyawan");
-                    User.LEVEL = super.res.getString("user.level");
+                    User.USERNAME = super.res.getString("a.username");
+                    User.ID_AKUN = super.res.getString("a.id_akun");
+                    User.RFID = super.res.getString("a.rfid");
+                    User.NAMA_USER = super.res.getString("da.nama_lengkap");
+                    User.LEVEL = super.res.getString("a.level");
                     return true;
                 }else{
                     Message.showWarning(this, "Password Anda tidak cocok!");
@@ -41,6 +45,7 @@ public class User extends Database{
                 Message.showWarning(this, String.format("'%s' Username tersebut tidak ditemukan!", usernameOrID));
             }
         }catch(Exception ex){
+            ex.printStackTrace();
             Message.showException(this, ex);
         }
         return false;
@@ -50,9 +55,12 @@ public class User extends Database{
         try{
             // membuat query
             String query = 
-                    String.format("SELECT karyawan.id_karyawan, karyawan.nama_karyawan, user.username, user.password, user.level "
-                            + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
-                            + "WHERE user.rfid = '%s' ", rfid);
+                    String.format("SELECT da.nama_lengkap, a.id_akun, a.username, a.rfid, a.password, a.level "
+                            + "FROM akun AS a "
+                            + "JOIN detail_akun AS da "
+                            + "ON a.id_akun = da.id_akun "
+                            + "WHERE a.rfid = '%s' ", rfid);
+            System.out.println(query);
             
             // eksekusi qeury
             super.res = super.stat.executeQuery(query);
@@ -60,14 +68,16 @@ public class User extends Database{
             // jika rfid ditemukan
             if(super.res.next()){
                 // mendapatkan nama dari user yang sedang login
-                User.USERNAME = super.res.getString("user.username");
-                User.ID_KY = super.res.getString("karyawan.id_karyawan");
-                User.NAMA_USER = super.res.getString("karyawan.nama_karyawan");
-                User.LEVEL = super.res.getString("user.level");
+                User.USERNAME = super.res.getString("a.username");
+                User.ID_AKUN = super.res.getString("a.id_akun");
+                User.RFID = rfid;
+                User.NAMA_USER = super.res.getString("da.nama_lengkap");
+                User.LEVEL = super.res.getString("a.level");
                 return true;
             }
             
         }catch(Exception ex){
+            ex.printStackTrace();
             Message.showException(this, ex);
         }
         return false;
@@ -76,7 +86,7 @@ public class User extends Database{
     public boolean isExistUsername(String username){
         try{
             // mengeksekusi query
-            super.res = super.stat.executeQuery("SELECT username FROM user WHERE username = '"+username+"'");
+            super.res = super.stat.executeQuery("SELECT username FROM akun WHERE username = '"+username+"'");
             
             if(super.res.next()){
                 return true;
@@ -88,10 +98,10 @@ public class User extends Database{
         return false;
     }
     
-    public boolean isIdKaryawan(String id){
+    public boolean isExistIdAkun(String id){
         try{
             // megeksekusi query
-            super.res = super.stat.executeQuery("SELECT id_karyawan FROM user WHERE id_karyawan = '"+id+"'");
+            super.res = super.stat.executeQuery("SELECT id_akun FROM akun WHERE id_akun = '"+id+"'");
             
             if(super.res.next()){
                 return true;
@@ -107,8 +117,12 @@ public class User extends Database{
         return User.USERNAME;
     }
     
-    public static String getIDKaryawan(){
-        return User.ID_KY;
+    public static String getIdAkun(){
+        return User.ID_AKUN;
+    }
+    
+    public static String getRfid(){
+        return User.RFID;
     }
     
     public static String getNamaUser(){
@@ -131,8 +145,9 @@ public class User extends Database{
         User.NAMA_USER = null;
         User.LEVEL = null;
         User.USERNAME = null;
-        User.ID_KY = null;
-        // membuka login window
+        User.ID_AKUN = null;
+        User.RFID = null;
+        // membuka login tipe window
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
