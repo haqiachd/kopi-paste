@@ -446,7 +446,7 @@ public class LoginWindow extends javax.swing.JFrame {
             LupaPassword g = new LupaPassword(this, true, this.inpUsername.getText());
             
             // cek apakah username exist
-            if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isIdKaryawan(this.inpUsername.getText())){
+            if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isExistIdAkun(this.inpUsername.getText())){
                 // membuka window
                 g.setVisible(true);                
             }else{

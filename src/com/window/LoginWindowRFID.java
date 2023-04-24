@@ -399,7 +399,7 @@ public class LoginWindowRFID extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-                user.login("admin", "lastidea");
+                user.loginRFID("0008277089");
                 new Dashboard().setVisible(true);
                 user.closeConnection();
             }
