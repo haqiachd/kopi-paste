@@ -791,7 +791,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         btnKaryawan.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         btnKaryawan.setForeground(new java.awt.Color(255, 255, 255));
         btnKaryawan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-sidemenu-karyawan.png"))); // NOI18N
-        btnKaryawan.setText("Data Karyawan");
+        btnKaryawan.setText("Data Akun");
         btnKaryawan.setIconTextGap(7);
         btnKaryawan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1366,8 +1366,6 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         lblTotalPdBulanan.setForeground(new java.awt.Color(0, 105, 233));
         lblTotalPdBulanan.setText(" Pendapatan : Rp. 12.903.902,00");
         lblTotalPdBulanan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
-
-        inpPilihTahun.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         cariTahun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window searchdata.png"))); // NOI18N
         cariTahun.addMouseListener(new java.awt.event.MouseAdapter() {

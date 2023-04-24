@@ -481,7 +481,7 @@ public class DataBahan extends javax.swing.JFrame {
         btnKaryawan.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         btnKaryawan.setForeground(new java.awt.Color(255, 255, 255));
         btnKaryawan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-sidemenu-karyawan.png"))); // NOI18N
-        btnKaryawan.setText("Data Karyawan");
+        btnKaryawan.setText("Data Akun");
         btnKaryawan.setIconTextGap(7);
         btnKaryawan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
