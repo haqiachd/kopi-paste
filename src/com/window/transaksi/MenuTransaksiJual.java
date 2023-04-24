@@ -88,16 +88,12 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         new Thread(new Runnable(){
             @Override
             public void run(){
-                try{
-                    System.out.println("update waktu is " + status);
-                    while(status){
-                        lblServerTime.setText("Server Time : " + waktu.getUpdateWaktu());
-                        Thread.sleep(1);
-                    }
-                    System.out.println("update waktu is false");
-                }catch(InterruptedException iex){
-                    Message.showException(null, iex);
+                System.out.println("update waktu is " + status);
+                while(status){
+                    lblServerTime.setText("Server Time : " + waktu.getUpdateWaktu());
+                    waktu.delay(1);
                 }
+                System.out.println("update waktu is false");
             }
         }).start();
         
@@ -551,7 +547,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             
             // menambahkan data transaksi ke query
             this.db.pst.setString(1, this.idTransaksi);
-            this.db.pst.setString(2, User.getIDKaryawan());
+            this.db.pst.setString(2, User.getIdAkun());
             this.db.pst.setString(3, User.getNamaUser());
             this.db.pst.setInt(4, this.getTotalJumlahMenu());
             this.db.pst.setInt(5, this.ttlSeluruahHarga);
