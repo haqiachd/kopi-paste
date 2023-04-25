@@ -607,7 +607,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) this.tabelTr.getModel();
             // membuat query untuk mendapatkan data dari dua tabel yaitu transaksi utama dan detail
             String sql = String.format(
-                    "SELECT t.id_karyawan, t.nama_karyawan, t.total_menu, t.total_harga, t.ttl_diskon, t.total_bayar, t.total_kembalian, t.tanggal, "
+                    "SELECT t.id_akun, t.nama_karyawan, t.total_menu, t.total_harga, t.ttl_diskon, t.total_bayar, t.total_kembalian, t.tanggal, "
                   + "d.id_menu, d.nama_menu, d.jenis_menu, d.harga_menu, d.jumlah, d.total_harga "
                   + "FROM transaksi_jual AS t "
                   + "JOIN detail_tr_jual AS d "
@@ -627,7 +627,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 // mendapatkan data transaksi
                 if(this.db.res.isFirst()){
                     // mendapatkan data
-                    this.idKaryawan = this.db.res.getString("t.id_karyawan");
+                    this.idKaryawan = this.db.res.getString("t.id_akun");
                     this.namaKaryawan = this.db.res.getString("t.nama_karyawan");
                     this.ttlSeluruahHarga = this.db.res.getInt("t.total_harga");
                     this.diskonToko = this.db.res.getInt("t.ttl_diskon");
@@ -663,7 +663,6 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         }
     }
     
-    @Deprecated
     private boolean updateTransaksi(){
         try{
             // reset detail transaksi
@@ -672,12 +671,12 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             // cek reset berhasil atau tidak
             if(reset){
 
-                // update id karyawan, nama karyawan, total menu, total harga dan tanggal
+                // update id akun, nama karyawan, total menu, total harga dan tanggal
                 String sql = String.format(
-                        "UPDATE transaksi_jual SET id_karyawan = '%s', nama_karyawan = '%s', total_menu = %d, total_harga = %d, ttl_diskon = %d, "
+                        "UPDATE transaksi_jual SET id_akun = '%s', nama_karyawan = '%s', total_menu = %d, total_harga = %d, ttl_diskon = %d, "
                       + "total_bayar = %d, total_kembalian = %d, tanggal = '%s' "
                       + "WHERE id_tr_jual = '%s' ", 
-                        this.idKaryawan, this.namaKaryawan, this.getTotalJumlahMenu(), this.ttlSeluruahHarga, this.diskonToko, this.ttlBayar, this.ttlKembalian,  this.waktu.getCurrentDateTime(), this.inpIdTransaksi.getText()
+                        User.getIdAkun(), User.getNamaUser(), this.getTotalJumlahMenu(), this.ttlSeluruahHarga, this.diskonToko, this.ttlBayar, this.ttlKembalian,  this.waktu.getCurrentDateTime(), this.inpIdTransaksi.getText()
                 );
                 
                 System.out.println(sql);

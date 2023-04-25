@@ -119,7 +119,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
                 new String[]{
-                    "ID Transaksi", "ID Karyawan", "Nama Karyawan", "Total Pesanan", "Total Harga", "Total Bayar", "Total Kembalian", "Waktu"
+                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Pesanan", "Total Harga", "Total Bayar", "Total Kembalian", "Waktu"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -136,10 +136,10 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         TableColumnModel columnModel = this.tabelRiwayat.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(90);
-        columnModel.getColumn(1).setMaxWidth(90);
-        columnModel.getColumn(2).setPreferredWidth(235);
-        columnModel.getColumn(2).setMaxWidth(235);
+        columnModel.getColumn(1).setPreferredWidth(65);
+        columnModel.getColumn(1).setMaxWidth(65);
+        columnModel.getColumn(2).setPreferredWidth(260);
+        columnModel.getColumn(2).setMaxWidth(260);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(140);
@@ -159,7 +159,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         
         try{
             // membuat query
-            String sql = "SELECT trj.id_tr_jual, trj.id_karyawan, trj.nama_karyawan,  trj.total_menu, trj.total_harga, trj.total_bayar, trj.total_kembalian, TIME(trj.tanggal) AS waktu " +
+            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan,  trj.total_menu, trj.total_harga, trj.total_bayar, trj.total_kembalian, TIME(trj.tanggal) AS waktu " +
                         "FROM transaksi_jual AS trj " +
                         "WHERE DATE(trj.tanggal) = '" + this.tanggal + "' " + 
                         " ORDER BY trj.tanggal DESC";
@@ -239,7 +239,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Transaksi", "ID Karyawan", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal", "Waktu"
+                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal", "Waktu"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -256,10 +256,10 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         TableColumnModel columnModel = this.tabelRiwayat.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(90);
-        columnModel.getColumn(1).setMaxWidth(90);
-        columnModel.getColumn(2).setPreferredWidth(235);
-        columnModel.getColumn(2).setMaxWidth(235);
+        columnModel.getColumn(1).setPreferredWidth(65);
+        columnModel.getColumn(1).setMaxWidth(65);
+        columnModel.getColumn(2).setPreferredWidth(260);
+        columnModel.getColumn(2).setMaxWidth(260);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(140);
@@ -278,7 +278,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         try{
             
             // membuat query
-            String sql = "SELECT trb.id_tr_beli, trb.id_karyawan, trb.nama_karyawan, trb.total_bahan, trb.total_harga, DATE(trb.tanggal), DAYNAME(trb.tanggal), TIME(trb.tanggal) AS waktu  " +
+            String sql = "SELECT trb.id_tr_beli, trb.id_akun, trb.nama_karyawan, trb.total_bahan, trb.total_harga, DATE(trb.tanggal), DAYNAME(trb.tanggal), TIME(trb.tanggal) AS waktu  " +
                         "FROM transaksi_beli AS trb " +
                         "WHERE DATE(trb.tanggal) = '" + this.tanggal + "' " + 
                         " ORDER BY trb.tanggal DESC";

@@ -106,7 +106,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         this.tabelLpHarian.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Transaksi", "ID Karyawan", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal", "Waktu"
+                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal", "Waktu"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -123,10 +123,10 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         TableColumnModel columnModel = this.tabelLpHarian.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(90);
-        columnModel.getColumn(1).setMaxWidth(90);
-        columnModel.getColumn(2).setPreferredWidth(235);
-//        columnModel.getColumn(2).setMaxWidth(235);
+        columnModel.getColumn(1).setPreferredWidth(65);
+        columnModel.getColumn(1).setMaxWidth(65);
+        columnModel.getColumn(2).setPreferredWidth(260);
+//        columnModel.getColumn(2).setMaxWidth(260);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(150);
@@ -146,7 +146,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
         try{
             // query untuk mengambil data laporan
             String sql = String.format(
-                    "SELECT trb.id_tr_beli, trb.id_karyawan, trb.nama_karyawan, trb.total_bahan, trb.total_harga, trb.tanggal, DAYNAME(trb.tanggal) AS hari, TIME(trb.tanggal) AS waktu "
+                    "SELECT trb.id_tr_beli, trb.id_akun, trb.nama_karyawan, trb.total_bahan, trb.total_harga, trb.tanggal, DAYNAME(trb.tanggal) AS hari, TIME(trb.tanggal) AS waktu "
                   + "FROM transaksi_beli AS trb "
                   + kondisi 
                   + " ORDER BY trb.id_tr_beli DESC "
@@ -163,7 +163,7 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
                 model.addRow(
                     new String[]{
                         this.db.res.getString("trb.id_tr_beli"), 
-                        this.db.res.getString("trb.id_karyawan"),
+                        this.db.res.getString("trb.id_akun"),
                         this.db.res.getString("trb.nama_karyawan"),
                         this.db.res.getInt("trb.total_bahan") + " Bahan", 
                         this.txt.toMoneyCase(this.db.res.getString("trb.total_harga")), 

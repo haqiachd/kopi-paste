@@ -73,7 +73,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Transaksi", "ID Karyawan", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal", "Waktu"
+                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Bahan", "Total Harga", "Tanggal", "Waktu"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -90,10 +90,10 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         TableColumnModel columnModel = this.tabelRiwayat.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(90);
         columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(90);
-        columnModel.getColumn(1).setMaxWidth(90);
-        columnModel.getColumn(2).setPreferredWidth(235);
-        columnModel.getColumn(2).setMaxWidth(235);
+        columnModel.getColumn(1).setPreferredWidth(65);
+        columnModel.getColumn(1).setMaxWidth(65);
+        columnModel.getColumn(2).setPreferredWidth(260);
+        columnModel.getColumn(2).setMaxWidth(260);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(140);
@@ -112,7 +112,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
         try{
             
             // membuat query
-            String sql = "SELECT trb.id_tr_beli, trb.id_karyawan, trb.nama_karyawan, trb.total_bahan, trb.total_harga, DATE(trb.tanggal), DAYNAME(trb.tanggal), TIME(trb.tanggal) AS waktu  " +
+            String sql = "SELECT trb.id_tr_beli, trb.id_akun, trb.nama_karyawan, trb.total_bahan, trb.total_harga, DATE(trb.tanggal), DAYNAME(trb.tanggal), TIME(trb.tanggal) AS waktu  " +
                         "FROM transaksi_beli AS trb " +
                         "WHERE MONTH(tanggal) = "+this.bulan+" AND YEAR(tanggal) = " + this.tahun + 
                         " ORDER BY trb.id_tr_beli DESC";

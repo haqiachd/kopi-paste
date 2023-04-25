@@ -88,16 +88,12 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         new Thread(new Runnable(){
             @Override
             public void run(){
-                try{
-                    System.out.println("update waktu is " + status);
-                    while(status){
-                        lblServerTime.setText("Server Time : " + waktu.getUpdateWaktu());
-                        Thread.sleep(1);
-                    }
-                    System.out.println("update waktu is false");
-                }catch(InterruptedException iex){
-                    Message.showException(null, iex);
+                System.out.println("update waktu is " + status);
+                while(status){
+                    lblServerTime.setText("Server Time : " + waktu.getUpdateWaktu());
+                    waktu.delay(1);
                 }
+                System.out.println("update waktu is false");
             }
         }).start();
         
@@ -165,19 +161,19 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
     
     private void showListKaryawan(){
         try{
-            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, us.level "
-                       + "FROM karyawan AS ky "
-                       + "JOIN user AS us "
-                       + "ON ky.id_karyawan = us.id_karyawan ";
+            String sql = "SELECT a.id_akun, da.nama_lengkap, a.level "
+                       + "FROM detail_akun AS da "
+                       + "JOIN akun AS a "
+                       + "ON a.id_akun = da.id_akun ";
             
             if(!User.isDeveloper()){
-                sql += "WHERE us.level != 'DEVELOPER'";
+                sql += "WHERE a.level != 'DEVELOPER'";
             }
             
             this.db.res = this.db.stat.executeQuery(sql);
             
             while(this.db.res.next()){
-                this.inpKaryawan.addItem(this.db.res.getString("ky.id_karyawan") + " | " + this.db.res.getString("ky.nama_karyawan"));
+                this.inpKaryawan.addItem(this.db.res.getString("a.id_akun") + " | " + this.db.res.getString("da.nama_lengkap"));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -613,7 +609,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             
             // membuat query untuk mendapatkan data dari dua tabel yaitu transaksi utama dan detail
             String sql = String.format(
-                    "SELECT t.id_karyawan, t.nama_karyawan, t.total_harga,  "
+                    "SELECT t.id_akun, t.nama_karyawan, t.total_harga,  "
                   + "d.id_bahan, d.nama_bahan, d.jenis_bahan, d.jumlah, d.satuan_bahan, d.total_harga "
                             + "FROM transaksi_beli AS t "
                             + "JOIN detail_tr_beli AS d "
@@ -633,7 +629,7 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
                 // mendapatkan data transaksi
                 if(this.db.res.isFirst()){
                     // mendapatkan data
-                    this.idKaryawan = this.db.res.getString("t.id_karyawan");
+                    this.idKaryawan = this.db.res.getString("t.id_akun");
                     this.namaKaryawan = this.db.res.getString("t.nama_karyawan");
                     this.ttlHargaBayar = this.db.res.getInt("t.total_harga");
                     
@@ -670,9 +666,9 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
             // cek reset berhasil atau tidak
             if(reset){
 
-                // update id karyawan, nama karyawan, total menu, total harga dan tanggal
+                // update id akun, nama karyawan, total menu, total harga dan tanggal
                 String sql = String.format(
-                        "UPDATE transaksi_beli SET id_karyawan = '%s', nama_karyawan = '%s', total_bahan = %d, total_harga = %d, tanggal = '%s' "
+                        "UPDATE transaksi_beli SET id_akun = '%s', nama_karyawan = '%s', total_bahan = %d, total_harga = %d, tanggal = '%s' "
                       + "WHERE id_tr_beli = '%s' ", 
                         this.idKaryawan, this.namaKaryawan, this.getTotalJumlahBahan(), this.getTotalHarga(), this.waktu.getCurrentDateTime(), this.inpIdTransaksi.getText()
                 );
