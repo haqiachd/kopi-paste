@@ -60,47 +60,22 @@
               <Component id="lblTitle" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblId" min="-2" pref="150" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="inpId" min="-2" pref="108" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblNama" min="-2" pref="150" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="inpNama" min="-2" pref="289" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="btnSimpan" min="-2" pref="114" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="btnHapus" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lineHorBot" alignment="1" max="32767" attributes="0"/>
                       <Component id="lineHorTop" alignment="1" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Component id="lblUsername" min="-2" pref="150" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="inpUsername" min="-2" pref="199" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblPassword" min="-2" pref="150" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="inpPassword" min="-2" pref="245" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblEye" min="-2" max="-2" attributes="0"/>
-                      </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lblShif" pref="150" max="32767" attributes="0"/>
+                                      <Component id="lblLevel" pref="150" max="32767" attributes="0"/>
                                       <Component id="lblAlamat" max="32767" attributes="0"/>
+                                      <Component id="lblShif" pref="150" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="inpShif" max="32767" attributes="0"/>
+                                      <Component id="inpLevel" max="32767" attributes="0"/>
                                       <Component id="inpAlamat" max="32767" attributes="0"/>
+                                      <Component id="inpShif" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
@@ -117,12 +92,53 @@
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="lblRfid" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lblId" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="inpId" min="-2" pref="108" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="btnSimpan" min="-2" pref="114" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btnHapus" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lblPassword" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="inpPassword" min="-2" pref="245" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lblEye" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lblNama" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="inpNama" min="-2" pref="289" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lblUsername" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="inpUsername" min="-2" pref="199" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lblRfid" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="inpRfid" min="-2" pref="199" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="inpRfid" min="-2" pref="199" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblStatusUsername" max="32767" attributes="0"/>
+                              <Component id="lblStatusRfid" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="21" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -140,13 +156,15 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblStatusUsername" max="32767" attributes="0"/>
                       <Component id="lblUsername" alignment="0" max="32767" attributes="0"/>
-                      <Component id="inpUsername" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="inpUsername" alignment="0" pref="37" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="lblRfid" alignment="0" max="32767" attributes="0"/>
                       <Component id="inpRfid" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="lblStatusRfid" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -170,8 +188,13 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lblShif" pref="37" max="32767" attributes="0"/>
-                      <Component id="inpShif" max="32767" attributes="0"/>
+                      <Component id="lblLevel" pref="37" max="32767" attributes="0"/>
+                      <Component id="inpLevel" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblShif" alignment="0" pref="37" max="32767" attributes="0"/>
+                      <Component id="inpShif" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -179,14 +202,14 @@
                       <Component id="lblPassword" pref="37" max="32767" attributes="0"/>
                       <Component id="inpPassword" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="lineHorBot" min="-2" pref="10" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnSimpan" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                       <Component id="btnHapus" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                  <EmptySpace pref="17" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -317,6 +340,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Nama Karyawan" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpNamaKeyReleased"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
@@ -348,6 +374,7 @@
             <Property name="name" type="java.lang.String" value="No Telephone" noResource="true"/>
           </Properties>
           <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpNoTelpKeyReleased"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpNoTelpKeyTyped"/>
           </Events>
           <AuxValues>
@@ -380,6 +407,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Alamat" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpAlamatKeyReleased"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
@@ -413,19 +443,23 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Username" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpUsernameKeyReleased"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpUsernameKeyTyped"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblShif">
+        <Component class="javax.swing.JLabel" name="lblLevel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Dialog" size="16" style="1"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/resources/image/icons/ic-window-data-shift.png"/>
+              <Image iconType="3" name="/resources/image/icons/ic-window-data-levelakun.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Shif"/>
+            <Property name="text" type="java.lang.String" value="Level Akun"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPassword">
@@ -454,6 +488,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Password" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpPasswordKeyReleased"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedPasswordField(15)"/>
           </AuxValues>
@@ -469,7 +506,7 @@
             <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblEyeMouseExited"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="inpShif">
+        <Component class="javax.swing.JComboBox" name="inpLevel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="fa" green="f9" red="f8" type="rgb"/>
@@ -479,13 +516,16 @@
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="Pilih Shif"/>
-                <StringItem index="1" value="Siang"/>
-                <StringItem index="2" value="Malam"/>
+                <StringItem index="0" value="Pilih Level"/>
+                <StringItem index="1" value="Admin"/>
+                <StringItem index="2" value="Karyawan"/>
               </StringArray>
             </Property>
             <Property name="name" type="java.lang.String" value="Shif" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpLevelKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblRfid">
           <Properties>
@@ -516,6 +556,10 @@
             </Property>
             <Property name="name" type="java.lang.String" value="Username" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpRfidKeyReleased"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpRfidKeyTyped"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
@@ -547,11 +591,61 @@
             <Property name="name" type="java.lang.String" value="No Telephone" noResource="true"/>
           </Properties>
           <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpEmailKeyReleased"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpEmailKeyTyped"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblShif">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="16" style="1"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/image/icons/ic-window-data-shift.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Shif"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="inpShif">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="fa" green="f9" red="f8" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="16" style="1"/>
+            </Property>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="4">
+                <StringItem index="0" value="Pilih Shif"/>
+                <StringItem index="1" value="No Shif"/>
+                <StringItem index="2" value="Siang"/>
+                <StringItem index="3" value="Malam"/>
+              </StringArray>
+            </Property>
+            <Property name="name" type="java.lang.String" value="Shif" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="inpShifKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblStatusUsername">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblStatusRfid">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

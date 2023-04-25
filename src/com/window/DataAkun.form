@@ -521,56 +521,62 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="1" attributes="0">
                                               <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="lblUsername" min="-2" pref="147" max="-2" attributes="0"/>
+                                                  <Component id="lblRfid" min="-2" pref="147" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="inpUsername" min="-2" pref="255" max="-2" attributes="0"/>
+                                                  <Component id="inpRfid" min="-2" pref="199" max="-2" attributes="0"/>
                                               </Group>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                      <Group type="102" attributes="0">
+                                                  <Component id="lblGajelas" min="-2" pref="432" max="-2" attributes="0"/>
+                                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
                                                           <Component id="lblAlamat" min="-2" pref="147" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="inpAlamat" pref="294" max="32767" attributes="0"/>
+                                                          <Component id="inpAlamat" max="32767" attributes="0"/>
                                                       </Group>
-                                                      <Group type="102" attributes="0">
-                                                          <Component id="lblTelephone" min="-2" pref="147" max="-2" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <Component id="lblEmail" min="-2" pref="147" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="inpTelephone" max="32767" attributes="0"/>
+                                                          <Component id="inpEmail" max="32767" attributes="0"/>
                                                       </Group>
-                                                      <Group type="102" attributes="0">
-                                                          <Component id="lblNama" min="-2" pref="147" max="-2" attributes="0"/>
-                                                          <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="inpNama" max="32767" attributes="0"/>
-                                                      </Group>
-                                                      <Group type="102" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
                                                           <Component id="btnAdd" min="-2" pref="141" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="btnHapus" min="-2" max="-2" attributes="0"/>
                                                       </Group>
-                                                      <Group type="102" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
                                                           <Component id="lblShift" min="-2" pref="147" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="inpShift" max="32767" attributes="0"/>
                                                       </Group>
-                                                      <Group type="102" attributes="0">
-                                                          <Component id="lblId" min="-2" pref="147" max="-2" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <Component id="lblIdUsername" min="-2" pref="147" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="inpId" min="-2" pref="105" max="-2" attributes="0"/>
+                                                          <Component id="inpIdUsername" min="-2" pref="191" max="-2" attributes="0"/>
                                                       </Group>
                                                       <Group type="102" alignment="1" attributes="0">
                                                           <Component id="lblLevel" min="-2" pref="147" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="inpLevel" max="32767" attributes="0"/>
                                                       </Group>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="lblNoHp" alignment="0" min="-2" pref="147" max="-2" attributes="0"/>
+                                                              <Component id="lblNamaLengkap" alignment="0" min="-2" pref="147" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="inpNamaLengkap" max="32767" attributes="0"/>
+                                                              <Component id="jLabel1" alignment="1" min="-2" pref="26" max="-2" attributes="0"/>
+                                                              <Group type="102" alignment="1" attributes="0">
+                                                                  <Component id="inpNoHp" min="-2" pref="249" max="-2" attributes="0"/>
+                                                                  <EmptySpace max="-2" attributes="0"/>
+                                                                  <Component id="lblWhatsapp" min="-2" pref="41" max="-2" attributes="0"/>
+                                                              </Group>
+                                                          </Group>
+                                                      </Group>
                                                   </Group>
-                                                  <Component id="lblGajelas" min="-2" pref="432" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="lblRfid" min="-2" pref="147" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="inpRfid" min="-2" pref="255" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <EmptySpace min="0" pref="9" max="32767" attributes="0"/>
@@ -623,29 +629,32 @@
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="lineHorTop" min="-2" pref="10" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="lblId" max="32767" attributes="0"/>
-                                              <Component id="inpId" min="-2" pref="37" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="lblIdUsername" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                              <Component id="inpIdUsername" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="lblRfid" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                              <Component id="inpRfid" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="lblUsername" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="inpUsername" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                                              <Component id="lblNamaLengkap" pref="37" max="32767" attributes="0"/>
+                                              <Component id="inpNamaLengkap" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="lblNoHp" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="inpNoHp" alignment="1" pref="37" max="32767" attributes="0"/>
+                                              <Component id="lblWhatsapp" max="32767" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="inpRfid" pref="37" max="32767" attributes="0"/>
-                                              <Component id="lblRfid" max="32767" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="lblNama" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="inpNama" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="lblTelephone" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="inpTelephone" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                                              <Component id="lblEmail" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="inpEmail" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -818,18 +827,18 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblId">
+                <Component class="javax.swing.JLabel" name="lblIdUsername">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="16" style="1"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/resources/image/icons/ic-window-data-id.png"/>
+                      <Image iconType="3" name="/resources/image/icons/ic-window-data-username.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="ID Akun"/>
+                    <Property name="text" type="java.lang.String" value="ID / Username"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="inpId">
+                <Component class="javax.swing.JTextField" name="inpIdUsername">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ef" green="eb" red="e7" type="rgb"/>
@@ -855,54 +864,7 @@
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(50)"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblNama">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="16" style="1"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/resources/image/icons/ic-window-data-nama.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Nama Lengkap"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="inpNama">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
-                    </Property>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="16" style="1"/>
-                    </Property>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder roundedCorners="true"/>
-                      </Border>
-                    </Property>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
-                  </AuxValues>
-                </Component>
-                <Component class="javax.swing.JTextField" name="inpTelephone">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
-                    </Property>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="16" style="1"/>
-                    </Property>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder roundedCorners="true"/>
-                      </Border>
-                    </Property>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
-                  </AuxValues>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblTelephone">
+                <Component class="javax.swing.JLabel" name="lblNoHp">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="16" style="1"/>
@@ -911,6 +873,53 @@
                       <Image iconType="3" name="/resources/image/icons/ic-window-data-telephone.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="Nomor HP"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="inpNoHp">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
+                    </Property>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="16" style="1"/>
+                    </Property>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                        <LineBorder roundedCorners="true"/>
+                      </Border>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JTextField" name="inpEmail">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
+                    </Property>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="16" style="1"/>
+                    </Property>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                        <LineBorder roundedCorners="true"/>
+                      </Border>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblEmail">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="16" style="1"/>
+                    </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/image/icons/ic-window-data-email.png"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Email"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="inpAlamat">
@@ -1063,18 +1072,18 @@
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblUsername">
+                <Component class="javax.swing.JLabel" name="lblRfid">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="16" style="1"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/resources/image/icons/ic-window-data-username.png"/>
+                      <Image iconType="3" name="/resources/image/icons/ic-window-data-rfid.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Username"/>
+                    <Property name="text" type="java.lang.String" value="Kode RFID"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="inpUsername">
+                <Component class="javax.swing.JTextField" name="inpRfid">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ef" green="eb" red="e7" type="rgb"/>
@@ -1129,42 +1138,49 @@
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblRfid">
+                <Component class="javax.swing.JLabel" name="lblNamaLengkap">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="16" style="1"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/resources/image/icons/ic-window-data-rfid.png"/>
+                      <Image iconType="3" name="/resources/image/icons/ic-window-data-nama.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Kode RFID"/>
+                    <Property name="text" type="java.lang.String" value="Nama Lengkap"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="inpRfid">
+                <Component class="javax.swing.JTextField" name="inpNamaLengkap">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="ef" green="eb" red="e7" type="rgb"/>
+                      <Color blue="fa" green="f9" red="f8" type="rgb"/>
                     </Property>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Dialog" size="16" style="1"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder roundedCorners="true"/>
+                        <LineBorder/>
                       </Border>
                     </Property>
-                    <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                      <Color id="Text Cursor"/>
-                    </Property>
-                    <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
-                    <Property name="enabled" type="boolean" value="false"/>
-                    <Property name="selectionStart" type="int" value="5"/>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(50)"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ui.RoundedTextField(15)"/>
                   </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel1">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblWhatsapp">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/image/icons/ic-window-data-whatsapp.png"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblWhatsappMouseClicked"/>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblWhatsappMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblWhatsappMouseExited"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

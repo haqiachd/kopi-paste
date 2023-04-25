@@ -7,6 +7,7 @@ import com.manage.Triggers;
 import com.manage.User;
 import com.manage.Validation;
 import com.media.Gambar;
+import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -24,11 +25,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
     
     private int kondisi;
     
-    private String idSelected, oldUsername;
+    private String idSelected, oldRfid, oldUsername;
     
     private final Database db = new Database();
     
     private final User us = new User();
+    
+    private final Text txt = new Text();
     
     private final PopUpBackground win = new PopUpBackground();
     
@@ -54,11 +57,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         
         // set margin button
         this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpRfid.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpUsername.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpNoTelp.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
+        this.inpEmail.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpUsername.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         this.idSelected = id;
         this.kondisi = kondisi;
@@ -67,6 +72,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             case TAMBAH : 
                 this.lblTitle.setText("Tambah Data Akun");
                 this.inpId.setText(this.createID());
+                this.inpUsername.requestFocus();
                 break;
             case EDIT : 
                 this.lblTitle.setText("Edit Data Akun");
@@ -78,10 +84,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                 this.lblPassword.setVisible(false);
                 this.inpUsername.setEditable(false);
                 this.inpUsername.setBackground(new Color(231,235,239));
+                this.inpNama.requestFocus();
+                // set data value
+                this.oldUsername = this.inpUsername.getText();
+                this.oldRfid = this.inpRfid.getText();
                 break;
-        }
+        }        
         
-        this.oldUsername = this.inpUsername.getText();
     }
 
     @Override
@@ -93,13 +102,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
     private String createID(){
         try{
             // menyiapkan query untuk mendapatkan id terakhir
-            String query = "SELECT * FROM karyawan ORDER BY id_karyawan DESC LIMIT 0,1", lastID, nomor = "000";
+            String query = "SELECT * FROM akun ORDER BY id_akun DESC LIMIT 0,1", lastID, nomor = "000";
             db.res = db.stat.executeQuery(query);
             
             // cek apakah query berhasil dieksekusi
             if(db.res.next()){
                 // mendapatkan id terakhir
-                lastID =  db.res.getString("id_karyawan");
+                lastID =  db.res.getString("id_akun");
                 if(lastID != null){
                     // mendapatkan nomor id
                     nomor = lastID.substring(2);
@@ -109,6 +118,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             // membuat id baru
             return String.format("KY%03d", Integer.parseInt(nomor)+1);
         }catch(SQLException ex){
+            ex.printStackTrace();
             Message.showException(this, ex);
         }
         return null;
@@ -117,22 +127,29 @@ public class UpdateDataAkun extends javax.swing.JDialog {
     private void showData(){
         try{
             // menyiapkan query
-            String sql = "SELECT karyawan.nama_karyawan, karyawan.alamat, karyawan.no_telp, karyawan.shif, user.username, user.password "
-                    + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
-                    + "WHERE karyawan.id_karyawan = '"+this.idSelected+"'";
+            String sql = "SELECT da.nama_lengkap, da.alamat, da.no_telp, da.email, da.shif, a.id_akun, a.username, a.rfid, a.password, a.level "
+                    + "FROM akun AS a "
+                    + "JOIN detail_akun AS da "
+                    + "ON a.id_akun = da.id_akun "
+                    + "WHERE a.id_akun = '"+this.idSelected+"'";
             
+            System.out.println(sql);
             // membuat koneksi
             this.db.res = this.db.stat.executeQuery(sql);
+            
             
             if(this.db.res.next()){
                 // menampilkan data ke window
                 this.inpId.setText(this.idSelected);
-                this.inpNama.setText(this.db.res.getString("karyawan.nama_karyawan"));
-                this.inpAlamat.setText(this.db.res.getString("karyawan.alamat"));
-                this.inpNoTelp.setText(this.db.res.getString("karyawan.no_telp"));
-                this.inpShif.setSelectedItem(this.db.res.getString("karyawan.shif"));
-                this.inpUsername.setText(this.db.res.getString("user.username"));
-                this.inpPassword.setText(this.db.res.getString("user.password"));
+                this.inpNama.setText(this.db.res.getString("da.nama_lengkap"));
+                this.inpAlamat.setText(this.db.res.getString("da.alamat"));
+                this.inpNoTelp.setText(this.db.res.getString("da.no_telp"));
+                this.inpEmail.setText(this.db.res.getString("da.email"));
+                this.inpLevel.setSelectedItem(this.txt.toCapitalize(this.db.res.getString("a.level")));
+                this.inpShif.setSelectedItem(this.db.res.getString("da.shif"));
+                this.inpUsername.setText(this.db.res.getString("a.username"));
+                this.inpRfid.setText(this.db.res.getString("a.rfid"));
+                this.inpPassword.setText(this.db.res.getString("a.password"));
             }
         }catch(SQLException ex){
             ex.printStackTrace();
@@ -140,11 +157,12 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
     }
     
-    private boolean addDataKaryawan() throws SQLException{
-        String sql = "INSERT INTO karyawan VALUES(?, ?, ?, ?, ?)",
+    private boolean addDataDetailAkun() throws SQLException{
+        String sql = "INSERT INTO karyawan VALUES(?, ?, ?, ?, ?, ?)",
                idKaryawan = this.inpId.getText(),
                nama = this.inpNama.getText(),
                noTelp = this.inpNoTelp.getText(),
+               email = this.inpEmail.getText(),
                alamat = this.inpAlamat.getText(),
                shif = this.inpShif.getSelectedItem().toString();
         
@@ -152,24 +170,28 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         this.db.pst.setString(1, idKaryawan);
         this.db.pst.setString(2, nama);
         this.db.pst.setString(3, noTelp);
-        this.db.pst.setString(4, alamat);
-        this.db.pst.setString(5, shif);
+        this.db.pst.setString(4, email);
+        this.db.pst.setString(5, alamat);
+        this.db.pst.setString(6, shif);
         
         boolean o = this.db.pst.executeUpdate() > 0;
         return o;
     }
     
-    private boolean addDataUser() throws SQLException{
-        String sql = "INSERT INTO user VALUES(?, ?, ?, ?)",
-               idKaryawan = this.inpId.getText(),
+    private boolean addDataAkun() throws SQLException{
+        String sql = "INSERT INTO user VALUES(?, ?, ?, ?, ?)",
+               idAKun = this.inpId.getText(),
                username = this.inpUsername.getText(),
-               password = this.inpPassword.getText();
+               password = this.inpPassword.getText(),
+               rfid = this.inpRfid.getText(),
+               level = this.inpLevel.getSelectedItem().toString().toUpperCase();
         
         this.us.pst = this.us.conn.prepareStatement(sql);
-        this.us.pst.setString(1, username);
-        this.us.pst.setString(2, BCrypt.hashpw(password, BCrypt.gensalt(12)));
-        this.us.pst.setString(3, "KARYAWAN");
-        this.us.pst.setString(4, idKaryawan);
+        this.us.pst.setString(1, idAKun);
+        this.us.pst.setString(2, username);
+        this.us.pst.setString(3, BCrypt.hashpw(password, BCrypt.gensalt(12)));
+        this.us.pst.setString(4, rfid);
+        this.us.pst.setString(5, level);
         
         return this.us.pst.executeUpdate() > 0;
     }
@@ -182,9 +204,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }else if(this.us.isExistUsername(this.inpUsername.getText())){
             Message.showWarning(this, "Username tersebut sudah terpakai");
             return;
-        }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpAlamat)){
+        }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpEmail, this.inpAlamat)){
             return;
         }else if(!Validation.isNoHp(this.inpNoTelp.getText())){
+            return;
+        }else if(!Validation.isEmail(this.inpEmail.getText())){
             return;
         }else if(!Validation.isEmptyComboBox(this.inpShif)){
             return;
@@ -195,14 +219,14 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
         
         try{
-            boolean karyawan = this.addDataKaryawan(),
-                    user = this.addDataUser();
+            boolean akun = this.addDataAkun(), 
+                    detailAkun = this.addDataDetailAkun();
             
-            if(karyawan && user){
-                JOptionPane.showMessageDialog(this, "Data karyawan berhasil ditambahkan!");
+            if(akun && detailAkun){
+                JOptionPane.showMessageDialog(this, "Akun berhasil ditambahkan!");
                 this.dispose();
             }else{
-                JOptionPane.showMessageDialog(this, "Data karyawan gagal ditambahkan!");
+                JOptionPane.showMessageDialog(this, "Akun gagal ditambahkan!");
             }
         }catch(SQLException ex){
             if(ex.getMessage().contains("Duplicate entry")){
@@ -273,8 +297,88 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
     }
     
+    @Deprecated // pindah ke class Validation
     public boolean isValidPass(){
         return this.inpPassword.getText().length() >= 8;
+    }
+    
+    private void validasiUsername(KeyEvent evt) {
+        // mendapatkan data dari textfield
+        String username = this.inpUsername.getText();
+        
+        // jika menekan enter
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            this.inpRfid.requestFocus();
+        }else {
+            // username minimal 5 karakter
+            if(username.length() <= 4) {
+                this.lblStatusUsername.setText("Min 5 Huruf");
+                this.lblStatusUsername.setForeground(new Color(255, 0, 0));
+            }
+            // username maximal 20 karakter
+            else if (username.length() > 20) {
+                this.lblStatusUsername.setText("Max 20 Huruf");
+                this.lblStatusUsername.setForeground(new Color(255, 0, 0));
+            }
+            // cek apakah usrename sudah digunakan atau belum
+            else if (this.us.isExistUsername(this.inpUsername.getText())) {
+                this.lblStatusUsername.setText("Sudah terpakai!");
+                this.lblStatusUsername.setForeground(new Color(255, 0, 0));
+            }
+            // jika username valid
+            else {
+                this.lblStatusUsername.setText("Username valid");
+                this.lblStatusUsername.setForeground(new Color(0, 0, 255));
+            }
+        }
+    }
+    
+    
+    private void validasiRfid(KeyEvent evt){
+        // mendapatkan data dari textfield
+        String rfid = this.inpRfid.getText();
+        
+        // jika menekan enter
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpNama.requestFocus();
+        }else{
+            // rfid harus 10 karakter
+            if(rfid.length() != 10){
+                this.lblStatusRfid.setText("Harus 10 angka");
+                this.lblStatusRfid.setForeground(new Color(255,0,0));
+            }else{
+                // cek kondisi
+                switch(this.kondisi){
+                    // kondisi tambah data
+                    case UpdateDataAkun.TAMBAH : 
+                        // cek apakah rfid sudah digunakan atau belum
+                        if(this.us.isExistRfid(rfid)){
+                            this.lblStatusRfid.setText("Sudah terpakai");
+                            this.lblStatusRfid.setForeground(new Color(255,0,0));
+                        }else{
+                            this.lblStatusRfid.setText("RFID valid");
+                            this.lblStatusRfid.setForeground(new Color(0,0,255));                            
+                        }
+                        break;
+                    // kondisi edit data
+                    case UpdateDataAkun.EDIT : 
+                        // jika rfid tidak diubah
+                        if(rfid.equalsIgnoreCase(this.oldRfid)){
+                            this.lblStatusRfid.setText("RFID valid");
+                            this.lblStatusRfid.setForeground(new Color(0,0,255));    
+                        }
+                        // cek apakah rfid sudah digunakan atau belum
+                        else if(this.us.isExistRfid(rfid)){
+                            this.lblStatusRfid.setText("Sudah terpakai");
+                            this.lblStatusRfid.setForeground(new Color(255,0,0));
+                        }else{
+                            this.lblStatusRfid.setText("RFID valid");
+                            this.lblStatusRfid.setForeground(new Color(0,0,255));  
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -297,15 +401,19 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpAlamat = new com.ui.RoundedTextField(15);
         lblUsername = new javax.swing.JLabel();
         inpUsername = new com.ui.RoundedTextField(15);
-        lblShif = new javax.swing.JLabel();
+        lblLevel = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
         inpPassword = new com.ui.RoundedPasswordField(15);
         lblEye = new javax.swing.JLabel();
-        inpShif = new javax.swing.JComboBox();
+        inpLevel = new javax.swing.JComboBox();
         lblRfid = new javax.swing.JLabel();
         inpRfid = new com.ui.RoundedTextField(15);
         lblEmail = new javax.swing.JLabel();
         inpEmail = new com.ui.RoundedTextField(15);
+        lblShif = new javax.swing.JLabel();
+        inpShif = new javax.swing.JComboBox();
+        lblStatusUsername = new javax.swing.JLabel();
+        lblStatusRfid = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -384,6 +492,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpNama.setName("Nama Karyawan"); // NOI18N
+        inpNama.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpNamaKeyReleased(evt);
+            }
+        });
 
         lblNoTelp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNoTelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
@@ -394,6 +507,9 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpNoTelp.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpNoTelp.setName("No Telephone"); // NOI18N
         inpNoTelp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpNoTelpKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpNoTelpKeyTyped(evt);
             }
@@ -407,6 +523,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpAlamat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpAlamat.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpAlamat.setName("Alamat"); // NOI18N
+        inpAlamat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpAlamatKeyReleased(evt);
+            }
+        });
 
         lblUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-username.png"))); // NOI18N
@@ -417,10 +538,18 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         inpUsername.setName("Username"); // NOI18N
+        inpUsername.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpUsernameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpUsernameKeyTyped(evt);
+            }
+        });
 
-        lblShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblShif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-shift.png"))); // NOI18N
-        lblShif.setText("Shif");
+        lblLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblLevel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-levelakun.png"))); // NOI18N
+        lblLevel.setText("Level Akun");
 
         lblPassword.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-password.png"))); // NOI18N
@@ -430,6 +559,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpPassword.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         inpPassword.setName("Password"); // NOI18N
+        inpPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpPasswordKeyReleased(evt);
+            }
+        });
 
         lblEye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
         lblEye.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -441,10 +575,15 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             }
         });
 
-        inpShif.setBackground(new java.awt.Color(248, 249, 250));
-        inpShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang", "Malam" }));
-        inpShif.setName("Shif"); // NOI18N
+        inpLevel.setBackground(new java.awt.Color(248, 249, 250));
+        inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Level", "Admin", "Karyawan" }));
+        inpLevel.setName("Shif"); // NOI18N
+        inpLevel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpLevelKeyReleased(evt);
+            }
+        });
 
         lblRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblRfid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-rfid.png"))); // NOI18N
@@ -455,6 +594,14 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpRfid.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpRfid.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         inpRfid.setName("Username"); // NOI18N
+        inpRfid.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpRfidKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpRfidKeyTyped(evt);
+            }
+        });
 
         lblEmail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-email.png"))); // NOI18N
@@ -465,10 +612,33 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpEmail.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpEmail.setName("No Telephone"); // NOI18N
         inpEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpEmailKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpEmailKeyTyped(evt);
             }
         });
+
+        lblShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblShif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-shift.png"))); // NOI18N
+        lblShif.setText("Shif");
+
+        inpShif.setBackground(new java.awt.Color(248, 249, 250));
+        inpShif.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "No Shif", "Siang", "Malam" }));
+        inpShif.setName("Shif"); // NOI18N
+        inpShif.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpShifKeyReleased(evt);
+            }
+        });
+
+        lblStatusUsername.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblStatusUsername.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        lblStatusRfid.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lblStatusRfid.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -477,41 +647,21 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpNama, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnHapus))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lineHorBot, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lineHorTop, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblEye))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblShif, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                    .addComponent(lblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblLevel, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                    .addComponent(lblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblShif, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(inpShif, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpAlamat)))
+                                    .addComponent(inpLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(inpAlamat)
+                                    .addComponent(inpShif, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblNoTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -522,10 +672,41 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                                 .addComponent(inpEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(14, 14, 14))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnHapus))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblEye))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpNama, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblStatusUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblStatusRfid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(21, 21, 21))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -540,12 +721,14 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                     .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblStatusUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inpUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblRfid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblStatusRfid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -564,6 +747,10 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                     .addComponent(inpAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblLevel, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(inpLevel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblShif, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpShif))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -571,13 +758,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                     .addComponent(lblEye, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpPassword))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(21, 21, 21)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -638,11 +825,6 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         this.inpPassword.setEchoChar('•');
     }//GEN-LAST:event_lblEyeMouseExited
 
-    private Text txt = new Text();
-    private void inpNoTelpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNoTelpKeyTyped
-            this.txt.decimalOnly(evt);
-    }//GEN-LAST:event_inpNoTelpKeyTyped
-
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.db.closeConnection();
         this.us.closeConnection();
@@ -653,9 +835,72 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
+
+    private void inpUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUsernameKeyReleased
+        this.validasiUsername(evt);
+    }//GEN-LAST:event_inpUsernameKeyReleased
+
+    private void inpUsernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUsernameKeyTyped
+        this.validasiUsername(evt);
+    }//GEN-LAST:event_inpUsernameKeyTyped
+
+    private void inpRfidKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpRfidKeyReleased
+        this.validasiRfid(evt);
+    }//GEN-LAST:event_inpRfidKeyReleased
+
+    private void inpRfidKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpRfidKeyTyped
+        this.validasiRfid(evt);
+    }//GEN-LAST:event_inpRfidKeyTyped
+
+    private void inpNamaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNamaKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpNoTelp.requestFocus();
+        }
+    }//GEN-LAST:event_inpNamaKeyReleased
+
+    private void inpNoTelpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNoTelpKeyTyped
+        this.txt.decimalOnly(evt);
+    }//GEN-LAST:event_inpNoTelpKeyTyped
+
     private void inpEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpEmailKeyTyped
-        // TODO add your handling code here:
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpAlamat.requestFocus();
+        }
     }//GEN-LAST:event_inpEmailKeyTyped
+
+    private void inpAlamatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpAlamatKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpLevel.requestFocus();
+        }
+    }//GEN-LAST:event_inpAlamatKeyReleased
+
+    private void inpLevelKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpLevelKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpShif.requestFocus();
+        }
+    }//GEN-LAST:event_inpLevelKeyReleased
+
+    private void inpShifKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpShifKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpPassword.requestFocus();
+        }
+    }//GEN-LAST:event_inpShifKeyReleased
+
+    private void inpPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyReleased
+        // nanti dulu
+    }//GEN-LAST:event_inpPasswordKeyReleased
+
+    private void inpNoTelpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpNoTelpKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpEmail.requestFocus();
+        }
+    }//GEN-LAST:event_inpNoTelpKeyReleased
+
+    private void inpEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpEmailKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpAlamat.requestFocus();
+        }
+    }//GEN-LAST:event_inpEmailKeyReleased
 
     /**
      * @param args the command line arguments
@@ -692,6 +937,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
     private javax.swing.JTextField inpAlamat;
     private javax.swing.JTextField inpEmail;
     private javax.swing.JTextField inpId;
+    private javax.swing.JComboBox inpLevel;
     private javax.swing.JTextField inpNama;
     private javax.swing.JTextField inpNoTelp;
     private javax.swing.JPasswordField inpPassword;
@@ -703,11 +949,14 @@ public class UpdateDataAkun extends javax.swing.JDialog {
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblEye;
     private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblLevel;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblNoTelp;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblRfid;
     private javax.swing.JLabel lblShif;
+    private javax.swing.JLabel lblStatusRfid;
+    private javax.swing.JLabel lblStatusUsername;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JSeparator lineHorBot;

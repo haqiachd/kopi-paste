@@ -3,6 +3,7 @@ package com.window;
 import com.window.laporan.MenuLaporan;
 import com.window.transaksi.MenuTransaksi;
 import com.koneksi.Database;
+import com.manage.Internet;
 import com.manage.Message;
 import com.manage.Text;
 import com.ui.UIManager;
@@ -16,6 +17,8 @@ import com.window.update.UpdateDataAkun;
 import com.window.dialog.UserProfile;
 
 import java.awt.Cursor;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -37,6 +40,8 @@ public class DataAkun extends javax.swing.JFrame {
     private final Text txt = new Text();
     
     private final UIManager win = new UIManager();
+    
+    private final Internet inet = new Internet();
     
     public static DefaultTableModel DATA_KY = new DefaultTableModel();
     
@@ -61,25 +66,24 @@ public class DataAkun extends javax.swing.JFrame {
         this.win.hoverButton();
         
         // set update data
-        JTextField[] fields = {this.inpNama, this.inpAlamat, this.inpShift, this.inpTelephone, this.inpLevel};
-        this.inpNama.setEditable(false);
+        JTextField[] fields = {this.inpNoHp, this.inpAlamat, this.inpShift, this.inpEmail, this.inpLevel};
+        this.inpNoHp.setEditable(false);
         this.inpAlamat.setEditable(false);
 //        this.inpPassword.setEditable(false);
         this.inpShift.setEditable(false);
-        this.inpTelephone.setEditable(false);
+        this.inpEmail.setEditable(false);
         this.win.updateData(fields);
         
         // set margin tabel
         this.inpCari.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpId.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpIdUsername.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpRfid.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpUsername.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpNama.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-        this.inpTelephone.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpNamaLengkap.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpNoHp.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+        this.inpEmail.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpAlamat.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));   
         this.inpShift.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpLevel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
-//        this.inpPassword.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         
         // hidden button
         this.btnPembeli.setVisible(false);
@@ -91,7 +95,6 @@ public class DataAkun extends javax.swing.JFrame {
             this.btnAdd.setVisible(false);
             this.btnEdit.setVisible(false);
             this.btnHapus.setVisible(false);
-//            this.lblEye.setVisible(false);
         }
         
         // menampilkan data tabel
@@ -108,11 +111,11 @@ public class DataAkun extends javax.swing.JFrame {
         this.tabelData.setModel(new javax.swing.table.DefaultTableModel(
                 new String[][]{},
                 new String[]{
-                    "ID Karyawan", "Nama Lengkap", "Shif"
+                    "ID Akun", "Username", "Nama Lengkap", "Level"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false
+                false, false, false, false
             };
 
             @Override
@@ -123,10 +126,12 @@ public class DataAkun extends javax.swing.JFrame {
         
         // set size kolom tabel
         TableColumnModel columnModel = tabelData.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(90);
-        columnModel.getColumn(0).setMaxWidth(90);
-        columnModel.getColumn(1).setPreferredWidth(220);
-//        columnModel.getColumn(1).setMaxWidth(220);
+        columnModel.getColumn(0).setPreferredWidth(65);
+        columnModel.getColumn(0).setMaxWidth(65);
+        columnModel.getColumn(1).setPreferredWidth(90);
+        columnModel.getColumn(1).setMaxWidth(90);
+        columnModel.getColumn(2).setPreferredWidth(200);
+//        columnModel.getColumn(1).setMaxWidth(200);
     }
     
     private void showTabel(){
@@ -153,10 +158,10 @@ public class DataAkun extends javax.swing.JFrame {
        
         try{
             // query untuk mengambil data karyawan pada tabel mysql
-            String sql = "SELECT ky.id_karyawan, ky.nama_karyawan, ky.shif, us.level, us.rfid "
-                       + "FROM karyawan AS ky "
-                       + "JOIN user AS us "
-                       + "ON ky.id_karyawan = us.id_karyawan " + keyword;
+            String sql = "SELECT da.id_akun, da.nama_lengkap, a.username, a.level, a.rfid "
+                       + "FROM detail_akun AS da "
+                       + "JOIN akun AS a "
+                       + "ON da.id_akun = a.id_akun " + keyword;
             System.out.println(sql);
 
             // eksekusi query
@@ -165,8 +170,9 @@ public class DataAkun extends javax.swing.JFrame {
             // membaca semua data yang ada didalam tabel
             while(this.db.res.next()){
                 
+                String level = this.db.res.getString("a.level");
                 if(!User.isDeveloper()){
-                    if(this.db.res.getString("us.level").equalsIgnoreCase("developer")){
+                    if(level.equalsIgnoreCase("developer")){
                         continue;
                     }
                 }
@@ -174,14 +180,12 @@ public class DataAkun extends javax.swing.JFrame {
                 // menambahkan data kedalam tabel
                     model.addRow(
                             new String[]{
-                                this.db.res.getString("id_karyawan"),
-                                this.db.res.getString("nama_karyawan"),
-                                this.db.res.getString("shif")
+                                this.db.res.getString("da.id_akun"),
+                                this.db.res.getString("a.username"),
+                                this.db.res.getString("da.nama_lengkap"),
+                                this.txt.toCapitalize(level),
                             }
                     );
-                
-                
- 
             }
             
             // menampilkan data tabel
@@ -202,21 +206,23 @@ public class DataAkun extends javax.swing.JFrame {
         
         // mendapatkan key
         String key = this.inpCari.getText().toLowerCase(), 
-               id, nama;
+               id, username, nama;
         
         // membaca isi data pada model cari
         for (int i = 0; i < DataAkun.DATA_KY.getRowCount(); i++) {
             // mendapatkan data di tabel
             id = DataAkun.DATA_KY.getValueAt(i, 0).toString().toLowerCase();
-            nama = DataAkun.DATA_KY.getValueAt(i, 1).toString().toLowerCase();
+            username = DataAkun.DATA_KY.getValueAt(i, 1).toString().toLowerCase();
+            nama = DataAkun.DATA_KY.getValueAt(i, 2).toString().toLowerCase();
             
             // cek apakah data yang dicari terdapat pada tabel
-            if(id.contains(key) || nama.contains(key)){
+            if(id.contains(key) || username.contains(key) || nama.contains(key)){
                 // menambahkan data
                 model.addRow(new Object[]{
                         DataAkun.DATA_KY.getValueAt(i, 0),
                         DataAkun.DATA_KY.getValueAt(i, 1),
                         DataAkun.DATA_KY.getValueAt(i, 2),
+                        DataAkun.DATA_KY.getValueAt(i, 3)
                     }
                 );
             }
@@ -228,21 +234,24 @@ public class DataAkun extends javax.swing.JFrame {
     private void showData(){
         try{
             // menyiapkan query
-            String sql = "SELECT karyawan.nama_karyawan, karyawan.alamat, karyawan.no_telp, karyawan.shif, user.username, user.level, user.rfid  "
-                    + "FROM karyawan JOIN user ON karyawan.id_karyawan = user.id_karyawan "
-                    + "WHERE karyawan.id_karyawan = '"+this.idSelected+"'";
+            String sql = "SELECT da.nama_lengkap, da.alamat, da.no_telp, da.email, da.shif, a.id_akun, a.username, a.level, a.rfid "
+                    + "FROM detail_akun AS da "
+                    + "JOIN akun AS a "
+                    + "ON a.id_akun = da.id_akun "
+                    + "WHERE a.id_akun = '"+this.idSelected+"'";
             
             // membuat koneksi
             this.db.res = this.db.stat.executeQuery(sql);
             
             if(this.db.res.next()){
-                this.inpId.setText(this.idSelected);
-                this.inpNama.setText(this.db.res.getString("karyawan.nama_karyawan"));
-                this.inpAlamat.setText(this.db.res.getString("karyawan.alamat"));
-                this.inpTelephone.setText(this.db.res.getString("karyawan.no_telp"));
-                this.inpShift.setText(this.db.res.getString("karyawan.shif"));
-                this.inpUsername.setText(this.db.res.getString("user.username"));
-                this.inpLevel.setText(this.txt.toCapitalize(this.db.res.getString("user.level")));
+                this.inpIdUsername.setText(this.idSelected + " / " + this.db.res.getString("username"));
+                this.inpRfid.setText(this.db.res.getString("a.rfid"));
+                this.inpNamaLengkap.setText(this.db.res.getString("da.nama_lengkap"));
+                this.inpNoHp.setText(this.txt.toTelephoneCase(this.db.res.getString("da.no_telp")));
+                this.inpEmail.setText(this.db.res.getString("da.email"));
+                this.inpAlamat.setText(this.db.res.getString("da.alamat"));
+                this.inpShift.setText(this.db.res.getString("da.shif"));
+                this.inpLevel.setText(this.txt.toCapitalize(this.db.res.getString("a.level")));
                 
                 String rfid = this.db.res.getString("rfid");
                 if(rfid == null || rfid.equals("")){
@@ -258,14 +267,14 @@ public class DataAkun extends javax.swing.JFrame {
     }
     
     private void resetData(){
-        this.inpId.setText("");
-        this.inpNama.setText("");
-        this.inpTelephone.setText("");
+        this.inpIdUsername.setText("");
+        this.inpNoHp.setText("");
+        this.inpEmail.setText("");
         this.inpAlamat.setText("");
         this.inpShift.setText("");
-        this.inpUsername.setText("");
+        this.inpRfid.setText("");
         this.inpLevel.setText("");
-//        this.inpPassword.setText("");
+        this.inpNamaLengkap.setText("");
         this.idSelected = "";
     }
     
@@ -305,12 +314,12 @@ public class DataAkun extends javax.swing.JFrame {
         lblInfoData = new javax.swing.JLabel();
         lineVerCen = new javax.swing.JSeparator();
         lineHorTop = new javax.swing.JSeparator();
-        lblId = new javax.swing.JLabel();
-        inpId = new com.ui.RoundedTextField(50);
-        lblNama = new javax.swing.JLabel();
-        inpNama = new com.ui.RoundedTextField(15);
-        inpTelephone = new com.ui.RoundedTextField(15);
-        lblTelephone = new javax.swing.JLabel();
+        lblIdUsername = new javax.swing.JLabel();
+        inpIdUsername = new com.ui.RoundedTextField(50);
+        lblNoHp = new javax.swing.JLabel();
+        inpNoHp = new com.ui.RoundedTextField(15);
+        inpEmail = new com.ui.RoundedTextField(15);
+        lblEmail = new javax.swing.JLabel();
         inpAlamat = new com.ui.RoundedTextField(15);
         lblAlamat = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
@@ -321,12 +330,14 @@ public class DataAkun extends javax.swing.JFrame {
         lblGajelas = new javax.swing.JLabel();
         lblShift = new javax.swing.JLabel();
         inpShift = new com.ui.RoundedTextField(15);
-        lblUsername = new javax.swing.JLabel();
-        inpUsername = new com.ui.RoundedTextField(50);
-        lblLevel = new javax.swing.JLabel();
-        inpLevel = new com.ui.RoundedTextField(15);
         lblRfid = new javax.swing.JLabel();
         inpRfid = new com.ui.RoundedTextField(50);
+        lblLevel = new javax.swing.JLabel();
+        inpLevel = new com.ui.RoundedTextField(15);
+        lblNamaLengkap = new javax.swing.JLabel();
+        inpNamaLengkap = new com.ui.RoundedTextField(15);
+        jLabel1 = new javax.swing.JLabel();
+        lblWhatsapp = new javax.swing.JLabel();
         lblBottom = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -692,33 +703,33 @@ public class DataAkun extends javax.swing.JFrame {
         lineHorTop.setBackground(new java.awt.Color(8, 8, 9));
         lineHorTop.setForeground(new java.awt.Color(8, 8, 9));
 
-        lblId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
-        lblId.setText("ID Akun");
+        lblIdUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblIdUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-username.png"))); // NOI18N
+        lblIdUsername.setText("ID / Username");
 
-        inpId.setBackground(new java.awt.Color(231, 235, 239));
-        inpId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpId.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpId.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        inpId.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpId.setEnabled(false);
-        inpId.setSelectionStart(5);
+        inpIdUsername.setBackground(new java.awt.Color(231, 235, 239));
+        inpIdUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpIdUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpIdUsername.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        inpIdUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        inpIdUsername.setEnabled(false);
+        inpIdUsername.setSelectionStart(5);
 
-        lblNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblNama.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-nama.png"))); // NOI18N
-        lblNama.setText("Nama Lengkap");
+        lblNoHp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblNoHp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
+        lblNoHp.setText("Nomor HP");
 
-        inpNama.setBackground(new java.awt.Color(248, 249, 250));
-        inpNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpNoHp.setBackground(new java.awt.Color(248, 249, 250));
+        inpNoHp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpNoHp.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        inpTelephone.setBackground(new java.awt.Color(248, 249, 250));
-        inpTelephone.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpTelephone.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpEmail.setBackground(new java.awt.Color(248, 249, 250));
+        inpEmail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpEmail.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        lblTelephone.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblTelephone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
-        lblTelephone.setText("Nomor HP");
+        lblEmail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-email.png"))); // NOI18N
+        lblEmail.setText("Email");
 
         inpAlamat.setBackground(new java.awt.Color(248, 249, 250));
         inpAlamat.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -802,26 +813,6 @@ public class DataAkun extends javax.swing.JFrame {
         inpShift.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpShift.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        lblUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-username.png"))); // NOI18N
-        lblUsername.setText("Username");
-
-        inpUsername.setBackground(new java.awt.Color(231, 235, 239));
-        inpUsername.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpUsername.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        inpUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpUsername.setEnabled(false);
-        inpUsername.setSelectionStart(5);
-
-        lblLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        lblLevel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-levelakun.png"))); // NOI18N
-        lblLevel.setText("Level Akun");
-
-        inpLevel.setBackground(new java.awt.Color(248, 249, 250));
-        inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
-        inpLevel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-
         lblRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblRfid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-rfid.png"))); // NOI18N
         lblRfid.setText("Kode RFID");
@@ -833,6 +824,36 @@ public class DataAkun extends javax.swing.JFrame {
         inpRfid.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         inpRfid.setEnabled(false);
         inpRfid.setSelectionStart(5);
+
+        lblLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblLevel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-levelakun.png"))); // NOI18N
+        lblLevel.setText("Level Akun");
+
+        inpLevel.setBackground(new java.awt.Color(248, 249, 250));
+        inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpLevel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        lblNamaLengkap.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        lblNamaLengkap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-nama.png"))); // NOI18N
+        lblNamaLengkap.setText("Nama Lengkap");
+
+        inpNamaLengkap.setBackground(new java.awt.Color(248, 249, 250));
+        inpNamaLengkap.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        inpNamaLengkap.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        lblWhatsapp.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblWhatsapp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-whatsapp.png"))); // NOI18N
+        lblWhatsapp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblWhatsappMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblWhatsappMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblWhatsappMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
         pnlContent.setLayout(pnlContentLayout);
@@ -849,46 +870,50 @@ public class DataAkun extends javax.swing.JFrame {
                             .addGroup(pnlContentLayout.createSequentialGroup()
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(pnlContentLayout.createSequentialGroup()
+                                        .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
                                                 .addComponent(lblAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(inpAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
-                                            .addGroup(pnlContentLayout.createSequentialGroup()
-                                                .addComponent(lblTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(inpAlamat))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                                .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(inpTelephone))
-                                            .addGroup(pnlContentLayout.createSequentialGroup()
-                                                .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(inpNama))
-                                            .addGroup(pnlContentLayout.createSequentialGroup()
+                                                .addComponent(inpEmail))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
                                                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnHapus))
-                                            .addGroup(pnlContentLayout.createSequentialGroup()
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
                                                 .addComponent(lblShift, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(inpShift))
-                                            .addGroup(pnlContentLayout.createSequentialGroup()
-                                                .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                                .addComponent(lblIdUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
+                                                .addComponent(inpIdUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(pnlContentLayout.createSequentialGroup()
                                                 .addComponent(lblLevel, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(inpLevel)))
-                                        .addComponent(lblGajelas, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
-                                        .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(inpLevel))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlContentLayout.createSequentialGroup()
+                                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(lblNoHp, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(lblNamaLengkap, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(inpNamaLengkap)
+                                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlContentLayout.createSequentialGroup()
+                                                        .addComponent(inpNoHp, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(lblWhatsapp, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                                 .addGap(0, 9, Short.MAX_VALUE))))
                     .addComponent(lineHorBot))
                 .addGap(18, 18, 18)
@@ -928,25 +953,28 @@ public class DataAkun extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lineHorTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpId, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblIdUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inpIdUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inpRfid, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblNamaLengkap, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                                    .addComponent(inpNamaLengkap))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblNoHp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(inpNoHp, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                                    .addComponent(lblWhatsapp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(inpRfid, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                                    .addComponent(lblRfid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(14, 14, 14)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblNama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpNama, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblTelephone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(inpTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(inpEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblAlamat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1260,7 +1288,7 @@ public class DataAkun extends javax.swing.JFrame {
                     case JOptionPane.YES_OPTION:
                         // menghapus data pembeli
                         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        String idKy = this.inpId.getText(),
+                        String idKy = this.inpIdUsername.getText(),
                          sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idKy + "'";
 
                         // mengecek kesamaan id
@@ -1320,10 +1348,6 @@ public class DataAkun extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelDataKeyPressed
 
     private void inpCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyTyped
-//        String key = this.inpCari.getText();
-//        this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
-//        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
-//        this.showTabel();
         this.cariData();
         this.lblKeyword.setText(String.format("Menampilkan %d data karyawan dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyTyped
@@ -1333,13 +1357,32 @@ public class DataAkun extends javax.swing.JFrame {
     }//GEN-LAST:event_inpCariKeyPressed
 
     private void inpCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpCariKeyReleased
-//        String key = this.inpCari.getText();
-//        this.keyword = "WHERE id_karyawan LIKE '%"+key+"%' OR nama_karyawan LIKE '%"+key+"%'";
-//        this.lblKeyword.setText("Menampilkan data karyawan dengan keyword = \""+key+"\"");
-//        this.showTabel();
         this.cariData();
         this.lblKeyword.setText(String.format("Menampilkan %d data karyawan dengan keyword '%s'", this.tabelData.getRowCount(), this.inpCari.getText()));
     }//GEN-LAST:event_inpCariKeyReleased
+
+    private void lblWhatsappMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblWhatsappMouseClicked
+        try {
+            if(!this.inpNoHp.getText().equals("")){
+                String noHp = this.inpNoHp.getText().substring(1).replaceAll(" ", "").replaceAll("-", "");
+                this.inet.openLink("https://wa.me/"+noHp);                
+            }else{
+                Message.showInformation(this, "Tidak ada data yang dipilih!");
+            }
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
+    }//GEN-LAST:event_lblWhatsappMouseClicked
+
+    private void lblWhatsappMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblWhatsappMouseEntered
+        this.lblWhatsapp.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblWhatsapp.setIcon(Gambar.getIcon("ic-window-data-whatsapp-entered.png"));
+    }//GEN-LAST:event_lblWhatsappMouseEntered
+
+    private void lblWhatsappMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblWhatsappMouseExited
+        this.lblWhatsapp.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblWhatsapp.setIcon(Gambar.getIcon("ic-window-data-whatsapp.png"));        
+    }//GEN-LAST:event_lblWhatsappMouseExited
 
     /**
      * @param args the command line arguments
@@ -1382,37 +1425,39 @@ public class DataAkun extends javax.swing.JFrame {
     private javax.swing.JLabel btnTransaksi;
     private javax.swing.JTextField inpAlamat;
     private javax.swing.JTextField inpCari;
-    private javax.swing.JTextField inpId;
+    private javax.swing.JTextField inpEmail;
+    private javax.swing.JTextField inpIdUsername;
     private javax.swing.JTextField inpLevel;
-    private javax.swing.JTextField inpNama;
+    private javax.swing.JTextField inpNamaLengkap;
+    private javax.swing.JTextField inpNoHp;
     private javax.swing.JTextField inpRfid;
     private javax.swing.JTextField inpShift;
-    private javax.swing.JTextField inpTelephone;
-    private javax.swing.JTextField inpUsername;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblAlamat;
     private javax.swing.JLabel lblBottom;
     private javax.swing.JLabel lblCari;
     private javax.swing.JLabel lblCariIcon;
+    private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblGajelas;
     private javax.swing.JLabel lblIconWindow;
-    private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblIdUsername;
     private javax.swing.JLabel lblInfoData;
     private javax.swing.JLabel lblKeyword;
     private javax.swing.JLabel lblLevel;
     private javax.swing.JLabel lblMenu;
-    private javax.swing.JLabel lblNama;
+    private javax.swing.JLabel lblNamaLengkap;
     private javax.swing.JLabel lblNamaUser;
     private javax.swing.JLabel lblNamaWindow;
+    private javax.swing.JLabel lblNoHp;
     private javax.swing.JLabel lblProfileSidebar;
     private javax.swing.JLabel lblRfid;
     private javax.swing.JLabel lblShift;
-    private javax.swing.JLabel lblTelephone;
     private javax.swing.JLabel lblTopInfo;
     private javax.swing.JLabel lblTopProfile;
     private javax.swing.JLabel lblTopSetting;
-    private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblWhatsapp;
     private javax.swing.JSeparator lineHorBot;
     private javax.swing.JSeparator lineHorTop;
     private javax.swing.JSeparator lineSideMenu1;
