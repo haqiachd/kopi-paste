@@ -97,6 +97,21 @@ public class User extends Database{
         }
         return false;
     }
+
+    public boolean isExistRfid(String username){
+        try{
+            // mengeksekusi query
+            super.res = super.stat.executeQuery("SELECT rfid FROM akun WHERE rfid = '"+username+"'");
+            
+            if(super.res.next()){
+                return true;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(null, ex);
+        }
+        return false;
+    }
     
     public boolean isExistIdAkun(String id){
         try{
