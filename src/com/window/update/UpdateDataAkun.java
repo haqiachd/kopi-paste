@@ -157,62 +157,46 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
     }
     
-    private boolean addDataDetailAkun() throws SQLException{
-        String sql = "INSERT INTO karyawan VALUES(?, ?, ?, ?, ?, ?)",
-               idKaryawan = this.inpId.getText(),
-               nama = this.inpNama.getText(),
-               noTelp = this.inpNoTelp.getText(),
-               email = this.inpEmail.getText(),
-               alamat = this.inpAlamat.getText(),
-               shif = this.inpShif.getSelectedItem().toString();
-        
-        this.db.pst = this.db.conn.prepareStatement(sql);
-        this.db.pst.setString(1, idKaryawan);
-        this.db.pst.setString(2, nama);
-        this.db.pst.setString(3, noTelp);
-        this.db.pst.setString(4, email);
-        this.db.pst.setString(5, alamat);
-        this.db.pst.setString(6, shif);
-        
-        boolean o = this.db.pst.executeUpdate() > 0;
-        return o;
-    }
-    
-    private boolean addDataAkun() throws SQLException{
-        String sql = "INSERT INTO user VALUES(?, ?, ?, ?, ?)",
-               idAKun = this.inpId.getText(),
-               username = this.inpUsername.getText(),
-               password = this.inpPassword.getText(),
-               rfid = this.inpRfid.getText(),
-               level = this.inpLevel.getSelectedItem().toString().toUpperCase();
-        
-        this.us.pst = this.us.conn.prepareStatement(sql);
-        this.us.pst.setString(1, idAKun);
-        this.us.pst.setString(2, username);
-        this.us.pst.setString(3, BCrypt.hashpw(password, BCrypt.gensalt(12)));
-        this.us.pst.setString(4, rfid);
-        this.us.pst.setString(5, level);
-        
-        return this.us.pst.executeUpdate() > 0;
-    }
-    
     
     private void tambahData(){
-        // cek validasi data kosong atau tidak
+        // cek validasi username
         if(!Validation.isEmptyTextField(this.inpUsername)){
             return;
-        }else if(this.us.isExistUsername(this.inpUsername.getText())){
-            Message.showWarning(this, "Username tersebut sudah terpakai");
+        }else if(Validation.isUsername(this.inpUsername.getText())){
             return;
-        }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpEmail, this.inpAlamat)){
+        }else if(this.us.isExistUsername(this.inpUsername.getText())){
+            Message.showWarning(this, String.format("'%s' Username tersebut sudah terpakai", this.inpUsername.getText()));
+            return;
+        }
+        // cek validasi rfid
+        else if(!Validation.isEmptyTextField(this.inpRfid)){
+            return;
+        }else if(!Validation.isRfid(this.inpRfid.getText())){
+            return;
+        }else if(this.us.isExistRfid(this.inpRfid.getText())){
+            Message.showWarning(this, String.format("'%s' Kode RFID tersebut sudah terpakai", this.inpUsername.getText()));
+            return;
+        }
+        // cek validasi nama, no hp, email dan alamat
+        else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpEmail, this.inpAlamat)){
+            return;
+        }else if(!Validation.isNamaOrang(this.inpNama.getText())){
             return;
         }else if(!Validation.isNoHp(this.inpNoTelp.getText())){
             return;
         }else if(!Validation.isEmail(this.inpEmail.getText())){
             return;
-        }else if(!Validation.isEmptyComboBox(this.inpShif)){
+        }else if(!Validation.isNamaTempat(this.inpAlamat.getText())){
             return;
-        }else if(!Validation.isEmptyPasswordField(this.inpPassword)){
+        }
+        // cek validasi level dan shif
+        else if(!Validation.isEmptyComboBox(this.inpLevel, this.inpShif)){
+            return;
+        }else if(!Validation.isShif(this.inpLevel.getSelectedItem().toString(), this.inpShif.getSelectedItem().toString())){
+            return;   
+        }
+        // cek validasi password
+        else if(!Validation.isEmptyPasswordField(this.inpPassword)){
             return;
         }else if(!Validation.isPassword(this.inpPassword.getText())){
             return;
@@ -223,18 +207,61 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                     detailAkun = this.addDataDetailAkun();
             
             if(akun && detailAkun){
-                JOptionPane.showMessageDialog(this, "Akun berhasil ditambahkan!");
+                Message.showInformation(this, "Akun berhasil ditambahkan!");
                 this.dispose();
             }else{
-                JOptionPane.showMessageDialog(this, "Akun gagal ditambahkan!");
+                Message.showInformation(this, "Akun gagal ditambahkan!");
             }
         }catch(SQLException ex){
-            if(ex.getMessage().contains("Duplicate entry")){
-                Message.showInformation(this, "Username tersebut sudah ada!");
-            }
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+            Message.showException(this, ex);
         }
+    }
+    
+    private boolean addDataAkun() throws SQLException{
+        // menyiapkan query
+        String sql = "INSERT INTO akun VALUES(?, ?, ?, ?, ?)",
+               // mendapatkan data akun
+               idAKun = this.inpId.getText(),
+               username = this.inpUsername.getText(),
+               password = this.inpPassword.getText(),
+               rfid = this.inpRfid.getText(),
+               level = this.inpLevel.getSelectedItem().toString().toUpperCase();
+        
+        // menambahkan ke query
+        this.us.pst = this.us.conn.prepareStatement(sql);
+        this.us.pst.setString(1, idAKun);
+        this.us.pst.setString(2, username);
+        this.us.pst.setString(3, BCrypt.hashpw(password, BCrypt.gensalt(12))); // enkripsi password
+        this.us.pst.setString(4, rfid);
+        this.us.pst.setString(5, level);
+        
+        // eksekusi query
+        return this.us.pst.executeUpdate() > 0;
+    }
+    
+    private boolean addDataDetailAkun() throws SQLException{
+        // menyiapkan query
+        String sql = "INSERT INTO detail_akun VALUES(?, ?, ?, ?, ?, ?)",
+               // mendapatkan data detail akun
+               idAkun = this.inpId.getText(),
+               nama = this.inpNama.getText(),
+               noTelp = this.inpNoTelp.getText(),
+               email = this.inpEmail.getText(),
+               alamat = this.inpAlamat.getText(),
+               shif = this.inpShif.getSelectedItem().toString();
+        
+        // menambahkan data ke query
+        this.db.pst = this.db.conn.prepareStatement(sql);
+        this.db.pst.setString(1, idAkun);
+        this.db.pst.setString(2, nama);
+        this.db.pst.setString(3, noTelp);
+        this.db.pst.setString(4, email);
+        this.db.pst.setString(5, alamat);
+        this.db.pst.setString(6, shif);
+        
+        // eksekusi query
+        return this.db.pst.executeUpdate() > 0;
     }
     
     private boolean editDataKaryawan() throws SQLException{
@@ -297,8 +324,8 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
     }
     
-    @Deprecated // pindah ke class Validation
-    public boolean isValidPass(){
+//    @Deprecated // pindah ke class Validation
+    private boolean isValidPass(){
         return this.inpPassword.getText().length() >= 8;
     }
     
@@ -478,7 +505,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
 
         lblId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
-        lblId.setText("ID Karyawan");
+        lblId.setText("ID Akun");
 
         inpId.setBackground(new java.awt.Color(231, 235, 239));
         inpId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -579,6 +606,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Level", "Admin", "Karyawan" }));
         inpLevel.setName("Shif"); // NOI18N
+        inpLevel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpLevelActionPerformed(evt);
+            }
+        });
         inpLevel.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 inpLevelKeyReleased(evt);
@@ -901,6 +933,14 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             this.inpAlamat.requestFocus();
         }
     }//GEN-LAST:event_inpEmailKeyReleased
+
+    private void inpLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpLevelActionPerformed
+        if(this.inpLevel.getSelectedItem().toString().equalsIgnoreCase("admin")){
+            inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"Pilih Shif", "No Shif"}));
+        }else if(this.inpLevel.getSelectedItem().toString().equalsIgnoreCase("karyawan")){
+            inpShif.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Shif", "Siang", "Malam" }));
+        }
+    }//GEN-LAST:event_inpLevelActionPerformed
 
     /**
      * @param args the command line arguments
