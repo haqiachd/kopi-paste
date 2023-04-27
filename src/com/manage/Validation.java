@@ -50,7 +50,7 @@ public class Validation {
     }
     
     public static boolean isNamaOrang(String nama){
-        if(nama.length() >= 6 && nama.length() <= 50){
+        if(nama.length() >= 4 && nama.length() <= 50){
             if(!containsNumber(nama)){
                 return true;
             }else{
@@ -59,13 +59,13 @@ public class Validation {
             }
         }else{
             Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Nama harus terdiri dari 6-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Nama harus terdiri dari 4-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
     
     public static boolean isUsername(String username){
-        if(username.length() >= 4 && username.length() <= 50){
+        if(username.length() >= 5 && username.length() <= 20){
             if(!username.contains(" ")){
                 return true;
             }else{
@@ -74,7 +74,16 @@ public class Validation {
             }
         }else{
             Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Panjang dari Username harus diantara 4-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Panjang dari Username harus diantara 5-20 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+        }
+        return false;
+    }
+    
+    public static boolean isRfid(String rfid){
+        if(rfid.length() == 12){
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null, "Panjang dari RFID harus 12 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
@@ -90,7 +99,6 @@ public class Validation {
     
     public static boolean isNamaTempat(String namaTempat){
         if(namaTempat.length() >= 5 && namaTempat.length() <= 50){
-
             return true;
         }else{
             Audio.play(Audio.SOUND_WARNING);
@@ -137,6 +145,26 @@ public class Validation {
         }else{
             Audio.play(Audio.SOUND_WARNING);
             JOptionPane.showMessageDialog(null, "Panjang dari Nomor Hp harus diantara 10-15 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+        }
+        return false;
+    }
+    
+    public static boolean isShif(String level, String shif){
+        switch(level.toLowerCase()){
+            case "admin" : 
+                if(shif.equalsIgnoreCase("no shif") == true){
+                    return true;
+                }else{
+                    Message.showWarning(null, "Akun dengan level admin hanya dapat memiliki shif 'No Shif'");
+                    return false;
+                }
+            case "karyawan" : 
+                if(shif.equalsIgnoreCase("Siang") || shif.equalsIgnoreCase("Malam")){
+                    return true;
+                }else{
+                    Message.showWarning(null, "Akun dengan level karyawan hanya dapat memiliki shif 'Siang' dan 'Malam'");
+                    return false;
+                }
         }
         return false;
     }
@@ -199,6 +227,16 @@ public class Validation {
             }
         }
         return true;
+    }
+    
+    public static void main(String[] args) {
+        
+        System.out.println(Validation.isShif("Admin", "no shif"));
+        System.out.println(Validation.isShif("Admin", "siang"));
+        System.out.println(Validation.isShif("Karyawan", "siang"));
+        System.out.println(Validation.isShif("karyawan", "malam"));
+        System.out.println(Validation.isShif("KARYAWAN", "no shif"));
+        
     }
     
 }
