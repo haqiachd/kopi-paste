@@ -10,9 +10,11 @@ import com.media.Gambar;
 import java.awt.event.KeyEvent;
 import com.window.dialog.PopUpBackground;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
@@ -78,16 +80,36 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                 this.lblTitle.setText("Edit Data Akun");
                 this.inpId.setText(this.idSelected);
                 this.showData();
-                // menghilangkan username dan password saat mengedit data
-                this.inpPassword.setVisible(false);
-                this.lblEye.setVisible(false);
-                this.lblPassword.setVisible(false);
+                // 
+                this.lblEye.setEnabled(false);
+                this.inpPassword.setText("12345678");
+                this.inpPassword.setBackground(new Color(231,235,239));
+                this.inpPassword.setEditable(false);
                 this.inpUsername.setEditable(false);
                 this.inpUsername.setBackground(new Color(231,235,239));
-                this.inpNama.requestFocus();
+                this.inpNama.setEditable(false);
+                this.inpNama.setBackground(new Color(231,235,239));
+                this.inpNoTelp.setEditable(false);
+                this.inpNoTelp.setBackground(new Color(231,235,239));
+                this.inpEmail.setEditable(false);
+                this.inpEmail.setBackground(new Color(231,235,239));
+                this.inpAlamat.setEditable(false);
+                this.inpAlamat.setBackground(new Color(231,235,239));
+                this.inpRfid.requestFocus();
                 // set data value
                 this.oldUsername = this.inpUsername.getText();
                 this.oldRfid = this.inpRfid.getText();
+                // 
+                JTextField fields[] = {this.inpUsername, this.inpNama, this.inpNoTelp, this.inpEmail, this.inpAlamat, this.inpPassword};
+                for(JTextField f : fields){
+                    f.addMouseListener(new java.awt.event.MouseAdapter() {
+
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            Message.showInformation(this, "Hanya pemilik akun yang dapat mengedit data ini");
+                        }
+                    });
+                }
                 break;
         }        
         
@@ -155,14 +177,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
         }
-    }
-    
+    } 
     
     private void tambahData(){
         // cek validasi username
         if(!Validation.isEmptyTextField(this.inpUsername)){
             return;
-        }else if(Validation.isUsername(this.inpUsername.getText())){
+        }else if(!Validation.isUsername(this.inpUsername.getText())){
             return;
         }else if(this.us.isExistUsername(this.inpUsername.getText())){
             Message.showWarning(this, String.format("'%s' Username tersebut sudah terpakai", this.inpUsername.getText()));
@@ -174,7 +195,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }else if(!Validation.isRfid(this.inpRfid.getText())){
             return;
         }else if(this.us.isExistRfid(this.inpRfid.getText())){
-            Message.showWarning(this, String.format("'%s' Kode RFID tersebut sudah terpakai", this.inpUsername.getText()));
+            Message.showWarning(this, String.format("'%s' Kode RFID tersebut sudah terpakai", this.inpRfid.getText()));
             return;
         }
         // cek validasi nama, no hp, email dan alamat
@@ -203,9 +224,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
         
         try{
+            // menambahkan data akun dan detail akun ke database
             boolean akun = this.addDataAkun(), 
                     detailAkun = this.addDataDetailAkun();
             
+            // cek apakah data berhasil ditambahkan
             if(akun && detailAkun){
                 Message.showInformation(this, "Akun berhasil ditambahkan!");
                 this.dispose();
@@ -238,6 +261,54 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         
         // eksekusi query
         return this.us.pst.executeUpdate() > 0;
+    }
+    
+    private void editData(){
+
+        // cek validasi rfid
+        if(!Validation.isEmptyTextField(this.inpRfid)){
+            return;
+        }else if(!Validation.isRfid(this.inpRfid.getText())){
+            return;
+        }else if(!this.oldRfid.equalsIgnoreCase(this.inpRfid.getText())){
+            if (this.us.isExistRfid(this.inpRfid.getText())) {
+                Message.showWarning(this, String.format("'%s' Kode RFID tersebut sudah terpakai", this.inpRfid.getText()));
+                return;
+            }
+        }
+        // cek validasi nama, no hp, email dan alamat
+        else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpEmail, this.inpAlamat)){
+            return;
+        }else if(!Validation.isNamaOrang(this.inpNama.getText())){
+            return;
+        }else if(!Validation.isNoHp(this.inpNoTelp.getText())){
+            return;
+        }else if(!Validation.isEmail(this.inpEmail.getText())){
+            return;
+        }else if(!Validation.isNamaTempat(this.inpAlamat.getText())){
+            return;
+        }
+        // cek validasi level dan shif
+        else if(!Validation.isEmptyComboBox(this.inpLevel, this.inpShif)){
+            return;
+        }else if(!Validation.isShif(this.inpLevel.getSelectedItem().toString(), this.inpShif.getSelectedItem().toString())){
+            return;   
+        }
+        
+        try{
+            boolean karyawan = this.editDataKaryawan();
+            
+            if(karyawan){
+                JOptionPane.showMessageDialog(this, "Data karyawan berhasil diedit!");
+                this.dispose();
+                new Triggers().updateKaryawan();
+            }else{
+                JOptionPane.showMessageDialog(this, "Data karyawan gagal diedit!");
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+        }
     }
     
     private boolean addDataDetailAkun() throws SQLException{
@@ -285,43 +356,6 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                         + "WHERE id_karyawan = '%s'", nama, noTelp, alamat, shif, idKaryawan);
         
         return  this.db.stat.executeUpdate(sql) > 0;
-    }
-    
-    private void editData(){
-        // cek validasi data kosong atau tidak
-        if(!Validation.isEmptyTextField(this.inpUsername)){
-            return;
-        }else if(!this.oldUsername.equalsIgnoreCase(this.inpUsername.getText())){
-            if(this.us.isExistUsername(this.inpUsername.getText())){
-                Message.showWarning(this, "Username tersebut sudah terpakai");
-                return;
-            }
-        }else if(!Validation.isEmptyTextField(this.inpNama, this.inpNoTelp, this.inpAlamat)){
-            return;
-        }else if(!Validation.isNoHp(this.inpNoTelp.getText())){
-            return;
-        }else if(!Validation.isEmptyComboBox(this.inpShif)){
-            return;
-        }else if(!Validation.isEmptyPasswordField(this.inpPassword)){
-            return;
-        }else if(!Validation.isPassword(this.inpPassword.getText())){
-            return;
-        }
-        
-        try{
-            boolean karyawan = this.editDataKaryawan();
-            
-            if(karyawan){
-                JOptionPane.showMessageDialog(this, "Data karyawan berhasil diedit!");
-                this.dispose();
-                new Triggers().updateKaryawan();
-            }else{
-                JOptionPane.showMessageDialog(this, "Data karyawan gagal diedit!");
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
-        }
     }
     
 //    @Deprecated // pindah ke class Validation
@@ -506,10 +540,12 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         lblId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-id.png"))); // NOI18N
         lblId.setText("ID Akun");
+        lblId.setName(""); // NOI18N
 
         inpId.setBackground(new java.awt.Color(231, 235, 239));
         inpId.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpId.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        inpId.setName("ID Akun"); // NOI18N
 
         lblNama.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNama.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-nama.png"))); // NOI18N
@@ -527,12 +563,12 @@ public class UpdateDataAkun extends javax.swing.JDialog {
 
         lblNoTelp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblNoTelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-data-telephone.png"))); // NOI18N
-        lblNoTelp.setText("No Telephone");
+        lblNoTelp.setText("Nomor HP");
 
         inpNoTelp.setBackground(new java.awt.Color(248, 249, 250));
         inpNoTelp.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpNoTelp.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpNoTelp.setName("No Telephone"); // NOI18N
+        inpNoTelp.setName("Nomor HP"); // NOI18N
         inpNoTelp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 inpNoTelpKeyReleased(evt);
@@ -605,7 +641,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpLevel.setBackground(new java.awt.Color(248, 249, 250));
         inpLevel.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pilih Level", "Admin", "Karyawan" }));
-        inpLevel.setName("Shif"); // NOI18N
+        inpLevel.setName("Level"); // NOI18N
         inpLevel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inpLevelActionPerformed(evt);
@@ -625,7 +661,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpRfid.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpRfid.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         inpRfid.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpRfid.setName("Username"); // NOI18N
+        inpRfid.setName("RFID"); // NOI18N
         inpRfid.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 inpRfidKeyReleased(evt);
@@ -642,7 +678,7 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         inpEmail.setBackground(new java.awt.Color(248, 249, 250));
         inpEmail.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         inpEmail.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        inpEmail.setName("No Telephone"); // NOI18N
+        inpEmail.setName("Email"); // NOI18N
         inpEmail.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 inpEmailKeyReleased(evt);
@@ -790,13 +826,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
                     .addComponent(lblEye, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(inpPassword))
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lineHorBot, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -846,15 +882,19 @@ public class UpdateDataAkun extends javax.swing.JDialog {
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void lblEyeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseEntered
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-        this.inpPassword.setEchoChar((char)0);
+        if(this.kondisi == UpdateDataAkun.TAMBAH){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
+            this.inpPassword.setEchoChar((char)0);            
+        }
     }//GEN-LAST:event_lblEyeMouseEntered
 
     private void lblEyeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpPassword.setEchoChar('•');
+        if(this.kondisi == UpdateDataAkun.TAMBAH){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
+            this.inpPassword.setEchoChar('•');
+        }
     }//GEN-LAST:event_lblEyeMouseExited
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
