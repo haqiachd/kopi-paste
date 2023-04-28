@@ -373,7 +373,7 @@ public class UserProfile extends javax.swing.JDialog {
                 this.frame.dispose();
                 this.pop.dispose();
                 this.us.logout();
-                DataAkun.DATA_KY = new DefaultTableModel();
+                DataAkun.DATA_AK = new DefaultTableModel();
                 this.dispose();
             break;
         }

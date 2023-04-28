@@ -263,6 +263,30 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         return this.us.pst.executeUpdate() > 0;
     }
     
+    private boolean addDataDetailAkun() throws SQLException{
+        // menyiapkan query
+        String sql = "INSERT INTO detail_akun VALUES(?, ?, ?, ?, ?, ?)",
+               // mendapatkan data detail akun
+               idAkun = this.inpId.getText(),
+               nama = this.inpNama.getText(),
+               noTelp = this.inpNoTelp.getText(),
+               email = this.inpEmail.getText(),
+               alamat = this.inpAlamat.getText(),
+               shif = this.inpShif.getSelectedItem().toString();
+        
+        // menambahkan data ke query
+        this.db.pst = this.db.conn.prepareStatement(sql);
+        this.db.pst.setString(1, idAkun);
+        this.db.pst.setString(2, nama);
+        this.db.pst.setString(3, noTelp);
+        this.db.pst.setString(4, email);
+        this.db.pst.setString(5, alamat);
+        this.db.pst.setString(6, shif);
+        
+        // eksekusi query
+        return this.db.pst.executeUpdate() > 0;
+    }
+    
     private void editData(){
 
         // cek validasi rfid
@@ -296,73 +320,54 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
         
         try{
-            boolean karyawan = this.editDataKaryawan();
+            // mengedit data akun dan detail akun ke database
+            boolean editAkun = this.editDataAkun() && this.editDataDetailAkun();
             
-            if(karyawan){
-                JOptionPane.showMessageDialog(this, "Data karyawan berhasil diedit!");
+            if(editAkun){
+                Message.showInformation(this, "Data karyawan berhasil diedit!");
                 this.dispose();
-                new Triggers().updateKaryawan();
+//                new Triggers().updateKaryawan();
             }else{
-                JOptionPane.showMessageDialog(this, "Data karyawan gagal diedit!");
+                Message.showWarning(this, "Data karyawan gagal diedit!");
             }
         }catch(SQLException ex){
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+            Message.showException(this, ex);
         }
     }
     
-    private boolean addDataDetailAkun() throws SQLException{
-        // menyiapkan query
-        String sql = "INSERT INTO detail_akun VALUES(?, ?, ?, ?, ?, ?)",
-               // mendapatkan data detail akun
-               idAkun = this.inpId.getText(),
-               nama = this.inpNama.getText(),
-               noTelp = this.inpNoTelp.getText(),
-               email = this.inpEmail.getText(),
-               alamat = this.inpAlamat.getText(),
-               shif = this.inpShif.getSelectedItem().toString();
-        
-        // menambahkan data ke query
-        this.db.pst = this.db.conn.prepareStatement(sql);
-        this.db.pst.setString(1, idAkun);
-        this.db.pst.setString(2, nama);
-        this.db.pst.setString(3, noTelp);
-        this.db.pst.setString(4, email);
-        this.db.pst.setString(5, alamat);
-        this.db.pst.setString(6, shif);
+    private boolean editDataAkun() throws SQLException{
+        // mendapatkan data-data yang dapat diedit
+        String idAkun = this.inpId.getText(),
+               rfid = this.inpRfid.getText(),
+               level = this.inpLevel.getSelectedItem().toString(),
+               // membuat query
+               sql = String.format("UPDATE akun "
+                       + "SET rfid = '%s', level = '%s' "
+                       + "WHERE id_akun = '%s'", rfid, level, idAkun);
         
         // eksekusi query
-        return this.db.pst.executeUpdate() > 0;
+        return this.db.stat.executeUpdate(sql) > 0;
     }
     
-    private boolean editDataKaryawan() throws SQLException{
-        if(!this.isValidPass()){
-            JOptionPane.showMessageDialog(this, "Password minimal harus 8 karakter!");
-            return false;
-        }
-        // mendapatkan data
-        String idKaryawan = this.inpId.getText(),
-               nama = this.inpNama.getText(),
-               noTelp = this.inpNoTelp.getText(),
-               alamat = this.inpAlamat.getText(),
-               shif = this.inpShif.getSelectedItem().toString(), sql;
-                // set developer shif
-                if(this.inpId.getText().equalsIgnoreCase("KY001") || this.inpId.getText().equalsIgnoreCase("KY002") || this.inpId.getText().equalsIgnoreCase("KY003") || this.inpId.getText().equalsIgnoreCase("KY004")){
-                    shif = "No Shif";
-                }
+    private boolean editDataDetailAkun() throws SQLException{
+        // mendapatkan data-data yang dapat diedit
+        String idAkun = this.inpId.getText(),
+               shif = this.inpShif.getSelectedItem().toString(), 
                // membuat query
-               sql = String.format("UPDATE karyawan "
-                        + "SET nama_karyawan = '%s', no_telp = '%s', alamat = '%s', shif = '%s' "
-                        + "WHERE id_karyawan = '%s'", nama, noTelp, alamat, shif, idKaryawan);
+               sql = String.format("UPDATE detail_akun "
+                        + "SET shif = '%s' "
+                        + "WHERE id_akun = '%s'", shif, idAkun);
         
-        return  this.db.stat.executeUpdate(sql) > 0;
+        // eksekusi query
+        return this.db.stat.executeUpdate(sql) > 0;
     }
     
-//    @Deprecated // pindah ke class Validation
-    private boolean isValidPass(){
-        return this.inpPassword.getText().length() >= 8;
-    }
-    
+    /**
+     * validasi username untuk key event 
+     * 
+     * @param evt 
+     */
     private void validasiUsername(KeyEvent evt) {
         // mendapatkan data dari textfield
         String username = this.inpUsername.getText();
@@ -394,7 +399,11 @@ public class UpdateDataAkun extends javax.swing.JDialog {
         }
     }
     
-    
+    /**
+     * validasi rfid untuk keyevent
+     * 
+     * @param evt 
+     */
     private void validasiRfid(KeyEvent evt){
         // mendapatkan data dari textfield
         String rfid = this.inpRfid.getText();
