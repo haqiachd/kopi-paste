@@ -58,18 +58,18 @@ public class Triggers extends Database{
         try {
             // membuat query untuk mengupdate nama karyawan pada tabel transaksi beli
             String sql = "UPDATE "
-                    + "transaksi_beli trb, karyawan ky "
-                    + "SET trb.nama_karyawan = ky.nama_karyawan "
-                    + "WHERE ky.id_karyawan = trb.id_karyawan; ";
+                    + "transaksi_beli trb, detail_akun da "
+                    + "SET trb.nama_karyawan = da.nama_lengkap "
+                    + "WHERE da.id_akun = trb.id_akun; ";
 
             System.out.println(sql);
             // eksekusi query
             super.stat.executeUpdate(sql);
 
             // membuat query untuk mengupdate nama karyawan pada tabel transaksi jual
-            sql = "UPDATE transaksi_jual trj, karyawan ky "
-                    + "SET trj.nama_karyawan = ky.nama_karyawan "
-                    + "WHERE ky.id_karyawan = trj.id_karyawan;";
+            sql = "UPDATE transaksi_jual trj, detail_akun da "
+                    + "SET trj.nama_karyawan = da.nama_lengkap "
+                    + "WHERE da.id_akun = trj.id_akun;";
             
             System.out.println(sql);
             // eksekusi query
