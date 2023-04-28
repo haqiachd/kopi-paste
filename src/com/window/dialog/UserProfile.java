@@ -45,6 +45,7 @@ public class UserProfile extends javax.swing.JDialog {
         
         this.btnLogoutAccount.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnGantiPass.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnVerifikasi.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         
         this.showDataAkun();
     }
@@ -108,6 +109,7 @@ public class UserProfile extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         valRfid = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        btnVerifikasi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -236,6 +238,16 @@ public class UserProfile extends javax.swing.JDialog {
         jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
 
+        btnVerifikasi.setBackground(new java.awt.Color(51, 153, 255));
+        btnVerifikasi.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        btnVerifikasi.setForeground(new java.awt.Color(255, 255, 255));
+        btnVerifikasi.setText("Verifikasi Email");
+        btnVerifikasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerifikasiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -248,6 +260,8 @@ public class UserProfile extends javax.swing.JDialog {
                             .addComponent(jSeparator1)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnVerifikasi)
+                                .addGap(18, 18, 18)
                                 .addComponent(btnGantiPass)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnLogoutAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -336,7 +350,8 @@ public class UserProfile extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGantiPass, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLogoutAccount))
+                    .addComponent(btnLogoutAccount)
+                    .addComponent(btnVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -350,7 +365,7 @@ public class UserProfile extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -404,10 +419,15 @@ public class UserProfile extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnGantiPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGantiPassActionPerformed
+        this.dispose();
         // membuka window ganti password
         GantiPassword g = new GantiPassword(null, true, this.valUsername.getText().replaceAll(": ", ""));
         g.setVisible(true);
     }//GEN-LAST:event_btnGantiPassActionPerformed
+
+    private void btnVerifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifikasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVerifikasiActionPerformed
 
     public static void main(String args[]) {
 
@@ -429,6 +449,7 @@ public class UserProfile extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGantiPass;
     private javax.swing.JButton btnLogoutAccount;
+    private javax.swing.JButton btnVerifikasi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
