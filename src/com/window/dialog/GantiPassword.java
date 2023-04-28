@@ -3,11 +3,11 @@ package com.window.dialog;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.User;
-import com.manage.Validation;
 import com.media.Gambar;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
@@ -20,50 +20,77 @@ public class GantiPassword extends javax.swing.JDialog {
     
     private final Text txt = new Text();
     
-    private final String usernameOrId;
+    private final String email;
     
-    private boolean isSuccess = false;
+    private boolean isVerif = false;
 
     /**
      * Creates new form GantiPassword
      * @param parent
      * @param modal
-     * @param username
+     * @param email
      */
-    public GantiPassword(java.awt.Frame parent, boolean modal, String username) {
+    public GantiPassword(java.awt.Frame parent, boolean modal, String email) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
         
         // mendapatkan dan menampilkan username 
-        this.usernameOrId = username;
-        this.inpUsername.setText(username);
+        this.email = "hakiahmad756@gmail.com";
+        this.inpEmail.setText(this.email);
         
-        // set ui button
+        // set ui 
         this.btnGanti.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnBatal.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-    }
-
-    private boolean isValidOldPass(){
-        try{
-            // membuat query sql
-            String sql = "SELECT password "
-                    + "FROM user  "
-                    + "WHERE username = '"+this.usernameOrId+"' OR id_karyawan = '"+this.usernameOrId+"'";
-            
-            System.out.println(sql);
-            // eksekusi query sql
-            this.us.res = this.us.stat.executeQuery(sql);
-            
-            if(this.us.res.next()){
-                // mengecek apakah no telepone valid atau tidak
-                return BCrypt.checkpw(this.inpPasswordOld.getText(), this.us.res.getString(1));
-            }
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            Message.showException(this, ex);
+        this.lblIconVerifikasi.setIcon(null);
+        this.inpVerifikasi.requestFocus();
+        
+        this.statusPassword();
+        
+        // set aksi saat textfied ditekan jika verifikasi masih salah
+        for(JTextField field : new JTextField[]{this.inpPassword, this.inpKonfPass}){
+            field.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(!isVerif){
+                        Message.showInformation(this, "Masukan kode verifikasi email terlebih dahulu!");
+                    }
+                }
+            });
         }
-        return false;
+
+    }
+    
+    private void statusPassword(){
+        if(this.isVerif){
+            // set editable dan enable menjadi true pada password
+            this.inpPassword.setEditable(true);
+            this.inpKonfPass.setEditable(true);
+            this.lblEye.setEnabled(true);
+            this.lblEyeKonf.setEnabled(true);
+            this.inpPassword.requestFocus();
+            this.lblStatusPassword.setText("Password harus minimal 8 karakter");
+            this.lblStatusKonfPass.setText("Ketikan ualng password anda");
+            
+            // set editable false pada verifikasi
+            this.inpVerifikasi.setEditable(false);
+            this.lblSendEmail.setEnabled(false);
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-success.png"));
+        }else{
+            // set editable dan enable menjadi false pada password
+            this.inpPassword.setEditable(false);
+            this.inpKonfPass.setEditable(false);
+            this.lblEye.setEnabled(false);
+            this.lblEyeKonf.setEnabled(false);
+            this.lblStatusPassword.setText("");
+            this.lblStatusKonfPass.setText("");
+            
+            // set editable true pada verifikasi
+            this.inpVerifikasi.requestFocus(true);
+            this.inpVerifikasi.setEditable(true);
+            this.lblSendEmail.setEnabled(false);
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal.png"));   
+        }
     }
     
     private boolean gantiPassword(){
@@ -72,7 +99,7 @@ public class GantiPassword extends javax.swing.JDialog {
             String hashPw = BCrypt.hashpw(this.inpPassword.getText(), BCrypt.gensalt(12)),
                     // membuat query untuk ganti password
                     sql = "UPDATE user SET password = '"+hashPw+"' "
-                        + "WHERE username = '"+this.usernameOrId+"' OR id_karyawan = '"+this.usernameOrId+"'";
+                        + "WHERE username = '"+this.email+"' OR id_karyawan = '"+this.email+"'";
             
             // eksekusi query
             return this.us.stat.executeUpdate(sql) > 0;
@@ -80,10 +107,6 @@ public class GantiPassword extends javax.swing.JDialog {
             Message.showException(this, ex);
         }
         return false;
-    }
-
-    public boolean isSuccess(){
-        return this.isSuccess;
     }
     
     @SuppressWarnings("unchecked")
@@ -93,20 +116,26 @@ public class GantiPassword extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         lblTop = new javax.swing.JLabel();
         lineTop = new javax.swing.JSeparator();
-        inpUsername = new com.ui.RoundedTextField(15);
-        lblUsername = new javax.swing.JLabel();
         inpPassword = new com.ui.RoundedPasswordField(15);
-        lblPassword = new javax.swing.JLabel();
+        lblStatusVerifikasi = new javax.swing.JLabel();
         lblEye = new javax.swing.JLabel();
-        lblKonfPass = new javax.swing.JLabel();
+        lblStatusPassword = new javax.swing.JLabel();
         inpKonfPass = new com.ui.RoundedPasswordField(15);
         lblEyeKonf = new javax.swing.JLabel();
         lineBottom = new javax.swing.JSeparator();
         btnGanti = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
-        lblPassword1 = new javax.swing.JLabel();
-        inpPasswordOld = new com.ui.RoundedPasswordField(15);
-        lblEyeOld = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        lblSendEmail = new javax.swing.JLabel();
+        lblStatusEmail = new javax.swing.JLabel();
+        lblIconVerifikasi = new javax.swing.JLabel();
+        lblVerifikasi = new javax.swing.JLabel();
+        inpEmail = new com.ui.RoundedTextField(15);
+        lblPassword = new javax.swing.JLabel();
+        inpVerifikasi = new com.ui.RoundedTextField(15);
+        lineCenter = new javax.swing.JSeparator();
+        lblKonfPass = new javax.swing.JLabel();
+        lblStatusKonfPass = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ganti Password");
@@ -126,27 +155,6 @@ public class GantiPassword extends javax.swing.JDialog {
         lineTop.setBackground(new java.awt.Color(0, 0, 0));
         lineTop.setForeground(new java.awt.Color(0, 0, 0));
 
-        inpUsername.setBackground(new java.awt.Color(231, 235, 239));
-        inpUsername.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        inpUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpUsername.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        inpUsername.setEnabled(false);
-        inpUsername.setMaximumSize(new java.awt.Dimension(2147483647, 35));
-        inpUsername.setMinimumSize(new java.awt.Dimension(6, 35));
-        inpUsername.setName("Username"); // NOI18N
-        inpUsername.setPreferredSize(new java.awt.Dimension(6, 35));
-        inpUsername.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                inpUsernameKeyReleased(evt);
-            }
-        });
-
-        lblUsername.setBackground(new java.awt.Color(0, 0, 0));
-        lblUsername.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblUsername.setForeground(new java.awt.Color(44, 119, 238));
-        lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblUsername.setText("Username / ID Karyawan");
-
         inpPassword.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         inpPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         inpPassword.setName("Password Baru"); // NOI18N
@@ -159,11 +167,11 @@ public class GantiPassword extends javax.swing.JDialog {
             }
         });
 
-        lblPassword.setBackground(new java.awt.Color(0, 0, 0));
-        lblPassword.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblPassword.setForeground(new java.awt.Color(44, 119, 238));
-        lblPassword.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPassword.setText("Password Baru");
+        lblStatusVerifikasi.setBackground(new java.awt.Color(0, 0, 0));
+        lblStatusVerifikasi.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblStatusVerifikasi.setForeground(new java.awt.Color(255, 51, 0));
+        lblStatusVerifikasi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblStatusVerifikasi.setText("Kode verifikasi tidak cocok!");
 
         lblEye.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblEye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
@@ -179,11 +187,10 @@ public class GantiPassword extends javax.swing.JDialog {
             }
         });
 
-        lblKonfPass.setBackground(new java.awt.Color(0, 0, 0));
-        lblKonfPass.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblKonfPass.setForeground(new java.awt.Color(44, 119, 238));
-        lblKonfPass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblKonfPass.setText("Konfirmasi Password");
+        lblStatusPassword.setBackground(new java.awt.Color(0, 0, 0));
+        lblStatusPassword.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblStatusPassword.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblStatusPassword.setText("Password harus minimal 8 karakter");
 
         inpKonfPass.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         inpKonfPass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -250,82 +257,139 @@ public class GantiPassword extends javax.swing.JDialog {
             }
         });
 
-        lblPassword1.setBackground(new java.awt.Color(0, 0, 0));
-        lblPassword1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblPassword1.setForeground(new java.awt.Color(44, 119, 238));
-        lblPassword1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPassword1.setText("Password Sekarang");
+        lblEmail.setBackground(new java.awt.Color(0, 0, 0));
+        lblEmail.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblEmail.setForeground(new java.awt.Color(44, 119, 238));
+        lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblEmail.setText("Alamat Email");
 
-        inpPasswordOld.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        inpPasswordOld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        inpPasswordOld.setName("Password Sekarang"); // NOI18N
-        inpPasswordOld.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                inpPasswordOldKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpPasswordOldKeyTyped(evt);
-            }
-        });
-
-        lblEyeOld.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEyeOld.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
-        lblEyeOld.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblSendEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblSendEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-verifikasi-send.png"))); // NOI18N
+        lblSendEmail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblEyeOldMouseClicked(evt);
+                lblSendEmailMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblEyeOldMouseEntered(evt);
+                lblSendEmailMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblEyeOldMouseExited(evt);
+                lblSendEmailMouseExited(evt);
             }
         });
+
+        lblStatusEmail.setBackground(new java.awt.Color(0, 0, 0));
+        lblStatusEmail.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblStatusEmail.setForeground(new java.awt.Color(204, 0, 204));
+        lblStatusEmail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblStatusEmail.setText("Kirim ulang kode verifikasi dalam 1 menit");
+
+        lblIconVerifikasi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblIconVerifikasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-verifikasi-success.png"))); // NOI18N
+        lblIconVerifikasi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblIconVerifikasiMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblIconVerifikasiMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblIconVerifikasiMouseExited(evt);
+            }
+        });
+
+        lblVerifikasi.setBackground(new java.awt.Color(0, 0, 0));
+        lblVerifikasi.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblVerifikasi.setForeground(new java.awt.Color(44, 119, 238));
+        lblVerifikasi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblVerifikasi.setText("Kode Verifikasi");
+
+        inpEmail.setEditable(false);
+        inpEmail.setBackground(new java.awt.Color(231, 235, 239));
+        inpEmail.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        inpEmail.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpEmail.setText("hakiahmad756@gmail.com");
+
+        lblPassword.setBackground(new java.awt.Color(0, 0, 0));
+        lblPassword.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblPassword.setForeground(new java.awt.Color(44, 119, 238));
+        lblPassword.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPassword.setText("Password Baru");
+
+        inpVerifikasi.setFont(new java.awt.Font("Dialog", 1, 19)); // NOI18N
+        inpVerifikasi.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inpVerifikasi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpVerifikasiKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpVerifikasiKeyTyped(evt);
+            }
+        });
+
+        lineCenter.setBackground(new java.awt.Color(0, 0, 0));
+        lineCenter.setForeground(new java.awt.Color(0, 0, 0));
+
+        lblKonfPass.setBackground(new java.awt.Color(0, 0, 0));
+        lblKonfPass.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblKonfPass.setForeground(new java.awt.Color(44, 119, 238));
+        lblKonfPass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblKonfPass.setText("Konfirmasi Password");
+
+        lblStatusKonfPass.setBackground(new java.awt.Color(0, 0, 0));
+        lblStatusKonfPass.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblStatusKonfPass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblStatusKonfPass.setText("Ketikan ulang password anda");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lineTop)
+                    .addComponent(lineCenter, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 13, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStatusVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStatusPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStatusEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStatusKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(lblEye, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(inpEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblSendEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(inpVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblIconVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(inpKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(lblEyeKonf, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(10, 10, 10))
+                    .addComponent(lineBottom, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btnGanti, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lineTop)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 13, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(50, 50, 50)
-                                    .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(50, 50, 50)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(lblEye, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(inpKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(lblEyeKonf, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(inpPasswordOld, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8)
-                                                .addComponent(lblEyeOld, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addGap(10, 10, 10))))
-                    .addComponent(lineBottom))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -336,34 +400,46 @@ public class GantiPassword extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lineTop, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
-                .addComponent(lblPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inpPasswordOld, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEyeOld, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblSendEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(inpEmail))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStatusEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(lblVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblIconVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inpVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStatusVerifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addComponent(lineCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEye, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStatusPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inpKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEyeKonf, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStatusKonfPass, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(lineBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBatal, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(btnGanti, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGanti, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnBatal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -380,82 +456,30 @@ public class GantiPassword extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inpUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUsernameKeyReleased
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.inpPasswordOld.requestFocus();
-        }
-    }//GEN-LAST:event_inpUsernameKeyReleased
-
-    private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.inpKonfPass.requestFocus();
-        }
-    }//GEN-LAST:event_inpPasswordKeyPressed
-
-    private void inpPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyTyped
-
-    }//GEN-LAST:event_inpPasswordKeyTyped
-
-    private void lblEyeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseClicked
-
-    }//GEN-LAST:event_lblEyeMouseClicked
-
-    private void lblEyeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseEntered
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-        this.inpPassword.setEchoChar((char)0);
-    }//GEN-LAST:event_lblEyeMouseEntered
-
-    private void lblEyeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpPassword.setEchoChar('•');
-    }//GEN-LAST:event_lblEyeMouseExited
-
-    private void inpKonfPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            btnGantiActionPerformed(null);
-        }
-    }//GEN-LAST:event_inpKonfPassKeyPressed
-
-    private void inpKonfPassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyTyped
-        
-    }//GEN-LAST:event_inpKonfPassKeyTyped
-
-    private void lblEyeKonfMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeKonfMouseClicked
-        
-    }//GEN-LAST:event_lblEyeKonfMouseClicked
-
-    private void lblEyeKonfMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeKonfMouseEntered
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblEyeKonf.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-        this.inpKonfPass.setEchoChar((char)0);
-    }//GEN-LAST:event_lblEyeKonfMouseEntered
-
-    private void lblEyeKonfMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeKonfMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEyeKonf.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpKonfPass.setEchoChar('•');
-    }//GEN-LAST:event_lblEyeKonfMouseExited
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.us.closeConnection();
+    }//GEN-LAST:event_formWindowClosed
 
     private void btnGantiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGantiActionPerformed
-        // validasi data ganti password
-        if(!Validation.isEmptyTextField(this.inpUsername, this.inpPasswordOld, this.inpPassword, this.inpKonfPass)){
-            return;
-        }else if(!this.isValidOldPass()){
-            Message.showWarning(this, "Password sekarang tidak cocok!");
-            return;
-        }else if(!Validation.isPassword(this.inpPassword.getText())){
-            return;
-        }else if(!this.inpPassword.getText().equals(this.inpKonfPass.getText())){
-            JOptionPane.showMessageDialog(this, "Konfirmasi Password tidak cocok!");
+        if(!this.isVerif){
+            Message.showWarning(this, "Masukan kode verifikasi email terlebih dahulu!");
             return;
         }
+        // validasi data ganti password
+//        if(!Validation.isEmptyTextField(this.inpUsername, this.inpPasswordOld, this.inpPassword, this.inpKonfPass)){
+//            return;
+//        }else if(!this.isValidOldPass()){
+//            Message.showWarning(this, "Password sekarang tidak cocok!");
+//            return;
+//        }else if(!Validation.isPassword(this.inpPassword.getText())){
+//            return;
+//        }else if(!this.inpPassword.getText().equals(this.inpKonfPass.getText())){
+//            JOptionPane.showMessageDialog(this, "Konfirmasi Password tidak cocok!");
+//            return;
+//        }
         
         // mengubah password
         if(this.gantiPassword()){
-            // jika password berhasil diubah
-            isSuccess = true;
             Message.showInformation(this, "Password berhasil diganti!");
             this.setVisible(false);
         }else{
@@ -483,33 +507,120 @@ public class GantiPassword extends javax.swing.JDialog {
         
     }//GEN-LAST:event_btnBatalMouseExited
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        this.us.closeConnection();
-    }//GEN-LAST:event_formWindowClosed
+    private void inpVerifikasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpVerifikasiKeyPressed
+        
+    }//GEN-LAST:event_inpVerifikasiKeyPressed
 
-    private void inpPasswordOldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordOldKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpPasswordOldKeyPressed
+    private void inpVerifikasiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpVerifikasiKeyTyped
+        this.txt.decimalOnly(evt);
+        if(this.inpVerifikasi.getText().length() > 7){
+            this.isVerif = true;
+            this.statusPassword();
+        }
+    }//GEN-LAST:event_inpVerifikasiKeyTyped
 
-    private void inpPasswordOldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordOldKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpPasswordOldKeyTyped
+    private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.inpKonfPass.requestFocus();
+        }
+    }//GEN-LAST:event_inpPasswordKeyPressed
 
-    private void lblEyeOldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeOldMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblEyeOldMouseClicked
+    private void inpPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyTyped
 
-    private void lblEyeOldMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeOldMouseEntered
+    }//GEN-LAST:event_inpPasswordKeyTyped
+
+    private void inpKonfPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnGantiActionPerformed(null);
+        }
+    }//GEN-LAST:event_inpKonfPassKeyPressed
+
+    private void inpKonfPassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyTyped
+        
+    }//GEN-LAST:event_inpKonfPassKeyTyped
+
+    private void lblSendEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseClicked
+        if(!this.isVerif){
+            Message.showInformation(this, "Nanti dulu aja");
+        }
+    }//GEN-LAST:event_lblSendEmailMouseClicked
+
+    private void lblSendEmailMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblEyeOld.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
-        this.inpPasswordOld.setEchoChar((char)0);
-    }//GEN-LAST:event_lblEyeOldMouseEntered
+        this.lblSendEmail.setIcon(Gambar.getIcon("ic-verifikasi-send-entered.png"));
+    }//GEN-LAST:event_lblSendEmailMouseEntered
 
-    private void lblEyeOldMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeOldMouseExited
+    private void lblSendEmailMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblEyeOld.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
-        this.inpPasswordOld.setEchoChar('•');
-    }//GEN-LAST:event_lblEyeOldMouseExited
+        this.lblSendEmail.setIcon(Gambar.getIcon("ic-verifikasi-send.png"));
+    }//GEN-LAST:event_lblSendEmailMouseExited
+
+    private void lblIconVerifikasiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIconVerifikasiMouseClicked
+        
+    }//GEN-LAST:event_lblIconVerifikasiMouseClicked
+
+    private void lblIconVerifikasiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIconVerifikasiMouseEntered
+        if(this.inpVerifikasi.getText().length() < 8){
+            this.lblIconVerifikasi.setIcon(null);
+            return;
+        }
+        if(!this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal-entered.png"));    
+        }
+    }//GEN-LAST:event_lblIconVerifikasiMouseEntered
+
+    private void lblIconVerifikasiMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIconVerifikasiMouseExited
+        if(this.inpVerifikasi.getText().length() < 8){
+            this.lblIconVerifikasi.setIcon(null);
+            return;
+        }
+        if(!this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal-entered.png"));    
+        }
+    }//GEN-LAST:event_lblIconVerifikasiMouseExited
+
+    private void lblEyeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseClicked
+
+    }//GEN-LAST:event_lblEyeMouseClicked
+
+    private void lblEyeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseEntered
+        if(this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
+            this.inpPassword.setEchoChar((char)0);
+        }
+    }//GEN-LAST:event_lblEyeMouseEntered
+
+    private void lblEyeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeMouseExited
+        if(this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblEye.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
+            this.inpPassword.setEchoChar('•');
+        }
+    }//GEN-LAST:event_lblEyeMouseExited
+
+    private void lblEyeKonfMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeKonfMouseClicked
+        
+    }//GEN-LAST:event_lblEyeKonfMouseClicked
+
+    private void lblEyeKonfMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeKonfMouseEntered
+        if(this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            this.lblEyeKonf.setIcon(Gambar.getIcon("ic-login-eye-open.png"));
+            this.inpKonfPass.setEchoChar((char)0); 
+        }
+    }//GEN-LAST:event_lblEyeKonfMouseEntered
+
+    private void lblEyeKonfMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEyeKonfMouseExited
+        if(this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblEyeKonf.setIcon(Gambar.getIcon("ic-login-eye-close.png"));
+            this.inpKonfPass.setEchoChar('•');
+        }
+    }//GEN-LAST:event_lblEyeKonfMouseExited
+
 
     /**
      * @param args the command line arguments
@@ -526,15 +637,6 @@ public class GantiPassword extends javax.swing.JDialog {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GantiPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        
         //</editor-fold>
 
         /* Create and display the dialog */
@@ -556,20 +658,26 @@ public class GantiPassword extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBatal;
     private javax.swing.JButton btnGanti;
+    private javax.swing.JTextField inpEmail;
     private javax.swing.JPasswordField inpKonfPass;
     private javax.swing.JPasswordField inpPassword;
-    private javax.swing.JPasswordField inpPasswordOld;
-    private javax.swing.JTextField inpUsername;
+    private javax.swing.JTextField inpVerifikasi;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblEye;
     private javax.swing.JLabel lblEyeKonf;
-    private javax.swing.JLabel lblEyeOld;
+    private javax.swing.JLabel lblIconVerifikasi;
     private javax.swing.JLabel lblKonfPass;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblPassword1;
+    private javax.swing.JLabel lblSendEmail;
+    private javax.swing.JLabel lblStatusEmail;
+    private javax.swing.JLabel lblStatusKonfPass;
+    private javax.swing.JLabel lblStatusPassword;
+    private javax.swing.JLabel lblStatusVerifikasi;
     private javax.swing.JLabel lblTop;
-    private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblVerifikasi;
     private javax.swing.JSeparator lineBottom;
+    private javax.swing.JSeparator lineCenter;
     private javax.swing.JSeparator lineTop;
     // End of variables declaration//GEN-END:variables
 }
