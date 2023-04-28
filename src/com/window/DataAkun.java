@@ -43,12 +43,12 @@ public class DataAkun extends javax.swing.JFrame {
     
     private final Internet inet = new Internet();
     
-    public static DefaultTableModel DATA_KY = new DefaultTableModel();
+    public static DefaultTableModel DATA_AK = new DefaultTableModel();
     
     public DataAkun() {
         initComponents();
         
-        this.setTitle("Data Karyawan");
+        this.setTitle("Data Akun");
         this.setExtendedState(this.getExtendedState() | javax.swing.JFrame.MAXIMIZED_BOTH);
         this.lblNamaUser.setText(User.getNamaUser());
         this.setIconImage(Gambar.getWindowIcon());
@@ -67,11 +67,12 @@ public class DataAkun extends javax.swing.JFrame {
         
         // set update data
         JTextField[] fields = {this.inpNoHp, this.inpAlamat, this.inpShift, this.inpEmail, this.inpLevel};
+        this.inpNamaLengkap.setEditable(false);
         this.inpNoHp.setEditable(false);
-        this.inpAlamat.setEditable(false);
-//        this.inpPassword.setEditable(false);
-        this.inpShift.setEditable(false);
         this.inpEmail.setEditable(false);
+        this.inpAlamat.setEditable(false);
+        this.inpLevel.setEditable(false);
+        this.inpShift.setEditable(false);
         this.win.updateData(fields);
         
         // set margin tabel
@@ -140,15 +141,15 @@ public class DataAkun extends javax.swing.JFrame {
         this.resetTabel();
         DefaultTableModel model = (DefaultTableModel) this.tabelData.getModel();
         
-        if(DataAkun.DATA_KY.getRowCount() > 0){
-            System.out.println("EXECUTE");
+        if(DataAkun.DATA_AK.getRowCount() > 0){
             // membaca data yang ada didalam tabel
-            for(int i = 0; i < DataAkun.DATA_KY.getRowCount(); i++){
+            for(int i = 0; i < DataAkun.DATA_AK.getRowCount(); i++){
                 // menambahkan data
                 model.addRow(new Object[]{
-                    DataAkun.DATA_KY.getValueAt(i, 0),
-                    DataAkun.DATA_KY.getValueAt(i, 1),
-                    DataAkun.DATA_KY.getValueAt(i, 2),
+                    DataAkun.DATA_AK.getValueAt(i, 0),
+                    DataAkun.DATA_AK.getValueAt(i, 1),
+                    DataAkun.DATA_AK.getValueAt(i, 2),
+                    DataAkun.DATA_AK.getValueAt(i, 3)
                 });
             }
             // menampilkan data
@@ -192,7 +193,7 @@ public class DataAkun extends javax.swing.JFrame {
             this.tabelData.setModel(model);
             
             // menambahkan data ke model 
-            DataAkun.DATA_KY = model;
+            DataAkun.DATA_AK = model;
         }catch(SQLException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
@@ -209,20 +210,20 @@ public class DataAkun extends javax.swing.JFrame {
                id, username, nama;
         
         // membaca isi data pada model cari
-        for (int i = 0; i < DataAkun.DATA_KY.getRowCount(); i++) {
+        for (int i = 0; i < DataAkun.DATA_AK.getRowCount(); i++) {
             // mendapatkan data di tabel
-            id = DataAkun.DATA_KY.getValueAt(i, 0).toString().toLowerCase();
-            username = DataAkun.DATA_KY.getValueAt(i, 1).toString().toLowerCase();
-            nama = DataAkun.DATA_KY.getValueAt(i, 2).toString().toLowerCase();
+            id = DataAkun.DATA_AK.getValueAt(i, 0).toString().toLowerCase();
+            username = DataAkun.DATA_AK.getValueAt(i, 1).toString().toLowerCase();
+            nama = DataAkun.DATA_AK.getValueAt(i, 2).toString().toLowerCase();
             
             // cek apakah data yang dicari terdapat pada tabel
             if(id.contains(key) || username.contains(key) || nama.contains(key)){
                 // menambahkan data
                 model.addRow(new Object[]{
-                        DataAkun.DATA_KY.getValueAt(i, 0),
-                        DataAkun.DATA_KY.getValueAt(i, 1),
-                        DataAkun.DATA_KY.getValueAt(i, 2),
-                        DataAkun.DATA_KY.getValueAt(i, 3)
+                        DataAkun.DATA_AK.getValueAt(i, 0),
+                        DataAkun.DATA_AK.getValueAt(i, 1),
+                        DataAkun.DATA_AK.getValueAt(i, 2),
+                        DataAkun.DATA_AK.getValueAt(i, 3)
                     }
                 );
             }
@@ -1240,7 +1241,7 @@ public class DataAkun extends javax.swing.JFrame {
         UpdateDataAkun d = new UpdateDataAkun(null, true, 1, "");
         d.setVisible(true);
         
-        DataAkun.DATA_KY = new DefaultTableModel();
+        DataAkun.DATA_AK = new DefaultTableModel();
         this.showTabel();
         // refresh data
         this.resetData();
@@ -1258,11 +1259,15 @@ public class DataAkun extends javax.swing.JFrame {
         if(this.idSelected.equals("") || this.idSelected == null){
             JOptionPane.showMessageDialog(this, "Tidak ada data yang dipilih!");
         }else{
-            UpdateDataAkun d = new UpdateDataAkun(null, true, 2, this.idSelected);
-            d.setVisible(true);
-            DataAkun.DATA_KY = new DefaultTableModel();
-            this.showTabel();
-            this.showData();
+            if(this.idSelected.equalsIgnoreCase(User.getIdAkun())){
+                Message.showWarning(this, "Tidak bisa mengedit data akun yang sedang login!\nSilahkan update akun anda di menu akun!");
+            }else{
+                UpdateDataAkun d = new UpdateDataAkun(null, true, 2, this.idSelected);
+                d.setVisible(true);
+                DataAkun.DATA_AK = new DefaultTableModel();
+                this.showTabel();
+                this.showData();                
+            }
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
@@ -1282,32 +1287,33 @@ public class DataAkun extends javax.swing.JFrame {
                 // membuka confirm dialog untuk menghapus data
                 Audio.play(Audio.SOUND_INFO);
                 status = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data?", "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
-                // mengecek pilihan dari barang
+                
+                // mengecek pilihan dari pop up
                 switch (status) {
                     // jika yes maka data akan dihapus
                     case JOptionPane.YES_OPTION:
                         // menghapus data pembeli
                         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        String idKy = this.inpIdUsername.getText(),
-                         sql = "DELETE FROM karyawan WHERE id_karyawan = '" + idKy + "'";
+                        String idAkun = this.inpIdUsername.getText().substring(0, 5),
+                         sql = "DELETE FROM akun WHERE id_akun = '" + idAkun + "'";
+                        System.out.println(sql);
 
-                        // mengecek kesamaan id
-                        if(!idKy.equalsIgnoreCase(this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString())){
+                        // mengecek kesamaan id antara id di textfield dan di tabel
+                        if(!idAkun.equalsIgnoreCase(this.tabelData.getValueAt(this.tabelData.getSelectedRow(), 0).toString())){
                             Message.showWarning(this, "Data gagal dihapus!");
                             this.tabelData.removeRowSelectionInterval(this.tabelData.getSelectedRow(), this.tabelData.getSelectedRow());
+                            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                             return;
-                        }else if(User.isAdmin()){
-                            if(this.inpLevel.getText().equalsIgnoreCase("admin")){
-                                Message.showWarning(this, "Admin tidak bisa menghapus admin!\nHubungi Developer untuk menghapus admin!");
-                                this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                                return;
-                            }
+                        }else if(this.idSelected.equalsIgnoreCase(User.getIdAkun())){
+                            Message.showWarning(this, "Tidak bisa menghapus akun yang sedang login!");
+                            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                            return;
                         }
                         
                         // mengecek apakah data berhasil terhapus atau tidak
                         if (this.db.stat.executeUpdate(sql) > 0) {
                             Message.showInformation(this, "Data berhasil dihapus!");
-                            DataAkun.DATA_KY = new DefaultTableModel();
+                            DataAkun.DATA_AK = new DefaultTableModel();
                             // mengupdate tabel
                             this.showTabel();
                             // reset textfield
