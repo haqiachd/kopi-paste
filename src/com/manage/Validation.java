@@ -80,10 +80,10 @@ public class Validation {
     }
     
     public static boolean isRfid(String rfid){
-        if(rfid.length() == 12){
+        if(rfid.length() == 10){
             return true;
         }else{
-            JOptionPane.showMessageDialog(null, "Panjang dari RFID harus 12 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Panjang dari RFID harus 10 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
@@ -98,11 +98,11 @@ public class Validation {
     }
     
     public static boolean isNamaTempat(String namaTempat){
-        if(namaTempat.length() >= 5 && namaTempat.length() <= 50){
+        if(namaTempat.length() >= 4 && namaTempat.length() <= 50){
             return true;
         }else{
             Audio.play(Audio.SOUND_WARNING);
-            JOptionPane.showMessageDialog(null, "Panjang dari Nama Tempat harus diantara 5-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Panjang dari Nama Tempat harus diantara 4-50 karakter!", "Pesan", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
