@@ -3,7 +3,11 @@ package com.window.dialog;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.User;
+import com.manage.VerifikasiEmail;
+import com.manage.Waktu;
+import com.media.Audio;
 import com.media.Gambar;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
@@ -18,7 +22,11 @@ public class GantiPassword extends javax.swing.JDialog {
     
     private final User us = new User();
     
+    private final VerifikasiEmail ve = new VerifikasiEmail();
+    
     private final Text txt = new Text();
+    
+    private final Waktu waktu = new Waktu();
     
     private final String email;
     
@@ -35,7 +43,7 @@ public class GantiPassword extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         
-        // mendapatkan dan menampilkan username 
+        // mendapatkan dan menampilkan email 
         this.email = "hakiahmad756@gmail.com";
         this.inpEmail.setText(this.email);
         
@@ -45,6 +53,7 @@ public class GantiPassword extends javax.swing.JDialog {
         this.lblIconVerifikasi.setIcon(null);
         this.inpVerifikasi.requestFocus();
         
+        // mengaktifkan input verifikasi
         this.statusPassword();
         
         // set aksi saat textfied ditekan jika verifikasi masih salah
@@ -54,11 +63,89 @@ public class GantiPassword extends javax.swing.JDialog {
                 public void mouseClicked(MouseEvent e) {
                     if(!isVerif){
                         Message.showInformation(this, "Masukan kode verifikasi email terlebih dahulu!");
+                        waktu.delay(100);
                     }
                 }
             });
         }
-
+        
+        // cek apakah ada kode yang aktif atau tidak
+        if(this.ve.isActiveKode()){
+            // menampilkan limit waktu ke layar jika masih ada kode yang aktif
+            this.showLimitWaktu();            
+        }else{
+            // merandom dan mengirimkan kode jika tidak ada kode yang aktif
+            this.kirimKode();
+            Message.showInformation(this, "Kode verifikasi telah dikirimkan ke email Anda!");
+        }
+    }
+    
+    private void kirimKode(){
+        // merandom kode dan mengirimkannya ke email
+        this.ve.randomKode();
+        System.out.println(this.ve.getKode());
+        this.showLimitWaktu();
+    }
+    
+    private void showLimitWaktu(){
+        // cek apakah verifikasi sudah berhasil atau belum
+        if(this.isVerif){
+            // jika verifikasi sudah berhasil maka akan langsung keluar dari method
+            return;
+        }
+        
+        // thread untuk menampilkan limit random kode ke status
+         new Thread(new Runnable(){
+             @Override
+             public void run(){
+                // mengatur warna teks status menjadi unggu
+                lblStatusEmail.setForeground(new Color(204,0,204));
+                // menampilkan limit random kode ke status
+                 while(ve.getLRandom() > 0){
+                     lblStatusEmail.setText("Kirim ulang kode verifikasi dalam "+ve.getLRandom()+" detik");
+                     waktu.delay(10);
+                     // berhenti jika user menginputkan kode verifikasi yang valid
+                     if(isVerif){
+                         break;
+                     }
+                 }
+                 
+                 // jika while sudah berhenti dan kode verifikasi tidak valid
+                 if(!isVerif){
+                     // atur pesan untuk mengirimkan ulang kode verifikasi
+                     lblStatusEmail.setForeground(new Color(0,0,0));
+                     lblStatusEmail.setText("Tekan tombol pesawat untuk mengirimkan ulang kode");                     
+                 }else{
+                     // atur pesan menjadi kosong jika verifikasi valid
+                     lblStatusEmail.setText("");                     
+                 }
+             }
+         }).start();
+         
+         // thread untuk menghitung apakah kode verifikasi masih aktif atau tidak
+         new Thread(new Runnable(){
+             @Override
+             public void run(){
+                 // melakukan perulangan sampai kode tidak aktif
+                 while(ve.getLKode() > 0){
+                     waktu.delay(10);
+                     // berhenti jika user menginputkan kode verifikasi yang valid
+                     if(isVerif){
+                         break;
+                     }
+                 }
+                 
+                 // jika while sudah berhenti dan kode verifikasi tidak valid
+                 if(!isVerif){
+                     // atur pesan bahwa kode verifikasi telah kadaluarsa
+                    lblStatusEmail.setForeground(new Color(255,51,0));
+                    lblStatusEmail.setText("Kode kadaluarsa, Tekan pesawat untuk mengirimkan ulang!");
+                 }else{
+                     // atur pesan menjadi kosong jika verifikasi valid
+                     lblStatusEmail.setText("");
+                 }
+             }
+         }).start();
     }
     
     private void statusPassword(){
@@ -75,6 +162,7 @@ public class GantiPassword extends javax.swing.JDialog {
             // set editable false pada verifikasi
             this.inpVerifikasi.setEditable(false);
             this.lblSendEmail.setEnabled(false);
+            this.lblStatusEmail.setText("");
             this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-success.png"));
         }else{
             // set editable dan enable menjadi false pada password
@@ -88,8 +176,58 @@ public class GantiPassword extends javax.swing.JDialog {
             // set editable true pada verifikasi
             this.inpVerifikasi.requestFocus(true);
             this.inpVerifikasi.setEditable(true);
-            this.lblSendEmail.setEnabled(false);
-            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal.png"));   
+            this.lblSendEmail.setEnabled(true);
+            this.lblStatusEmail.setText("Kirim ulang kode verifikasi dalam 1 menit");
+            // set icon verifikasi gagal
+            if(this.inpVerifikasi.getText().length() >= 8){
+                this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal.png"));
+            }else{
+                this.lblIconVerifikasi.setIcon(null);
+            }
+        }
+    }
+    
+    private void validasiKode(KeyEvent evt, String inputKode){
+        // set hanya angka pada textfield
+        this.txt.decimalOnly(evt);
+        // mendapatkan panjang dari kode
+        int indexKode = inputKode.length(); 
+        
+        // jika panjang dari kode > 0 dan < 8
+        if(indexKode > 0 && indexKode < 8){
+            // setting verifikasi tidak cocok
+            this.lblStatusVerifikasi.setForeground(new Color(255,51,0));
+            this.lblStatusVerifikasi.setText("Kode verifikasi tidak cocok!");
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal.png"));
+        }
+        // jika panjang dari kode sama dengan 8
+        else if(indexKode == 8){
+            // jika kode tidak cocok
+            if(!inputKode.equals(Integer.toString(this.ve.getKode()))){
+                // setting verifikasi tidak cocoko
+                this.lblStatusVerifikasi.setForeground(new Color(255,51,0));
+                this.lblStatusVerifikasi.setText("Kode verifikasi tidak cocok!");
+                this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal.png"));
+            }
+            // jika verifikasi cocok
+            else{
+                // reset kode
+                this.ve.killKode();
+                // setting verifikasi berhasil
+                this.isVerif = true;
+                this.lblStatusVerifikasi.setForeground(new Color(0,153,0));
+                this.lblStatusVerifikasi.setText("Verifikasi berhasil!");
+                this.statusPassword();
+                Audio.play(Audio.SOUND_INFO);
+            }
+        }
+        // jika panjang dari kode 0 atau lebih dari 8
+        else {
+            // reset verifikasi ke null
+            this.inpVerifikasi.setText("");
+            this.lblStatusVerifikasi.setForeground(new Color(0,0,0));
+            this.lblStatusVerifikasi.setText("Masukan kode verifikasi");
+            this.lblIconVerifikasi.setIcon(null);
         }
     }
     
@@ -169,9 +307,8 @@ public class GantiPassword extends javax.swing.JDialog {
 
         lblStatusVerifikasi.setBackground(new java.awt.Color(0, 0, 0));
         lblStatusVerifikasi.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblStatusVerifikasi.setForeground(new java.awt.Color(255, 51, 0));
         lblStatusVerifikasi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblStatusVerifikasi.setText("Kode verifikasi tidak cocok!");
+        lblStatusVerifikasi.setText("Masukan kode verifikasi");
 
         lblEye.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblEye.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-login-eye-close.png"))); // NOI18N
@@ -320,6 +457,9 @@ public class GantiPassword extends javax.swing.JDialog {
         inpVerifikasi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inpVerifikasiKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpVerifikasiKeyReleased(evt);
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpVerifikasiKeyTyped(evt);
@@ -508,21 +648,19 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBatalMouseExited
 
     private void inpVerifikasiKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpVerifikasiKeyPressed
-        
+
     }//GEN-LAST:event_inpVerifikasiKeyPressed
 
+    private void inpVerifikasiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpVerifikasiKeyReleased
+        this.validasiKode(evt, this.inpVerifikasi.getText());
+    }//GEN-LAST:event_inpVerifikasiKeyReleased
+
     private void inpVerifikasiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpVerifikasiKeyTyped
-        this.txt.decimalOnly(evt);
-        if(this.inpVerifikasi.getText().length() > 7){
-            this.isVerif = true;
-            this.statusPassword();
-        }
+        this.validasiKode(evt, this.inpVerifikasi.getText());
     }//GEN-LAST:event_inpVerifikasiKeyTyped
 
     private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            this.inpKonfPass.requestFocus();
-        }
+
     }//GEN-LAST:event_inpPasswordKeyPressed
 
     private void inpPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyTyped
@@ -540,19 +678,29 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_inpKonfPassKeyTyped
 
     private void lblSendEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseClicked
-        if(!this.isVerif){
-            Message.showInformation(this, "Nanti dulu aja");
+        if(this.isVerif){
+            return;
+        }
+        
+        if(this.ve.isCanRandom()){
+            this.kirimKode();
+        }else{
+            Message.showWarning(this, "Tunggu beberapa saat lagi!");
         }
     }//GEN-LAST:event_lblSendEmailMouseClicked
 
     private void lblSendEmailMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseEntered
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        this.lblSendEmail.setIcon(Gambar.getIcon("ic-verifikasi-send-entered.png"));
+        if(!this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            this.lblSendEmail.setIcon(Gambar.getIcon("ic-verifikasi-send-entered.png"));            
+        }
     }//GEN-LAST:event_lblSendEmailMouseEntered
 
     private void lblSendEmailMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseExited
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        this.lblSendEmail.setIcon(Gambar.getIcon("ic-verifikasi-send.png"));
+        if(!this.isVerif){
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblSendEmail.setIcon(Gambar.getIcon("ic-verifikasi-send.png"));            
+        }
     }//GEN-LAST:event_lblSendEmailMouseExited
 
     private void lblIconVerifikasiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIconVerifikasiMouseClicked
@@ -560,24 +708,30 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_lblIconVerifikasiMouseClicked
 
     private void lblIconVerifikasiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIconVerifikasiMouseEntered
-        if(this.inpVerifikasi.getText().length() < 8){
+        if(this.inpVerifikasi.getText().length() <= 0){
             this.lblIconVerifikasi.setIcon(null);
             return;
         }
         if(!this.isVerif){
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal-entered.png"));    
+        }else{
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-success.png"));    
         }
     }//GEN-LAST:event_lblIconVerifikasiMouseEntered
 
     private void lblIconVerifikasiMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIconVerifikasiMouseExited
-        if(this.inpVerifikasi.getText().length() < 8){
+        if(this.inpVerifikasi.getText().length() <= 0){
             this.lblIconVerifikasi.setIcon(null);
             return;
         }
         if(!this.isVerif){
-            this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal-entered.png"));    
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-gagal.png"));    
+        }else{
+            this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            this.lblIconVerifikasi.setIcon(Gambar.getIcon("ic-verifikasi-success.png"));    
         }
     }//GEN-LAST:event_lblIconVerifikasiMouseExited
 
