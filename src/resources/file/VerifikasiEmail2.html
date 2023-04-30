@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contoh Halaman Web dengan Footer</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .content {
+        flex: 1;
+        padding: 50px;
+      }
+      .footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .footer-left {
+        display: flex;
+        align-items: center;
+      }
+      .footer-left img {
+        width: 30px;
+        margin-right: 10px;
+      }
+      .footer-left p {
+        margin: 0;
+        font-size: 14px;
+      }
+      .footer-right {
+        display: flex;
+        align-items: center;
+      }
+      .footer-right a {
+        color: #fff;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <h1>Contoh Halaman Web</h1>
+        <p>Ini adalah contoh halaman web dengan footer yang berisi informasi perusahaan dan media sosial.</p>
+      </div>
+      <div class="footer">
+        <div class="footer-left">
+          <p>Copy</p>
+          <br>
+          <img src="icon.ico" alt="Logo Perusahaan">
+          <p>Alamat Perusahaan, Kota, Provinsi</p>
+        </div>
+        <div class="footer-right">
+          <p>Follow Kami:</p>
+          <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="#"><i class="fab fa-twitter fa-lg"></i></a>
+          <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
