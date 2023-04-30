@@ -3,11 +3,13 @@ package com.window.dialog;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.User;
+import com.manage.Validation;
 import com.manage.VerifikasiEmail;
 import com.manage.Waktu;
 import com.media.Audio;
 import com.media.Gambar;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
@@ -22,7 +24,7 @@ public class GantiPassword extends javax.swing.JDialog {
     
     private final User us = new User();
     
-    private final VerifikasiEmail ve = new VerifikasiEmail();
+    private final VerifikasiEmail ve = new VerifikasiEmail("");
     
     private final Text txt = new Text();
     
@@ -41,10 +43,11 @@ public class GantiPassword extends javax.swing.JDialog {
     public GantiPassword(java.awt.Frame parent, boolean modal, String email) {
         super(parent, modal);
         initComponents();
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null); // password gmail
         
         // mendapatkan dan menampilkan email 
-        this.email = "hakiahmad756@gmail.com";
+        this.email = email;
+        this.ve.setEmail(this.email);
         this.inpEmail.setText(this.email);
         
         // set ui 
@@ -74,17 +77,26 @@ public class GantiPassword extends javax.swing.JDialog {
             // menampilkan limit waktu ke layar jika masih ada kode yang aktif
             this.showLimitWaktu();            
         }else{
-            // merandom dan mengirimkan kode jika tidak ada kode yang aktif
-            this.kirimKode();
-            Message.showInformation(this, "Kode verifikasi telah dikirimkan ke email Anda!");
+            // mengirim kode ke email
+            kirimKode();
+
         }
     }
     
     private void kirimKode(){
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // merandom kode dan mengirimkannya ke email
         this.ve.randomKode();
-        System.out.println(this.ve.getKode());
+        System.out.println("KODE VERIFIKASI : "+this.ve.getKode());
         this.showLimitWaktu();
+        // jika kode gagal dikirim lewat email
+        if (!ve.isActiveKode()) {
+            waktu.delay(1500);
+            lblStatusEmail.setText("Kode gagal dikirim, Mohon cek koneksi internet Anda!");
+        } else {
+            Message.showInformation(this, "Kode verifikasi telah dikirim ke email Anda '" + email + "'");
+        }
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
     
     private void showLimitWaktu(){
@@ -157,7 +169,7 @@ public class GantiPassword extends javax.swing.JDialog {
             this.lblEyeKonf.setEnabled(true);
             this.inpPassword.requestFocus();
             this.lblStatusPassword.setText("Password harus minimal 8 karakter");
-            this.lblStatusKonfPass.setText("Ketikan ualng password anda");
+            this.lblStatusKonfPass.setText("Ketikan ulang password anda");
             
             // set editable false pada verifikasi
             this.inpVerifikasi.setEditable(false);
@@ -203,7 +215,7 @@ public class GantiPassword extends javax.swing.JDialog {
         // jika panjang dari kode sama dengan 8
         else if(indexKode == 8){
             // jika kode tidak cocok
-            if(!inputKode.equals(Integer.toString(this.ve.getKode()))){
+            if(!inputKode.equals(ve.getKode())){
                 // setting verifikasi tidak cocoko
                 this.lblStatusVerifikasi.setForeground(new Color(255,51,0));
                 this.lblStatusVerifikasi.setText("Kode verifikasi tidak cocok!");
@@ -231,13 +243,47 @@ public class GantiPassword extends javax.swing.JDialog {
         }
     }
     
+    private void validasiPassword(String pass){
+        // mendapatkan panjang dari password
+        int indexPass = pass.length();
+        
+        if(indexPass <= 0){
+            this.lblStatusPassword.setForeground(new Color(0,0,0));
+            this.lblStatusPassword.setText("Masukan password baru");
+        }else if(indexPass < 8){
+            this.lblStatusPassword.setForeground(new Color(255,51,0));
+            this.lblStatusPassword.setText("Password harus minimal 8 karakter");
+        }else{
+            this.lblStatusPassword.setForeground(new Color(0,153,0));
+            this.lblStatusPassword.setText("Password valid");
+        }
+    }
+
+    private void validasiKonfPassword(String pass){
+        // mendapatkan panjang dari password
+        int indexPass = pass.length();
+        
+        if(indexPass <= 0){
+            this.lblStatusKonfPass.setForeground(new Color(0,0,0));
+            this.lblStatusKonfPass.setText("Ketikan ulang password Anda");
+        }else if(indexPass > 0){
+            if(pass.equals(this.inpPassword.getText())){
+                this.lblStatusKonfPass.setForeground(new Color(0,153,0));
+                this.lblStatusKonfPass.setText("Konfirmasi password valid");
+            }else{
+                this.lblStatusKonfPass.setForeground(new Color(255,51,0));
+                this.lblStatusKonfPass.setText("Konfimasi password tidak cocok");
+            }
+        }
+    }
+    
     private boolean gantiPassword(){
         try{
             // enkripsi password baru
             String hashPw = BCrypt.hashpw(this.inpPassword.getText(), BCrypt.gensalt(12)),
                     // membuat query untuk ganti password
-                    sql = "UPDATE user SET password = '"+hashPw+"' "
-                        + "WHERE username = '"+this.email+"' OR id_karyawan = '"+this.email+"'";
+                    sql = "UPDATE akun SET password = '"+hashPw+"' "
+                        + "WHERE username = '"+User.getUsername()+"'";
             
             // eksekusi query
             return this.us.stat.executeUpdate(sql) > 0;
@@ -300,6 +346,9 @@ public class GantiPassword extends javax.swing.JDialog {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inpPasswordKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpPasswordKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpPasswordKeyTyped(evt);
             }
@@ -335,6 +384,9 @@ public class GantiPassword extends javax.swing.JDialog {
         inpKonfPass.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inpKonfPassKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpKonfPassKeyReleased(evt);
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inpKonfPassKeyTyped(evt);
@@ -605,18 +657,16 @@ public class GantiPassword extends javax.swing.JDialog {
             Message.showWarning(this, "Masukan kode verifikasi email terlebih dahulu!");
             return;
         }
-        // validasi data ganti password
-//        if(!Validation.isEmptyTextField(this.inpUsername, this.inpPasswordOld, this.inpPassword, this.inpKonfPass)){
-//            return;
-//        }else if(!this.isValidOldPass()){
-//            Message.showWarning(this, "Password sekarang tidak cocok!");
-//            return;
-//        }else if(!Validation.isPassword(this.inpPassword.getText())){
-//            return;
-//        }else if(!this.inpPassword.getText().equals(this.inpKonfPass.getText())){
-//            JOptionPane.showMessageDialog(this, "Konfirmasi Password tidak cocok!");
-//            return;
-//        }
+        
+//         validasi data ganti password
+        if(!Validation.isEmptyTextField(this.inpPassword, this.inpKonfPass)){
+            return;
+        }else if(!Validation.isPassword(this.inpPassword.getText())){
+            return;
+        }else if(!this.inpPassword.getText().equals(this.inpKonfPass.getText())){
+            Message.showWarning(this, "Konfirmasi Password tidak cocok!");
+            return;
+        }
         
         // mengubah password
         if(this.gantiPassword()){
@@ -660,21 +710,33 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_inpVerifikasiKeyTyped
 
     private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
-
+//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//            this.inpKonfPass.requestFocus();
+//        }
+//        this.validasiPassword(this.inpPassword.getText());
     }//GEN-LAST:event_inpPasswordKeyPressed
 
-    private void inpPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyTyped
+    private void inpPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyReleased
+        this.validasiPassword(this.inpPassword.getText());
+    }//GEN-LAST:event_inpPasswordKeyReleased
 
+    private void inpPasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyTyped
+        this.validasiPassword(this.inpPassword.getText());
     }//GEN-LAST:event_inpPasswordKeyTyped
 
     private void inpKonfPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            btnGantiActionPerformed(null);
-        }
+//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//            btnGantiActionPerformed(null);
+//        }
+//        this.validasiKonfPassword(this.inpKonfPass.getText());
     }//GEN-LAST:event_inpKonfPassKeyPressed
 
+    private void inpKonfPassKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyReleased
+        this.validasiKonfPassword(this.inpKonfPass.getText());
+    }//GEN-LAST:event_inpKonfPassKeyReleased
+
     private void inpKonfPassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyTyped
-        
+        this.validasiKonfPassword(this.inpKonfPass.getText());
     }//GEN-LAST:event_inpKonfPassKeyTyped
 
     private void lblSendEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSendEmailMouseClicked
@@ -774,7 +836,6 @@ public class GantiPassword extends javax.swing.JDialog {
             this.inpKonfPass.setEchoChar('•');
         }
     }//GEN-LAST:event_lblEyeKonfMouseExited
-
 
     /**
      * @param args the command line arguments
