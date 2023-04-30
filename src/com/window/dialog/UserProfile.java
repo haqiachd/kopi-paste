@@ -7,6 +7,7 @@ import com.manage.User;
 import com.media.Audio;
 import com.media.Gambar;
 import com.window.DataAkun;
+import com.manage.VerifikasiEmail;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.sql.SQLException;
@@ -25,6 +26,8 @@ public class UserProfile extends javax.swing.JDialog {
     private final User us = new User();
     
     private final PopUpBackground pop = new PopUpBackground();
+    
+    private final VerifikasiEmail ve = new VerifikasiEmail();
     
     private final JFrame frame;
     
@@ -419,10 +422,28 @@ public class UserProfile extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnGantiPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGantiPassActionPerformed
-        this.dispose();
-        // membuka window ganti password
-        GantiPassword g = new GantiPassword(null, true, this.valUsername.getText().replaceAll(": ", ""));
-        g.setVisible(true);
+        String pesan = "Apakah Anda yakin ingin mengubah kata sandi?\n"
+                    + "Kami akan mengirimkan kode verifikasi ke email Anda jika Anda ingin mengubah kata sandi.";
+        int status;
+        
+        // jika masih ada kode verifikasi yang aktif
+        if(this.ve.isActiveKode()){
+            status = JOptionPane.YES_OPTION;
+        }else{
+            // memunculkan confirm dialog
+            Audio.play(Audio.SOUND_INFO);
+            status = JOptionPane.showConfirmDialog(this, pesan, "Confirm", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE);
+        }
+        
+        // cek apakah user menekan tombol yes
+        if(status == JOptionPane.YES_OPTION){
+            this.dispose();
+            // membuka window ganti password
+            String email = this.valEmail.getText().replaceAll(": ", "");
+            System.out.println(email);
+            GantiPassword g = new GantiPassword(null, true, email);
+            g.setVisible(true);
+        }
     }//GEN-LAST:event_btnGantiPassActionPerformed
 
     private void btnVerifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifikasiActionPerformed
