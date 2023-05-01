@@ -43,7 +43,7 @@ public class GantiPassword extends javax.swing.JDialog {
     public GantiPassword(java.awt.Frame parent, boolean modal, String email) {
         super(parent, modal);
         initComponents();
-        this.setLocationRelativeTo(null); // password gmail
+        this.setLocationRelativeTo(null);
         
         // mendapatkan dan menampilkan email 
         this.email = email;
