@@ -443,24 +443,24 @@ public class LoginWindow extends javax.swing.JFrame {
 
     private void lblCopyrightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCopyrightMouseClicked
         if(this.isLaliPass){
-            LupaPassword g = new LupaPassword(this, true, this.inpUsername.getText());
+            LupaPassword lali = new LupaPassword(this, this, true, this.inpUsername.getText());
             
             // cek apakah username exist
             if(this.user.isExistUsername(this.inpUsername.getText()) || this.user.isExistIdAkun(this.inpUsername.getText())){
                 // membuka window
-                g.setVisible(true);                
+                lali.setVisible(true);                
             }else{
-                g.dispose();
+                lali.dispose();
                 Message.showWarning(this, "Username/Id Karyawan tersebut tidak ditemukan!");
             }
             
             // jika password berhasil diganti
-            if(g.isSuccess()){
+            if(lali.isSuccess()){
                 Message.showInformation(this, "Silahkan masukan username dan password baru Anda!");
                 // reset textfield
-                this.inpUsername.requestFocus();
                 this.inpPassword.setText("");
                 this.inpUsername.setText("");
+                this.inpUsername.requestFocus();
             }
         }
     }//GEN-LAST:event_lblCopyrightMouseClicked
