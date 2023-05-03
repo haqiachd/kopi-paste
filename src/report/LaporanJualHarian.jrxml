@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65e8a3fa-22d2-4bd0-9d47-3d60f72168c3">
-	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.zoom" value="0.9982500000000003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
+	<property name="ireport.y" value="3"/>
+	<queryString>
 		<![CDATA[SELECT
      transaksi_jual.`id_tr_jual` AS transaksi_jual_id_tr_jual,
-     transaksi_jual.`id_karyawan` AS transaksi_jual_id_karyawan,
+     transaksi_jual.`id_akun` AS transaksi_jual_id_karyawan,
      transaksi_jual.`nama_karyawan` AS transaksi_jual_nama_karyawan,
      transaksi_jual.`total_menu` AS transaksi_jual_total_menu,
      transaksi_jual.`total_harga` AS transaksi_jual_total_harga,
