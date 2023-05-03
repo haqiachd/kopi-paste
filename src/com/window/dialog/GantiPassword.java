@@ -30,21 +30,23 @@ public class GantiPassword extends javax.swing.JDialog {
     
     private final Waktu waktu = new Waktu();
     
-    private final String email;
+    private final String username, email;
     
-    private boolean isVerif = false;
+    private boolean isVerif = false, isSuccess = false;
 
     /**
      * Creates new form GantiPassword
      * @param parent
      * @param modal
      * @param email
+     * @param username
      */
-    public GantiPassword(java.awt.Frame parent, boolean modal, String email) {
+    public GantiPassword(java.awt.Frame parent, boolean modal, String username, String email) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
         
+        this.username = username;
         // mendapatkan dan menampilkan email 
         this.email = email;
         this.ve.setEmail(this.email);
@@ -83,6 +85,9 @@ public class GantiPassword extends javax.swing.JDialog {
         }
     }
     
+    public GantiPassword(java.awt.Frame parent, boolean modal, String email){
+        this(parent, modal, null, email);
+    }
     private void kirimKode(){
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         // merandom kode dan mengirimkannya ke email
@@ -280,10 +285,11 @@ public class GantiPassword extends javax.swing.JDialog {
     private boolean gantiPassword(){
         try{
             // enkripsi password baru
-            String hashPw = BCrypt.hashpw(this.inpPassword.getText(), BCrypt.gensalt(12)),
+            String userOrId = User.isLogin() ? User.getUsername() : this.username,
+                    hashPw = BCrypt.hashpw(this.inpPassword.getText(), BCrypt.gensalt(12)),
                     // membuat query untuk ganti password
                     sql = "UPDATE akun SET password = '"+hashPw+"' "
-                        + "WHERE username = '"+User.getUsername()+"'";
+                        + "WHERE username = '"+userOrId+"' OR id_akun = '"+userOrId+"'";
             
             // eksekusi query
             return this.us.stat.executeUpdate(sql) > 0;
@@ -291,6 +297,10 @@ public class GantiPassword extends javax.swing.JDialog {
             Message.showException(this, ex);
         }
         return false;
+    }
+    
+    public boolean isSuccess(){
+        return this.isSuccess;
     }
     
     @SuppressWarnings("unchecked")
@@ -670,6 +680,7 @@ public class GantiPassword extends javax.swing.JDialog {
         
         // mengubah password
         if(this.gantiPassword()){
+            this.isSuccess = true;
             Message.showInformation(this, "Password berhasil diganti!");
             this.setVisible(false);
         }else{
@@ -710,10 +721,10 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_inpVerifikasiKeyTyped
 
     private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed
-//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            this.inpKonfPass.requestFocus();
-//        }
-//        this.validasiPassword(this.inpPassword.getText());
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            this.inpKonfPass.requestFocus();
+        }
+        this.validasiPassword(this.inpPassword.getText());
     }//GEN-LAST:event_inpPasswordKeyPressed
 
     private void inpPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyReleased
@@ -725,10 +736,10 @@ public class GantiPassword extends javax.swing.JDialog {
     }//GEN-LAST:event_inpPasswordKeyTyped
 
     private void inpKonfPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyPressed
-//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            btnGantiActionPerformed(null);
-//        }
-//        this.validasiKonfPassword(this.inpKonfPass.getText());
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnGantiActionPerformed(null);
+        }
+        this.validasiKonfPassword(this.inpKonfPass.getText());
     }//GEN-LAST:event_inpKonfPassKeyPressed
 
     private void inpKonfPassKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKonfPassKeyReleased
