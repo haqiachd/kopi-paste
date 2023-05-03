@@ -228,15 +228,5 @@ public class Validation {
         }
         return true;
     }
-    
-    public static void main(String[] args) {
-        
-        System.out.println(Validation.isShif("Admin", "no shif"));
-        System.out.println(Validation.isShif("Admin", "siang"));
-        System.out.println(Validation.isShif("Karyawan", "siang"));
-        System.out.println(Validation.isShif("karyawan", "malam"));
-        System.out.println(Validation.isShif("KARYAWAN", "no shif"));
-        
-    }
-    
+     
 }
