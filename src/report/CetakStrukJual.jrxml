@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="226" pageHeight="250" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a2a6dec3-4ed7-4fd2-b882-c5913dc25b14">
-	<property name="ireport.zoom" value="3.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Struk" language="groovy" pageWidth="226" pageHeight="1080" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" isIgnorePagination="true" uuid="a2a6dec3-4ed7-4fd2-b882-c5913dc25b14">
+	<property name="ireport.zoom" value="3.630000000000019"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="id_tr_jual" class="java.lang.String">
@@ -13,7 +13,10 @@
      transaksi_jual.`total_menu` AS transaksi_jual_total_menu,
      transaksi_jual.`total_harga` AS transaksi_jual_total_harga,
      transaksi_jual.`total_bayar` AS transaksi_jual_total_bayar,
+     transaksi_jual.`ttl_diskon` AS transaksi_jual_ttl_diskon,
      transaksi_jual.`total_kembalian` AS transaksi_jual_total_kembalian,
+     (transaksi_jual.`total_harga`-transaksi_jual.`ttl_diskon`) AS setelah_diskon,
+ (transaksi_jual.`total_bayar`-(transaksi_jual.`total_harga`-transaksi_jual.`ttl_diskon`)) AS kembalian,
      transaksi_jual.`tanggal` AS transaksi_jual_tanggal,
      detail_tr_jual.`id_tr_jual` AS detail_tr_jual_id_tr_jual,
      detail_tr_jual.`nama_menu` AS detail_tr_jual_nama_menu,
@@ -21,7 +24,11 @@
      detail_tr_jual.`jumlah` AS detail_tr_jual_jumlah,
      detail_tr_jual.`total_harga` AS detail_tr_jual_total_harga
 FROM
-     `transaksi_jual` transaksi_jual INNER JOIN `detail_tr_jual` detail_tr_jual ON transaksi_jual.`id_tr_jual` = detail_tr_jual.`id_tr_jual`
+     `transaksi_jual` transaksi_jual 
+INNER JOIN 
+     `detail_tr_jual` detail_tr_jual 
+ON 
+      transaksi_jual.`id_tr_jual` = detail_tr_jual.`id_tr_jual`
 WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 	</queryString>
 	<field name="transaksi_jual_id_tr_jual" class="java.lang.String"/>
@@ -29,7 +36,10 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 	<field name="transaksi_jual_total_menu" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_harga" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_bayar" class="java.lang.Integer"/>
+	<field name="transaksi_jual_ttl_diskon" class="java.lang.Integer"/>
 	<field name="transaksi_jual_total_kembalian" class="java.lang.Integer"/>
+	<field name="setelah_diskon" class="java.lang.Long"/>
+	<field name="kembalian" class="java.lang.Long"/>
 	<field name="transaksi_jual_tanggal" class="java.sql.Timestamp"/>
 	<field name="detail_tr_jual_id_tr_jual" class="java.lang.String"/>
 	<field name="detail_tr_jual_nama_menu" class="java.lang.String"/>
@@ -183,62 +193,111 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<summary>
-		<band height="61" splitType="Stretch">
+		<band height="114" splitType="Stretch">
 			<line>
 				<reportElement x="-10" y="0" width="207" height="1" uuid="81bf9552-cad1-4d20-941a-f75ab943ef78"/>
 			</line>
 			<textField>
-				<reportElement x="135" y="4" width="61" height="10" uuid="b19316b0-b681-45ad-82d5-5b522a31973d"/>
+				<reportElement x="135" y="21" width="62" height="10" uuid="b19316b0-b681-45ad-82d5-5b522a31973d"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transaksi_jual_total_harga}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="135" y="14" width="61" height="10" uuid="69ca4f26-9770-4a4e-af5a-1457837bda72"/>
+				<reportElement x="135" y="51" width="62" height="10" uuid="69ca4f26-9770-4a4e-af5a-1457837bda72"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transaksi_jual_total_bayar}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="135" y="24" width="61" height="10" uuid="39361e0f-bbef-4a94-acb7-681285776dde"/>
-				<textElement>
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{transaksi_jual_total_kembalian}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="11" y="4" width="124" height="10" uuid="598b287d-4014-476e-a983-3c3e73aa5195"/>
+				<reportElement x="11" y="11" width="124" height="10" uuid="598b287d-4014-476e-a983-3c3e73aa5195"/>
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Total Harga      Rp. ]]></text>
+				<text><![CDATA[Total Item             ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="11" y="14" width="124" height="10" uuid="8560c69d-1779-4a3a-8a9e-23de8a78b14c"/>
+				<reportElement x="11" y="51" width="124" height="10" uuid="8560c69d-1779-4a3a-8a9e-23de8a78b14c"/>
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Total Bayar      Rp. ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="11" y="24" width="124" height="10" uuid="8ed4ce81-e88b-4977-9b85-06fa38c7d978"/>
+				<reportElement x="11" y="61" width="124" height="10" uuid="8ed4ce81-e88b-4977-9b85-06fa38c7d978"/>
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Total Kembalian      Rp. ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="46" width="185" height="15" uuid="2a0dd322-5878-4406-b55f-757acb02b56f"/>
+				<reportElement x="1" y="82" width="185" height="12" uuid="2a0dd322-5878-4406-b55f-757acb02b56f"/>
 				<textElement textAlignment="Center">
 					<font size="9" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[----- Terima Kasih -----]]></text>
 			</staticText>
 			<line>
-				<reportElement x="-10" y="60" width="207" height="1" uuid="c55647ac-f4fa-4eb3-bac9-f55b9793e909"/>
+				<reportElement x="-10" y="81" width="207" height="1" uuid="c55647ac-f4fa-4eb3-bac9-f55b9793e909"/>
 			</line>
+			<staticText>
+				<reportElement x="11" y="31" width="124" height="10" uuid="c8582e9b-a7a1-4a12-bb5a-ea57719da82b"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Total Diskon      Rp. ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="136" y="31" width="61" height="10" uuid="8f64d843-daa4-4be9-94f3-2a38e46341bb"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{transaksi_jual_ttl_diskon}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="41" width="124" height="10" uuid="f8ad0e1f-824c-4439-a83d-f6c7a4e8e8a3"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Setelah Diskon      Rp. ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="136" y="41" width="61" height="10" uuid="9080205a-fbc2-4672-925c-1aef27c58ad4"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{setelah_diskon}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="21" width="124" height="10" uuid="2baa5ed0-c43c-4fb6-90c8-ba697ba0c691"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Total Harga      Rp. ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="135" y="11" width="11" height="10" uuid="a0671765-ea88-4bad-8506-588dc387f57f"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{transaksi_jual_total_menu}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="146" y="11" width="51" height="10" uuid="864835a0-5834-4c93-86e4-ad902ce781ca"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="136" y="61" width="61" height="10" uuid="d52083cc-e0b4-4b3c-baa2-392f175ee59f"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kembalian}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
