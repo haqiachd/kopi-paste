@@ -83,6 +83,10 @@ public class User extends Database{
         return false;
     }
     
+    public static boolean isLogin(){
+        return User.USERNAME != null;
+    }
+    
     public boolean isExistUsername(String username){
         try{
             // mengeksekusi query
