@@ -49,6 +49,7 @@ public class UserProfile extends javax.swing.JDialog {
         this.btnLogoutAccount.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnGantiPass.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnVerifikasi.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnVerifikasi.setVisible(false);
         
         this.showDataAkun();
     }
@@ -438,11 +439,12 @@ public class UserProfile extends javax.swing.JDialog {
         // cek apakah user menekan tombol yes
         if(status == JOptionPane.YES_OPTION){
             this.dispose();
+            this.frame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             // membuka window ganti password
             String email = this.valEmail.getText().replaceAll(": ", "");
-            System.out.println(email);
             GantiPassword g = new GantiPassword(null, true, email);
             g.setVisible(true);
+            this.frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }//GEN-LAST:event_btnGantiPassActionPerformed
 
