@@ -655,7 +655,7 @@ public class UpdateDataMenu extends javax.swing.JDialog {
     }//GEN-LAST:event_inpKodeBarcodeKeyReleased
 
     private void inpKodeBarcodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyTyped
-        this.txt.decimalOnly(evt);
+//        this.txt.decimalOnly(evt);
     }//GEN-LAST:event_inpKodeBarcodeKeyTyped
 
     private void inpKodeBarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKodeBarcodeKeyPressed

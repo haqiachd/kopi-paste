@@ -110,7 +110,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.inpNamaMenu.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpHarga.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
         this.inpJumlah.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0)); 
-        
+
         // set hidden button
         this.btnPembeli.setVisible(false);
         this.btnLogout.setVisible(false);
@@ -121,7 +121,8 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.btnLaporan.setVisible(false);
         }
         
-        this.inpJumlah.requestFocus();
+        this.inputMenu(true);
+        this.inpIdMenu.requestFocus();
     }
     
     public MenuTransaksiJual(String idTransaksi){
@@ -177,16 +178,16 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
      * Menampilkan data menu yang diplih
      */
     private void showMenuSelected(){
-
         try {
             // membuat query
-            String sql = "SELECT * FROM menu WHERE id_menu = '"+this.idMenu+"'";
+            String sql = "SELECT * FROM menu WHERE id_menu = '"+this.idMenu+"' OR id_barcode = '"+this.idMenu+"'";
             
             // mengeksekusqi query
             this.db.res = this.db.stat.executeQuery(sql);
 
             if(this.db.res.next()){
                 // mendapatkan data menu
+                this.idMenu = this.db.res.getString("id_menu"); // inisialisasi ulang id menu
                 this.namaMenu = this.db.res.getString("nama_menu");
                 this.jenisMenu = this.db.res.getString("jenis");
                 this.hargaMenu = this.db.res.getInt("harga");
@@ -194,11 +195,15 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 this.inpIdMenu.setText(idMenu);
                 this.inpNamaMenu.setText(namaMenu);
                 this.inpHarga.setText(txt.toMoneyCase(""+hargaMenu));
-//                this.inpJenis.setText(this.jenisMenu);
+            }else{
+                Message.showInformation(this, "ID Menu / Kode barcode tidak terdaftar!");
+                this.inputMenu(true);
+                this.inpIdMenu.setText("");
+                this.idMenu = null;
             }
         }catch(SQLException ex){
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error : " + ex.getMessage());
+            Message.showInformation(this, "Error : " + ex.getMessage());
         }
     }
     
@@ -331,6 +336,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void resetTransaksi(){
         // reset textfield dan data
         this.resetTambah();
+        this.inputMenu(true);
 //        this.inpJenis.setText("");
         this.inpDiskonToko.setText("");
         this.inpTotalHarga.setText("");
@@ -416,9 +422,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         // reset tabel dan textfield
         this.updateTabel();
         this.resetTambah();
-        
-        // alihkan fokus ke input total bayar
-        this.inpTotalBayar.requestFocus();
+        this.inputMenu(true);
     }
     
     private void editDataMenu(){
@@ -454,13 +458,11 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             
             // reset data menu
             this.resetTambah();
+            this.inputMenu(true);
             
             // reset button
             this.isEdit = false;
             this.changeButton();
-            
-            // alihkan fokus ke input total bayar
-            this.inpTotalBayar.requestFocus();
         }catch(NumberFormatException ex){
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Jumlah menu harus berupa Angka!");
@@ -742,6 +744,33 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.isUangCukup = true;
         }
     }
+    
+    private void inputMenu(boolean inputMenu){
+        if(inputMenu){
+            this.inpIdMenu.setEnabled(true);
+            this.inpIdMenu.setEditable(true);
+            this.inpIdMenu.requestFocus();
+        }else{
+            this.inpIdMenu.setEnabled(false);
+            this.inpIdMenu.setEditable(false);
+            this.inpJumlah.requestFocus();
+        }
+    }
+    
+    private void fromEnterKeyboard(){
+        // mendapatkan id menu dari textfield dan menampilkan datanya
+        this.idMenu = this.inpIdMenu.getText();
+        this.showMenuSelected();
+        
+        // cek id menu kosong atau tidak setelah menampilkan data menu
+        if (!this.idMenu.equals("") || this.idMenu != null) {
+            // jumlah akan otomatis menjadi 1 jika menerima input dari keyboard
+            this.inpJumlah.setText("1");
+            // menambahkan data menu kek tabel
+            this.tambahDataMenu();
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1155,6 +1184,17 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                 inpIdMenuMouseClicked(evt);
             }
         });
+        inpIdMenu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpIdMenuKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpIdMenuKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpIdMenuKeyTyped(evt);
+            }
+        });
 
         inpNamaMenu.setBackground(new java.awt.Color(248, 249, 250));
         inpNamaMenu.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -1482,9 +1522,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
                                         .addComponent(lblIdMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(inpNamaMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(inpNamaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(pnlContentLayout.createSequentialGroup()
-                                            .addComponent(inpIdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(inpIdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(inpCariMenu))))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1841,7 +1881,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         if (this.isUpdateTr) {
             // melakukan update transaksi
             if (this.updateTransaksi()) {
-                this.report.cetakStrukPenjualan(this.db.conn, this.idTransaksi);
+                this.report.cetakStrukPenjualan(this.db.conn, true, this.idTransaksi);
                 this.isUpdateTr = false;
                 this.isEdit = false;
                 this.changeButton();
@@ -1851,7 +1891,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         else {
             // melakukan transaksi baru
             if (this.transaksi()) {
-                this.report.cetakStrukPenjualan(this.db.conn, this.idTransaksi);
+                this.report.cetakStrukPenjualan(this.db.conn, true, this.idTransaksi);
                 this.isEdit = false;
                 this.changeButton();
                 this.resetTransaksi();
@@ -1901,13 +1941,14 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         if(konf == JOptionPane.YES_OPTION){
             this.hapusDataMenu();
             this.resetTambah();
+            this.inputMenu(true);
             this.isEdit = false;
             this.changeButton();
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void inpIdMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpIdMenuMouseClicked
-        this.inpCariMenuMouseClicked(evt);
+//        this.inpCariMenuMouseClicked(evt);
     }//GEN-LAST:event_inpIdMenuMouseClicked
 
     private void inpCariMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpCariMenuMouseClicked
@@ -2084,6 +2125,22 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private void inpDiskonTokoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpDiskonTokoMouseClicked
         JOptionPane.showMessageDialog(this, "Total harga akan terupdate otomatis saat menambahkan menu!!");
     }//GEN-LAST:event_inpDiskonTokoMouseClicked
+    
+    private void inpIdMenuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpIdMenuKeyTyped
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.fromEnterKeyboard();
+        }
+    }//GEN-LAST:event_inpIdMenuKeyTyped
+
+    private void inpIdMenuKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpIdMenuKeyReleased
+
+    }//GEN-LAST:event_inpIdMenuKeyReleased
+
+    private void inpIdMenuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpIdMenuKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.fromEnterKeyboard();
+        }
+    }//GEN-LAST:event_inpIdMenuKeyPressed
 
     /**
      * @param args the command line arguments
