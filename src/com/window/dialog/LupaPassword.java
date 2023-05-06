@@ -47,6 +47,11 @@ public class LupaPassword extends javax.swing.JDialog {
         this.inpEmail.requestFocus();
     }
     
+    /**
+     * Digunakan untuk mengecek apakah email valid atau tidak
+     * @param email
+     * @return 
+     */
     private boolean isValidEmail(String email) {
         return email.length() >= 10 && email.length() <= 60
                 && email.contains("@") && email.contains(".")
@@ -79,7 +84,6 @@ public class LupaPassword extends javax.swing.JDialog {
             this.inpEmail.setEditable(false);
             this.btnKirim.requestFocus();
         }
-        
     }
     
     private String getEmail(String usernameOrId){
@@ -319,6 +323,7 @@ public class LupaPassword extends javax.swing.JDialog {
             g.setVisible(true);
             if(g.isSuccess()){
                 this.isSuccess = true;
+                g.setVisible(false);
             }
             this.frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
