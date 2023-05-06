@@ -117,14 +117,19 @@ public class Laporan {
     }
     
     
-    public void cetakStrukPenjualan(Connection conn, String idTransaksi) {
+    public void cetakStrukPenjualan(Connection conn, boolean diskon, String idTransaksi) {
         try {
             // menyiapkan id transaksi
             HashMap parameter = new HashMap();
             parameter.put("id_tr_jual", idTransaksi);
 
             // meyiapkan jasper report
-            InputStream file = getClass().getResourceAsStream("/report/CetakStrukJual.jrxml");
+            InputStream file;
+            if(diskon){
+                file = getClass().getResourceAsStream("/report/CetakStrukJualDiskon.jrxml");
+            }else{
+                file = getClass().getResourceAsStream("/report/CetakStrukJual.jrxml");
+            }
             JasperDesign desain = JRXmlLoader.load(file);
             JasperReport report = JasperCompileManager.compileReport(desain);
             JasperPrint print = JasperFillManager.fillReport(report, parameter, conn);
@@ -167,5 +172,4 @@ public class Laporan {
             Message.showException(null, e);
         }
     }
-    
 }
