@@ -87,13 +87,17 @@
                                   <Component id="lblCol3" alignment="1" min="-2" pref="415" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
-                                  <Component id="lblCol4" min="-2" pref="415" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="pnlKontakDev" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="lblCopyright" min="-2" pref="471" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="182" pref="182" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblCol4" alignment="0" min="-2" pref="415" max="-2" attributes="0"/>
+                                      <Component id="lblCol5" min="-2" pref="415" max="-2" attributes="0"/>
+                                      <Component id="lblCol6" min="-2" pref="415" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -140,6 +144,10 @@
                           <Component id="lblCol3" min="-2" pref="34" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="lblCol4" min="-2" pref="34" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="lblCol5" min="-2" pref="34" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="lblCol6" min="-2" pref="34" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                           <Component id="pnlKontakDev" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -522,7 +530,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="1" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="  Mohammad Ilham Islamy"/>
+            <Property name="text" type="java.lang.String" value="  Atilah Lazuardi Azra"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol2MouseClicked"/>
@@ -538,7 +546,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="1" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="  Septian Yoga Pamungkas"/>
+            <Property name="text" type="java.lang.String" value="  Bagas Halilintar Pindhu P"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol3MouseClicked"/>
@@ -554,7 +562,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="1" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="  Widyasari Raisya Salsabilla"/>
+            <Property name="text" type="java.lang.String" value="  David Nila Abi Saputra"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol4MouseClicked"/>
@@ -573,6 +581,38 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Copyright &#xa9; 2022-2023. Cito Team. TIF Kampus&#xa0;3&#xa0;Polije. All Rights Reserved."/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblCol5">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="18" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="1" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="  Habib Dwi Febriansyah "/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol5MouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol5MouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol5MouseExited"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblCol6">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="18" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="1" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="  Widyasari Raisya Salsabilla"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol6MouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol6MouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCol6MouseExited"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

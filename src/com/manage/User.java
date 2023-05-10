@@ -131,6 +131,21 @@ public class User extends Database{
         }
         return false;
     }
+    
+    public boolean isExisEmail(String id){
+        try{
+            // megeksekusi query
+            super.res = super.stat.executeQuery("SELECT id_akun FROM akun WHERE id_akun = '"+id+"'");
+            
+            if(super.res.next()){
+                return true;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            Message.showException(null, ex);
+        }
+        return false;
+    }
  
     public static String getUsername(){
         return User.USERNAME;

@@ -73,6 +73,8 @@ public class InfoApp extends javax.swing.JDialog {
         lblCol3 = new javax.swing.JLabel();
         lblCol4 = new javax.swing.JLabel();
         lblCopyright = new javax.swing.JLabel();
+        lblCol5 = new javax.swing.JLabel();
+        lblCol6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -313,7 +315,7 @@ public class InfoApp extends javax.swing.JDialog {
 
         lblCol2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol2.setForeground(new java.awt.Color(0, 0, 1));
-        lblCol2.setText("  Mohammad Ilham Islamy");
+        lblCol2.setText("  Atilah Lazuardi Azra");
         lblCol2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCol2MouseClicked(evt);
@@ -328,7 +330,7 @@ public class InfoApp extends javax.swing.JDialog {
 
         lblCol3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol3.setForeground(new java.awt.Color(0, 0, 1));
-        lblCol3.setText("  Septian Yoga Pamungkas");
+        lblCol3.setText("  Bagas Halilintar Pindhu P");
         lblCol3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCol3MouseClicked(evt);
@@ -343,7 +345,7 @@ public class InfoApp extends javax.swing.JDialog {
 
         lblCol4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblCol4.setForeground(new java.awt.Color(0, 0, 1));
-        lblCol4.setText("  Widyasari Raisya Salsabilla");
+        lblCol4.setText("  David Nila Abi Saputra");
         lblCol4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCol4MouseClicked(evt);
@@ -360,6 +362,36 @@ public class InfoApp extends javax.swing.JDialog {
         lblCopyright.setForeground(new java.awt.Color(0, 0, 1));
         lblCopyright.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCopyright.setText("Copyright © 2022-2023. Cito Team. TIF Kampus 3 Polije. All Rights Reserved.");
+
+        lblCol5.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCol5.setForeground(new java.awt.Color(0, 0, 1));
+        lblCol5.setText("  Habib Dwi Febriansyah ");
+        lblCol5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCol5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCol5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCol5MouseExited(evt);
+            }
+        });
+
+        lblCol6.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblCol6.setForeground(new java.awt.Color(0, 0, 1));
+        lblCol6.setText("  Widyasari Raisya Salsabilla");
+        lblCol6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCol6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblCol6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblCol6MouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -395,12 +427,15 @@ public class InfoApp extends javax.swing.JDialog {
                                     .addComponent(lblCol1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(lblCol3, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addGap(182, 182, 182)
-                                .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblCopyright, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lblCopyright, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addGap(182, 182, 182)
+                                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblCol5, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblCol6, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -436,6 +471,10 @@ public class InfoApp extends javax.swing.JDialog {
                         .addComponent(lblCol3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblCol4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblCol5, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblCol6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23)
                         .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlMainLayout.createSequentialGroup()
@@ -602,12 +641,12 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void lblCol2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol2MouseEntered
         this.lblCol2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        this.lblCol2.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Mohammad Ilham Islamy</p></html>");
+        this.lblCol2.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Atilah Lazuardi Azra</p></html>");
     }//GEN-LAST:event_lblCol2MouseEntered
 
     private void lblCol2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol2MouseExited
         this.lblCol2.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        this.lblCol2.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Mohammad Ilham Islamy</p></html>");
+        this.lblCol2.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Atilah Lazuardi Azra</p></html>");
     }//GEN-LAST:event_lblCol2MouseExited
 
     private void lblCol3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseClicked
@@ -620,12 +659,12 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void lblCol3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseEntered
         this.lblCol3.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        this.lblCol3.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Septian Yoga Pamungkas</p></html>");
+        this.lblCol3.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Bagas Halilintar Pindhu P</p></html>");
     }//GEN-LAST:event_lblCol3MouseEntered
 
     private void lblCol3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseExited
         this.lblCol3.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        this.lblCol3.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Septian Yoga Pamungkas</p></html>");
+        this.lblCol3.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Bagas Halilintar Pindhu P</p></html>");
     }//GEN-LAST:event_lblCol3MouseExited
 
     private void lblCol4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseClicked
@@ -638,13 +677,37 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void lblCol4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseEntered
         this.lblCol4.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        this.lblCol4.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Widyasari Raisya Salsabilla</p></html>");
+        this.lblCol4.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;David Nila Abi Saputra</p></html>");
     }//GEN-LAST:event_lblCol4MouseEntered
 
     private void lblCol4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseExited
         this.lblCol4.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-        this.lblCol4.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Widyasari Raisya Salsabilla</p></html>");
+        this.lblCol4.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;David Nila Abi Saputra</p></html>");
     }//GEN-LAST:event_lblCol4MouseExited
+
+    private void lblCol5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol5MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblCol5MouseClicked
+
+    private void lblCol5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol5MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblCol5MouseEntered
+
+    private void lblCol5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol5MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblCol5MouseExited
+
+    private void lblCol6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol6MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblCol6MouseClicked
+
+    private void lblCol6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol6MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblCol6MouseEntered
+
+    private void lblCol6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol6MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblCol6MouseExited
 
     /**
      * @param args the command line arguments
@@ -698,6 +761,8 @@ public class InfoApp extends javax.swing.JDialog {
     private javax.swing.JLabel lblCol2;
     private javax.swing.JLabel lblCol3;
     private javax.swing.JLabel lblCol4;
+    private javax.swing.JLabel lblCol5;
+    private javax.swing.JLabel lblCol6;
     private javax.swing.JLabel lblColabolator;
     private javax.swing.JLabel lblCopyright;
     private javax.swing.JLabel lblDev;
