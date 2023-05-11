@@ -333,8 +333,8 @@ public class EditAkun extends javax.swing.JDialog {
         btnLogoutAccount.setBackground(new java.awt.Color(255, 0, 51));
         btnLogoutAccount.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         btnLogoutAccount.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogoutAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-sidemenu-logout.png"))); // NOI18N
-        btnLogoutAccount.setText("Batal");
+        btnLogoutAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-sidemenu-cancel.png"))); // NOI18N
+        btnLogoutAccount.setText(" Batal");
         btnLogoutAccount.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnLogoutAccountMouseEntered(evt);
@@ -367,7 +367,16 @@ public class EditAkun extends javax.swing.JDialog {
         btnGantiPass.setBackground(new java.awt.Color(51, 204, 0));
         btnGantiPass.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnGantiPass.setForeground(new java.awt.Color(255, 255, 255));
-        btnGantiPass.setText("Simpan");
+        btnGantiPass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/image/icons/ic-window-sidemenu-edit.png"))); // NOI18N
+        btnGantiPass.setText(" Simpan");
+        btnGantiPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnGantiPassMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnGantiPassMouseExited(evt);
+            }
+        });
         btnGantiPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGantiPassActionPerformed(evt);
@@ -446,7 +455,7 @@ public class EditAkun extends javax.swing.JDialog {
                             .addComponent(jSeparator1)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnGantiPass, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnGantiPass)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnLogoutAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(50, 50, 50))
@@ -509,14 +518,13 @@ public class EditAkun extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblStatusEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(inpEmail)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)))
+                    .addComponent(inpEmail)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(55, 55, 55)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -602,6 +610,14 @@ public class EditAkun extends javax.swing.JDialog {
     private void inpEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpEmailKeyTyped
         this.validasi(this.inpEmail.getText());
     }//GEN-LAST:event_inpEmailKeyTyped
+
+    private void btnGantiPassMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGantiPassMouseEntered
+        this.btnGantiPass.setBackground(new Color(0,0,0));
+    }//GEN-LAST:event_btnGantiPassMouseEntered
+
+    private void btnGantiPassMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGantiPassMouseExited
+        this.btnGantiPass.setBackground(new Color(51,204,0));
+    }//GEN-LAST:event_btnGantiPassMouseExited
 
     public static void main(String args[]) {
 

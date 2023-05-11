@@ -63,11 +63,11 @@
                               <Component id="jSeparator1" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="btnEditAkun" min="-2" pref="129" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="btnEditAkun" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="btnGantiPass" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="btnLogoutAccount" min="-2" pref="143" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btnLogoutAccount" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="50" pref="50" max="-2" attributes="0"/>
@@ -79,39 +79,37 @@
                                   <EmptySpace pref="54" max="32767" attributes="0"/>
                                   <Component id="lblClose" min="-2" pref="56" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lineTop" min="-2" pref="351" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="jLabel5" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jLabel3" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jLabel1" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jLabel7" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jLabel10" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jLabel12" alignment="1" min="-2" pref="174" max="-2" attributes="0"/>
-                                          <Component id="jLabel8" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jLabel14" alignment="1" min="-2" pref="174" max="-2" attributes="0"/>
-                                          <Component id="jLabel4" alignment="1" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                                                      <Component id="valUsername" alignment="0" min="-2" pref="423" max="-2" attributes="0"/>
-                                                      <Component id="valId" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
-                                                      <Component id="valRfid" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Component id="valNama" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
-                                                  <Component id="valNoTelp" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
-                                                  <Component id="valShif" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
-                                                  <Component id="valEmail" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
-                                                  <Component id="valLevel" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
+                              <Component id="lineTop" min="-2" pref="351" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jLabel5" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jLabel3" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jLabel1" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jLabel7" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jLabel10" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jLabel12" alignment="1" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="jLabel8" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="jLabel14" alignment="1" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="jLabel4" alignment="1" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                                  <Component id="valUsername" alignment="0" min="-2" pref="423" max="-2" attributes="0"/>
+                                                  <Component id="valId" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
+                                                  <Component id="valRfid" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                              <Component id="valNama" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
+                                              <Component id="valNoTelp" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
+                                              <Component id="valShif" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
+                                              <Component id="valEmail" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
+                                              <Component id="valLevel" alignment="1" min="-2" pref="423" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="valAlamat" alignment="0" max="32767" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
+                                      <Component id="valAlamat" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -322,7 +320,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/resources/image/icons/ic-window-sidemenu-logout.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Logout"/>
+            <Property name="text" type="java.lang.String" value=" Logout"/>
           </Properties>
           <Events>
             <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnLogoutAccountMouseEntered"/>
@@ -357,9 +355,14 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ganti Password"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/image/icons/ic-window-sidemenu-pass.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value=" Ganti Password"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnGantiPassMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnGantiPassMouseExited"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGantiPassActionPerformed"/>
           </Events>
         </Component>
@@ -432,9 +435,14 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Edit Akun"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/image/icons/ic-window-sidemenu-edit.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value=" Edit Akun"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnEditAkunMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnEditAkunMouseExited"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditAkunActionPerformed"/>
           </Events>
         </Component>

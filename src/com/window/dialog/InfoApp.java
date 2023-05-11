@@ -123,7 +123,7 @@ public class InfoApp extends javax.swing.JDialog {
 
         valVersi.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         valVersi.setForeground(new java.awt.Color(0, 0, 1));
-        valVersi.setText(": 1.1");
+        valVersi.setText(": 1.2");
 
         valDev.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         valDev.setForeground(new java.awt.Color(0, 0, 1));
@@ -478,7 +478,7 @@ public class InfoApp extends javax.swing.JDialog {
                         .addGap(23, 23, 23)
                         .addComponent(pnlKontakDev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 555, Short.MAX_VALUE)
                         .addComponent(lblCopyright)))
                 .addGap(24, 24, 24))
         );
@@ -515,7 +515,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void iconGmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconGmailMouseClicked
         try {
-            this.inet.openLink("mailto:hakiahmad756@gmail.com");
+            this.inet.openLink("mailto:kopipaste.app@gmail.com");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -555,7 +555,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void iconTeleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconTeleMouseClicked
         try {
-            this.inet.openLink("https://t.me/haqiachd");
+            this.inet.openLink("https://t.me/cito_team");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -633,7 +633,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void lblCol2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol2MouseClicked
         try {
-            this.inet.openLink("https://wa.me/6285784626830");
+            this.inet.openLink("https://wa.me/6281335315751");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -651,7 +651,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void lblCol3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol3MouseClicked
         try {
-            this.inet.openLink("https://wa.me/6285806531609");
+            this.inet.openLink("https://wa.me/6282299518956");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -669,7 +669,7 @@ public class InfoApp extends javax.swing.JDialog {
 
     private void lblCol4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol4MouseClicked
         try {
-            this.inet.openLink("https://wa.me/6289637652216");
+            this.inet.openLink("https://wa.me/62895367798107");
         } catch (IOException | URISyntaxException ex) {
             Message.showException(this, ex);
         }
@@ -686,27 +686,39 @@ public class InfoApp extends javax.swing.JDialog {
     }//GEN-LAST:event_lblCol4MouseExited
 
     private void lblCol5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol5MouseClicked
-        // TODO add your handling code here:
+        try {
+            this.inet.openLink("https://wa.me/6285708307620");
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
     }//GEN-LAST:event_lblCol5MouseClicked
 
     private void lblCol5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol5MouseEntered
-        // TODO add your handling code here:
+        this.lblCol5.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblCol5.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Habib Dwi Febriansyah</p></html>");
     }//GEN-LAST:event_lblCol5MouseEntered
 
     private void lblCol5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol5MouseExited
-        // TODO add your handling code here:
+        this.lblCol5.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblCol5.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Habib Dwi Febriansyah</p></html>");
     }//GEN-LAST:event_lblCol5MouseExited
 
     private void lblCol6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol6MouseClicked
-        // TODO add your handling code here:
+        try {
+            this.inet.openLink("https://wa.me/6289637652216");
+        } catch (IOException | URISyntaxException ex) {
+            Message.showException(this, ex);
+        }
     }//GEN-LAST:event_lblCol6MouseClicked
 
     private void lblCol6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol6MouseEntered
-        // TODO add your handling code here:
+        this.lblCol6.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.lblCol6.setText("<html><p style=\"text-decoration:underline; color:rgb(15,98,230);\">&nbsp;&nbsp;Widyasari Raisya Salsabilla</p></html>");
     }//GEN-LAST:event_lblCol6MouseEntered
 
     private void lblCol6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCol6MouseExited
-        // TODO add your handling code here:
+        this.lblCol6.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.lblCol6.setText("<html><p style=\"text-decoration:none; color:rgb(0,0,0);\">&nbsp;&nbsp;Widyasari Raisya Salsabilla</p></html>");
     }//GEN-LAST:event_lblCol6MouseExited
 
     /**
