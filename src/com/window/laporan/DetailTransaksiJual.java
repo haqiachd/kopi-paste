@@ -115,7 +115,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         
         try{
             // membuat query
-        String sql = "SELECT tr.id_tr_jual, tr.nama_karyawan, tr.total_menu, tr.total_harga, tr.total_bayar, tr.total_kembalian,  "
+        String sql = "SELECT tr.id_tr_jual, tr.nama_karyawan, tr.total_menu, tr.total_harga, tr.total_bayar, tr.ttl_diskon, tr.total_kembalian,  "
                    + "dtr.nama_menu, dtr.jenis_menu, dtr.harga_menu, dtr.jumlah, dtr.total_harga "
                    + "FROM transaksi_jual AS tr "
                    + "JOIN detail_tr_jual AS dtr "
@@ -149,12 +149,19 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                 
                 if(this.db.res.isLast()){
                     int jumlah = this.db.res.getInt("tr.total_menu"), 
-                        harga = this.db.res.getInt("tr.total_harga");
+                        harga = this.db.res.getInt("tr.total_harga"),
+                        diskon = this.db.res.getInt("tr.ttl_diskon");
 
                     // menampilkan total jumlah pesanan dan total harga
                     model.addRow(
                         new Object[]{
                             "", "Total", "", jumlah, txt.toMoneyCase(harga)
+                        }
+                    );
+                    // menampilkan total jumlah pesanan dan total harga
+                    model.addRow(
+                        new Object[]{
+                            "", "Total Diskon", "", "", txt.toMoneyCase(diskon)
                         }
                     );
                     // menampilkan total bayar
@@ -179,7 +186,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
             this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-1, 35);
             this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-2, 35);
             this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-3, 35);
-            this.tabelDetail.setRowSelectionInterval(this.tabelDetail.getRowCount()-1, this.tabelDetail.getRowCount()-3);
+            this.tabelDetail.setRowSelectionInterval(this.tabelDetail.getRowCount()-1, this.tabelDetail.getRowCount()-4);
         }catch(SQLException ex){
             ex.printStackTrace();
             Message.showException(this, ex);
@@ -341,7 +348,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DetailTransaksiJual dialog = new DetailTransaksiJual(new javax.swing.JFrame(), true, "TRJ0174");
+                DetailTransaksiJual dialog = new DetailTransaksiJual(new javax.swing.JFrame(), true, "TRJ00340");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

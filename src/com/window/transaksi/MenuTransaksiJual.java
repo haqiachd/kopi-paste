@@ -225,6 +225,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         this.inpJumlah.setText(Integer.toString(this.jumlah));
         
         this.inpJumlah.requestFocus();
+        this.inputMenu(false);
     }
     
     private void updateTabel(){
@@ -396,6 +397,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             // menambahkan data menu
             this.tambahDataMenu();
         }
+        
+        // update status total bayar
+        this.hitungKembalian();
     }
     
     // untuk menambahkan data menu
@@ -541,7 +545,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     private boolean transaksi(){
         try{
             // membuat query
-            String sql = "INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO transaksi_jual VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             this.idTransaksi = this.createID();
             
             // membuat preparedstatement
@@ -552,12 +556,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.db.pst.setString(2, User.getIdAkun());
             this.db.pst.setString(3, User.getNamaUser());
             this.db.pst.setInt(4, this.getTotalJumlahMenu());
-            this.db.pst.setInt(5, this.ttlSeluruahHarga);
+            this.db.pst.setInt(5, this.getTotalHarga());
             this.db.pst.setString(6, this.idDiskon);
             this.db.pst.setInt(7, this.diskonToko);
-            this.db.pst.setInt(8, this.ttlBayar);
-            this.db.pst.setInt(9, this.ttlKembalian);
-            this.db.pst.setString(10, waktu.getCurrentDateTime());
+            this.db.pst.setInt(8, this.ttlSeluruahHarga);
+            this.db.pst.setInt(9, this.ttlBayar);
+            this.db.pst.setInt(10, this.ttlKembalian);
+            this.db.pst.setString(11, waktu.getCurrentDateTime());
             
             // eksekusi query
             boolean isSuccess = this.db.pst.executeUpdate() > 0;
@@ -675,10 +680,10 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
                 // update id akun, nama karyawan, total menu, total harga dan tanggal
                 String sql = String.format(
-                        "UPDATE transaksi_jual SET id_akun = '%s', nama_karyawan = '%s', total_menu = %d, total_harga = %d, ttl_diskon = %d, "
+                        "UPDATE transaksi_jual SET id_akun = '%s', nama_karyawan = '%s', total_menu = %d, total_harga = %d, sub_total = %d, ttl_diskon = %d, "
                       + "total_bayar = %d, total_kembalian = %d, tanggal = '%s' "
                       + "WHERE id_tr_jual = '%s' ", 
-                        User.getIdAkun(), User.getNamaUser(), this.getTotalJumlahMenu(), this.ttlSeluruahHarga, this.diskonToko, this.ttlBayar, this.ttlKembalian,  this.waktu.getCurrentDateTime(), this.inpIdTransaksi.getText()
+                        User.getIdAkun(), User.getNamaUser(), this.getTotalJumlahMenu(), this.getTotalHarga(), this.ttlSeluruahHarga, this.diskonToko, this.ttlBayar, this.ttlKembalian,  this.waktu.getCurrentDateTime(), this.inpIdTransaksi.getText()
                 );
                 
                 System.out.println(sql);
@@ -1867,6 +1872,9 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBayarMouseExited
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        
+        this.isUangCukup = Integer.parseInt(this.inpTotalBayar.getText()) >= this.ttlSeluruahHarga;
+        
         if(this.tabelTr.getRowCount() <= 0){
             Message.showWarning(this, "Tidak ada menu yang dipilih!");
             return;
@@ -1881,7 +1889,12 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         if (this.isUpdateTr) {
             // melakukan update transaksi
             if (this.updateTransaksi()) {
-                this.report.cetakStrukPenjualan(this.db.conn, true, this.idTransaksi);
+                // mencetak diskon
+                if(this.inpDiskonToko.getText().equalsIgnoreCase("Tidak ada diskon")){
+                    this.report.cetakStrukPenjualan(this.db.conn, false, this.idTransaksi);
+                }else{
+                    this.report.cetakStrukPenjualan(this.db.conn, true, this.idTransaksi);
+                }
                 this.isUpdateTr = false;
                 this.isEdit = false;
                 this.changeButton();
@@ -1891,7 +1904,13 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
         else {
             // melakukan transaksi baru
             if (this.transaksi()) {
-                this.report.cetakStrukPenjualan(this.db.conn, true, this.idTransaksi);
+                // mencetak diskon
+                if(this.inpDiskonToko.getText().equalsIgnoreCase("Tidak ada diskon")){
+                    this.report.cetakStrukPenjualan(this.db.conn, false, this.idTransaksi);
+                }else{
+                    this.report.cetakStrukPenjualan(this.db.conn, true, this.idTransaksi);
+                }
+                
                 this.isEdit = false;
                 this.changeButton();
                 this.resetTransaksi();
@@ -1944,6 +1963,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.inputMenu(true);
             this.isEdit = false;
             this.changeButton();
+            this.hitungKembalian();
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
@@ -1965,6 +1985,7 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
             this.inpJumlah.requestFocus();
             this.isEdit = false;
             this.changeButton();
+            this.inputMenu(false);
         }
     }//GEN-LAST:event_inpCariMenuMouseClicked
 

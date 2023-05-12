@@ -73,11 +73,11 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
                 new String[]{
-                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Pesanan", "Total Harga", "Tanggal", "Waktu"
+                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Pesanan", "Sub Total", "Total Diskon", "Tanggal", "Waktu"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             @Override
@@ -92,14 +92,16 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         columnModel.getColumn(0).setMaxWidth(90);
         columnModel.getColumn(1).setPreferredWidth(65);
         columnModel.getColumn(1).setMaxWidth(65);
-        columnModel.getColumn(2).setPreferredWidth(260);
-        columnModel.getColumn(2).setMaxWidth(260);
+        columnModel.getColumn(2).setPreferredWidth(210);
+        columnModel.getColumn(2).setMaxWidth(210);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
-        columnModel.getColumn(4).setPreferredWidth(140);
-        columnModel.getColumn(4).setMaxWidth(140);
-        columnModel.getColumn(5).setPreferredWidth(210);
-        columnModel.getColumn(5).setMaxWidth(210);
+        columnModel.getColumn(4).setPreferredWidth(120);
+        columnModel.getColumn(4).setMaxWidth(120);
+        columnModel.getColumn(5).setPreferredWidth(120);
+        columnModel.getColumn(5).setMaxWidth(120);
+        columnModel.getColumn(6).setPreferredWidth(200);
+        columnModel.getColumn(6).setMaxWidth(200);
 //        columnModel.getColumn(5).setPreferredWidth(210);
 //        columnModel.getColumn(5).setMaxWidth(210);
     }
@@ -111,7 +113,7 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         
         try{
             // membuat query
-            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan,  trj.total_menu, trj.total_harga, DATE(trj.tanggal), DAYNAME(trj.tanggal), TIME(trj.tanggal) AS waktu " +
+            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan,  trj.total_menu, trj.total_harga, trj.ttl_diskon, DATE(trj.tanggal), DAYNAME(trj.tanggal), TIME(trj.tanggal) AS waktu " +
                         "FROM transaksi_jual AS trj " +
                         "WHERE MONTH(tanggal) = "+this.bulan+" AND YEAR(tanggal) = " + this.tahun + 
                         " ORDER BY trj.id_tr_jual DESC";
@@ -130,8 +132,9 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
                         this.db.res.getString(3),
                         this.db.res.getString(4) + " Pesanan",
                         this.text.toMoneyCase(this.db.res.getString(5)),
-                        this.waktu.getNamaHariInIndonesian(this.db.res.getString(7)) + ", " + this.text.toDateCase(this.db.res.getString(6)),
-                        this.db.res.getString(8)
+                        this.text.toMoneyCase(this.db.res.getString(6)),
+                        this.waktu.getNamaHariInIndonesian(this.db.res.getString(8)) + ", " + this.text.toDateCase(this.db.res.getString(7)),
+                        this.db.res.getString(9)
                     }
                 );
             }
@@ -181,7 +184,7 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
             id = this.cariData.getValueAt(i, 0).toString().toLowerCase();
             nama = this.cariData.getValueAt(i, 1).toString().toLowerCase();
             idKy = this.cariData.getValueAt(i, 2).toString().toLowerCase();
-            tanggal = this.cariData.getValueAt(i, 5).toString().toLowerCase();
+            tanggal = this.cariData.getValueAt(i, 6).toString().toLowerCase();
             
             // pengecekan id, nama dan tanggal
             if(id.contains(key) || idKy.contains(key) || nama.contains(key) || tanggal.contains(key)){
@@ -194,7 +197,8 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
                         this.cariData.getValueAt(i, 3),
                         this.cariData.getValueAt(i, 4),
                         this.cariData.getValueAt(i, 5),
-                        this.cariData.getValueAt(i, 6)
+                        this.cariData.getValueAt(i, 6),
+                        this.cariData.getValueAt(i, 7)
                     }
                 );
             }
