@@ -83,7 +83,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         this.tabelDetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
             new String [] {
-                "ID Transaksi", "Nama Menu", "Harga", "Jumlah", "Total Harga"
+                "ID Transaksi", "Nama Menu", "Harga", "Qty", "Total Harga"
             }
         ) {
             boolean[] canEdit = new boolean[]{
@@ -104,8 +104,8 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
 //        columnModel.getColumn(1).setMaxWidth(190);
         columnModel.getColumn(2).setPreferredWidth(120);
         columnModel.getColumn(2).setMaxWidth(120);
-        columnModel.getColumn(3).setPreferredWidth(60);
-        columnModel.getColumn(3).setMaxWidth(60);
+        columnModel.getColumn(3).setPreferredWidth(40);
+        columnModel.getColumn(3).setMaxWidth(40);
     }
     
     private void showDetailTransaksi(){
@@ -115,7 +115,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         
         try{
             // membuat query
-        String sql = "SELECT tr.id_tr_jual, tr.nama_karyawan, tr.total_menu, tr.total_harga, tr.total_bayar, tr.ttl_diskon, tr.total_kembalian,  "
+        String sql = "SELECT tr.id_tr_jual, tr.nama_karyawan, tr.total_menu, tr.sub_total, tr.total_harga, tr.total_bayar, tr.ttl_diskon, tr.total_kembalian,  "
                    + "dtr.nama_menu, dtr.jenis_menu, dtr.harga_menu, dtr.jumlah, dtr.total_harga "
                    + "FROM transaksi_jual AS tr "
                    + "JOIN detail_tr_jual AS dtr "
@@ -149,19 +149,24 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                 
                 if(this.db.res.isLast()){
                     int jumlah = this.db.res.getInt("tr.total_menu"), 
-                        harga = this.db.res.getInt("tr.total_harga"),
+                        sub_total = this.db.res.getInt("tr.sub_total"),
+                        ttl_harga = this.db.res.getInt("tr.total_harga"),
                         diskon = this.db.res.getInt("tr.ttl_diskon");
-
+                    
                     // menampilkan total jumlah pesanan dan total harga
-                    model.addRow(
-                        new Object[]{
-                            "", "Total", "", jumlah, txt.toMoneyCase(harga)
+                    model.addRow(new Object[]{
+                            "", "Sub Total", "", jumlah, txt.toMoneyCase(sub_total)
                         }
                     );
                     // menampilkan total jumlah pesanan dan total harga
                     model.addRow(
                         new Object[]{
                             "", "Total Diskon", "", "", txt.toMoneyCase(diskon)
+                        }
+                    );
+                    // menampilkan total jumlah pesanan dan total harga
+                    model.addRow(new Object[]{
+                            "", "Total Harga", "", "", txt.toMoneyCase(ttl_harga)
                         }
                     );
                     // menampilkan total bayar
@@ -186,7 +191,9 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
             this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-1, 35);
             this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-2, 35);
             this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-3, 35);
-            this.tabelDetail.setRowSelectionInterval(this.tabelDetail.getRowCount()-1, this.tabelDetail.getRowCount()-4);
+            this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-4, 35);
+            this.tabelDetail.setRowHeight(this.tabelDetail.getRowCount()-5, 35);
+            this.tabelDetail.setRowSelectionInterval(this.tabelDetail.getRowCount()-1, this.tabelDetail.getRowCount()-5);
         }catch(SQLException ex){
             ex.printStackTrace();
             Message.showException(this, ex);

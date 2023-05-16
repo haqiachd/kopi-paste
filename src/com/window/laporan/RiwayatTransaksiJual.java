@@ -96,10 +96,10 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         columnModel.getColumn(2).setMaxWidth(210);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
-        columnModel.getColumn(4).setPreferredWidth(120);
-        columnModel.getColumn(4).setMaxWidth(120);
-        columnModel.getColumn(5).setPreferredWidth(120);
-        columnModel.getColumn(5).setMaxWidth(120);
+        columnModel.getColumn(4).setPreferredWidth(130);
+        columnModel.getColumn(4).setMaxWidth(130);
+        columnModel.getColumn(5).setPreferredWidth(130);
+        columnModel.getColumn(5).setMaxWidth(130);
         columnModel.getColumn(6).setPreferredWidth(200);
         columnModel.getColumn(6).setMaxWidth(200);
 //        columnModel.getColumn(5).setPreferredWidth(210);
@@ -113,7 +113,7 @@ public class RiwayatTransaksiJual extends javax.swing.JDialog {
         
         try{
             // membuat query
-            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan,  trj.total_menu, trj.total_harga, trj.ttl_diskon, DATE(trj.tanggal), DAYNAME(trj.tanggal), TIME(trj.tanggal) AS waktu " +
+            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan, trj.total_menu, trj.sub_total, trj.ttl_diskon, DATE(trj.tanggal), DAYNAME(trj.tanggal), TIME(trj.tanggal) AS waktu " +
                         "FROM transaksi_jual AS trj " +
                         "WHERE MONTH(tanggal) = "+this.bulan+" AND YEAR(tanggal) = " + this.tahun + 
                         " ORDER BY trj.id_tr_jual DESC";

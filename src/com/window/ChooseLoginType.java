@@ -14,6 +14,7 @@ public class ChooseLoginType extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        this.setIconImage(Gambar.getWindowIcon());
     }
 
     @SuppressWarnings("unchecked")

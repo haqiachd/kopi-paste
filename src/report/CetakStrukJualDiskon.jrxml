@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Struk" language="groovy" pageWidth="226" pageHeight="425" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" isIgnorePagination="true" uuid="a2a6dec3-4ed7-4fd2-b882-c5913dc25b14">
-	<property name="ireport.zoom" value="3.300000000000046"/>
+	<property name="ireport.zoom" value="3.0000000000000484"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="308"/>
 	<parameter name="id_tr_jual" class="java.lang.String">
 		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
@@ -204,14 +204,14 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 				<reportElement x="-20" y="0" width="137" height="1" uuid="81bf9552-cad1-4d20-941a-f75ab943ef78"/>
 			</line>
 			<textField>
-				<reportElement x="76" y="18" width="41" height="10" uuid="b19316b0-b681-45ad-82d5-5b522a31973d"/>
+				<reportElement x="77" y="18" width="40" height="10" uuid="b19316b0-b681-45ad-82d5-5b522a31973d"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sub_total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="76" y="48" width="41" height="10" uuid="69ca4f26-9770-4a4e-af5a-1457837bda72"/>
+				<reportElement x="77" y="48" width="40" height="10" uuid="69ca4f26-9770-4a4e-af5a-1457837bda72"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
@@ -287,7 +287,7 @@ WHERE transaksi_jual.id_tr_jual = $P{id_tr_jual}]]>
 				<text><![CDATA[Sub Total      Rp. ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="76" y="8" width="11" height="10" uuid="a0671765-ea88-4bad-8506-588dc387f57f"/>
+				<reportElement x="77" y="8" width="10" height="10" uuid="a0671765-ea88-4bad-8506-588dc387f57f"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>

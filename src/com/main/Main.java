@@ -13,12 +13,9 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run(){
-//                new com.koneksi.TugasCrud().setVisible(true);
+                // membuka window pilih tipe login
                 new com.window.ChooseLoginType().setVisible(true);
-//                new com.window.LoginWindow().setVisible(true);
-
             }
         });
-        
     }
 }

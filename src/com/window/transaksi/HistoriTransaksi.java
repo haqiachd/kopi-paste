@@ -119,11 +119,11 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         this.tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
                 new String[]{
-                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Pesanan", "Total Harga", "Total Bayar", "Total Kembalian", "Waktu"
+                    "ID Transaksi", "ID Akun", "Nama Karyawan", "Total Pesanan", "Sub Total", "Total Diskon", "Total Bayar", "Total Kembalian", "Waktu"
                 }
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             @Override
@@ -138,8 +138,8 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         columnModel.getColumn(0).setMaxWidth(90);
         columnModel.getColumn(1).setPreferredWidth(65);
         columnModel.getColumn(1).setMaxWidth(65);
-        columnModel.getColumn(2).setPreferredWidth(260);
-        columnModel.getColumn(2).setMaxWidth(260);
+        columnModel.getColumn(2).setPreferredWidth(230);
+        columnModel.getColumn(2).setMaxWidth(230);
         columnModel.getColumn(3).setPreferredWidth(100);
         columnModel.getColumn(3).setMaxWidth(100);
         columnModel.getColumn(4).setPreferredWidth(140);
@@ -148,6 +148,8 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         columnModel.getColumn(5).setMaxWidth(140);
         columnModel.getColumn(6).setPreferredWidth(140);
         columnModel.getColumn(6).setMaxWidth(140);
+        columnModel.getColumn(7).setPreferredWidth(140);
+        columnModel.getColumn(7).setMaxWidth(140);
 //        columnModel.getColumn(5).setPreferredWidth(210);
 //        columnModel.getColumn(5).setMaxWidth(210);
     }
@@ -159,7 +161,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         
         try{
             // membuat query
-            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan,  trj.total_menu, trj.total_harga, trj.total_bayar, trj.total_kembalian, TIME(trj.tanggal) AS waktu " +
+            String sql = "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan,  trj.total_menu, trj.sub_total, trj.ttl_diskon, trj.total_bayar, trj.total_kembalian, TIME(trj.tanggal) AS waktu " +
                         "FROM transaksi_jual AS trj " +
                         "WHERE DATE(trj.tanggal) = '" + this.tanggal + "' " + 
                         " ORDER BY trj.tanggal DESC";
@@ -179,7 +181,8 @@ public class HistoriTransaksi extends javax.swing.JDialog {
                         this.text.toMoneyCase(this.db.res.getInt(5)),
                         this.text.toMoneyCase(this.db.res.getInt(6)),
                         this.text.toMoneyCase(this.db.res.getInt(7)),
-                        this.db.res.getString(8)
+                        this.text.toMoneyCase(this.db.res.getInt(8)),
+                        this.db.res.getString(9)
                     }
                 );
             }

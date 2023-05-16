@@ -151,7 +151,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         try{
             // query untuk mengambil data laporan
             String sql = String.format(
-                    "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan, trj.total_menu, trj.total_harga, trj.tanggal, trj.ttl_diskon, DAYNAME(trj.tanggal) AS hari, TIME(trj.tanggal) AS waktu "
+                    "SELECT trj.id_tr_jual, trj.id_akun, trj.nama_karyawan, trj.total_menu, trj.sub_total, trj.tanggal, trj.ttl_diskon, DAYNAME(trj.tanggal) AS hari, TIME(trj.tanggal) AS waktu "
                   + "FROM transaksi_jual AS trj "
                   + kondisi 
                   + " ORDER BY trj.id_tr_jual DESC "
@@ -171,7 +171,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
                         this.db.res.getString("trj.id_akun"),
                         this.db.res.getString("trj.nama_karyawan"),
                         this.db.res.getString("trj.total_menu") + " Pesanan", 
-                        txt.toMoneyCase(this.db.res.getString("trj.total_harga")), 
+                        txt.toMoneyCase(this.db.res.getString("trj.sub_total")), 
                         txt.toMoneyCase(this.db.res.getString("trj.ttl_diskon")),
                         waktu.getNamaHariInIndonesian(this.db.res.getString("hari")) + ", " + txt.toDateCase(this.db.res.getString("tanggal")),
                         this.db.res.getString("waktu")
