@@ -198,12 +198,14 @@ public class MenuTransaksiBeli extends javax.swing.JFrame {
         // mendapatkan data bahan
         this.idBahan = this.tabelTr.getValueAt(row, 1).toString();
         this.namaBahan = this.tabelTr.getValueAt(row, 2).toString();
+        this.jenisBahan = this.tabelTr.getValueAt(row, 3).toString();
         this.hargaBahan = Integer.parseInt(this.txt.removeMoneyCase(this.tabelTr.getValueAt(row, 6).toString()));
         this.jumlah = Float.parseFloat(this.tabelTr.getValueAt(row, 4).toString());
         
         // menampilkan data bahan
         this.inpIdBahan.setText(this.idBahan);
         this.inpNamaBahan.setText(this.namaBahan);
+        this.inpJenisBahan.setText(this.jenisBahan);
         this.inpHarga.setText(Integer.toString(this.hargaBahan));
         this.inpJumlah.setText(Float.toString(this.jumlah));
         this.inpStokSatuan.setText(this.tabelTr.getValueAt(row, 5).toString());

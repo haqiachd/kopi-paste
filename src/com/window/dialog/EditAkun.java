@@ -32,7 +32,7 @@ public class EditAkun extends javax.swing.JDialog {
     
     private final JFrame frame;
     
-    private final String email;
+    private final String email, noHp;
     
     private boolean isVerif;
     
@@ -65,6 +65,7 @@ public class EditAkun extends javax.swing.JDialog {
         
         this.showDataAkun();
         this.email = this.inpEmail.getText();
+        this.noHp = this.inpEmail.getText();
     }
     
     @Override
@@ -189,11 +190,16 @@ public class EditAkun extends javax.swing.JDialog {
             return;
         }else if(!Validation.isNoHp(this.inpNoHp.getText())){
             return;
+        }else if(!this.noHp.equalsIgnoreCase(this.inpNoHp.getText())){
+            if(this.us.isExistNoHp(this.inpNoHp.getText())){
+                Message.showWarning(this, "Nomor Hp tersebut sudah terpakai!");
+                return;
+            }
         }
         else if(!Validation.isEmail(this.inpEmail.getText())){
             return;
         }else if(!this.email.equalsIgnoreCase(this.inpEmail.getText())){
-            if(this.us.isExisEmail(this.inpEmail.getText())){
+            if(this.us.isExistEmail(this.inpEmail.getText())){
                 Message.showWarning(this, "Email tersebut sudah terpakai!");
                 return;
             }

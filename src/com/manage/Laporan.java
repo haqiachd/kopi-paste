@@ -29,7 +29,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author Achmad Baihaqi
  */
 public class Laporan {
-    
+        
     public void cetakPdf(JTable table, String judul){
         try {
             // set header dan footer
@@ -94,6 +94,10 @@ public class Laporan {
     }
     
     private void showJasperReport(String jasperFile, Connection conn){
+            if(!System.getProperties().get("java.version").toString().contains("1.")){
+                Message.showWarning(this, "Tidak bisa menampilkan struk, Versi java Anda > 8");
+                return;
+            }
         try{
             // menyiapkan jasper report
             JasperPrint jprint = JasperFillManager.fillReport(jasperFile, null, conn);
@@ -115,10 +119,16 @@ public class Laporan {
     public void cetakLaporanBeliHarian(Connection conn){
         this.showJasperReport("src\\report\\LaporanBeliHarian.jasper", conn);
     }
-    
+
     
     public void cetakStrukPenjualan(Connection conn, boolean diskon, String idTransaksi) {
+        
         try {
+            if(!System.getProperties().get("java.version").toString().contains("1.")){
+                Message.showWarning(this, "Tidak bisa menampilkan struk, Versi java Anda > 8");
+                return;
+            }
+            
             // menyiapkan id transaksi
             HashMap parameter = new HashMap();
             parameter.put("id_tr_jual", idTransaksi);
@@ -171,5 +181,14 @@ public class Laporan {
             e.printStackTrace();
             Message.showException(null, e);
         }
+    }
+    
+    public static void main(String[] args) {
+        if(System.getProperties().get("java.version").toString().contains("1.")){
+            System.out.println("java versi 8 < 10");
+        }else{
+            System.out.println("versi java lebih dari 8");
+        }
+        
     }
 }

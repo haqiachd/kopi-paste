@@ -2036,6 +2036,8 @@ public class MenuLaporanBeli extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
+
+        
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpHarian, this.db.conn, CetakLaporanHarian.STATUS_BELI, "Laporan Pembelian Harian");
         report.setVisible(true);

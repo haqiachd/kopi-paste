@@ -205,7 +205,13 @@ public class UpdateDataAkun extends javax.swing.JDialog {
             return;
         }else if(!Validation.isNoHp(this.inpNoTelp.getText())){
             return;
+        }else if(this.us.isExistNoHp(this.inpNoTelp.getText())){
+            Message.showWarning(this, String.format("'%s' Nomor Hp tersebut sudah terpakai", this.inpNoTelp.getText()));
+            return;
         }else if(!Validation.isEmail(this.inpEmail.getText())){
+            return;
+        }else if(this.us.isExistEmail(this.inpEmail.getText())){
+            Message.showWarning(this, String.format("'%s' Email tersebut sudah terpakai", this.inpEmail.getText()));
             return;
         }else if(!Validation.isNamaTempat(this.inpAlamat.getText())){
             return;

@@ -2,6 +2,7 @@ package com.window.transaksi;
 
 import com.window.laporan.*;
 import com.koneksi.Database;
+import com.manage.Laporan;
 import com.manage.Message;
 import com.manage.Text;
 import com.manage.Waktu;
@@ -32,6 +33,8 @@ public class HistoriTransaksi extends javax.swing.JDialog {
     
     private final Text text = new Text();
     
+    private final Laporan laporan = new Laporan();
+    
     private String idSelected = "";
     
     private final String tanggal = this.waktu.getCurrentDate(), status;
@@ -55,6 +58,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         this.btnUpdate.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnDetail.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         this.btnHapus.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.btnCetak.setUI(new javax.swing.plaf.basic.BasicButtonUI());
 
         this.setBackground(new Color(0,0,0,0));
         this.setLocationRelativeTo(null);
@@ -364,6 +368,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         btnUpdate = new javax.swing.JButton();
         lineBottom = new javax.swing.JSeparator();
         btnHapus = new javax.swing.JButton();
+        btnCetak = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -456,7 +461,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
             }
         });
 
-        btnUpdate.setBackground(new java.awt.Color(255, 102, 0));
+        btnUpdate.setBackground(new java.awt.Color(204, 0, 204));
         btnUpdate.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdate.setText("Update");
@@ -479,6 +484,16 @@ public class HistoriTransaksi extends javax.swing.JDialog {
             }
         });
 
+        btnCetak.setBackground(new java.awt.Color(255, 102, 0));
+        btnCetak.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        btnCetak.setForeground(new java.awt.Color(255, 255, 255));
+        btnCetak.setText("Cetak");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -498,7 +513,9 @@ public class HistoriTransaksi extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlMainLayout.createSequentialGroup()
                                     .addComponent(lblCari, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -530,7 +547,8 @@ public class HistoriTransaksi extends javax.swing.JDialog {
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDetail)
                     .addComponent(btnUpdate)
-                    .addComponent(btnHapus))
+                    .addComponent(btnHapus)
+                    .addComponent(btnCetak))
                 .addGap(16, 16, 16))
         );
 
@@ -688,6 +706,18 @@ public class HistoriTransaksi extends javax.swing.JDialog {
         this.idSelected = this.tabelRiwayat.getValueAt(this.tabelRiwayat.getSelectedRow(), 0).toString();
     }//GEN-LAST:event_tabelRiwayatMouseClicked
 
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        if (tabelRiwayat.getSelectedRow() > -1) {
+            String id = this.tabelRiwayat.getValueAt(this.tabelRiwayat.getSelectedRow(), 0).toString(),
+                   dis = this.tabelRiwayat.getValueAt(this.tabelRiwayat.getSelectedRow(), 5).toString();
+            
+            this.laporan.cetakStrukPenjualan(this.db.conn, !dis.equals("Rp. 0.00"), id);
+            this.dispose();
+        }else{
+            Message.showWarning(this, "Tidak ada data yang dipilih!");
+        }
+    }//GEN-LAST:event_btnCetakActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -720,6 +750,7 @@ public class HistoriTransaksi extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnDetail;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnUpdate;

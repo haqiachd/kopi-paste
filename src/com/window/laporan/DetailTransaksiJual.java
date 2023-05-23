@@ -2,6 +2,7 @@ package com.window.laporan;
 
 
 import com.koneksi.Database;
+import com.manage.Laporan;
 import com.manage.Message;
 import com.manage.Text;
 import com.window.dialog.PopUpBackground;
@@ -22,6 +23,8 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
     private final PopUpBackground pop = new PopUpBackground();
     
     private final Text txt = new Text();
+    
+    private final Laporan laporan = new Laporan();
     
     private final String id;
     
@@ -210,6 +213,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelDetail = new javax.swing.JTable();
         btnClose = new javax.swing.JButton();
+        btnCetak = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -267,6 +271,16 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
             }
         });
 
+        btnCetak.setBackground(new java.awt.Color(255, 102, 0));
+        btnCetak.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
+        btnCetak.setForeground(new java.awt.Color(255, 255, 255));
+        btnCetak.setText("Cetak");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -283,6 +297,8 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -295,7 +311,9 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnClose)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClose)
+                    .addComponent(btnCetak))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -336,6 +354,13 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
         this.db.closeConnection();
     }//GEN-LAST:event_formWindowClosing
 
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        String id = this.tabelDetail.getValueAt(0, 0).toString(),
+               diskon = this.tabelDetail.getValueAt(this.tabelDetail.getRowCount()-4, 4).toString();
+        laporan.cetakStrukPenjualan(this.db.conn, !diskon.equals("Rp. 0.00"), id);
+        this.dispose();
+    }//GEN-LAST:event_btnCetakActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -368,6 +393,7 @@ public class DetailTransaksiJual extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnClose;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDialogName;

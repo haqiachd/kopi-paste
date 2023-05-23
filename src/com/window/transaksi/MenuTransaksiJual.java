@@ -1873,10 +1873,18 @@ public class MenuTransaksiJual extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
         
+        if(this.inpTotalBayar.getText().isEmpty()){
+            Message.showWarning(this, "Masukan total bayar terlebih dahulu");
+            return;
+        }
+        
         this.isUangCukup = Integer.parseInt(this.inpTotalBayar.getText()) >= this.ttlSeluruahHarga;
         
         if(this.tabelTr.getRowCount() <= 0){
             Message.showWarning(this, "Tidak ada menu yang dipilih!");
+            return;
+        }else if(this.inpTotalBayar.getText().isEmpty()){
+            Message.showWarning(this, "Uang yang anda masukan kurang dari Rp. " + this.inpTotalHarga.getText());
             return;
         }else if(!this.isUangCukup){
             Message.showWarning(this, "Uang yang anda masukan kurang dari Rp. " + this.inpTotalHarga.getText());
