@@ -413,16 +413,16 @@ public class LoginWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void lblLogoAppMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoAppMouseClicked
-        java.awt.EventQueue.invokeLater(new Runnable(){
-            @Override
-            public void run(){
-                user = new User();
-                user.login("admin", "lastidea");
-                new Dashboard().setVisible(true);
-                user.closeConnection();
-            }
-        });
-        this.setVisible(false);
+//        java.awt.EventQueue.invokeLater(new Runnable(){
+//            @Override
+//            public void run(){
+//                user = new User();
+//                user.login("admin", "lastidea");
+//                new Dashboard().setVisible(true);
+//                user.closeConnection();
+//            }
+//        });
+//        this.setVisible(false);
     }//GEN-LAST:event_lblLogoAppMouseClicked
 
     private void inpPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPasswordKeyPressed

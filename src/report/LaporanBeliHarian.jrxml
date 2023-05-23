@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65e8a3fa-22d2-4bd0-9d47-3d60f72168c3">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="31"/>
+	<property name="ireport.zoom" value="0.8467108950806659"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
+	<parameter name="tgl_mulai" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tgl_akhir" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
 		<![CDATA[SELECT
      transaksi_beli.`id_tr_beli` AS transaksi_beli_id_tr_beli,
-     transaksi_beli.`id_karyawan` AS transaksi_beli_id_karyawan,
+     transaksi_beli.`id_akun` AS transaksi_beli_id_karyawan,
      transaksi_beli.`nama_karyawan` AS transaksi_beli_nama_karyawan,
      transaksi_beli.`total_bahan` AS transaksi_beli_total_bahan,
      transaksi_beli.`total_harga` AS transaksi_beli_total_harga,
@@ -18,7 +24,8 @@
      detail_tr_beli.`jumlah` AS detail_tr_beli_jumlah,
      detail_tr_beli.`total_harga` AS detail_tr_beli_total_harga
 FROM
-     `transaksi_beli` transaksi_beli INNER JOIN `detail_tr_beli` detail_tr_beli ON transaksi_beli.`id_tr_beli` = detail_tr_beli.`id_tr_beli`]]>
+     `transaksi_beli` transaksi_beli INNER JOIN `detail_tr_beli` detail_tr_beli ON transaksi_beli.`id_tr_beli` = detail_tr_beli.`id_tr_beli`
+WHERE `transaksi_beli`.`tanggal` BETWEEN $P{tgl_mulai} AND $P{tgl_akhir}]]>
 	</queryString>
 	<field name="transaksi_beli_id_tr_beli" class="java.lang.String"/>
 	<field name="transaksi_beli_id_karyawan" class="java.lang.String"/>
@@ -30,19 +37,15 @@ FROM
 	<field name="detail_tr_beli_id_bahan" class="java.lang.String"/>
 	<field name="detail_tr_beli_nama_bahan" class="java.lang.String"/>
 	<field name="detail_tr_beli_jenis_bahan" class="java.lang.String"/>
-	<field name="detail_tr_beli_jumlah" class="java.lang.Integer"/>
+	<field name="detail_tr_beli_jumlah" class="java.lang.Float"/>
 	<field name="detail_tr_beli_total_harga" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="115" splitType="Stretch">
-			<image>
-				<reportElement x="0" y="0" width="142" height="114" uuid="4484befb-d215-498f-aa1a-b4209fd975eb"/>
-				<imageExpression><![CDATA["logo.png"]]></imageExpression>
-			</image>
 			<staticText>
-				<reportElement x="142" y="11" width="413" height="39" forecolor="#004AEE" uuid="0a286a5c-5f34-4ce6-a50d-5d795c21e4f2"/>
+				<reportElement x="142" y="11" width="225" height="39" forecolor="#004AEE" uuid="0a286a5c-5f34-4ce6-a50d-5d795c21e4f2"/>
 				<textElement textAlignment="Justified">
 					<font size="26" isBold="true" isItalic="false"/>
 				</textElement>
@@ -62,6 +65,10 @@ FROM
 				</textElement>
 				<text><![CDATA[KOPI Pelayanan ASPIRASI Terpadu]]></text>
 			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="142" height="115" uuid="fd4e68e2-b0b1-4699-9cf1-009b5e630b79"/>
+				<imageExpression><![CDATA["C:\\Users\\Achmad Baihaqi\\Documents\\NetBeansProjects\\Kopi Paste\\src\\report\\logo.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

@@ -451,7 +451,7 @@ public class RiwayatTransaksiBeli extends javax.swing.JDialog {
     }//GEN-LAST:event_inpCariKeyTyped
 
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
-        CetakLaporanHarian report = new CetakLaporanHarian(null, true, this.tabelRiwayat, this.db.conn, "unsupported-yet :|", "Riwayat Pembelian Bulan " + this.waktu.getNamaBulan(this.bulan) + " " + this.tahun);
+        CetakLaporanHarian report = new CetakLaporanHarian(null, true, this.tabelRiwayat, this.db.conn, "unsupported-yet :|", "Riwayat Pembelian Bulan " + this.waktu.getNamaBulan(this.bulan) + " " + this.tahun, null, null);
         report.setVisible(true);     
     }//GEN-LAST:event_btnCetakActionPerformed
 

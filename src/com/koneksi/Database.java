@@ -1,8 +1,6 @@
 package com.koneksi;
 
 import com.manage.Message;
-import com.manage.User;
-import com.manage.Waktu;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -95,7 +93,6 @@ public class Database {
                             if(minutes >= 60){
                                 // refresh koneksi ke server
                                 System.out.println("SEND TEST");
-                                sendTestConn();
                                 System.out.println("KONEKSI BERHASIL DI REFRESH");
                             }
                             // pertambahan menit setiap 60.000 milisecond / 1 menit
@@ -188,24 +185,6 @@ public class Database {
         } catch (SQLException ex) {
             Message.showException(null, "Terjadi Kesalahan!\nError message : " + ex.getMessage(), ex);
         }
-    }
-  
-    /**
-     * Digunakan untuk merefresh koneksi ke server selama 15 menit sekali agar koneksi ke server tidak otomatis terputus
-     * 
-     * @throws SQLException error pada sql 
-     */
-    private void sendTestConn() throws SQLException{
-        // menyiapkan query
-        this.pst = this.conn.prepareStatement("INSERT INTO test_conn VALUES (?, ?, ?, ?)");
-        // mendapatkan data data test_conn (untuk pencatatan koneksi)
-        this.pst.setString(1, null);
-        this.pst.setString(2, User.getUsername());
-        this.pst.setInt(3, this.local_count);
-        this.pst.setString(4, new Waktu().getCurrentDateTime());
-        // eksekusi query dan refresh menit koneksi
-        this.pst.executeUpdate();
-        this.minutes = 0;
     }
     
     private boolean startXampp() {

@@ -17,13 +17,13 @@ public class CetakLaporanHarian extends javax.swing.JDialog {
     
     private final JTable tabel;
     
-    private final String title, statue;
+    private final String title, statue, tglMulai, tglAkhir;
     
     public static final String STATUS_JUAL = "jual", STATUS_BELI = "beli";
     
     private final Laporan report = new Laporan();
     
-    public CetakLaporanHarian(java.awt.Frame parent, boolean modal, JTable table, Connection conn, String status, String title) {
+    public CetakLaporanHarian(java.awt.Frame parent, boolean modal, JTable table, Connection conn, String status, String title, String tglMulai, String tglAkhir) {
         super(parent, modal);
         initComponents();
         
@@ -31,8 +31,14 @@ public class CetakLaporanHarian extends javax.swing.JDialog {
         this.conn = conn;
         this.title = title;
         this.statue = status;
+        this.tglMulai = tglMulai;
+        this.tglAkhir = tglAkhir;
         
         this.setLocationRelativeTo(null);
+        
+        if(status.contains("unsupported")){
+            this.btnPrint.setVisible(false);
+        }
     }
 
 
@@ -156,8 +162,8 @@ public class CetakLaporanHarian extends javax.swing.JDialog {
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
         this.dispose();
         switch(this.statue){
-            case STATUS_JUAL : this.report.cetakLaporanJualHarian(this.conn); break;
-            case STATUS_BELI : this.report.cetakLaporanBeliHarian(this.conn); break;
+            case STATUS_JUAL : this.report.cetakLaporanJualHarian(this.conn, this.tglMulai, this.tglAkhir); break;
+            case STATUS_BELI : this.report.cetakLaporanBeliHarian(this.conn, this.tglMulai, this.tglAkhir); break;
             default : Message.showWarning(this, "Print saat ini belum tersedia untuk semua laporan!");
         }
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -226,7 +232,7 @@ public class CetakLaporanHarian extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                CetakLaporanHarian dialog = new CetakLaporanHarian(new javax.swing.JFrame(), true, null, null, "", "");
+                CetakLaporanHarian dialog = new CetakLaporanHarian(new javax.swing.JFrame(), true, null, null, "", "", "", "");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

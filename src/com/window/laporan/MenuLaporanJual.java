@@ -223,7 +223,7 @@ public class MenuLaporanJual extends javax.swing.JFrame {
         for(int i = 0; i < this.modelCariLaporan.getRowCount(); i++){
             // mendapatkan data id, nama dan tanggal
             id = this.modelCariLaporan.getValueAt(i, 0).toString().toLowerCase();
-            idKy = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase();
+            idKy = this.modelCariLaporan.getValueAt(i, 1).toString().toLowerCase()+"";
             nama = this.modelCariLaporan.getValueAt(i, 2).toString().toLowerCase();
             tanggal = this.modelCariLaporan.getValueAt(i, 6).toString().toLowerCase();
             
@@ -2027,8 +2027,18 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSemuaHarianActionPerformed
 
     private void btnCetakHarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakHarianActionPerformed
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-d"), 
+                           format2 = format1;
         this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-        CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpHarian, this.db.conn, CetakLaporanHarian.STATUS_JUAL, "Laporan Penjualan Harian");
+        String tglMulai = null, tglAkhir = null;
+        if(this.inpDataPerhari.getDate() != null){
+            tglMulai = format1.format(this.inpDataPerhari.getDate());
+        }else if(this.inpDataHarianBetween1.getDate() != null && this.inpDataHarianBetween2.getDate() != null){
+            tglMulai = format1.format(this.inpDataHarianBetween1.getDate());
+            tglAkhir = format2.format(this.inpDataHarianBetween2.getDate());
+        }
+
+        CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpHarian, this.db.conn, CetakLaporanHarian.STATUS_JUAL, "Laporan Penjualan Harian", tglMulai, tglAkhir);
         report.setVisible(true);
         this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_btnCetakHarianActionPerformed
@@ -2073,7 +2083,15 @@ public class MenuLaporanJual extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRiwayatBulananActionPerformed
 
     private void btnCetakBulananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakBulananActionPerformed
-        CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpBulanan, this.db.conn, "unsupported-yet :|", "Laporan Penjualan Bulanan");
+        this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        String tglMulai = null, tglAkhir = null;
+        if(this.inpDataPerhari.getDate() != null){
+            tglMulai = this.inpDataPerhari.getDate().toString();
+        }else if(this.inpDataHarianBetween1.getDate() != null && this.inpDataHarianBetween2.getDate() != null){
+            tglMulai = this.inpDataHarianBetween1.getDate().toString();
+            tglAkhir = this.inpDataHarianBetween2.getDate().toString();
+        }
+        CetakLaporanHarian report = new CetakLaporanHarian(this, true, this.tabelLpBulanan, this.db.conn, "unsupported-yet :|", "Laporan Penjualan Bulanan", tglMulai, tglAkhir);
         report.setVisible(true);      
     }//GEN-LAST:event_btnCetakBulananActionPerformed
 

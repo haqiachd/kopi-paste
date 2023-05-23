@@ -112,12 +112,91 @@ public class Laporan {
         }
     }
     
-    public void cetakLaporanJualHarian(Connection conn){
-        this.showJasperReport("src\\report\\LaporanJualHarian.jasper", conn);
+    private void showJasperReport(String jasperFile, Connection conn, String tglMulai, String tglAkhir) {
+        try {
+            if (!System.getProperties().get("java.version").toString().contains("1.")) {
+                Message.showWarning(this, "Tidak bisa menampilkan struk, Versi java Anda > 8");
+                return;
+            }
+
+            // menyiapkan id transaksi
+            HashMap parameter = new HashMap();
+            parameter.put("tgl_mulai", tglMulai);
+            parameter.put("tgl_akhir", tglAkhir);
+
+            // meyiapkan jasper report
+            InputStream file = getClass().getResourceAsStream(jasperFile);
+
+            JasperDesign desain = JRXmlLoader.load(file);
+            JasperReport report = JasperCompileManager.compileReport(desain);
+            JasperPrint print = JasperFillManager.fillReport(report, parameter, conn);
+
+            // membuka jasper report
+            JasperViewer jview = new JasperViewer(print, false);
+            jview.setVisible(true);
+            jview.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            jview.setLocationRelativeTo(null);
+            jview.setFitPageZoomRatio();
+
+            // solved bug jasper report tiba-tiba minimaze
+            jview.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                // menutup jasper report saat user menekan tombol close
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    System.out.println("JASPER CLOSING");
+                    jview.dispose();
+                }
+
+                // menutup jasper report saat user menekan tombol close
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    System.out.println("JASPER CLOSED");
+                    jview.dispose();
+                }
+
+                // memaksa jasper report untuk tetap aktif (tidak minimaze)
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                    System.out.println("JASPER ACTIVATED");
+                    jview.setVisible(true);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Message.showException(null, e);
+        }
     }
     
-    public void cetakLaporanBeliHarian(Connection conn){
-        this.showJasperReport("src\\report\\LaporanBeliHarian.jasper", conn);
+    public void cetakLaporanJualHarian(Connection conn, String tglMulai, String tglAkhir){
+//        this.showJasperReport("src\\report\\LaporanJualHarian.japser", conn);
+        if(tglMulai == null && tglAkhir == null){
+            tglMulai = "1900-01-01";
+            tglAkhir = "3000-01-01";
+        }else if(tglMulai == null || tglMulai.equals("")){
+            tglMulai = "1900-01-01";
+        }else if(tglAkhir == null || tglAkhir.equals("")){
+            tglAkhir = "3000-01-01";
+        }
+        System.out.println("MULAI : "+ tglMulai);
+        System.out.println("AKHIR : " + tglAkhir);
+        this.showJasperReport("/report/LaporanJualHarian.jrxml", conn, tglMulai, tglAkhir);
+    }
+    
+    public void cetakLaporanBeliHarian(Connection conn, String tglMulai, String tglAkhir){
+//        this.showJasperReport("src\\report\\LaporanJualHarian.japser", conn);
+        if(tglMulai == null && tglAkhir == null){
+            tglMulai = "1900-01-01";
+            tglAkhir = "3000-01-01";
+        }else if(tglMulai == null || tglMulai.equals("")){
+            tglMulai = "1900-01-01";
+        }else if(tglAkhir == null || tglAkhir.equals("")){
+            tglAkhir = "3000-01-01";
+        }
+        System.out.println("MULAI : "+ tglMulai);
+        System.out.println("AKHIR : " + tglAkhir);
+        this.showJasperReport("/report/LaporanBeliHarian.jrxml", conn, tglMulai, tglAkhir);
     }
 
     
